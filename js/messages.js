@@ -123,6 +123,7 @@ async function renderReply(msg) {
 
 // =====================INIT LISTENER DE MENSAGENS =======================================================
 
+
 export function initMessages() {
   const chatContainer = document.getElementById("chat-container");
 
@@ -137,6 +138,8 @@ export function initMessages() {
 }
 
 
+export function initMessages(chat, sala) {
+  
   renderedMessages = new Set();
   chat.innerHTML = ""; // limpa UI corretamente
 
