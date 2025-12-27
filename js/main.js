@@ -19,25 +19,26 @@ const stickerList = document.getElementById("stickerList");
 // ======================================================
 // SALA DA URL
 // ======================================================
-const urlParams = new URLSearchParams(window.location.search);
-const sala = urlParams.get("sala") || "geral";
-document.title = `Chat - ${sala}`;
-// ======================================================
-// AUTH + MENSAGENS
-// ======================================================
-initAuth(loginBtn, showToast);
-initMessages(chat, sala);
-// ======================================================
-// ESSA PARTE PERMIT QUE O GITHUB RODA OS CODIGOS  
-// ======================================================
+// ===============================
+// SALA PELA URL
+// ===============================
+const sala =
+  new URLSearchParams(window.location.search).get("sala") || "geral";
 
-// auth pode rodar em qualquer página
+document.title = `Chat - ${sala}`;
+
+// ===============================
+// AUTH (PODE RODAR EM QUALQUER PÁGINA)
+// ===============================
 initAuth(showToast);
 
-// chat só roda se existir no HTML
+// ===============================
+// CHAT (SÓ SE EXISTIR NO HTML)
+// ===============================
 const chatContainer = document.getElementById("chat-container");
+
 if (chatContainer) {
-  initMessages();
+  initMessages(chatContainer, sala);
 }
 
 
