@@ -122,50 +122,42 @@ async function renderReply(msg) {
 }
 
 // =====================INIT LISTENER DE MENSAGENS =======================================================
+export function initMessages(chat, sala) {
 
-
-export function initMessages() {
-  const chatContainer = document.getElementById("chat-container");
-
-  if (!chatContainer) {
+  if (!chat) {
     console.warn("chat-container não encontrado, initMessages ignorado");
     return;
   }
 
-  chatContainer.innerHTML = "";
+  if (!sala) {
+    console.warn("Sala não definida, initMessages ignorado");
+    return;
+  }
 
-  // resto da lógica de mensagens aqui
-}
-
-
-export function initMessages(chat, sala) {
-  
   renderedMessages = new Set();
-  chat.innerHTML = ""; // limpa UI corretamente
+  chat.innerHTML = "";
 
-  chatRef = collection(db, "salas", sala, "messages")
+  chatRef = collection(db, "salas", sala, "messages");
 
+  // =============================
+  // FILTRO DE DIAS
+  // =============================
+  const dias = 4;
+  const hoje = new Date();
+  const limite = new Date();
+  limite.setDate(hoje.getDate() - dias);
 
-// Gerar limite DIAS mínimo (apenas nome do documento)
-const dias = 4;
-const hoje = new Date();
-const limite = new Date();
-limite.setDate(hoje.getDate() - dias);
+  const ano = limite.getFullYear();
+  const mes = String(limite.getMonth() + 1).padStart(2, "0");
+  const dia = String(limite.getDate()).padStart(2, "0");
 
-// Converter para formato YYYY-MM-DD (igual início do seu ID)
-const ano = limite.getFullYear();
-const mes = String(limite.getMonth() + 1).padStart(2, "0");
-const dia = String(limite.getDate()).padStart(2, "0");
+  const idMinimo = `${ano}-${mes}-${dia}_`;
 
-// ID mínimo permitido
-const idMinimo = `${ano}-${mes}-${dia}_`;
-
-// 🔥 Buscar apenas mensagens recentes
-const q = query(
-  chatRef,
-  where("__name__", ">=", idMinimo),
-  orderBy("__name__")
-);
+  const q = query(
+    chatRef,
+    where("__name__", ">=", idMinimo),
+    orderBy("__name__")
+  );
 
   onSnapshot(q, (snapshot) => {
     const fragment = document.createDocumentFragment();
@@ -181,7 +173,7 @@ const q = query(
 
       const msg = docSnap.data();
 
-      let timestamp = msg.createdAt
+      const timestamp = msg.createdAt
         ? formatTimestamp(msg.createdAt)
         : "";
 
@@ -204,12 +196,10 @@ const q = query(
         </div>
 
         <div class="reply-container"></div>
-
         <div>${content}</div>
         <div class="message-time">${timestamp}</div>
       `;
 
-      // CLICK REPLY (igual ao seu)
       div.addEventListener("click", (event) => {
         if (
           event.target.classList.contains("toggle-expand") ||
@@ -224,7 +214,6 @@ const q = query(
 
       fragment.appendChild(div);
 
-      // 🔥 CARREGA REPLY SEM BLOQUEAR
       if (msg.replyTo) {
         renderReply(msg).then(replyHTML => {
           const box = div.querySelector(".reply-container");
@@ -232,10 +221,20 @@ const q = query(
         });
       }
     });
+
     chat.appendChild(fragment);
     chat.scrollTop = chat.scrollHeight;
   });
 }
+
+
+
+
+
+
+
+
+
 // ================= ENVIO — AGORA COM REPLY FUNCIONANDO =========================================================
 export async function sendMessage(input) {
   const text = input.value.trim();
