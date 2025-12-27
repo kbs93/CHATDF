@@ -13,11 +13,11 @@ import {
 
 import { currentUser } from "./auth.js";
 import { showToast, getColorFromName, highlightMentions } from "./ui.js";
-import { showReplyPreview } from "./ui.js";   // ⭐ IMPORTANTE ⭐
+import { showReplyPreview } from "./ui.js";   // IMPORTANTE
 
 // =================== STATE ===========================================================================
 
-window.replyingTo = null;    // ⭐ Agora global, e não some
+window.replyingTo = null;    // Agora global, e não some
 let chatRef = null;
 let renderedMessages = new Set();
 

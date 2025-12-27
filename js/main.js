@@ -2,7 +2,7 @@
 //  IMPORTS
 // ======================================================
 import { initAuth } from "./auth.js";
-import { initMessages, sendMessage } from "./messages.js"; // <- removido setReplyTo
+import { initMessages, sendMessage } from "./messages.js";
 import { showToast } from "./ui.js";
 import { stickers } from "./stickers.js";
 // ======================================================
@@ -27,6 +27,23 @@ document.title = `Chat - ${sala}`;
 // ======================================================
 initAuth(loginBtn, showToast);
 initMessages(chat, sala);
+
+
+
+
+
+// auth pode rodar em qualquer página
+initAuth(showToast);
+
+// chat só roda se existir no HTML
+const chatContainer = document.getElementById("chat-container");
+if (chatContainer) {
+  initMessages();
+}
+
+
+
+
 // =====================================================
 // BOTÃO ENVIAR
 // ======================================================
