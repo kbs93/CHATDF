@@ -123,7 +123,20 @@ async function renderReply(msg) {
 
 // =====================INIT LISTENER DE MENSAGENS =======================================================
 
-export function initMessages(chat, sala) {
+export function initMessages() {
+  const chatContainer = document.getElementById("chat-container");
+
+  if (!chatContainer) {
+    console.warn("chat-container não encontrado, initMessages ignorado");
+    return;
+  }
+
+  chatContainer.innerHTML = "";
+
+  // resto da lógica de mensagens aqui
+}
+
+
   renderedMessages = new Set();
   chat.innerHTML = ""; // limpa UI corretamente
 

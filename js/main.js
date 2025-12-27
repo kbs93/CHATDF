@@ -27,10 +27,9 @@ document.title = `Chat - ${sala}`;
 // ======================================================
 initAuth(loginBtn, showToast);
 initMessages(chat, sala);
-
-
-
-
+// ======================================================
+// ESSA PARTE PERMIT QUE O GITHUB RODA OS CODIGOS  
+// ======================================================
 
 // auth pode rodar em qualquer página
 initAuth(showToast);
