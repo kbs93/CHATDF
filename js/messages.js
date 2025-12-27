@@ -238,6 +238,9 @@ export function initMessages(chat, sala) {
 
 
 
+
+
+
 // ================= ENVIO — AGORA COM REPLY FUNCIONANDO =========================================================
 export async function sendMessage(input) {
   const text = input.value.trim();
