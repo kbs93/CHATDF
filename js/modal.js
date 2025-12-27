@@ -6,9 +6,9 @@ import {
   sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-import { auth, db } from "/js/firebase-config.js";
+import { auth, db } from "./firebase-config.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-import { showToast } from "/js/ui.js";
+import { showToast } from "./ui.js";
 
 // ======================== CONSTANTES ========================
 const DEFAULT_AVATAR = "img/avatar.png";
