@@ -13,11 +13,11 @@ import {
 
 import { currentUser } from "./auth.js";
 import { showToast, getColorFromName, highlightMentions } from "./ui.js";
-import { showReplyPreview } from "./ui.js";   // IMPORTANTE
+import { showReplyPreview } from "./ui.js";   // ⭐ IMPORTANTE ⭐
 
 // =================== STATE ===========================================================================
 
-window.replyingTo = null;    // Agora global, e não some
+window.replyingTo = null;    // ⭐ Agora global, e não some
 let chatRef = null;
 let renderedMessages = new Set();
 
@@ -123,50 +123,34 @@ async function renderReply(msg) {
 
 // =====================INIT LISTENER DE MENSAGENS =======================================================
 
-
 export function initMessages(chat, sala) {
-
-  // =============================
-  // PROTEÇÕES OBRIGATÓRIAS
-  // =============================
-  if (!chat) {
-    console.warn("chat-container não encontrado, initMessages cancelado");
-    return;
-  }
-
-  if (!sala) {
-    console.warn("Sala não definida, initMessages cancelado");
-    return;
-  }
-
   renderedMessages = new Set();
-  chat.innerHTML = "";
+  chat.innerHTML = ""; // limpa UI corretamente
 
-  chatRef = collection(db, "salas", sala, "messages");
+  chatRef = collection(db, "salas", sala, "messages")
 
-  // =============================
-  // FILTRO DE DIAS (ÚLTIMOS 4)
-  // =============================
-  const dias = 4;
-  const hoje = new Date();
-  const limite = new Date();
-  limite.setDate(hoje.getDate() - dias);
 
-  const ano = limite.getFullYear();
-  const mes = String(limite.getMonth() + 1).padStart(2, "0");
-  const dia = String(limite.getDate()).padStart(2, "0");
+// Gerar limite DIAS mínimo (apenas nome do documento)
+const dias = 4;
+const hoje = new Date();
+const limite = new Date();
+limite.setDate(hoje.getDate() - dias);
 
-  const idMinimo = `${ano}-${mes}-${dia}_`;
+// Converter para formato YYYY-MM-DD (igual início do seu ID)
+const ano = limite.getFullYear();
+const mes = String(limite.getMonth() + 1).padStart(2, "0");
+const dia = String(limite.getDate()).padStart(2, "0");
 
-  const q = query(
-    chatRef,
-    where("__name__", ">=", idMinimo),
-    orderBy("__name__")
-  );
+// ID mínimo permitido
+const idMinimo = `${ano}-${mes}-${dia}_`;
 
-  // =============================
-  // LISTENER REALTIME
-  // =============================
+// 🔥 Buscar apenas mensagens recentes
+const q = query(
+  chatRef,
+  where("__name__", ">=", idMinimo),
+  orderBy("__name__")
+);
+
   onSnapshot(q, (snapshot) => {
     const fragment = document.createDocumentFragment();
 
@@ -181,7 +165,7 @@ export function initMessages(chat, sala) {
 
       const msg = docSnap.data();
 
-      const timestamp = msg.createdAt
+      let timestamp = msg.createdAt
         ? formatTimestamp(msg.createdAt)
         : "";
 
@@ -200,19 +184,16 @@ export function initMessages(chat, sala) {
       div.innerHTML = `
         <div style="display:flex;align-items:center;gap:6px;">
           ${msg.photo ? `<img src="${msg.photo}" class="user-photo">` : ""}
-          <b class="user-name" style="color:${userColor};cursor:pointer;">
-            ${msg.user}:
-          </b>
+          <b class="user-name" style="color:${userColor};cursor:pointer;">${msg.user}:</b>
         </div>
 
         <div class="reply-container"></div>
+
         <div>${content}</div>
         <div class="message-time">${timestamp}</div>
       `;
 
-      // =============================
-      // CLICK PARA REPLY
-      // =============================
+      // CLICK REPLY (igual ao seu)
       div.addEventListener("click", (event) => {
         if (
           event.target.classList.contains("toggle-expand") ||
@@ -227,9 +208,7 @@ export function initMessages(chat, sala) {
 
       fragment.appendChild(div);
 
-      // =============================
-      // REPLY ASSÍNCRONO
-      // =============================
+      // 🔥 CARREGA REPLY SEM BLOQUEAR
       if (msg.replyTo) {
         renderReply(msg).then(replyHTML => {
           const box = div.querySelector(".reply-container");
@@ -237,17 +216,10 @@ export function initMessages(chat, sala) {
         });
       }
     });
-
     chat.appendChild(fragment);
     chat.scrollTop = chat.scrollHeight;
   });
 }
-
-
-
-
-
-
 // ================= ENVIO — AGORA COM REPLY FUNCIONANDO =========================================================
 export async function sendMessage(input) {
   const text = input.value.trim();

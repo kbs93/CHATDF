@@ -2,7 +2,7 @@
 //  IMPORTS
 // ======================================================
 import { initAuth } from "./auth.js";
-import { initMessages, sendMessage } from "./messages.js";
+import { initMessages, sendMessage } from "./messages.js"; // <- removido setReplyTo
 import { showToast } from "./ui.js";
 import { stickers } from "./stickers.js";
 // ======================================================
@@ -19,31 +19,14 @@ const stickerList = document.getElementById("stickerList");
 // ======================================================
 // SALA DA URL
 // ======================================================
-// ===============================
-// SALA PELA URL
-// ===============================
-const sala =
-  new URLSearchParams(window.location.search).get("sala") || "geral";
-
+const urlParams = new URLSearchParams(window.location.search);
+const sala = urlParams.get("sala") || "geral";
 document.title = `Chat - ${sala}`;
-
-// ===============================
-// AUTH (PODE RODAR EM QUALQUER PÁGINA)
-// ===============================
-initAuth(showToast);
-
-// ===============================
-// CHAT (SÓ SE EXISTIR NO HTML)
-// ===============================
-const chatContainer = document.getElementById("chat-container");
-
-if (chatContainer) {
-  initMessages(chatContainer, sala);
-}
-
-
-
-
+// ======================================================
+// AUTH + MENSAGENS
+// ======================================================
+initAuth(loginBtn, showToast);
+initMessages(chat, sala);
 // =====================================================
 // BOTÃO ENVIAR
 // ======================================================
