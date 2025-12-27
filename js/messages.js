@@ -124,33 +124,36 @@ async function renderReply(msg) {
 // =====================INIT LISTENER DE MENSAGENS =======================================================
 
 export function initMessages(chat, sala) {
+  // 🔒 PROTEÇÃO TOTAL (evita erro no GitHub)
+  if (!chat) {
+    console.warn("initMessages: container de chat não encontrado");
+    return;
+  }
+
   renderedMessages = new Set();
-  chat.innerHTML = ""; // limpa UI corretamente
+  chat.innerHTML = ""; // agora é seguro
 
-  chatRef = collection(db, "salas", sala, "messages")
+  chatRef = collection(db, "salas", sala, "messages");
 
+  // ================== FILTRO POR DIAS ==================
+  const dias = 4;
+  const hoje = new Date();
+  const limite = new Date();
+  limite.setDate(hoje.getDate() - dias);
 
-// Gerar limite DIAS mínimo (apenas nome do documento)
-const dias = 4;
-const hoje = new Date();
-const limite = new Date();
-limite.setDate(hoje.getDate() - dias);
+  const ano = limite.getFullYear();
+  const mes = String(limite.getMonth() + 1).padStart(2, "0");
+  const dia = String(limite.getDate()).padStart(2, "0");
 
-// Converter para formato YYYY-MM-DD (igual início do seu ID)
-const ano = limite.getFullYear();
-const mes = String(limite.getMonth() + 1).padStart(2, "0");
-const dia = String(limite.getDate()).padStart(2, "0");
+  const idMinimo = `${ano}-${mes}-${dia}_`;
 
-// ID mínimo permitido
-const idMinimo = `${ano}-${mes}-${dia}_`;
+  const q = query(
+    chatRef,
+    where("__name__", ">=", idMinimo),
+    orderBy("__name__")
+  );
 
-// 🔥 Buscar apenas mensagens recentes
-const q = query(
-  chatRef,
-  where("__name__", ">=", idMinimo),
-  orderBy("__name__")
-);
-
+  // ================== SNAPSHOT ==================
   onSnapshot(q, (snapshot) => {
     const fragment = document.createDocumentFragment();
 
@@ -165,7 +168,7 @@ const q = query(
 
       const msg = docSnap.data();
 
-      let timestamp = msg.createdAt
+      const timestamp = msg.createdAt
         ? formatTimestamp(msg.createdAt)
         : "";
 
@@ -177,14 +180,25 @@ const q = query(
       else if (ytId) content = renderYouTube(ytId);
       else content = renderPlainMessage(msg);
 
+      // ✅ AVATAR SEGURO (usuários antigos e novos)
+      const avatar = msg.photo && msg.photo.startsWith("http")
+        ? msg.photo
+        : "img/avatar.png";
+
       const div = document.createElement("div");
       div.classList.add("message");
       div.dataset.id = msgId;
 
       div.innerHTML = `
         <div style="display:flex;align-items:center;gap:6px;">
-          ${msg.photo ? `<img src="${msg.photo}" class="user-photo">` : ""}
-          <b class="user-name" style="color:${userColor};cursor:pointer;">${msg.user}:</b>
+          <img 
+            src="${avatar}" 
+            class="user-photo"
+            onerror="this.src='img/avatar.png'"
+          >
+          <b class="user-name" style="color:${userColor};cursor:pointer;">
+            ${msg.user}:
+          </b>
         </div>
 
         <div class="reply-container"></div>
@@ -193,7 +207,7 @@ const q = query(
         <div class="message-time">${timestamp}</div>
       `;
 
-      // CLICK REPLY (igual ao seu)
+      // ================== CLICK REPLY ==================
       div.addEventListener("click", (event) => {
         if (
           event.target.classList.contains("toggle-expand") ||
@@ -208,7 +222,7 @@ const q = query(
 
       fragment.appendChild(div);
 
-      // 🔥 CARREGA REPLY SEM BLOQUEAR
+      // ================== REPLY ==================
       if (msg.replyTo) {
         renderReply(msg).then(replyHTML => {
           const box = div.querySelector(".reply-container");
@@ -216,10 +230,14 @@ const q = query(
         });
       }
     });
+
     chat.appendChild(fragment);
     chat.scrollTop = chat.scrollHeight;
   });
 }
+
+
+
 // ================= ENVIO — AGORA COM REPLY FUNCIONANDO =========================================================
 export async function sendMessage(input) {
   const text = input.value.trim();
