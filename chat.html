@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>O Chat</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <!-- Estilos personalizados -->
+  <link href="styles.css" rel="stylesheet">
+  <link rel="shortcut icon" href="imagem2.jpeg" />
+
+  <style>
+
+/* ======== PALETA DE CORES ======== */
+#colorPanel {
+  position: fixed!important;right: 15px;bottom: 75px !important;border-radius: 12px;box-shadow: 0 4px 15px rgba(0, 0, 0, 0.712);padding: 12px;display: none; z-index: 100;
+  background: #fff;transition: opacity 0.2s ease, transform 0.15s ease;opacity: 0;transform: translateY(10px);width: 290px;max-height: 200px;overflow-y: auto;}
+#colorPanel.show {opacity: 1;transform: translateY(0);}
+.color-grid {display: grid;grid-template-columns: repeat(5, 1fr);gap: 6px;}
+.color-box {width: 32px;height: 32px;border-radius: 6px;cursor: pointer;border: 2px solid transparent;transition: transform 0.15s ease, border 0.2s;}
+.color-box:hover {transform: scale(1.1);border-color: #d3c5fa5e;}
+.color-box {position: relative;display: flex;align-items: center;justify-content: center;}
+.color-check {color: white;font-size: 20px;font-weight: bold;display: none;}
+.color-box.selected .color-check {display: block;}
+
+/* Zoom quando a cor é selecionada */
+.color-box.selected {
+  transform: scale(2.2);
+  transition: transform 0.15s ease;
+  border: 2px solid #ffffffcc; /* opcional: borda branca suave */
+  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  z-index: 10;
+}
+/* Manter animação suave mesmo quando hover existe */
+.color-box {transition: transform 0.15s ease;}
+.color-box:hover {transform: perspective(200px) rotateX(6deg);}
+
+  </style>
+</head>
+
+<body>
+<!-- 🔹 NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top">
+  <div class="container">
+    <img src="img/imagem3.png" style="width:62px; height:52px" alt="logo">
+    <a class="navbar-brand fw-bold" href="#">ChatDF</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav align-items-center">
+        <li class="nav-item"><a class="nav-link" href="./index.html">Início</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Teste 1</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Teste 2</a></li>
+    
+        <li class="nav-item d-flex align-items-center ms-3" id="userArea">
+          <button id="loginBtn" class="btn btn-outline-light btn-sm d-flex align-items-center gap-2"></button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Título da Sala -->
+<div id="salaTitulo" style="margin-top: 80px; text-align: center; font-weight: bold;">Carregando sala...</div>
+<!--  Mensagens -->
+<div id="chat-container" class="container-fluid"></div>
+<!--  Campo de envio -->
+<div id="message-input-area">
+  <div class="dropdown dropup">
+    <button id="attachBtn" title="Anexar arquivo" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-paperclip"></i>
+    </button>
+
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="#">📷 Imagem (em breve)</a></li>
+      <li class="dropdown-item" id="stickerBtn"><img src="img/sorrir.png" height="27px" width=" 27px"> Figurinhas</li>
+      <li class="dropdown-item" id="colorBtn"><img src="img/cor3.png" height="27px" width=" 27px"> Cor do texto</li>
+    </ul>
+  </div>
+  <button id="emojiBtn" title="Adicionar emoji"><i class="bi bi-emoji-smile"></i></button>
+<div id="replyPreview" class="reply-preview" style="display:none;"></div>
+<textarea id="messageInput" class="message-input" placeholder="Digite sua mensagem..." rows="1"></textarea>
+  <button id="sendBtn" title="Enviar"><i class="bi bi-send-fill"></i></button>
+</div>
+<!-- 🔹 Painel de Figurinhas -->
+<div id="stickerPanel"><div id="stickerList"></div></div>
+<!-- 🎨 Painel de Cores -->
+<div id="colorPanel">
+  <div class="fw-bold mb-2 text-center">Escolha uma cor</div>
+  <div class="color-grid" id="dynamicColors"></div>
+</div>
+
+<!-- 🔹 Toast -->
+<div id="toast"></div>
+
+<!-- 🔹 Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+<script type="module">
+/* ======================================================
+   🚀 NOVA PALETA DE CORES (DINÂMICA / SALVA NO FIREBASE)
+====================================================== */
+
+import { auth, db } from "./js/firebase-config.js";
+import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { showToast } from "./js/ui.js";
+
+let selectedColor = "#000000";   // ⭐ SEMPRE COMEÇA COM PRETO
+let colorLocked = false;
+
+const messageInput = document.getElementById("messageInput");
+messageInput.style.color = "#000000";   // ⭐ GARANTE QUE SEMPRE INICIA PRETO
+
+const colorBtn = document.getElementById("colorBtn");
+const colorPanel = document.getElementById("colorPanel");
+const grid = document.getElementById("dynamicColors");
+
+// Paleta de cores fixa
+const palette = ["#003366","#0066cc","#336699","#142952","#0055ff","#000066","#006666","#00cccc","#669999","#00ccff"," #666699","#339966","#194d33",
+"#751aff","#a64dff","#4d0099","#339933","#9966ff","#006600","#003300","#009933","#990099","#ff1aff","#cc0099","#669900"," #b3b300","#ffcc00","#806600",
+"#ff9933","#b35900","#ff6600","#b30000","#660033","#ff0080","#ac7339","#604020","#cc9900"," #661400","#cc0000","#990033","#663300","#666666", 
+ 
+];
+
+// Gerar paleta no painel
+palette.forEach(color => {
+
+  const box = document.createElement("div");
+  box.classList.add("color-box");
+  box.style.backgroundColor = color;
+  box.dataset.color = color;
+
+  // ⭐ ÍCONE ✔ DA COR SELECIONADA
+  const check = document.createElement("span");
+  check.classList.add("color-check");
+  check.textContent = "✔";
+
+  box.appendChild(check);
+  grid.appendChild(box);
+});
+
+/* ============================================
+   🔥 1. Carregar cor do Firebase no LOGIN
+============================================ */
+auth.onAuthStateChanged(async (user) => {
+  if (!user) return;
+
+  // ⭐ SEMPRE VOLTA PARA PRETO ANTES DE CARREGAR COR DO FIREBASE
+  selectedColor = "#000000";
+  messageInput.style.color = "#000000";
+
+  const ref = doc(db, "users", user.uid);
+  const snap = await getDoc(ref);
+
+if (snap.exists() && snap.data().chatColor) {
+
+    selectedColor = snap.data().chatColor;
+    messageInput.style.color = selectedColor;
+
+    // 🔥 Só bloqueia se a cor NÃO for preto
+    if (selectedColor !== "#000000") {
+        colorLocked = true;
+    } else {
+        colorLocked = false;
+    }
+
+    // Atualizar ícone ✔ visualmente
+    document.querySelectorAll(".color-box").forEach(b => {
+        if (b.dataset.color === selectedColor) {
+            b.classList.add("selected");
+        } else {
+            b.classList.remove("selected");
+        }
+    });
+}
+  else {
+    // Nenhuma cor salva → usuário pode escolher
+    colorLocked = false;
+  }
+});
+
+/* ============================================
+   🔥 RESET GERAL DA PALETA AO SAIR DA CONTA
+============================================ */
+window.addEventListener("resetColorPicker", () => {
+
+  // RESET das variáveis
+  selectedColor = "#000000";
+  colorLocked = false;
+
+  // RESET da cor no input
+  messageInput.style.color = "#000000";
+
+  // Remove seleção visual
+  document.querySelectorAll(".color-box").forEach(b => {
+    b.classList.remove("selected");
+    b.style.opacity = "1";
+  });
+
+  console.log("🎨 Paleta resetada após logout");
+});
+
+/* ============================================
+   🔥 2. Escolher cor (SE NÃO estiver travado)
+============================================ */
+document.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("color-box")) {
+
+    // ❌ Já escolheu e está logado → não permite
+    if (colorLocked) {
+      showToast("Você já escolheu uma cor!.");
+      return;
+    }
+
+    const color = e.target.dataset.color;
+    selectedColor = color;
+    messageInput.style.color = color;
+
+    // ⭐ MARCAR ✔ VISUAL NA COR ESCOLHIDA
+    document.querySelectorAll(".color-box").forEach(b => b.classList.remove("selected"));
+    e.target.classList.add("selected");
+
+    const user = auth.currentUser;
+    if (user) {
+      await setDoc(doc(db, "users", user.uid), {
+        chatColor: color
+      }, { merge: true });
+    }
+
+    colorLocked = true;
+
+    colorPanel.classList.remove("show");
+    setTimeout(() => (colorPanel.style.display = "none"), 150);
+  }
+
+  // Fechar ao clicar fora
+  if (!colorPanel.contains(e.target) && !colorBtn.contains(e.target)) {
+    colorPanel.classList.remove("show");
+    setTimeout(() => (colorPanel.style.display = "none"), 150);
+  }
+});
+
+// Abrir painel
+colorBtn.addEventListener("click", () => {
+  const open = colorPanel.classList.contains("show");
+  if (open) {
+    colorPanel.classList.remove("show");
+    setTimeout(() => (colorPanel.style.display = "none"), 150);
+  } else {
+    colorPanel.style.display = "block";
+    setTimeout(() => colorPanel.classList.add("show"), 10);
+  }
+});
+
+// Função usada pelo messages.js
+window.getSelectedColor = () => selectedColor;
+
+</script>
+
+
+
+
+
+
+
+<script type="module" src="./js/main.js"></script>
+<script type="module" src="./js/stickers.js"></script>
+</body>
+</html>

@@ -1,0 +1,730 @@
+body {
+  background-color: #f7f8fa;font-family: 'Segoe UI', sans-serif;scroll-behavior: smooth;margin: 0;padding: 0;overflow-x: hidden;
+}
+/* ================== CHAT =================== */
+.chat-box {height: 65vh;/*ocupa 65% da altura da tela*/
+  overflow-y: auto;background: #e6d9d9;border-radius: 4px;padding: 10px;}
+/* ================== HERO =================== */
+.hero {background: linear-gradient(to right, #007bff, #0056b3);height: 70vh;position: relative;overflow: hidden;
+  z-index: 1;display: flex;align-items: center;justify-content: center;text-align: center;}
+#background-animation {
+position: absolute;top: 0;left: 0;width: 100%;height: 100%;z-index: 0;}
+#background-animation {display: block;width: 100%;height: 100%;overflow: hidden; /* opcional */}
+.hero .container {position: relative;z-index: 1;color: #fff;}
+.hero h1 {font-size: 2.5rem;font-weight: bold;}
+.hero p {font-size: 1.25rem;}
+/* ================== NAVBAR =================== */
+.navbar-brand {
+  font-size: 1.4rem;}
+  /*edita a cor dos nomes do menu*/
+.nav-link {color: #fff !important; margin-right: 20px;}
+.nav-link:hover {text-decoration: underline;}
+
+/* ================== SALAS =================== */
+.salas-container {
+  margin-top: 40px;
+}
+.sala-btn {
+  background: #226fff;color: #fff;
+  font-weight: bold;padding: 20px;border-radius: 12px;margin: 8px;transition: 0.25s ease-in-out;text-decoration: none;
+  display: block;text-align: center;box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.sala-btn:hover {
+  background: #6146f8;color: #fff;
+  transform: scale(1.05); box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+}
+/* ================== MENÇÃO =================== */
+.mention:hover {
+  text-decoration: underline;background-color: rgba(255, 64, 129, 0.1);
+}
+/* ================== RESPONSIVIDADE =================== */
+
+/* 1. Ajuste geral para dispositivos pequenos */
+@media (max-width: 768px) {.hero h1 {font-size: 1.6rem;}
+.hero p {font-size: 1rem;}
+.sala-btn {padding: 14px;font-size: 0.95rem;}
+  /*.chat-box {
+    height:100vh;
+  }*/
+}
+
+/* 2. Layout com 2 colunas de salas no celular */
+@media (max-width: 576px) {
+  .sala-col {flex: 0 0 48%;max-width: 48%;}
+  .navbar .nav-link {margin-right: 0;font-size: 0.9rem;}
+  .hero h1 {font-size: 1.4rem;}
+  .hero p {font-size: 0.9rem;}
+  .sala-btn {font-size: 0.85rem;padding: 12px;}}
+/* 3. Ajuste do rodapé em telas menores */
+@media (max-width: 400px) {
+footer p {font-size: 0.8rem;}}
+/* 4. Footer fixo e leve */
+footer {font-size: 0.9rem;text-align: center;}
+
+
+/*================DAQUI PRA BAIXO EDITA AS PARTE DO CHAT  ========================*/
+
+    .navbar {position: sticky; top: 0; z-index: 10;}
+
+    #salaTitulo {
+      text-align: center;background: #186dec;color: white;
+      padding: 12px;font-weight: 400;font-size: 1.1rem;
+      border-bottom: 3px solid #0b5ed7;display: none;
+    }
+/*edita os nomes da salas que aparece no chat IMPORTANTE*/
+    #chat-container {
+      flex: 1;overflow-y: auto;padding: 3px 0px 5px 9px;
+      background: #ffffff;/*Edita a cor de fundo*/
+       height:100vh; /* Ajuste fino */
+  overflow-y: auto;scroll-behavior: smooth;
+    }
+
+    #message-input-area {
+      display: flex;align-items: center;
+      gap: 8px;background: #ffffff;border-top: 1px solid #ddd;
+      padding: 10px;width: 100%;box-sizing: border-box;
+      position: sticky;bottom: 0;left: 0;
+    }
+    #message-input-area button {
+      background: none;border: none;color: #555;font-size: 1.3rem;
+      display: flex;align-items: center;justify-content: center;padding: 6px;
+      cursor: pointer;transition: 0.2s;
+    }
+    #message-input-area button:hover {color: #0d6efd;}
+    #message-input-area input {flex: 1;border: 1px solid #ccc;border-radius: 50px;padding: 10px 15px;
+      font-size: 1rem;outline: none;min-width: 0;
+    }
+    #sendBtn {
+      background: #0d6efd;color: #fff;border-radius: 50%;width: 42px;
+      height: 42px;display: flex;align-items: center;justify-content: center;
+      border: none;flex-shrink: 0;
+    }
+    #sendBtn:hover {background: #0b5ed7;}
+    @media (max-width: 600px) {
+      #message-input-area {gap: 5px; padding: 8px;}
+      #message-input-area input {font-size: 0.9rem; padding: 8px 12px;}
+      #sendBtn {width: 38px; height: 38px;}
+    }
+
+
+
+/*========================  EDITA O CAMPO DE RESPONDER OS USUARIOS MENCIONADOS ==================================*/
+
+.reply-preview {
+  position: absolute;
+  bottom: 65px; /* modo DeskTop Aumentado para não encostar */
+  display: inline-flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: auto;
+  max-width: 80vw;  /*largura máxima confortável */
+  min-width: 200px;
+  background: #e7e7e7;
+  border-left: 4px solid #353434;
+   border-right: 4px solid #353434;
+  border-radius: 12px;
+  padding: 12px 14px;
+  gap: 12px;
+  z-index: 50;
+  animation: slideUp 0.2s ease;
+  
+}
+
+/* IMAGEM / STICKER */
+.reply-preview img {
+  width: 55px;
+  height: 55px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+/* largura do Bloco de menção  */
+.reply-preview .reply-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-width: 80vw;
+}
+
+/* Nome */
+.reply-preview .reply-author {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+/* edita a quantidade de linha na menção Texto em 4 linhas naturais  */
+.reply-preview .reply-text {
+  font-size: 0.88em;
+  color: #444;
+  white-space: normal;
+  line-height: 1.25em;
+  max-height: calc(1.25em * 3);
+  overflow: hidden;
+}
+
+/* BOTÃO FECHAR */
+.reply-preview .close-reply {
+  margin-left: auto;
+  font-size: 20px;
+  cursor: pointer;
+  color: #444;
+}
+
+/* MOBILE */
+@media (max-width: 500px) {
+  .reply-preview {
+    bottom: 62px;/* modo mobile  Aumentado para não encostar */
+    max-width: 90vw;
+  }
+}
+
+/* animação */
+@keyframes slideUp {
+  from { transform: translateY(12px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+/* Wrapper geral para deixar o preview alinhado SEM invadir o input */
+.input-wrapper {
+  position: relative;
+}
+
+/* Preview agora fica preso ao input-wrapper */
+.reply-preview {
+  position: absolute;
+  left: 10px;
+  bottom: calc(92% + 10px); /*sempre 10px acima do input */
+}
+
+.quoted-reply-box {background-color: #b1adad3d;padding: 6px 10px;border-radius: 6px;margin-bottom: 6px;
+  font-size: 0.92rem;
+  display: inline-block;/*Faz o fundo acompanhar o conteúdo */
+  max-width: 90%;  /* Evita que quebre no mobile */
+}
+.quoted-text {
+  color: #000;
+  white-space: pre-wrap;
+  display: block;
+}
+
+/*.quoted-header {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #ff0000;
+}
+*/
+
+body {font-family: 'Segoe UI', sans-serif;background: linear-gradient(to right, #e3f2fd, #fce4ec);
+}
+.login-box {width: 100%;max-width: 380px;
+}
+#loginBtn img {margin-right: 8px;
+}
+
+
+
+/*===============  EDITA campo de enviar mensagens no chat textarea cresce de acordo com o texto ======================= */
+.message-input {width: 100%;border: 1px solid #5856568e;border-radius: 18px;padding: 10px 14px;resize: none;
+  overflow-y: auto;max-height: 95px;line-height: 20px;font-size: 15px;white-space: pre-wrap;word-break: break-word;
+  transition: border-color 0.2s ease;
+}
+.message-input:focus {
+  border-color: #3d3c3ca1;/* cor quando clicado */
+  outline: none !important;
+}
+
+#messageInput {
+  transition: height 0.35s ease;
+}
+
+/*=========ESSA PARTE EDITA O LOGIN GOOGLE -----------*/
+#loginBtn {
+  background-color: #0050a0e1 !important;color: #fff !important;border: none;
+  padding: 6px 12px;border-radius: 46px;font-weight: bold;font-size: 15px;}
+#loginBtn:hover {background-color: #012346 !important;color: #fff !important;}
+/*EDITA o background DE FUNDO DAS mensagens*/
+.message {background: #ffffff;border-radius: 18px;max-width:98%;
+  margin-bottom: 12px;word-wrap: break-word; margin-top: 1px;margin-bottom: 1px;}
+.message span {font-size: 1em;line-height: 1.5em;/*EDITAR a imagem do perfil*/}
+/*Cor de fundo do Botao Sair*/
+.btn-logout {
+  background: #6247f84b !important; color: white !important;border-radius: 6px;border: none;padding: 5px 14px;font-weight: 600;}
+ 
+
+/*=================== Edita as imagem e a Hora  =================================*/
+
+/* Ajusta imagem de perfil dentro da mensagem */
+.user-photo {width: 36px;height: 36px;border-radius: 50%;object-fit: cover;margin-right: 6px;}
+/* Hora da mensagem */
+.message-time {font-size: 0.68em;color: #5756568f;margin-top: 1px;text-align: right;}
+/* Estilo para texto truncado */
+.msg-text {display: block;white-space: pre-wrap;max-height: 4.5em;overflow: hidden;color: #e00606;}
+/* Botão "Mostrar mais" */
+.toggle-expand {background: transparent;color: #333;border: none;font-size: 0.85em;cursor: pointer;padding: 2px 4px;text-decoration: underline;}
+.toggle-expand {background: transparent;border: none;color: #00000079;padding: 0;font-size: 14px;cursor: pointer;}
+.toggle-expand:hover {text-decoration: underline;}
+
+
+
+/*======================================== FIGURINHAS ================================================*/
+
+/* Painel de Figurinhas */
+#stickerPanel {
+display: none;position: fixed;
+bottom: 70px; /* ajusta para ficar logo acima do campo */
+right: 90px; /* ajusta para ficar colado ao botão 📎 */
+width: 270px;background: #fff;border: 1px solid #ccc;border-radius: 12px;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+padding: 10px;z-index: 2000;transition: all 0.2s ease-in-out;
+}
+#stickerList {display: flex;flex-wrap: wrap;gap: 8px;justify-content: center;max-height: 220px;overflow-y: auto;
+}
+#stickerList img {width: 60px;height: 60px;border-radius: 8px;cursor: pointer;transition: transform 0.2s;
+}
+#stickerList img:hover {transform: scale(1.15);
+}
+
+/* Figurinhas dentro do chat */
+.sticker-img {width: 85px;height: auto; border-radius: 12px;display: block;margin-top: 4px;margin-bottom: 4px;
+  transition: transform 0.2s;
+}
+.sticker-img:hover {transform: scale(1.08);
+}
+
+/* Miniatura de figurinha em replies */
+.sticker-reply-thumb {
+  width: 60px;
+  height: auto;
+  border-radius: 8px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* ============================= */
+/* ANIMAÇÕES PARA FIGURINHAS E EMOJIS */
+/* ============================= */
+
+/* Animação de aparecer (fade + slide) */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animação de desaparecer */
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* Aplica a animação quando o painel abrir */
+#stickerPanel.show {
+  display: block;
+  animation: fadeInUp 0.25s ease forwards;
+}
+
+/* Aplica a animação quando for fechar */
+#stickerPanel.hide {
+  animation: fadeOutDown 0.25s ease forwards;
+}
+
+/* Ajuste visual para o emoji-picker (padrão da lib) */
+emoji-picker {
+  animation: fadeInUp 0.25s ease forwards;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 14px rgba(2, 1, 1, 0.2) !important;
+  overflow: hidden !important;
+  border: 1px solid #ddd !important;
+  z-index: 2000 !important;
+  background-color: #0080ff;
+}
+
+/* ========================  MELHOR AJUSTE MOBILE PARA FIGURINHAS E EMOJIS  ==========================*/
+
+@media (max-width: 768px) {
+  /* Painel de figurinhas centralizado no mobile */
+@media (max-width: 768px) {
+  #stickerPanel {position: fixed !important;left: 50% !important;right: auto !important;transform: translateX(-50%) !important;
+    bottom: 80px !important;width: 90% !important;max-width: 360px !important;border-radius: 14px;box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    transition: all 0.25s ease-in-out;
+  }
+}
+  /* Figurinhas maiores para toque */
+  #stickerList img {width: 72px !important;height: 72px !important;border-radius: 10px;
+  }
+  /* Ajusta espaço entre figurinhas */
+  #stickerList {
+    gap: 10px !important;
+  }
+
+  /* Ajusta o emoji-picker para o mobile */
+  emoji-picker {
+    position: fixed !important;
+    bottom: 80px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 95% !important;
+    max-width: 380px !important;
+    border-radius: 16px !important;
+    background: #fff !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  /* Área de input um pouco mais alta para o teclado */
+  #message-input-area {
+    padding: 10px 8px !important;
+    gap: 6px !important;
+  }
+
+  /* Botões de emoji e figurinha maiores */
+  #emojiBtn, #attachBtn, #sendBtn {
+    font-size: 1.6rem !important;
+  }
+
+  /* Evita que o painel sobreponha completamente o teclado */
+  body.keyboard-open #stickerPanel,
+  body.keyboard-open emoji-picker {
+    bottom: 220px !important;
+  }
+}
+
+
+/* ============================= */
+/* PRÉVIA DE VÍDEOS YOUTUBE */
+/* ============================= */
+
+/* Botão padrão dentro das mensagens normais */
+.youtube-preview {position: relative;display: inline-block;cursor: pointer;}
+.youtube-preview .youtube-thumb { width: 40%;border-radius: 12px;display: block;}
+.youtube-preview .youtube-play {position: absolute;top: 50%;left: 19%;transform: translate(-50%, -50%);background: rgba(189, 5, 5, 0.849);
+  color: white;font-size: 36px;width: 44px;height: 30px;line-height: 27px;border-radius: 34%;text-align: center;pointer-events: none;}
+.youtube-reply-thumb {position: relative;display: inline-block;cursor: pointer;overflow: hidden; /* 🔹 impede o símbolo de sair pra fora */}
+.youtube-reply-thumb .youtube-thumb {display: block;width: 120px;border-radius: 6px;}
+
+/*EDITA AS CORES DOS AVISO EXIBIDO NO CHAT*/
+.custom-toast {position: fixed;bottom: 70px;left: 50%;transform: translateX(-50%) scale(0.9);
+  padding: 12px 20px;background: #4f5bfc94;color: white;border-radius: 10px;box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  display: flex;align-items: center;gap: 8px;opacity: 0;transition: all .5s ease;z-index: 9999;font-size: 17px;}
+.custom-toast.show {opacity: 1;transform: translateX(-50%) scale(1);}
+.custom-toast.success { background: #34c759; }
+.custom-toast.warning { background: #ffcc00; }
+
+
+
+/* ======================================================================
+              MODAL LOGIN — BASE
+======================================================================= */
+/* Reset controlado (bloqueia Bootstrap) */
+.modal-reset {all: unset;display: flex;width: 100%;max-width: 1050px;height: 620px;justify-content: center;align-items: center;
+  box-sizing: border-box;}
+.modal-reset * {box-sizing: border-box;}
+/* Backdrop */
+.login-modal {position: fixed;inset: 0;background: #00000080;display: flex;justify-content: center;align-items: center;
+  z-index: 9999;}
+.hidden { display: none !important; }
+/* Container principal */
+.modal-login-box {
+  width: 100%;max-width: 980px;height: 520px;background: #fff;
+  border-radius: 18px;display: flex;overflow: hidden;position: relative;}
+/* Botões topo */
+.close-login,
+.back-login {position: absolute;top: 22px;background: none;border: none;cursor: pointer;}
+.close-login {right: 22px;font-size: 32px;}
+.back-login {right: 72px;font-size: 19px;color: #333;}
+.back-login:hover { color: #ff6b6b; }
+/* ===============================
+   LAYOUT
+=============================== */
+/* Lado esquerdo */
+.login-left {width: 50%;height: 100%;display: flex;}
+.login-left img {width: 100%;height: 100%;object-fit: cover;}
+/* Lado direito */
+.login-right {width: 50%;padding: 0 60px;display: flex;flex-direction: column;justify-content: center;
+  gap: 14px;font-family: Arial, sans-serif;}
+.login-right h1 {font-size: 38px;margin-bottom: 6px;}
+.login-right p {margin: 0;font-size: 18px;color: #444;}
+/* ===============================
+   BOTÕES
+=============================== */
+.social {
+  width: 95%;padding: 10px;border: 1px solid #ddd;border-radius: 12px;display: flex;
+  align-items: center;justify-content: center;gap: 12px;font-size: 17px;cursor: pointer;}
+.social img {width: 24px;height: 24px;}
+.social.google {background: #f5f5f5;font-weight: 500;}
+.login-right button[style*="background:#ff6b6b"] {border: none;padding: 14px;font-size: 14px;font-weight: 600;
+   border-radius: 10px;}
+/* ==== BOTÕES MAIS COMPACTOS ===== */
+.social {padding: 9px;font-size: 16px;}
+.login-right button[style*="background:#ff6b6b"] {padding: 11px;font-size: 15px;border-radius: 9px;}
+.social1{  width: 59%;justify-content: center;}
+/* ===============================
+   INPUTS (UNDERLINE)
+=============================== */
+.login-right input {width: 100%;padding: 10px 2px;border: none;border-bottom: 1.5px solid #dcdcdc;background: transparent;
+  font-size: 15px;outline: none;}
+.login-right input::placeholder {color: #777;font-size: 14px;}
+.login-right input:focus {border-bottom-color: #ff6b6b;}
+.login-right input + input {
+  margin-top: 14px;}
+#registerView input:last-of-type {margin-bottom: 24px;}
+/* Autofill fix */
+.login-right input:-webkit-autofill {box-shadow: 0 0 0 1000px #fff inset !important;-webkit-text-fill-color: #000 !important;}
+/* ===============================
+   INPUT COM ÍCONE
+=============================== */
+/* ===== AJUSTE FINO ÍCONES DOS INPUTS ===== */
+.input-icon {position: relative;}
+.input-icon .icon {position: absolute;right: 6px;top: 50%;transform: translateY(-50%);width: 20px;
+  height: 20px;opacity: 0.55;pointer-events: none;}
+/* Ícones */
+.icon.user {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23999'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M15.75 7.5a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 0115 0'/%3E%3C/svg%3E");
+}
+.icon.email {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23999'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M21.75 6.75v10.5A2.25 2.25 0 0119.5 19.5h-15A2.25 2.25 0 012.25 17.25V6.75m19.5 0L12 13.5 2.25 6.75'/%3E%3C/svg%3E");
+}
+.icon.lock {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23999'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75M6 10.5h12v9H6v-9z'/%3E%3C/svg%3E");
+}
+/* ===============================
+   AVATAR PICKER
+=============================== */
+.avatar-picker {margin: 18px 0;padding: 12px 14px;border: 1.5px dashed #ccc;border-radius: 10px;display: flex;
+  justify-content: space-between;align-items: center;cursor: pointer;transition: .2s;}
+.avatar-picker:hover {border-color: #ff6b6b;background: #fff7f7;}
+.avatar-picker span {font-size: 14px;}
+.avatar-preview {width: 42px;height: 42px;display: flex;align-items: center;justify-content: center;}
+.avatar-preview img {width: 58px;height: 58px;opacity: .7;}
+/* ===============================
+   TERMOS
+=============================== */
+.terms {margin-top: 12px;font-size: 12px;color: #555;text-align: center;}
+.terms a {color: #1a73e8;}
+
+/* ===============================
+   MOBILE
+=============================== */
+
+@media (max-width: 768px) {.modal-login-box {flex-direction: column;width: 85%;
+height: auto;max-height: 95vh;}
+.login-left {width: 100%;height: 250px;}
+.login-right {width: 100%;padding: 30px 25px;align-items: center;text-align: center;}
+.login-right h1 {font-size: 28px;}
+.close-login {top: 12px;right: 15px;}
+}
+
+
+@media (max-width: 768px) {
+  .modal-reset {
+    height: 100vh;
+    align-items: flex-start;
+    padding: 12px 0;
+  }
+
+  .modal-login-box {
+    width: 94%;
+    max-height: 94vh;
+    height: auto;
+    flex-direction: column;
+    border-radius: 16px;
+  }
+}
+@media (max-width: 768px) {
+  .login-left {
+    height: 180px; /* 👈 reduz bem */
+    min-height: 160px;
+  }
+
+  .login-left img {
+    object-fit: cover;
+  }
+}
+@media (max-width: 768px) {
+  .login-right {
+    width: 100%;
+    max-height: calc(94vh - 180px);
+    overflow-y: auto;
+    padding: 22px 22px 26px;
+  }
+}
+@media (max-width: 768px) {
+  .login-right h1 {
+    font-size: 26px;
+  }
+
+  .login-right p {
+    font-size: 15px;
+  }
+
+  .login-right input {
+    font-size: 14px;
+  }
+
+  .avatar-picker {
+    margin: 14px 0;
+  }
+}
+
+
+
+/* ===============================
+   edita a parte dos avatar 
+=============================== */
+.avatar-grid {display: grid;grid-template-columns: repeat(3, 1fr);gap: 12px;margin-top: 10px;}
+.avatar-grid img {width: 55%;border-radius: 10px;cursor: pointer;border: 2px solid transparent;transition: 0.2s;}
+.avatar-grid img:hover {border-color: #ff6b6b;transform: scale(1.05);}
+/* ===============================
+   barra de rolagem do modal avatar  — SCROLL
+=============================== */
+/* Limita altura do modal */
+#avatarModal .modal-login-box {
+  max-height: 80vh;          /* nunca passa da tela */
+display: flex;flex-direction:column;}
+/* Área interna do conteúdo */
+#avatarModal .login-right {
+  max-height: calc(85vh - 80px); /* desconta título + padding */
+  overflow-y: auto;padding-right: 8px; /* espaço para scrollbar */
+}
+#avatarModal h2 {
+  margin-bottom: 18px;
+}
+
+
+/* Scrollbar elegante (Chrome / Edge) */
+#avatarModal .login-right::-webkit-scrollbar {width: 6px;}
+#avatarModal .login-right::-webkit-scrollbar-thumb {background: #ccc;border-radius: 10px;}
+#avatarModal .login-right::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+/* ===== CATEGORIAS DE AVATAR ===== */
+
+.avatar-cat {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.avatar-cat:hover {
+  background: #f39b9b;
+}
+
+.avatar-cat.active {
+  background: #ff6b6b;
+  color: #fff;
+  border-color: #ff6b6b;
+}
+
+/* ===== CONTEÚDO MODAL AVATAR ===== */
+.avatar-content {
+  width: 100%;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* título */
+.avatar-content h2 {
+  margin-bottom: 14px;
+  font-size: 22px;
+}
+
+/* categorias */
+.avatar-categories {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* scroll apenas na grid das categorias */
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  max-height: 55vh;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+
+/* ===============================
+   CATEGORIAS RESPONSIVAS
+=============================== */
+
+@media (max-width: 600px) {
+  .avatar-categories {
+    justify-content: flex-start;   /* 👈 não centraliza */
+    overflow-x: auto;              /* 👈 permite rolagem */
+    flex-wrap: nowrap;
+    padding: 6px 4px 10px;
+    gap: 8px;
+  }
+
+  .avatar-cat {
+    flex-shrink: 0;                /* 👈 impede encolher */
+    white-space: nowrap;
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+
+  /* scrollbar discreta (opcional) */
+  .avatar-categories::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .avatar-categories::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 4px;
+  }
+}
+
+/*EDITA as mensagem de informação no input*/
+.input-hint {
+  display: block;
+  margin-top: -13px;   /* cola na linha do input */
+  margin-bottom: 8px;
+  padding-left: 2px;   /* alinha com o texto digitado */
+  font-size: 11px;
+  color: #1a191971;
+  line-height: 1.1;
+}
+.input-hint {
+  padding-left: 28px; /* igual ao padding do input */
+}
+
+
+
+
+
+.register-message {
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: none;
+}
+
+.register-message.success {
+  background: #e6f7ee;
+  color: #1e7f4f;
+}
+
+.register-message.error {
+  background: #fdecea;
+  color: #b3261e;
+}

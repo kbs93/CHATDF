@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O Chat - Conecte e Converse</title>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="shortcut icon" href="img/imagem2.jpeg" />
+  <link href="styles.css" rel="stylesheet">
+
+  <!-- Caminhos RELATIVOS corretos -->
+  <script type="module" src="./js/animacao.js"></script>
+  <script type="module" src="./js/salas.js"></script>
+  <script type="module" src="./js/modal.js"></script>
+</head>
+
+<body>
+  <!-- 🔹 NAVBAR -->
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top">
+    <div class="container">
+      <img src="img/imagem3.png" style="width:62px; height:52px">
+      <a class="navbar-brand fw-bold" href="#">ChatDF</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center">
+          <!-- ÁREA DO USUÁRIO → IGUAL AO CHAT -->
+          <li class="nav-item"><a class="nav-link" href="#sobre">Quem Somos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contato">Contato</a></li>
+          <li class="nav-item d-flex align-items-center ms-3" id="userArea">
+            <!-- será preenchido pelo auth.js -->
+            <a class="nav-link" id="btnLogin" id="imgusu" href="#"></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div id="toast" class="toast-container"></div>
+  <!-- 🔹 HERO -->
+  <header class="hero d-flex align-items-center text-center text-white">
+    <canvas id="background-animation"></canvas>
+    <div class="container">
+      <h1 class="h2 fw-bold">Bem-vindo ao O Chat </h1>
+      <p class="lead">Entre, converse e faça novas amizades em tempo real!</p>
+      <a href="#salas" class="btn btn-light btn-lg mt-3">Comece Agora</a>
+    </div>
+  </header>
+  <!-- 🔹 SALAS -->
+  <section id="salas" class="py-5 bg-light">
+    <div class="container text-center">
+      <h2 class="mb-4">Selecione uma Sala & Comece a Conversar!</h2>
+      <div class="row justify-content-center salas-container" id="salas-lista"></div>
+    </div>
+  </section>
+  <!-- 🔹 SOBRE -->
+  <section id="sobre" class="py-5">
+    <div class="container">
+      <h2>Quem Somos</h2>
+      <p>Somos uma plataforma de chat moderna e segura...</p>
+    </div>
+  </section>
+  <!-- 🔹 CONTATO -->
+  <section id="contato" class="bg-light py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">Contato</h2>
+      <form class="col-md-8 mx-auto">
+        <div class="mb-3"><input type="text" class="form-control" placeholder="Seu nome"></div>
+        <div class="mb-3"><input type="email" class="form-control" placeholder="Seu e-mail"></div>
+        <div class="mb-3"><textarea class="form-control" rows="4" placeholder="Escreva sua mensagem..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Enviar</button>
+      </form>
+    </div>
+  </section>
+  <!-- ===========================================================================
+                              MODAL LOGIN
+================================================================================ -->
+<div id="loginModal" class="login-modal hidden">
+  <div id="registerMessage" class="register-message"></div>
+
+  <div class="modal-reset">
+    <div class="modal-login-box">
+      <button type="button" class="back-login hidden" id="backToLoginTop" title="Voltar">
+        voltar
+      </button>
+
+      <button type="button" class="close-login">×</button>
+
+      <div class="login-left">
+        <img src="img/astronauta.jpg" alt="Imagem Login">
+      </div>
+
+      <div class="login-right">
+
+        <!-- ================= LOGIN ================= -->
+        <div id="loginView">
+          <h1 style="text-align: center;">Olá</h1>
+
+          <p style="margin:12px 0;color:#666;font-size:16px;text-align:center;">
+            Seja bem-vindo ao ChatDF
+          </p>
+          </br>
+
+          <button type="button" id="googleModalBtn" class="social google">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg">
+            Entrar com Google
+          </button>
+
+          <p style="margin:12px 0;color:#666;font-size:16px;text-align:center;margin-top:23px;">
+            Ou acesse com o seu e-mail
+          </p>
+
+          <input type="email" id="loginEmail" placeholder="Seu e-mail">
+          <input type="password" id="loginPassword" placeholder="Sua senha">
+
+          <a href="#" id="forgotPassword" style="align-self:flex-end;font-size:13px">
+            Esqueceu sua senha?
+          </a>
+
+          </br></br>
+
+          <button
+            type="button"
+            id="loginEmailBtn"
+            class="social1"
+            style="background:#ff6b6b;color:#fff"
+          >
+            Entrar
+          </button>
+
+          <p style="margin-top:10px;font-size:14px">
+            Não dispõe de conta?
+            <a href="#" id="openRegister" style="color:#ff6b6b;font-weight:600">
+              Registre-se
+            </a>
+          </p>
+
+          <p class="terms">
+            </br>
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            Ao continuar, você concorda com os
+          </p>
+        </div>
+
+        <!-- ================= CADASTRO ================= -->
+        <div id="registerView" class="hidden">
+          <h1>Olá</h1>
+
+          <p style="margin-top:10px;font-weight:600">
+            Cadastra-se usando seu e-mail
+          </p>
+
+          <div class="input-icon">
+            <input
+              type="text"
+              id="registerName"
+              placeholder="Nome de Usuário"
+              maxlength="15">
+            <span class="icon user"></span>
+          </div>
+          <small class="input-hint" id="nameErro"> Nome deve conter 15 caracteres Letra mais número sem espaço</small>
+
+          <div class="input-icon">
+            <input type="email" id="registerEmail" placeholder="E-mail">
+            <span class="icon email"></span>
+            <small class="input-hint">Digite um e-mail valido para a verificação .</small>
+          </div>
+
+          <div class="input-icon">
+            <input type="password" id="registerPassword" placeholder="Senha" maxlength="10">
+            <span class="icon lock"></span>
+          </div>
+          <small class="input-hint">Senha deve ter de 6 a 10 caracteres.</small>
+
+          <div class="avatar-picker">
+            <span>Escolha um avatar</span>
+            <div class="avatar-preview">
+              <img src="img/avatar.png" alt="Avatar">
+            </div>
+          </div>
+
+          <button
+            type="button"
+            id="registerBtn"
+            class="social1"
+            style="background:#ff6b6b;color:#fff"
+          >
+            Criar conta
+          </button>
+
+          <!-- nao apagar esse <p> e ligado ao botao de voltar -->
+          <p style="margin-top:10px;font-size:14px">
+            <a href="#" id="backToLogin" style="color:#ff6b6b;font-weight:600"></a>
+          </p>
+
+          <p class="terms">
+            Ao continuar, você concorda com os
+            <a href="#">Política de Privacidade</a>.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+  
+
+  <!-- ===== MODAL SELEÇÃO DE AVATAR ===== -->
+  <div id="avatarModal" class="login-modal hidden">
+    <div class="modal-reset">
+      <div class="modal-login-box" style="max-width:500px;height:auto">
+        <button class="close-login" id="closeAvatarModal">×</button>
+        <!-- CLASSE ESPECÍFICA DO AVATAR -->
+        <div class="avatar-content">
+          <h2 id="txt">Escolha um avatar</h2>
+          <div class="avatar-categories">
+            <button class="avatar-cat active" data-cat="all">Todos</button>
+            <button class="avatar-cat" data-cat="people">Pessoas</button>
+            <button class="avatar-cat" data-cat="personagem">Personagem</button>
+            <button class="avatar-cat" data-cat="personagem">Times</button>
+            <button class="avatar-cat" data-cat="mascot">Mascotes</button>
+            <button class="avatar-cat" data-cat="icon">Ícones</button>
+          </div>
+          <div class="avatar-grid">
+            <!-- ÍCONES -->
+            <img src="avatar/av1.png" data-category="icon">
+            <img src="avatar/av2.png" data-category="icon">
+            <img src="avatar/av3.png" data-category="icon">
+            <img src="avatar/av4.png" data-category="icon">
+            <img src="avatar/av5.png" data-category="icon">
+            <img src="avatar/av6.png" data-category="icon">
+            <!-- PESSOAS -->
+            <img src="avatar/av7.png" data-category="people">
+            <img src="avatar/av8.png" data-category="people">
+            <img src="avatar/av9.png" data-category="people">
+            <img src="avatar/av10.png" data-category="people">
+            <img src="avatar/av11.png" data-category="people">
+            <img src="avatar/av12.png" data-category="people">
+            <img src="avatar/av13.png" data-category="people">
+            <img src="avatar/av14.png" data-category="people">
+            <img src="avatar/av15.png" data-category="people">
+            <img src="avatar/av16.png" data-category="people">
+            <img src="avatar/av17.png" data-category="people">
+            <img src="avatar/av18.png" data-category="people">
+            <img src="avatar/av19.png" data-category="people">
+            <img src="avatar/av20.png" data-category="people">
+            <img src="avatar/av21.png" data-category="people">
+            <img src="avatar/av22.png" data-category="people">
+            <!-- MASCOTES -->
+            <img src="avatar/av24.png" data-category="mascot">
+            <img src="avatar/av25.png" data-category="mascot">
+            <img src="avatar/av26.png" data-category="mascot">
+            <!-- PERSONAGEM -->
+            <img src="avatar/av23.png" data-category="personagem">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 🔹 RODAPÉ -->
+  <footer class="bg-primary text-white text-center py-3">
+    <p class="mb-0">&copy; 2025 O Chat - Todos os direitos reservados.</p>
+  </footer>
+  <!-- BOOTSTRAP -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- importante FAZ PARTE DO LOGIN NAO PAGAR -->
+  <script type="module">
+    import { initAuth } from "./js/auth.js";
+    import { showToast } from "./js/ui.js";
+    initAuth(showToast);
+  </script>
+
+
+
+</body>
+
+</html>
