@@ -16,16 +16,16 @@ import { showToast, getColorFromName, highlightMentions } from "./ui.js";
 import { showReplyPreview } from "./ui.js";   // ⭐ IMPORTANTE ⭐
 
 // =================== STATE ===========================================================================
-
 window.replyingTo = null;    // ⭐ Agora global, e não some
 let chatRef = null;
 let renderedMessages = new Set();
 
 let floodCount = 0;
 let floodResetTimeout = null;
+let ultimaMensagem = "";
+let repetidas = 0;
 
 //======================= ID ORGANIZADO  =============================================================
-
 function gerarIdISO() {
   const d = new Date();
   const pad = (n) => n.toString().padStart(2, "0");
@@ -82,7 +82,6 @@ function renderYouTube(id) {
   `;
 }
 
-
 async function renderReply(msg) {
   if (!msg.replyTo) return "";
   try {
@@ -122,7 +121,6 @@ async function renderReply(msg) {
 }
 
 // =====================INIT LISTENER DE MENSAGENS =======================================================
-
 export function initMessages(chat, sala) {
   // 🔒 PROTEÇÃO TOTAL (evita erro no GitHub)
   if (!chat) {
@@ -137,20 +135,13 @@ export function initMessages(chat, sala) {
 
   // ================== FILTRO POR DIAS ==================
   const dias = 4;
-  const hoje = new Date();
   const limite = new Date();
-  limite.setDate(hoje.getDate() - dias);
-
-  const ano = limite.getFullYear();
-  const mes = String(limite.getMonth() + 1).padStart(2, "0");
-  const dia = String(limite.getDate()).padStart(2, "0");
-
-  const idMinimo = `${ano}-${mes}-${dia}_`;
+  limite.setDate(limite.getDate() - dias);
 
   const q = query(
     chatRef,
-    where("__name__", ">=", idMinimo),
-    orderBy("__name__")
+    where("createdAt", ">=", limite),
+    orderBy("createdAt")
   );
 
   // ================== SNAPSHOT ==================
@@ -236,11 +227,6 @@ export function initMessages(chat, sala) {
   });
 }
 
-
-
-
-
-
 // ================= ENVIO — AGORA COM REPLY FUNCIONANDO =========================================================
 export async function sendMessage(input) {
   const text = input.value.trim();
@@ -295,21 +281,20 @@ function bloqueiaRG(text) {
 }
 //BLOQUEIA SPAM 
 // bloqueia textos aleatórios como "asdasdasdasd"
-//bloqueia 3 mensagens iguais seguidas
-
-let ultimaMensagem = "";
-let repetidas = 0;
+// bloqueia 3 mensagens iguais seguidas
 
 function bloqueiaSpam(text) {
   if (text === ultimaMensagem) {
     repetidas++;
   } else {
     repetidas = 0;
+    ultimaMensagem = text;
   }
 
-  ultimaMensagem = text;
   // Texto sem sentido repetitivo (ex: asdasdasdasd)
   if (/^[a-zA-Z]{8,}$/.test(text)) return true;
+  // Três mensagens idênticas em sequência (contando a atual)
+  if (repetidas >= 2) return true;
 
   return false;
 }

@@ -97,7 +97,6 @@ document.querySelectorAll(".avatar-cat").forEach(btn => {
 });
 
 // ======================== CADASTRO ========================
-
 document.getElementById("registerBtn")?.addEventListener("click", async () => {
   const name = document.getElementById("registerName").value.trim();
   const email = document.getElementById("registerEmail").value.trim();
@@ -173,8 +172,6 @@ document.getElementById("registerBtn")?.addEventListener("click", async () => {
   }
 });
 
-
-
 // ======================== LOGIN ========================
 document.getElementById("loginEmailBtn")?.addEventListener("click", async e => {
   e.preventDefault();
@@ -186,6 +183,13 @@ document.getElementById("loginEmailBtn")?.addEventListener("click", async e => {
     showToast("Informe email e senha");
     return;
   }
+
+  // valida senha antes de chamar o Firebase
+  if (password.length < 6 || password.length > 10) {
+    showToast("Senha deve ter entre 6 e 10 caracteres.");
+    return;
+  }
+
   try {
     const cred = await signInWithEmailAndPassword(auth, email, password);
 
@@ -200,12 +204,6 @@ document.getElementById("loginEmailBtn")?.addEventListener("click", async e => {
   } catch {
     showToast("Email ou senha incorretos");
   }
-
-// valida senha
-if (password.length < 6 || password.length > 10) {
-  showToast("Senha deve ter entre 6 e 10 caracteres.");
-  return;
-}
 
 });
 
@@ -244,6 +242,3 @@ function limparAvatar() {
   selectedAvatar = DEFAULT_AVATAR;
   avatarPreviewImg.src = DEFAULT_AVATAR;
 }
-
-
-
