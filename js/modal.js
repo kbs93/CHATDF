@@ -186,6 +186,13 @@ document.getElementById("loginEmailBtn")?.addEventListener("click", async e => {
     showToast("Informe email e senha");
     return;
   }
+
+  // valida senha antes de chamar o Firebase
+  if (password.length < 6 || password.length > 10) {
+    showToast("Senha deve ter entre 6 e 10 caracteres.");
+    return;
+  }
+
   try {
     const cred = await signInWithEmailAndPassword(auth, email, password);
 
@@ -200,12 +207,6 @@ document.getElementById("loginEmailBtn")?.addEventListener("click", async e => {
   } catch {
     showToast("Email ou senha incorretos");
   }
-
-// valida senha
-if (password.length < 6 || password.length > 10) {
-  showToast("Senha deve ter entre 6 e 10 caracteres.");
-  return;
-}
 
 });
 
@@ -244,6 +245,5 @@ function limparAvatar() {
   selectedAvatar = DEFAULT_AVATAR;
   avatarPreviewImg.src = DEFAULT_AVATAR;
 }
-
 
 
