@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>O Chat</title>
 
   <!-- Bootstrap -->
@@ -15,29 +15,29 @@
 
   <style>
 
-  /* ======== PALETA DE CORES ======== */
-  #colorPanel {
-    position: fixed!important;right: 15px;bottom: calc(75px + env(safe-area-inset-bottom, 0)) !important;border-radius: 12px;box-shadow: 0 4px 15px rgba(0, 0, 0, 0.712);padding: 12px;display: none; z-index: 100;
-    background: #fff;transition: opacity 0.2s ease, transform 0.15s ease;opacity: 0;transform: translateY(10px);width: 290px;max-height: 260px;overflow-y: auto;}
-  #colorPanel.show {opacity: 1;transform: translateY(0);}
-  .color-grid {display: grid;grid-template-columns: repeat(5, 1fr);gap: 6px;}
-  .color-box {width: 32px;height: 32px;border-radius: 6px;cursor: pointer;border: 2px solid transparent;transition: transform 0.15s ease, border 0.2s;}
-  .color-box:hover {transform: scale(1.1);border-color: #d3c5fa5e;}
-  .color-box {position: relative;display: flex;align-items: center;justify-content: center;}
-  .color-check {color: white;font-size: 20px;font-weight: bold;display: none;}
-  .color-box.selected .color-check {display: block;}
+/* ======== PALETA DE CORES ======== */
+#colorPanel {
+  position: fixed!important;right: 15px;bottom: 75px !important;border-radius: 12px;box-shadow: 0 4px 15px rgba(0, 0, 0, 0.712);padding: 12px;display: none; z-index: 100;
+  background: #fff;transition: opacity 0.2s ease, transform 0.15s ease;opacity: 0;transform: translateY(10px);width: 290px;max-height: 200px;overflow-y: auto;}
+#colorPanel.show {opacity: 1;transform: translateY(0);}
+.color-grid {display: grid;grid-template-columns: repeat(5, 1fr);gap: 6px;}
+.color-box {width: 32px;height: 32px;border-radius: 6px;cursor: pointer;border: 2px solid transparent;transition: transform 0.15s ease, border 0.2s;}
+.color-box:hover {transform: scale(1.1);border-color: #d3c5fa5e;}
+.color-box {position: relative;display: flex;align-items: center;justify-content: center;}
+.color-check {color: white;font-size: 20px;font-weight: bold;display: none;}
+.color-box.selected .color-check {display: block;}
 
-  /* Zoom quando a cor é selecionada */
-  .color-box.selected {
-    transform: scale(2.2);
-    transition: transform 0.15s ease;
-    border: 2px solid #ffffffcc; /* opcional: borda branca suave */
-    box-shadow: 0 0 6px rgba(0,0,0,0.3);
-    z-index: 10;
-  }
-  /* Manter animação suave mesmo quando hover existe */
-  .color-box {transition: transform 0.15s ease;}
-  .color-box:hover {transform: perspective(200px) rotateX(6deg);}
+/* Zoom quando a cor é selecionada */
+.color-box.selected {
+  transform: scale(2.2);
+  transition: transform 0.15s ease;
+  border: 2px solid #ffffffcc; /* opcional: borda branca suave */
+  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  z-index: 10;
+}
+/* Manter animação suave mesmo quando hover existe */
+.color-box {transition: transform 0.15s ease;}
+.color-box:hover {transform: perspective(200px) rotateX(6deg);}
 
   </style>
 </head>
