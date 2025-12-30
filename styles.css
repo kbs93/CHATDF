@@ -713,27 +713,14 @@ display: flex;flex-direction:column;}
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-left: auto;
 }
 .user-fixed-area img { width: 38px; height: 38px; border-radius: 50%; }
 .user-fixed-area .btn-logout { padding: 6px 12px; }
 
-/* Mantém avatar/nome/sair fixo mesmo quando o menu é aberto/fechado */
-.chat-navbar .container {
-  position: relative;
+.chat-navbar .navbar-collapse {
+  flex-grow: 1;
 }
-.chat-navbar .user-fixed-area {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1020;
-}
-@media (max-width: 991.98px) {
-  .chat-navbar .navbar-toggler {
-    margin-right: 88px;
-  }
-}
+
 
 
 
