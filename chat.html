@@ -82,6 +82,20 @@
   </div>
 </nav>
 
+<script>
+  // Garante que o menu comece fechado ao carregar a página
+  document.addEventListener("DOMContentLoaded", () => {
+    const navbarNav = document.getElementById("navbarNav");
+    const toggler = document.querySelector(".navbar-toggler");
+    if (navbarNav?.classList.contains("show")) {
+      navbarNav.classList.remove("show");
+    }
+    if (toggler) {
+      toggler.setAttribute("aria-expanded", "false");
+    }
+  });
+</script>
+
 
 <!-- Título da Sala -->
 <div id="salaTitulo" style="margin-top: 80px; text-align: center; font-weight: bold;">Carregando sala...</div>
