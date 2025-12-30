@@ -11,7 +11,7 @@
 
   <!-- Estilos personalizados -->
   <link href="styles.css" rel="stylesheet">
-  <link rel="shortcut icon" href="imagem2.jpeg" />
+  <link rel="shortcut icon" href="./img/imagem2.jpeg" />
 
   <style>
 
@@ -44,28 +44,43 @@
 
 <body>
 <!-- 🔹 NAVBAR -->
+<!-- 🔹 NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top">
-  <div class="container">
-    <img src="img/imagem3.png" style="width:62px; height:52px" alt="logo">
-    <a class="navbar-brand fw-bold" href="#">ChatDF</a>
+  <div class="container position-relative">
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <!-- LOGO -->
+    <div class="">
+      <img src="img/imagem3.png" style="width:82px; height:62px" alt="logo">
+      <!---<a class="navbar-brand" href="#">ChatDF</a>--->
+    </div>
+
+    <!-- USUÁRIO (FORA DO MENU — ÚNICO userArea) -->
+    <div id="userArea" class="user-fixed-area ms-auto"></div>
+    <!-- BOTÃO ☰ -->
+    <button class="navbar-toggler"type="button"data-bs-toggle="collapse"data-bs-target="#navbarNav"aria-controls="navbarNav"
+      aria-expanded="false"aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
+    <!-- MENU (SEM userArea AQUI) -->
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      
       <ul class="navbar-nav align-items-center">
-        <li class="nav-item"><a class="nav-link" href="./index.html">Início</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Teste 1</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Teste 2</a></li>
-    
-        <li class="nav-item d-flex align-items-center ms-3" id="userArea">
-          <button id="loginBtn" class="btn btn-outline-light btn-sm d-flex align-items-center gap-2"></button>
+         <li class="nav-item">
+          <a class="nav-link" href="./index.html">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Quem Somos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contato</a>
         </li>
       </ul>
     </div>
+
   </div>
 </nav>
+
 
 <!-- Título da Sala -->
 <div id="salaTitulo" style="margin-top: 80px; text-align: center; font-weight: bold;">Carregando sala...</div>
