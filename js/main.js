@@ -30,6 +30,8 @@ if (isChatRoute) {
   window.addEventListener("DOMContentLoaded", setupChat);
 }
 
+document.addEventListener("DOMContentLoaded", initNavbarCollapse);
+
 function setupChat() {
   if (chatInitialized) return;
 
@@ -196,5 +198,19 @@ export function resetMessageInput() {
   messageInput.style.height = "44px";
   requestAnimationFrame(() => {
     messageInput.addEventListener("input", autoResize);
+  });
+}
+
+function initNavbarCollapse() {
+  const navbarNav = document.getElementById("navbarNav");
+  if (!navbarNav || typeof bootstrap === "undefined") return;
+
+  const collapse = bootstrap.Collapse.getOrCreateInstance(navbarNav);
+  const navLinks = navbarNav.querySelectorAll("a");
+
+  navLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      collapse.hide();
+    });
   });
 }
