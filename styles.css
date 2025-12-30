@@ -246,24 +246,11 @@ body {font-family: 'Segoe UI', sans-serif;background: linear-gradient(to right, 
 .message {background: #ffffff;border-radius: 18px;max-width:98%;
   margin-bottom: 12px;word-wrap: break-word; margin-top: 1px;margin-bottom: 1px;}
 .message span {font-size: 1em;line-height: 1.5em;/*EDITAR a imagem do perfil*/}
-/*Cor de fundo do Botao Sair*/
-.btn-logout {
-  background: #6247f84b !important; color: white !important;border-radius: 6px;border: none;padding: 5px 14px;font-weight: 600;}
- 
-
-/*=================== Edita as imagem e a Hora  =================================*/
-
-/* Ajusta imagem de perfil dentro da mensagem */
-.user-photo {width: 36px;height: 36px;border-radius: 50%;object-fit: cover;margin-right: 6px;}
-/* Hora da mensagem */
 .message-time {font-size: 0.68em;color: #5756568f;margin-top: 1px;text-align: right;}
-/* Estilo para texto truncado */
 .msg-text {display: block;white-space: pre-wrap;max-height: 4.5em;overflow: hidden;color: #e00606;}
-/* Botão "Mostrar mais" */
 .toggle-expand {background: transparent;color: #333;border: none;font-size: 0.85em;cursor: pointer;padding: 2px 4px;text-decoration: underline;}
 .toggle-expand {background: transparent;border: none;color: #00000079;padding: 0;font-size: 14px;cursor: pointer;}
 .toggle-expand:hover {text-decoration: underline;}
-
 
 
 /*======================================== FIGURINHAS ================================================*/
@@ -400,7 +387,7 @@ emoji-picker {
 }
 
 
-/* ============================= */
+ /* ============================= */
 /* PRÉVIA DE VÍDEOS YOUTUBE */
 /* ============================= */
 
@@ -694,8 +681,7 @@ display: flex;flex-direction:column;}
   }
 }
 
-
-/*EDITA fixando o avatar no menu*/
+/*EDITA as mensagem de informação no input*/
 .input-hint {
   display: block;
   margin-top: -13px;   /* cola na linha do input */
@@ -709,6 +695,7 @@ display: flex;flex-direction:column;}
   padding-left: 28px; /* igual ao padding do input */
 }
 
+
 .user-fixed-area {
   display: flex;
   align-items: center;
@@ -720,6 +707,7 @@ display: flex;flex-direction:column;}
 .chat-navbar .navbar-collapse {
   flex-grow: 1;
 }
+
 
 /*
 
@@ -770,12 +758,3 @@ display: flex;flex-direction:column;}
   cursor: pointer;
 }
 */
-
-
-
-
-
-
-
-
-
