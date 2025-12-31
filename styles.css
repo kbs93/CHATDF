@@ -712,6 +712,147 @@ display: flex;flex-direction:column;}
 
 
 
+/* ======== Anexos estilo WhatsApp ======== */
+.attachment-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.btn-attach {
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-attach:hover {
+  color: #0d6efd;
+  transform: translateY(-1px);
+}
+
+#attachmentPanel {
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+  background: #fff;
+  border: 1px solid #edf0f5;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  border-radius: 18px;
+  padding: 12px;
+  min-width: 280px;
+  max-width: min(360px, 90vw);
+  display: none;
+  z-index: 1200;
+}
+
+#attachmentPanel.show {
+  display: block;
+  animation: attachmentIn 0.18s ease;
+}
+
+@keyframes attachmentIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.attachment-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.attachment-item {
+  border: 1px solid #f1f2f6;
+  background: #f9fbff;
+  border-radius: 14px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #2f2f2f;
+  font-size: 0.9rem;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s;
+}
+
+.attachment-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  border-color: #e0e7ff;
+}
+
+.attachment-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.3rem;
+}
+
+.attachment-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.attachment-item img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.icon-gallery { background: linear-gradient(135deg, #4e9efc, #5be0ff); }
+.icon-camera { background: linear-gradient(135deg, #ff5f6d, #ff9a44); }
+.icon-location { background: linear-gradient(135deg, #2ecc71, #1abc9c); }
+.icon-contact { background: linear-gradient(135deg, #7b68ee, #9b59b6); }
+.icon-document { background: linear-gradient(135deg, #6c7efc, #8fcbff); }
+.icon-audio { background: linear-gradient(135deg, #ff9f1c, #ff6f61); }
+.icon-poll { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+.icon-event { background: linear-gradient(135deg, #ff6cab, #7366ff); }
+.icon-sticker { background: linear-gradient(135deg, #ffc371, #ff5f6d); }
+.icon-color { background: linear-gradient(135deg, #f953c6, #b91d73); }
+.icon-ai { background: linear-gradient(135deg, #1e3c72, #2a5298); }
+
+@media (max-width: 520px) {
+  #attachmentPanel {
+    left: -10px;
+    right: 0;
+    min-width: 0;
+  }
+  .attachment-grid {
+    grid-template-columns: repeat(3, minmax(80px, 1fr));
+    gap: 8px;
+  }
+  .attachment-item {
+    padding: 10px 6px;
+  }
+  .attachment-label {
+    font-size: 0.78rem;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 
 .register-message {
