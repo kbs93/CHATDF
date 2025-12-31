@@ -64,6 +64,9 @@ logoutBtn.onclick = async () => {
   window.dispatchEvent(new Event("resetColorPicker"));
 
   showToast("Volte sempre!");
+
+  // Redireciona para a página inicial após o logout
+  window.location.href = "./index.html";
 };
 
 
