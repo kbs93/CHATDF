@@ -203,14 +203,27 @@ export function resetMessageInput() {
 
 function initNavbarCollapse() {
   const navbarNav = document.getElementById("navbarNav");
+  const toggler = document.querySelector(".navbar-toggler");
   if (!navbarNav || typeof bootstrap === "undefined") return;
 
-  const collapse = bootstrap.Collapse.getOrCreateInstance(navbarNav);
+  const collapse = bootstrap.Collapse.getOrCreateInstance(navbarNav, { toggle: false });
+
+  // Garante que o menu sempre inicie fechado, mesmo após reload / bfcache
+  collapse.hide();
+  if (toggler) {
+    toggler.setAttribute("aria-expanded", "false");
+    toggler.classList.add("collapsed");
+  }
+
   const navLinks = navbarNav.querySelectorAll("a");
 
   navLinks.forEach((link) => {
     link.addEventListener("click", () => {
       collapse.hide();
+      if (toggler) {
+        toggler.setAttribute("aria-expanded", "false");
+        toggler.classList.add("collapsed");
+      }
     });
   });
 }
