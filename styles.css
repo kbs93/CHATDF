@@ -246,7 +246,6 @@ body {font-family: 'Segoe UI', sans-serif;background: linear-gradient(to right, 
 .message {background: #ffffff;border-radius: 18px;max-width:98%;
   margin-bottom: 12px;word-wrap: break-word; margin-top: 1px;margin-bottom: 1px;}
 .message span {font-size: 1em;line-height: 1.5em;/*EDITAR a imagem do perfil*/}
-/*Cor de fundo do Botao Sair*/
 .btn-logout {
   background: #6247f84b !important; color: white !important;border-radius: 6px;border: none;padding: 5px 14px;font-weight: 600;}
  
@@ -475,7 +474,7 @@ emoji-picker {
   font-size: 15px;outline: none;}
 .login-right input::placeholder {color: #777;font-size: 14px;}
 .login-right input:focus {border-bottom-color: #ff6b6b;}
-.login-right input + input {
+login-right input + input {
   margin-top: 14px;}
 #registerView input:last-of-type {margin-bottom: 24px;}
 /* Autofill fix */
@@ -653,7 +652,7 @@ display: flex;flex-direction:column;}
 }
 
 /* scroll apenas na grid das categorias */
-.avatar-grid {
+avatar-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
@@ -716,6 +715,9 @@ display: flex;flex-direction:column;}
   position: relative;
   display: flex;
   align-items: center;
+
+  flex-shrink: 0;
+
 }
 
 .btn-attach {
@@ -727,6 +729,13 @@ display: flex;flex-direction:column;}
   align-items: center;
   justify-content: center;
   padding: 6px;
+
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+  touch-action: manipulation;
+
+
   transition: color 0.2s ease, transform 0.15s ease;
 }
 
@@ -734,6 +743,15 @@ display: flex;flex-direction:column;}
   color: #0d6efd;
   transform: translateY(-1px);
 }
+
+
+.btn-attach:focus-visible {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
+  color: #0d6efd;
+}
+
+
 
 #attachmentPanel {
   position: absolute;
@@ -746,8 +764,17 @@ display: flex;flex-direction:column;}
   padding: 12px;
   min-width: 280px;
   max-width: min(360px, 90vw);
+
+  max-height: 65vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   display: none;
   z-index: 1200;
+      bottom: calc(72px + env(safe-area-inset-bottom)); /* afasta do teclado / barra inferior */
+
+  display: none;
+  z-index: 1200;
+
 }
 
 #attachmentPanel.show {
@@ -821,6 +848,7 @@ display: flex;flex-direction:column;}
 .icon-color { background: linear-gradient(135deg, #f953c6, #b91d73); }
 .icon-ai { background: linear-gradient(135deg, #1e3c72, #2a5298); }
 
+
 @media (max-width: 520px) {
   #attachmentPanel {
     left: -10px;
@@ -859,6 +887,7 @@ display: flex;flex-direction:column;}
     height: 40px;
   }
 }
+
 
 
 
@@ -921,12 +950,3 @@ display: flex;flex-direction:column;}
   cursor: pointer;
 }
 */
-
-
-
-
-
-
-
-
-
