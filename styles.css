@@ -715,9 +715,7 @@ avatar-grid {
   position: relative;
   display: flex;
   align-items: center;
-
   flex-shrink: 0;
-
 }
 
 .btn-attach {
@@ -729,13 +727,10 @@ avatar-grid {
   align-items: center;
   justify-content: center;
   padding: 6px;
-
   min-width: 44px;
   min-height: 44px;
   border-radius: 50%;
   touch-action: manipulation;
-
-
   transition: color 0.2s ease, transform 0.15s ease;
 }
 
@@ -744,14 +739,11 @@ avatar-grid {
   transform: translateY(-1px);
 }
 
-
 .btn-attach:focus-visible {
   outline: 2px solid #0d6efd;
   outline-offset: 2px;
   color: #0d6efd;
 }
-
-
 
 #attachmentPanel {
   position: absolute;
@@ -764,17 +756,12 @@ avatar-grid {
   padding: 12px;
   min-width: 280px;
   max-width: min(360px, 90vw);
-
   max-height: 65vh;
   overflow-y: auto;
   overscroll-behavior: contain;
   display: none;
   z-index: 1200;
       bottom: calc(72px + env(safe-area-inset-bottom)); /* afasta do teclado / barra inferior */
-
-  display: none;
-  z-index: 1200;
-
 }
 
 #attachmentPanel.show {
@@ -847,48 +834,6 @@ avatar-grid {
 .icon-sticker { background: linear-gradient(135deg, #ffc371, #ff5f6d); }
 .icon-color { background: linear-gradient(135deg, #f953c6, #b91d73); }
 .icon-ai { background: linear-gradient(135deg, #1e3c72, #2a5298); }
-
-
-@media (max-width: 520px) {
-  #attachmentPanel {
-    left: -10px;
-    right: 0;
-    min-width: 0;
-    max-width: 100%;
-    bottom: 70px; /* afasta do teclado / barra inferior */
-  }
-  .attachment-grid {
-    grid-template-columns: repeat(3, minmax(80px, 1fr));
-    gap: 8px;
-  }
-  .attachment-item {
-    padding: 10px 6px;
-  }
-  .attachment-label {
-    font-size: 0.78rem;
-  }
-}
-
-@media (max-width: 400px) {
-  #attachmentPanel {
-    left: -6px;
-    right: -6px;
-    bottom: 78px;
-  }
-  .attachment-grid {
-    grid-template-columns: repeat(3, minmax(70px, 1fr));
-    gap: 6px;
-  }
-  .attachment-item {
-    padding: 10px 5px;
-  }
-  .attachment-icon {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-
 
 
 
