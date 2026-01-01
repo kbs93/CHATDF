@@ -15,7 +15,6 @@
 
   <style>
 
-/* ======== PALETA DE CORES ======== */
 #colorPanel {
   position: fixed!important;right: 15px;bottom: 75px !important;border-radius: 12px;box-shadow: 0 4px 15px rgba(0, 0, 0, 0.712);padding: 12px;display: none; z-index: 100;
   background: #fff;transition: opacity 0.2s ease, transform 0.15s ease;opacity: 0;transform: translateY(10px);width: 290px;max-height: 200px;overflow-y: auto;}
@@ -45,8 +44,8 @@
 <body>
 <!-- 🔹 NAVBAR -->
 <!-- 🔹 NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top">
-  <div class="container position-relative">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top chat-navbar">
+  <div class="container position-relative d-flex align-items-center">
 
     <!-- LOGO -->
     <div class="">
@@ -54,16 +53,14 @@
       <!---<a class="navbar-brand" href="#">ChatDF</a>--->
     </div>
 
-    <!-- USUÁRIO (FORA DO MENU — ÚNICO userArea) -->
-    <div id="userArea" class="user-fixed-area ms-auto"></div>
     <!-- BOTÃO ☰ -->
-    <button class="navbar-toggler"type="button"data-bs-toggle="collapse"data-bs-target="#navbarNav"aria-controls="navbarNav"
-      aria-expanded="false"aria-label="Toggle navigation">
+    <button class="navbar-toggler order-2 ms-auto ms-lg-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
+      aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <!-- MENU (SEM userArea AQUI) -->
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <div class="collapse navbar-collapse order-3 order-lg-2 justify-content-end" id="navbarNav">
       
       <ul class="navbar-nav align-items-center">
          <li class="nav-item">
@@ -78,8 +75,25 @@
       </ul>
     </div>
 
+    <!-- USUÁRIO (FORA DO MENU — ÚNICO userArea) -->
+    <div id="userArea" class="user-fixed-area ms-3 ms-lg-auto order-1 order-lg-3"></div>
+
   </div>
 </nav>
+
+<script>
+  // Garante que o menu comece fechado ao carregar a página
+  document.addEventListener("DOMContentLoaded", () => {
+    const navbarNav = document.getElementById("navbarNav");
+    const toggler = document.querySelector(".navbar-toggler");
+    if (navbarNav?.classList.contains("show")) {
+      navbarNav.classList.remove("show");
+    }
+    if (toggler) {
+      toggler.setAttribute("aria-expanded", "false");
+    }
+  });
+</script>
 
 
 <!-- Título da Sala -->
@@ -88,16 +102,58 @@
 <div id="chat-container" class="container-fluid"></div>
 <!--  Campo de envio -->
 <div id="message-input-area">
-  <div class="dropdown dropup">
-    <button id="attachBtn" title="Anexar arquivo" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+  <div class="attachment-wrapper">
+    <button id="attachBtn" title="Anexar" class="btn-attach" aria-expanded="false">
       <i class="bi bi-paperclip"></i>
     </button>
-
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="#">📷 Imagem (em breve)</a></li>
-      <li class="dropdown-item" id="stickerBtn"><img src="img/sorrir.png" height="27px" width=" 27px"> Figurinhas</li>
-      <li class="dropdown-item" id="colorBtn"><img src="img/cor3.png" height="27px" width=" 27px"> Cor do texto</li>
-    </ul>
+    <div id="attachmentPanel" class="attachment-panel">
+      <div class="attachment-grid">
+        <button class="attachment-item" data-action="gallery">
+          <span class="attachment-icon icon-gallery"><i class="bi bi-image"></i></span>
+          <span class="attachment-label">Galeria</span>
+        </button>
+        <button class="attachment-item" data-action="camera">
+          <span class="attachment-icon icon-camera"><i class="bi bi-camera-fill"></i></span>
+          <span class="attachment-label">Câmera</span>
+        </button>
+        <button class="attachment-item" data-action="location">
+          <span class="attachment-icon icon-location"><i class="bi bi-geo-alt-fill"></i></span>
+          <span class="attachment-label">Localização</span>
+        </button>
+        <button class="attachment-item" data-action="contact">
+          <span class="attachment-icon icon-contact"><i class="bi bi-person-badge-fill"></i></span>
+          <span class="attachment-label">Contato</span>
+        </button>
+        <button class="attachment-item" data-action="documento">
+          <span class="attachment-icon icon-document"><i class="bi bi-file-earmark-text"></i></span>
+          <span class="attachment-label">Documento</span>
+        </button>
+        <button class="attachment-item" data-action="audio">
+          <span class="attachment-icon icon-audio"><i class="bi bi-headphones"></i></span>
+          <span class="attachment-label">Áudio</span>
+        </button>
+        <button class="attachment-item" data-action="poll">
+          <span class="attachment-icon icon-poll"><i class="bi bi-bar-chart-line-fill"></i></span>
+          <span class="attachment-label">Enquete</span>
+        </button>
+        <button class="attachment-item" data-action="event">
+          <span class="attachment-icon icon-event"><i class="bi bi-calendar-event-fill"></i></span>
+          <span class="attachment-label">Evento</span>
+        </button>
+        <button class="attachment-item" id="stickerBtn" data-action="stickers">
+          <span class="attachment-icon icon-sticker"><img src="img/sorrir.png" alt="Figurinhas" width="24" height="24"></span>
+          <span class="attachment-label">Figurinhas</span>
+        </button>
+        <button class="attachment-item" id="colorBtn" data-action="color">
+          <span class="attachment-icon icon-color"><i class="bi bi-palette-fill"></i></span>
+          <span class="attachment-label">Cor do texto</span>
+        </button>
+        <button class="attachment-item" data-action="ai">
+          <span class="attachment-icon icon-ai"><i class="bi bi-stars"></i></span>
+          <span class="attachment-label">Imagens de IA</span>
+        </button>
+      </div>
+    </div>
   </div>
   <button id="emojiBtn" title="Adicionar emoji"><i class="bi bi-emoji-smile"></i></button>
 <div id="replyPreview" class="reply-preview" style="display:none;"></div>
@@ -138,6 +194,32 @@ messageInput.style.color = "#000000";   // ⭐ GARANTE QUE SEMPRE INICIA PRETO
 const colorBtn = document.getElementById("colorBtn");
 const colorPanel = document.getElementById("colorPanel");
 const grid = document.getElementById("dynamicColors");
+const attachBtn = document.getElementById("attachBtn");
+const attachmentPanel = document.getElementById("attachmentPanel");
+
+const attachmentActions = {
+  gallery: () => showToast("Galeria em breve."),
+  camera: () => showToast("Câmera em breve."),
+  location: () => showToast("Localização em breve."),
+  contact: () => showToast("Contato em breve."),
+  documento: () => showToast("Documento em breve."),
+  audio: () => showToast("Áudio em breve."),
+  poll: () => showToast("Enquete em breve."),
+  event: () => showToast("Evento em breve."),
+  ai: () => showToast("Imagens de IA em breve.")
+};
+
+const closeAttachmentPanel = () => {
+  if (!attachmentPanel) return;
+  attachmentPanel.classList.remove("show");
+  attachBtn?.setAttribute("aria-expanded", "false");
+};
+
+const toggleAttachmentPanel = () => {
+  if (!attachmentPanel) return;
+  const open = attachmentPanel.classList.toggle("show");
+  attachBtn?.setAttribute("aria-expanded", open ? "true" : "false");
+};
 
 // Paleta de cores fixa
 const palette = ["#003366","#0066cc","#336699","#142952","#0055ff","#000066","#006666","#00cccc","#669999","#00ccff"," #666699","#339966","#194d33",
@@ -278,6 +360,37 @@ colorBtn.addEventListener("click", () => {
 
 // Função usada pelo messages.js
 window.getSelectedColor = () => selectedColor;
+
+/* ============================================
+   📎 Painel de anexos estilo WhatsApp
+============================================ */
+attachBtn?.addEventListener("click", (e) => {
+  e.stopPropagation();
+  toggleAttachmentPanel();
+});
+
+attachmentPanel?.addEventListener("click", (e) => {
+  const item = e.target.closest(".attachment-item");
+  if (!item) return;
+  closeAttachmentPanel();
+  const action = item.dataset.action;
+  const handler = attachmentActions[action];
+  if (handler) handler();
+});
+
+document.addEventListener("click", (e) => {
+  if (
+    attachmentPanel?.classList.contains("show") &&
+    !attachmentPanel.contains(e.target) &&
+    !attachBtn?.contains(e.target)
+  ) {
+    closeAttachmentPanel();
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeAttachmentPanel();
+});
 
 </script>
 
