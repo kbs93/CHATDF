@@ -1,13 +1,19 @@
 // ui.js
+import DOMPurify from "https://cdn.jsdelivr.net/npm/dompurify@3.1.5/dist/purify.es.js";
 
 // EDITA todos os aviso que aparece no chat 
 export function showToast(message, type = "error") {
   const toast = document.createElement("div");
   toast.className = `custom-toast ${type}`;
-  toast.innerHTML = `
-    <span class="icon"></span>
-    <span>${message}</span>
-  `;
+
+  const icon = document.createElement("span");
+  icon.className = "icon";
+
+  const text = document.createElement("span");
+  text.textContent = DOMPurify.sanitize(String(message || ""));
+
+  toast.appendChild(icon);
+  toast.appendChild(text);
 
   document.body.appendChild(toast);
 
@@ -102,16 +108,19 @@ export function showReplyPreview(msgId, msgText, author) {
   if (/^\p{Emoji}$/u.test(msgText)) {
     shortText = msgText;
   }
-  preview.innerHTML = `
+  const safeHTML = DOMPurify.sanitize(`
     ${mediaHTML}
-
     <div class="reply-info">
-      <div class="reply-author">${author}</div>
-      <div class="reply-text">${shortText}</div>
+      <div class="reply-author">${DOMPurify.sanitize(author)}</div>
+      <div class="reply-text">${DOMPurify.sanitize(shortText)}</div>
     </div>
-
     <span class="close-reply">✕</span>
-  `;
+  `, {
+    ALLOWED_TAGS: ["div", "span", "img"],
+    ALLOWED_ATTR: ["class", "src", "alt"]
+  });
+
+  preview.innerHTML = safeHTML;
 
   preview.style.display = "inline-flex";
   window.replyingTo = msgId;
@@ -121,4 +130,3 @@ export function showReplyPreview(msgId, msgText, author) {
     window.replyingTo = null;
   };
 }
-
