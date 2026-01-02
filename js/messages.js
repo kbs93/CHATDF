@@ -1,4 +1,5 @@
 import { db } from './firebase-config.js';
+import DOMPurify from "https://cdn.jsdelivr.net/npm/dompurify@3.1.5/dist/purify.es.js";
 import {
   collection,
   query,
@@ -50,6 +51,15 @@ function extractYouTubeId(url) {
   );
   return match ? match[1] : null;
 }
+
+const SANITIZE_OPTIONS = {
+  ALLOWED_TAGS: ["span", "button", "img", "div", "strong", "br"],
+  ALLOWED_ATTR: ["class", "style", "data-video", "src", "alt"]
+};
+
+function sanitizeHTML(html) {
+  return DOMPurify.sanitize(html, SANITIZE_OPTIONS);
+}
 // ------------------  Função da data e hora que aparece no site --------------------------------------
 function formatTimestamp(ts) {
   if (!ts) return "";
@@ -63,23 +73,23 @@ function renderPlainMessage(msg) {
   const color = msg.color || "#000000";
 
   if (long) {
-    return `
+    return sanitizeHTML(`
       <span class="msg-text" style="color:${color};">${highlighted}</span>
-      <button class="toggle-expand">Mostrar mais</button>`;
+      <button class="toggle-expand">Mostrar mais</button>`);
   }
-  return `<span style="white-space:pre-wrap;color:${color};">${highlighted}</span>`;
+  return sanitizeHTML(`<span style="white-space:pre-wrap;color:${color};">${highlighted}</span>`);
 }
 function renderSticker(url) {
-  return `<img src="${url.trim()}" alt="sticker" class="sticker-img" draggable="false">`;
+  return sanitizeHTML(`<img src="${url.trim()}" alt="sticker" class="sticker-img" draggable="false">`);
 }
 function renderYouTube(id) {
   const thumb = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
-  return `
+  return sanitizeHTML(`
     <div class="youtube-preview" data-video="${id}">
       <img src="${thumb}" alt="YouTube thumbnail" class="youtube-thumb">
       <div class="youtube-play">&#9658;</div>
     </div>
-  `;
+  `);
 }
 
 async function renderReply(msg) {
@@ -107,12 +117,12 @@ async function renderReply(msg) {
       }
     }
 
-    return `
+    return sanitizeHTML(`
       <div class="quoted-reply-box" style="border-left:4px solid ${color};">
-        <div class="quoted-header" style="color:${color};"><strong>${d.user}</strong></div>
+        <div class="quoted-header" style="color:${color};"><strong>${DOMPurify.sanitize(d.user || "")}</strong></div>
         ${content}
       </div>
-    `;
+    `);
 
   } catch (err) {
     console.warn("Erro carregar reply:", err);
@@ -180,23 +190,40 @@ export function initMessages(chat, sala) {
       div.classList.add("message");
       div.dataset.id = msgId;
 
-      div.innerHTML = `
-        <div style="display:flex;align-items:center;gap:6px;">
-          <img 
-            src="${avatar}" 
-            class="user-photo"
-            onerror="this.src='img/avatar.png'"
-          >
-          <b class="user-name" style="color:${userColor};cursor:pointer;">
-            ${msg.user}:
-          </b>
-        </div>
+      const header = document.createElement("div");
+      header.style.display = "flex";
+      header.style.alignItems = "center";
+      header.style.gap = "6px";
 
-        <div class="reply-container"></div>
+      const photo = document.createElement("img");
+      photo.src = avatar;
+      photo.className = "user-photo";
+      photo.alt = "avatar";
+      photo.onerror = () => { photo.src = "img/avatar.png"; };
 
-        <div>${content}</div>
-        <div class="message-time">${timestamp}</div>
-      `;
+      const nameEl = document.createElement("b");
+      nameEl.className = "user-name";
+      nameEl.style.color = userColor;
+      nameEl.style.cursor = "pointer";
+      nameEl.textContent = `${msg.user}:`;
+
+      header.appendChild(photo);
+      header.appendChild(nameEl);
+
+      const replyContainer = document.createElement("div");
+      replyContainer.className = "reply-container";
+
+      const contentWrapper = document.createElement("div");
+      contentWrapper.innerHTML = sanitizeHTML(content);
+
+      const timeEl = document.createElement("div");
+      timeEl.className = "message-time";
+      timeEl.textContent = timestamp;
+
+      div.appendChild(header);
+      div.appendChild(replyContainer);
+      div.appendChild(contentWrapper);
+      div.appendChild(timeEl);
 
       // ================== CLICK REPLY ==================
       div.addEventListener("click", (event) => {
