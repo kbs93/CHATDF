@@ -23,58 +23,59 @@ export function initAuth(showToast) {
     /* =====================================================
        USUÁRIO LOGADO
     ===================================================== */
-    if (user) {
-      currentUser = user;
+if (user) {
+  currentUser = user;
 
-      // Fecha modal (se estiver no index)
-      const modal = document.getElementById("loginModal");
-      if (modal) modal.classList.add("hidden");
+  // Fecha modal (se estiver no index)
+  const modal = document.getElementById("loginModal");
+  if (modal) modal.classList.add("hidden");
 
-      // Some botão do Google dentro do modal
-      if (loginBtnModal) loginBtnModal.style.display = "none";
+  // Some botão do Google dentro do modal
+  if (loginBtnModal) loginBtnModal.style.display = "none";
 
-      // ATUALIZA NAVBAR (index e chat)
-      if (userArea) {
-        userArea.innerHTML = `
-          <img src="${user.photoURL}" style="width:38px;height:38px;border-radius:50%; margin-right:8px;">
-          <span class="text-white fw-bold">${(user.displayName || "Usuário").split(" ")[0]
-}</span>
-          <button id="logoutBtn"class="btn-logout ms-2">Sair</button>
-        `;
-      }
-
-      // Evento sair
-      const logoutBtn = document.getElementById("logoutBtn");
-      if (logoutBtn) {
-
-logoutBtn.onclick = async () => {
-
-  const user = auth.currentUser;
-
-  // Antes de deslogar, reseta a cor no Firestore
-  if (user) {
-    const ref = doc(db, "users", user.uid);
-    await updateDoc(ref, { chatColor: "#000000" });
+  // ATUALIZA NAVBAR (index e chat)
+  if (userArea) {
+    userArea.innerHTML = `
+      <img src="${user.photoURL}" style="width:38px;height:38px;border-radius:50%; margin-right:8px;">
+      <span class="text-white fw-bold">
+        ${(user.displayName || "Usuário").split(" ")[0]}
+      </span>
+      <button id="logoutBtn" class="btn-logout ms-2">Sair</button>
+    `;
   }
 
-  // Agora faz logout
-  await signOutUser();
+  // Evento sair (CORRIGIDO)
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.onclick = async () => {
+      try {
+        // Limpa estado global do chat
+        window.replyingTo = null;
 
-  // Reset na paleta do lado do cliente QUANDO O USUARIO SAI DA CONTA A COR VOLTA AO PADRAO PRETO
-  window.dispatchEvent(new Event("resetColorPicker"));
+        // Reset da paleta SOMENTE no cliente
+        window.dispatchEvent(new Event("resetColorPicker"));
 
-  showToast("Volte sempre!");
+        // Logout SEM depender do Firestore
+        await signOutUser();
 
-  // Redireciona para a página inicial após o logout
-  window.location.href = "./index.html";
-};
+        showToast("Volte sempre!");
 
-
-      
+        // Redireciona para a página inicial
+        window.location.href = "./index.html";
+      } catch (err) {
+        console.error("Erro ao sair:", err);
       }
+    };
+  }
 
-      return; // FIM DO LOGIN
-    }
+  return; // FIM DO LOGIN
+}
+
+
+
+
+
+
 
     /* =====================================================
      USUÁRIO DESLOGADO

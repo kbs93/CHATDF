@@ -229,6 +229,10 @@ export function initMessages(chat, sala) {
 
 // ================= ENVIO — AGORA COM REPLY FUNCIONANDO =========================================================
 export async function sendMessage(input) {
+
+
+
+  
   const text = input.value.trim();
   if (!text) return;
 if (floodCount >= 5) {showToast(" Aguarde um instante.");return;} // usuario so pode enviar 5 mensagens rapido 
