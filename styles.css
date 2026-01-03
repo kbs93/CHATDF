@@ -849,44 +849,7 @@ avatar-grid {
 .icon-ai { background: linear-gradient(135deg, #1e3c72, #2a5298); }
 
 
-@media (max-width: 520px) {
-  #attachmentPanel {
-    left: -10px;
-    right: 0;
-    min-width: 0;
-    max-width: 100%;
-    bottom: 70px; /* afasta do teclado / barra inferior */
-  }
-  .attachment-grid {
-    grid-template-columns: repeat(3, minmax(80px, 1fr));
-    gap: 8px;
-  }
-  .attachment-item {
-    padding: 10px 6px;
-  }
-  .attachment-label {
-    font-size: 0.78rem;
-  }
-}
 
-@media (max-width: 400px) {
-  #attachmentPanel {
-    left: -6px;
-    right: -6px;
-    bottom: 78px;
-  }
-  .attachment-grid {
-    grid-template-columns: repeat(3, minmax(70px, 1fr));
-    gap: 6px;
-  }
-  .attachment-item {
-    padding: 10px 5px;
-  }
-  .attachment-icon {
-    width: 40px;
-    height: 40px;
-  }
-}
 
 
 
