@@ -18,21 +18,36 @@
       font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: #f7f9fc;
       color: #1f2d3d;
-      padding-top: 82px;
+      padding-top: 86px;
+      margin: 0;
+      scroll-behavior: smooth;
     }
 
     .navbar {
-      background: #ffffff;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      background: linear-gradient(135deg, #0d6efd 0%, #437dff 40%, #74b9ff 100%);
+      border-bottom: none;
+      box-shadow: 0 10px 30px rgba(13, 110, 253, 0.25);
     }
 
     .navbar .nav-link {
-      color: #1f2d3d !important;
+      color: #ffffff !important;
       font-weight: 600;
     }
 
     .navbar .nav-link:hover {
-      color: #0d6efd !important;
+      color: #dfe9ff !important;
+    }
+
+    .navbar .navbar-brand {
+      color: #ffffff !important;
+    }
+
+    .navbar .navbar-toggler {
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .navbar .navbar-toggler-icon {
+      filter: brightness(10);
     }
 
     .hero {
@@ -64,6 +79,13 @@
     .hero .lead {
       max-width: 760px;
       margin: 0 auto;
+    }
+
+    .hero-avatar {
+      max-width: 320px;
+      width: 100%;
+      filter: drop-shadow(0 14px 40px rgba(0, 0, 0, 0.25));
+      animation: float 6s ease-in-out infinite;
     }
 
     .pill-badge {
@@ -98,7 +120,7 @@
       border: 1px solid rgba(0, 0, 0, 0.04);
       box-shadow: 0 10px 30px rgba(13, 110, 253, 0.08);
       border-radius: 18px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
       height: 100%;
       padding: 22px;
     }
@@ -184,6 +206,15 @@
       margin-bottom: 10px;
     }
 
+    .btn {
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    }
+
     .chat-rooms {
       background: #fff;
       border-radius: 20px;
@@ -204,9 +235,67 @@
       background: #0d6efd;
     }
 
+    .animate-fade {
+      animation: fadeIn 0.9s ease forwards;
+      opacity: 0;
+    }
+
+    .animate-slide {
+      animation: slideUp 0.9s ease forwards;
+      opacity: 0;
+    }
+
+    .delay-1 {
+      animation-delay: 0.15s;
+    }
+
+    .delay-2 {
+      animation-delay: 0.3s;
+    }
+
+    .delay-3 {
+      animation-delay: 0.45s;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+
+      100% {
+        transform: translateY(0);
+      }
+    }
+
     @media (max-width: 991px) {
       body {
-        padding-top: 70px;
+        padding-top: 78px;
       }
 
       .hero::after {
@@ -236,11 +325,11 @@
 
 <body>
   <!-- 🔹 NAVBAR -->
-  <nav class="navbar navbar-expand-lg shadow-sm fixed-top py-3">
+  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm fixed-top py-3">
     <div class="container">
       <div class="d-flex align-items-center gap-2">
         <img src="img/imagem3.png" alt="ChatDF" style="width:58px; height:50px">
-        <a class="navbar-brand fw-bold text-primary" href="#">ChatDF</a>
+        <a class="navbar-brand fw-bold text-white" href="#">ChatDF</a>
       </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
@@ -263,22 +352,191 @@
 
   <div id="toast" class="toast-container"></div>
   <!-- 🔹 HERO -->
-  <header class="hero d-flex align-items-center text-white text-center">
+  <header class="hero d-flex align-items-center text-white">
     <canvas id="background-animation"></canvas>
     <div class="container py-5">
-      <div class="pill-badge mb-3 mx-auto">
-        <span class="badge bg-light text-primary fw-bold rounded-pill px-3">Novo</span>
-        Comunidade ativa 24/7
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7 text-center text-lg-start animate-slide">
+          <div class="pill-badge mb-3 mx-auto mx-lg-0">
+            <span class="badge bg-light text-primary fw-bold rounded-pill px-3">Novo</span>
+            Comunidade ativa 24/7
+          </div>
+          <h1 class="fw-bold mb-3">Bem-vindo ao O Chat</h1>
+          <p class="lead mb-4">Salas temáticas, comunidades moderadas e conversas rápidas em um visual clássico inspirado no 321Chat.</p>
+          <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+            <a href="#salas" class="btn btn-light btn-lg text-primary fw-bold shadow-sm">Entrar nas salas</a>
+            <a href="#categorias" class="btn btn-outline-light btn-lg fw-bold">Explorar categorias</a>
+          </div>
+          <div class="stats mt-4">
+            <div class="stats-item">
+              <h3>+120</h3>
+              <p class="mb-0">Salas públicas</p>
+            </div>
+            <div class="stats-item">
+              <h3>15K</h3>
+              <p class="mb-0">Usuários ativos</p>
+            </div>
+            <div class="stats-item">
+              <h3>Segurança</h3>
+              <p class="mb-0">Moderada em tempo real</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5 d-flex justify-content-center animate-fade delay-1">
+          <img src="img/avatar1.png" alt="Mascote do Chat" class="hero-avatar">
+        </div>
       </div>
-      <h1 class="fw-bold mb-3">Bem-vindo ao O Chat</h1>
-      <p class="lead mb-4">Salas temáticas, comunidades moderadas e conversas rápidas em um visual clássico inspirado no 321Chat.</p>
-      <div class="d-flex flex-wrap gap-3 justify-content-center">
-        <a href="#salas" class="btn btn-light btn-lg text-primary fw-bold shadow-sm">Entrar nas salas</a>
-        <a href="#categorias" class="btn btn-outline-light btn-lg fw-bold">Explorar categorias</a>
-      </div>
- 
     </div>
   </header>
+
+  <!-- 🔹 COMO FUNCIONA -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-6 animate-slide">
+          <h2 class="section-title">Como funciona</h2>
+          <p class="text-muted">Escolha uma categoria, entre em uma sala e converse em tempo real. Tudo com moderação ativa, botões visíveis e navegação simples para você chegar rápido ao bate-papo.</p>
+          <div class="d-flex gap-3 flex-wrap">
+            <div class="feature-card animate-fade delay-1">
+              <h5>1. Escolha a sala</h5>
+              <p class="mb-0 text-muted">Selecione um tema ou comunidade que combina com você.</p>
+            </div>
+            <div class="feature-card animate-fade delay-2">
+              <h5>2. Entre e converse</h5>
+              <p class="mb-0 text-muted">Converse com pessoas online em poucos cliques.</p>
+            </div>
+            <div class="feature-card animate-fade delay-3">
+              <h5>3. Salve favoritos</h5>
+              <p class="mb-0 text-muted">Volte rápido para as salas que você mais curtir.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 text-center animate-fade delay-1">
+          <img src="img/astronauta.jpg" alt="Guia visual do chat" class="img-fluid rounded-4 shadow-sm">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🔹 COMUNIDADES -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title h1">Comunidades populares</h2>
+        <p class="section-subtitle">Entre em grupos clássicos do estilo 321Chat: temas claros, botões grandes e um ambiente acolhedor.</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4 animate-slide">
+          <div class="category-card h-100">
+            <div class="category-icon"><img src="img/usu3.png" alt="Comunidade geral"></div>
+            <h4 class="fw-bold">Bate-papo Geral</h4>
+            <p class="text-muted">Para quem quer fazer novas amizades e conversar sobre o dia a dia.</p>
+            <a href="#salas" class="btn btn-primary w-100">Abrir agora</a>
+          </div>
+        </div>
+        <div class="col-md-4 animate-slide delay-1">
+          <div class="category-card h-100">
+            <div class="category-icon"><img src="img/sorrir.png" alt="Diversão"></div>
+            <h4 class="fw-bold">Diversão & Música</h4>
+            <p class="text-muted">Salas descontraídas com playlists, memes e bate-papo leve.</p>
+            <a href="#salas" class="btn btn-outline-primary w-100">Ver salas</a>
+          </div>
+        </div>
+        <div class="col-md-4 animate-slide delay-2">
+          <div class="category-card h-100">
+            <div class="category-icon"><img src="img/usu5.png" alt="Tecnologia"></div>
+            <h4 class="fw-bold">Tech & Games</h4>
+            <p class="text-muted">Espaços para gamers, devs e apaixonados por tecnologia.</p>
+            <a href="#salas" class="btn btn-primary w-100">Entrar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🔹 SEGURANÇA -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-6 animate-fade">
+          <h2 class="section-title">Segurança e moderação</h2>
+          <p class="text-muted">Nossa equipe acompanha as salas em tempo real para manter o ambiente respeitoso. Regras visíveis e ferramentas de denúncia ajudam a proteger a comunidade.</p>
+          <ul class="list-unstyled text-muted">
+            <li class="mb-2">• Moderadores online durante os horários de pico</li>
+            <li class="mb-2">• Botões claros para denunciar conteúdo impróprio</li>
+            <li class="mb-2">• Orientações rápidas para novos membros</li>
+          </ul>
+        </div>
+        <div class="col-lg-6 animate-slide delay-1">
+          <div class="chat-rooms">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h3 class="h4 mb-0">Destaques de segurança</h3>
+              <span class="badge bg-primary rounded-pill px-3 py-2">Atualizado</span>
+            </div>
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <div class="feature-card h-100">
+                  <h5>Regras claras</h5>
+                  <p class="mb-0 text-muted">Avisos visíveis em cada sala para orientar o chat.</p>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="feature-card h-100">
+                  <h5>Alertas rápidos</h5>
+                  <p class="mb-0 text-muted">Botões de reporte e moderação instantânea.</p>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="feature-card h-100">
+                  <h5>Privacidade</h5>
+                  <p class="mb-0 text-muted">Opções para grupos privados e convites.</p>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="feature-card h-100">
+                  <h5>Comunidade</h5>
+                  <p class="mb-0 text-muted">Equipe disponível para dúvidas e suporte.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🔹 DESTAQUES -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <div class="text-center mb-4">
+        <h2 class="section-title h1">Destaques do dia</h2>
+        <p class="section-subtitle">Sugestões rápidas para você entrar já em uma sala movimentada ou conhecer novidades da comunidade.</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4 animate-slide">
+          <div class="feature-card h-100">
+            <h5>Top salas agora</h5>
+            <p class="text-muted mb-2">Comunidade Geral, Games BR, Músicas & Covers.</p>
+            <a href="#salas" class="btn btn-primary w-100">Acessar</a>
+          </div>
+        </div>
+        <div class="col-md-4 animate-slide delay-1">
+          <div class="feature-card h-100">
+            <h5>Novas categorias</h5>
+            <p class="text-muted mb-2">Debates atuais, filmes clássicos e sala de estudos.</p>
+            <a href="#categorias" class="btn btn-outline-primary w-100">Explorar</a>
+          </div>
+        </div>
+        <div class="col-md-4 animate-slide delay-2">
+          <div class="feature-card h-100">
+            <h5>Eventos rápidos</h5>
+            <p class="text-muted mb-2">Quiz semanal, karaokê e roda de indicações.</p>
+            <a href="#contato" class="btn btn-primary w-100">Quero participar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- 🔹 CATEGORIAS -->
   <section id="categorias" class="py-5">
