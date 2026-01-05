@@ -7,6 +7,10 @@
   <title>O Chat - Conecte e Converse</title>
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <link rel="shortcut icon" href="img/imagem2.jpeg" />
   <link href="styles.css" rel="stylesheet">
 
@@ -49,36 +53,162 @@
   <!-- 🔹 HERO -->
   <header class="hero d-flex align-items-center text-center text-white">
     <canvas id="background-animation"></canvas>
-    <div class="container">
-      <h1 class="h2 fw-bold">Bem-vindo ao O Chat </h1>
-      <p class="lead">Entre, converse e faça novas amizades em tempo real!</p>
-      <a href="#salas" class="btn btn-light btn-lg mt-3">Comece Agora</a>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="container hero-grid">
+      <div class="hero-copy text-start text-lg-start">
+        <span class="eyebrow">Experiência em tempo real</span>
+        <h1 class="display-6 fw-bold">Converse com a energia de um chat moderno, clean e premium.</h1>
+        <p class="lead">Descubra salas com vibe SaaS, animações suaves e um visual tecnológico que deixa cada troca de mensagens mais envolvente.</p>
+        <div class="hero-actions d-flex flex-wrap gap-3 align-items-center">
+          <a href="#salas" class="btn btn-gradient btn-lg">Comece Agora</a>
+          <a href="#sobre" class="btn btn-outline-glass btn-lg">Ver mais detalhes</a>
+        </div>
+        <div class="hero-metrics mt-4">
+          <div class="metric">
+            <span class="metric-value">24/7</span>
+            <span class="metric-label">Salas ativas</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">+5K</span>
+            <span class="metric-label">Interações diárias</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">Premium</span>
+            <span class="metric-label">Visual clean & tecnológico</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-panel glass-card text-start">
+        <div class="panel-header d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center gap-2">
+            <span class="status-dot"></span>
+            <small class="text-uppercase fw-semibold text-muted">Salas em destaque</small>
+          </div>
+          <span class="badge rounded-pill bg-gradient-info">Realtime</span>
+        </div>
+        <div class="panel-body mt-3">
+          <div class="chip fade-in">
+            <i class="bi bi-stars"></i>
+            <div>
+              <strong>Futebol</strong>
+              <small class="d-block text-muted">Energia de estádio</small>
+            </div>
+            <span class="chip-count">128 on</span>
+          </div>
+          <div class="chip fade-in" style="animation-delay: .05s">
+            <i class="bi bi-moon-stars"></i>
+            <div>
+              <strong>Desabafo</strong>
+              <small class="d-block text-muted">Escuta acolhedora</small>
+            </div>
+            <span class="chip-count">86 on</span>
+          </div>
+          <div class="chip fade-in" style="animation-delay: .1s">
+            <i class="bi bi-rocket-takeoff"></i>
+            <div>
+              <strong>Eventos</strong>
+              <small class="d-block text-muted">Agenda ao vivo</small>
+            </div>
+            <span class="chip-count">64 on</span>
+          </div>
+        </div>
+        <div class="panel-footer d-flex align-items-center gap-2 mt-3">
+          <i class="bi bi-shield-lock text-primary"></i>
+          <small class="text-muted">Segurança, responsividade e animações suaves para acompanhar cada mensagem.</small>
+        </div>
+      </div>
     </div>
   </header>
+  <section class="feature-tiles py-5">
+    <div class="container">
+      <div class="section-heading text-center">
+        <span class="eyebrow">Visual inspirado em SaaS</span>
+        <h2 class="fw-bold">Mais fluidez, mais presença online.</h2>
+        <p class="text-muted mb-0">Transições em fade, efeitos de hover elegantes e um layout que respira modernidade.</p>
+      </div>
+      <div class="row g-4 mt-4">
+        <div class="col-md-4">
+          <div class="feature-card h-100 fade-up">
+            <div class="icon-stack bg-primary-subtle text-primary"><i class="bi bi-layers"></i></div>
+            <h5 class="mt-3">Design clean</h5>
+            <p class="text-muted">Componentes com glassmorphism, contrastes suaves e tipografia nítida para longas conversas.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card h-100 fade-up" style="animation-delay: .05s">
+            <div class="icon-stack bg-info-subtle text-info"><i class="bi bi-broadcast"></i></div>
+            <h5 class="mt-3">Interação viva</h5>
+            <p class="text-muted">Hover, slide e fade construídos para deixar cada ação perceptível sem poluir a tela.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card h-100 fade-up" style="animation-delay: .1s">
+            <div class="icon-stack bg-success-subtle text-success"><i class="bi bi-shield-check"></i></div>
+            <h5 class="mt-3">Experiência premium</h5>
+            <p class="text-muted">Arquitetura SaaS, performance e segurança para quem precisa de confiança 24/7.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   <!-- 🔹 SALAS -->
-  <section id="salas" class="py-5 bg-light">
+  <section id="salas" class="py-5">
     <div class="container text-center">
-      <h2 class="mb-4">Selecione uma Sala & Comece a Conversar!</h2>
+      <div class="section-heading">
+        <span class="eyebrow">Escolha seu mood</span>
+        <h2 class="fw-bold">Selecione uma Sala &amp; Comece a Conversar!</h2>
+        <p class="text-muted">Experimente um grid vibrante com efeitos de hover e entre na sala que combina com você.</p>
+      </div>
       <div class="row justify-content-center salas-container" id="salas-lista"></div>
     </div>
   </section>
   <!-- 🔹 SOBRE -->
   <section id="sobre" class="py-5">
     <div class="container">
-      <h2>Quem Somos</h2>
-      <p>Somos uma plataforma de chat moderna e segura...</p>
+      <div class="row align-items-center g-4">
+        <div class="col-lg-6">
+          <div class="about-card glass-card h-100">
+            <span class="eyebrow">Quem somos</span>
+            <h3 class="fw-bold">ChatDF: espaço para conexões reais.</h3>
+            <p class="text-muted">Construímos um chat que combina usabilidade SaaS, animações suaves e uma identidade tecnológica para conversas com ritmo.</p>
+            <ul class="about-list">
+              <li><i class="bi bi-lightning-charge"></i>Performance otimizada para manter as salas sempre responsivas.</li>
+              <li><i class="bi bi-magic"></i>UI com glassmorphism, microinterações e transições em fade.</li>
+              <li><i class="bi bi-shield-lock"></i>Camada segura para você conversar sem preocupações.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="highlight-card h-100 fade-up">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <div class="badge rounded-pill bg-primary-subtle text-primary">Experiência premium</div>
+              <div class="badge rounded-pill bg-dark text-white">Versão 2025</div>
+            </div>
+            <p class="mb-2 fw-semibold">Microinterações</p>
+            <p class="text-muted">Animações de hover, slides e fades foram aplicadas para tornar cada clique mais leve.</p>
+            <p class="mb-2 fw-semibold">Look & Feel</p>
+            <p class="text-muted">Paleta tecnológica, cartões translúcidos e componentes curvos inspirados em dashboards modernos.</p>
+            <div class="d-flex align-items-center gap-3 mt-4">
+              <div class="pill">SaaS-ready</div>
+              <div class="pill">UI Premium</div>
+              <div class="pill">Clean & Focused</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
   <!-- 🔹 CONTATO -->
-  <section id="contato" class="bg-light py-5">
+  <section id="contato" class="py-5">
     <div class="container">
       <h2 class="text-center mb-4">Contato</h2>
-      <form class="col-md-8 mx-auto">
+      <form class="col-md-8 mx-auto contact-card glass-card">
         <div class="mb-3"><input type="text" class="form-control" placeholder="Seu nome"></div>
         <div class="mb-3"><input type="email" class="form-control" placeholder="Seu e-mail"></div>
         <div class="mb-3"><textarea class="form-control" rows="4" placeholder="Escreva sua mensagem..."></textarea>
         </div>
-        <button type="submit" class="btn btn-primary w-100">Enviar</button>
+        <button type="submit" class="btn btn-gradient w-100">Enviar</button>
       </form>
     </div>
   </section>
