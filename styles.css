@@ -9,7 +9,7 @@ body {background-color: #115aec31;font-family: 'Segoe UI', sans-serif;scroll-beh
 */
 body {
 font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-background: linear-gradient(145deg, #f7f9ff 0%, #e9f1ff 45%, #f7f9ff 100%);
+background: linear-gradient(135deg, #f5f8ff, #e3f2fd);
 color: #1154a1;
 margin: 0;
 scroll-behavior: smooth;
@@ -86,82 +86,38 @@ footer {font-size: 0.9rem;text-align: center;}
     }
 /*edita os nomes da salas que aparece no chat IMPORTANTE*/
     #chat-container {
-      flex: 1;
-      overflow-y: auto;
-      padding: 18px 18px 140px;
-      background: radial-gradient(circle at 12% 20%, rgba(13,110,253,0.06), transparent 38%),
-                  radial-gradient(circle at 80% 14%, rgba(99,102,241,0.08), transparent 40%),
-                  linear-gradient(180deg, #f7f9ff 0%, #eef2f9 50%, #f9fbff 100%);
-      height: 100vh;
-      scroll-behavior: smooth;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      box-sizing: border-box;
+      flex: 1;overflow-y: auto;padding: 3px 0px 5px 9px;
+      background: #ffffff;/*Edita a cor de fundo*/
+       height:100vh; /* Ajuste fino */
+  overflow-y: auto;scroll-behavior: smooth;
     }
 
     #message-input-area {
       display: flex;align-items: center;
-      gap: 10px;background: rgba(255, 255, 255, 0.92);/*COR DE FUNDO DO CAMPO E ENVIAR MSG*/
-      border-top: 1px solid #e3e9f1;
-      padding: 14px 16px;width: 100%;box-sizing: border-box;
+      gap: 8px;background: #ffffff;/*COR DE FUNDO DO CAMPO E ENVIAR MSG*/
+      border-top: 1px solid #ddd;
+      padding: 10px;width: 100%;box-sizing: border-box;
       position: sticky;bottom: 0;left: 0;
-      box-shadow: 0 -10px 28px rgba(15, 23, 42, 0.08);
-      backdrop-filter: blur(12px);
-      z-index: 900;
-    }
-    #chat-container::-webkit-scrollbar,
-    .message-input::-webkit-scrollbar {
-      width: 8px;
-    }
-    #chat-container::-webkit-scrollbar-thumb,
-    .message-input::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 10px;
-    }
-    #chat-container::-webkit-scrollbar-thumb:hover,
-    .message-input::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
     }
     #message-input-area button {
-      background: #f4f7fb;
-      border: 1px solid #dfe6f3;
-      color: #4b5563;
-      font-size: 1.18rem;
-      display: flex;align-items: center;justify-content: center;padding: 9px;
-      cursor: pointer;transition: 0.2s ease, transform 0.2s ease;
-      border-radius: 14px;
-      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
-      min-width: 44px;
-      min-height: 44px;
+      background: none;border: none;color: #555;font-size: 1.3rem;
+      display: flex;align-items: center;justify-content: center;padding: 6px;
+      cursor: pointer;transition: 0.2s;
     }
-    #message-input-area button:hover {color: #0d6efd;transform: translateY(-1px);}
-    #message-input-area button:focus-visible {outline: 3px solid rgba(13,110,253,0.25);}
+    #message-input-area button:hover {color: #0d6efd;}
     #message-input-area input {flex: 1;border: 1px solid #ccc;border-radius: 50px;padding: 10px 15px;
       font-size: 1rem;outline: none;min-width: 0;
     }
     #sendBtn {
-      background: linear-gradient(135deg, #0d6efd, #4c8dff);
-      color: #fff;
-      border-radius: 16px;
-      width: 46px;
-      height: 46px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      flex-shrink: 0;
-      box-shadow: 0 10px 22px rgba(13, 110, 253, 0.35);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      background: #0d6efd;color: #fff;border-radius: 50%;width: 42px;
+      height: 42px;display: flex;align-items: center;justify-content: center;
+      border: none;flex-shrink: 0;
     }
-    #sendBtn:hover {background: linear-gradient(135deg, #0b5ed7, #3f7af8);box-shadow: 0 12px 28px rgba(13, 110, 253, 0.45);transform: translateY(-1px);}
-    #sendBtn:active {transform: translateY(0);}
+    #sendBtn:hover {background: #0b5ed7;}
     @media (max-width: 600px) {
-      #message-input-area {gap: 6px; padding: 10px;}
-      #message-input-area input {font-size: 0.95rem; padding: 10px 12px;}
-      #sendBtn {width: 42px; height: 42px;}
-      #chat-container {padding: 14px 12px 130px; gap: 10px;}
-      .message {width: 100%; padding: 12px 13px;}
+      #message-input-area {gap: 5px; padding: 8px;}
+      #message-input-area input {font-size: 0.9rem; padding: 8px 12px;}
+      #sendBtn {width: 38px; height: 38px;}
     }
 
 
@@ -170,20 +126,22 @@ footer {font-size: 0.9rem;text-align: center;}
 
 .reply-preview {
   position: absolute;
+  bottom: 65px; /* modo DeskTop Aumentado para não encostar */
   display: inline-flex;
   flex-direction: row;
   align-items: flex-start;
   width: auto;
-  max-width: 82vw;  /*largura máxima confortável */
-  min-width: 220px;
-  background: linear-gradient(135deg, #f3f6fc, #e8ecf5);
-  border: 1px solid #dfe6f3;
-  border-radius: 14px;
+  max-width: 80vw;  /*largura máxima confortável */
+  min-width: 200px;
+  background: #e7e7e7;
+  border-left: 4px solid #353434;
+   border-right: 4px solid #353434;
+  border-radius: 12px;
   padding: 12px 14px;
   gap: 12px;
   z-index: 50;
   animation: slideUp 0.2s ease;
-  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.12);
+  
 }
 
 /* IMAGEM / STICKER */
@@ -200,20 +158,18 @@ footer {font-size: 0.9rem;text-align: center;}
   flex-direction: column;
   overflow: hidden;
   max-width: 80vw;
-  gap: 2px;
 }
 
 /* Nome */
 .reply-preview .reply-author {
   font-weight: bold;
   margin-bottom: 4px;
-  color: #0f172a;
 }
 
 /* edita a quantidade de linha na menção Texto em 4 linhas naturais  */
 .reply-preview .reply-text {
   font-size: 0.88em;
-  color: #334155;
+  color: #444;
   white-space: normal;
   line-height: 1.25em;
   max-height: calc(1.25em * 3);
@@ -225,7 +181,15 @@ footer {font-size: 0.9rem;text-align: center;}
   margin-left: auto;
   font-size: 20px;
   cursor: pointer;
-  color: #475569;
+  color: #444;
+}
+
+/* MOBILE */
+@media (max-width: 500px) {
+  .reply-preview {
+    bottom: 62px;/* modo mobile  Aumentado para não encostar */
+    max-width: 90vw;
+  }
 }
 
 /* animação */
@@ -242,22 +206,13 @@ footer {font-size: 0.9rem;text-align: center;}
 .reply-preview {
   position: absolute;
   left: 10px;
-  bottom: calc(100% + 14px); /*sempre acima do input com respiro extra */
+  bottom: calc(92% + 10px); /*sempre 10px acima do input */
 }
 
-@media (max-width: 500px) {
-  .reply-preview {
-    bottom: calc(100% + 10px);
-    max-width: 90vw;
-  }
-}
-
-.quoted-reply-box {background-color: #eef2fb;padding: 8px 12px;border-radius: 10px;margin-bottom: 8px;
-  font-size: 0.94rem;
+.quoted-reply-box {background-color: #b1adad3d;padding: 6px 10px;border-radius: 6px;margin-bottom: 6px;
+  font-size: 0.92rem;
   display: inline-block;/*Faz o fundo acompanhar o conteúdo */
   max-width: 90%;  /* Evita que quebre no mobile */
-  border: 1px solid #dfe6f3;
-  color: #1f2937;
 }
 .quoted-text {
   color: #000;
@@ -280,21 +235,17 @@ footer {font-size: 0.9rem;text-align: center;}
 
 
 /*===============  EDITA campo de enviar mensagens no chat textarea cresce de acordo com o texto ======================= */
-.message-input {width: 100%;border: 1px solid #dbe4f3;border-radius: 16px;padding: 12px 14px;resize: none;
-  overflow-y: auto;max-height: 120px;line-height: 1.5;font-size: 1rem;white-space: pre-wrap;word-break: break-word;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease; background: #f9fbff;
-  color: #0f172a;box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 1px 2px rgba(15, 23, 42, 0.05);
+.message-input {width: 100%;border: 1px solid #5856568e;border-radius: 18px;padding: 10px 14px;resize: none;
+  overflow-y: auto;max-height: 95px;line-height: 20px;font-size: 15px;white-space: pre-wrap;word-break: break-word;
+  transition: border-color 0.2s ease;
 }
-.message-input::placeholder {color: #94a3b8;}
 .message-input:focus {
-  border-color: #8ab8ff;/* cor quando clicado */
+  border-color: #3d3c3ca1;/* cor quando clicado */
   outline: none !important;
-  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.18), inset 0 1px 0 rgba(255,255,255,0.85);
-  background: #ffffff;
 }
 
 #messageInput {
-  transition: height 0.3s ease;
+  transition: height 0.35s ease;
 }
 
 /*=========ESSA PARTE EDITA O LOGIN GOOGLE -----------*/
@@ -302,17 +253,10 @@ footer {font-size: 0.9rem;text-align: center;}
   background-color: #0050a0e1 !important;color: #fff !important;border: none;
   padding: 6px 12px;border-radius: 46px;font-weight: bold;font-size: 15px;}
 #loginBtn:hover {background-color: #012346 !important;color: #fff !important;}
-.message {background: #ffffff;border-radius: 18px;max-width: 960px;
-  margin: 0 auto;word-wrap: break-word; padding: 14px 16px;
-  width: min(100%, 960px);
-  border: 1px solid #e4eaf3;box-shadow: 0 14px 30px -18px rgba(15, 23, 42, 0.45);
-  transition: transform 0.18s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  backdrop-filter: blur(2px);
-  animation: fadeInUp 0.2s ease;
-}
-.message:hover {transform: translateY(-1px);box-shadow: 0 18px 36px -18px rgba(15, 23, 42, 0.55);border-color: #d8e5ff;}
-.message > div:first-child {display: flex;align-items: center;gap: 10px;margin-bottom: 6px;}
-.message span {font-size: 1em;line-height: 1.55em;/*EDITAR a imagem do perfil*/}
+/*EDITA  A COR  DE FUNDO DAS mensagens*/
+.message {background: #ffffff;border-radius: 18px;max-width:98%;
+  margin-bottom: 12px;word-wrap: break-word; margin-top: 1px;margin-bottom: 1px;}
+.message span {font-size: 1em;line-height: 1.5em;/*EDITAR a imagem do perfil*/}
 .btn-logout {
   background: #6247f84b !important; color: white !important;border-radius: 6px;border: none;padding: 5px 14px;font-weight: 600;}
  
@@ -320,13 +264,11 @@ footer {font-size: 0.9rem;text-align: center;}
 /*=================== Edita as imagem e a Hora  =================================*/
 
 /* Ajusta imagem de perfil dentro da mensagem */
-.user-photo {width: 38px;height: 38px;border-radius: 50%;object-fit: cover;margin-right: 6px;box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);}
-.user-name {font-weight: 700;letter-spacing: 0.01em;}
-.reply-container {margin: 8px 0 12px;padding: 10px 12px;border-radius: 14px;background: #f3f6fc;border: 1px dashed #d8e0ef;}
+.user-photo {width: 36px;height: 36px;border-radius: 50%;object-fit: cover;margin-right: 6px;}
 /* Hora da mensagem */
-.message-time {font-size: 0.78em;color: #6b7280;margin-top: 6px;text-align: right;font-weight: 600;letter-spacing: 0.01em;}
+.message-time {font-size: 0.68em;color: #5756568f;margin-top: 1px;text-align: right;}
 /* Estilo para texto truncado */
-.msg-text {display: block;white-space: pre-wrap;max-height: 4.5em;overflow: hidden;color: #1f2937;}
+.msg-text {display: block;white-space: pre-wrap;max-height: 4.5em;overflow: hidden;color: #e00606;}
 /* Botão "Mostrar mais" */
 .toggle-expand {background: transparent;color: #333;border: none;font-size: 0.85em;cursor: pointer;padding: 2px 4px;text-decoration: underline;}
 .toggle-expand {background: transparent;border: none;color: #00000079;padding: 0;font-size: 14px;cursor: pointer;}
@@ -793,26 +735,24 @@ display: flex;flex-direction:column;}
 }
 
 .btn-attach {
-  background: #f4f7fb;
-  border: 1px solid #dfe6f3;
-  color: #4b5563;
-  font-size: 1.35rem;
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 1.4rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
+  padding: 6px;
   min-width: 44px;
   min-height: 44px;
-  border-radius: 14px;
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  border-radius: 50%;
   touch-action: manipulation;
-  transition: color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  transition: color 0.2s ease, transform 0.15s ease;
 }
 
 .btn-attach:hover {
   color: #0d6efd;
   transform: translateY(-1px);
-  box-shadow: 0 10px 22px rgba(13, 110, 253, 0.18);
 }
 
 .btn-attach:focus-visible {
