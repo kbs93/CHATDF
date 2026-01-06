@@ -2,6 +2,17 @@
 import { auth, signInWithGoogle, signOutUser, onAuthChange, db } from "./firebase-config.js";
 import { doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  fetchSignInMethodsForEmail,
+  signInWithEmailAndPassword,
+  linkWithCredential
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+
+
+
 export let currentUser = null;
 
 export function initAuth(showToast) {
@@ -109,22 +120,77 @@ if (user) {
 
 loginBtnModal.onclick = async () => {
   const modal = document.getElementById("loginModal");
-
-  // FECHA O MODAL IMEDIATAMENTE
   if (modal) modal.classList.add("hidden");
 
-  // Libera o scroll caso o modal trave o body
   document.body.style.overflow = "auto";
 
-  try {
-    await signInWithGoogle();
-  } catch (err) {
-    showToast("Erro ao fazer login: " + err.message);
+  const provider = new GoogleAuthProvider();
 
-    // Se der erro, reabre o modal
+  try {
+    // 🔹 1. Tenta login Google
+    const result = await signInWithPopup(auth, provider);
+
+    // 🔹 2. Verifica se já existe conta password
+    const email = result.user.email;
+    const methods = await fetchSignInMethodsForEmail(auth, email);
+
+    if (methods.includes("password") && !methods.includes("google.com")) {
+      // ⚠️ Já existe conta com senha → precisa vincular
+
+      const password = prompt(
+        "Este e-mail já possui conta com senha.\nDigite sua senha para vincular ao Google:"
+      );
+
+      if (!password) {
+        await auth.signOut();
+        return;
+      }
+
+      // Login com senha
+      const userCred = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // Credencial Google
+      const googleCred = GoogleAuthProvider.credentialFromResult(result);
+
+      // 🔗 Vincula Google à conta existente
+      await linkWithCredential(userCred.user, googleCred);
+
+      showToast("Conta Google vinculada com sucesso!");
+    }
+
+  } catch (error) {
+    console.error("Erro Google:", error);
+    showToast("Erro ao fazer login com Google");
     if (modal) modal.classList.remove("hidden");
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
   });
 }

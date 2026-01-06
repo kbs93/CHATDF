@@ -243,7 +243,7 @@ if (!floodResetTimeout) {
   floodResetTimeout = setTimeout(() => {
     floodCount = 0;
     floodResetTimeout = null;
-  }, 60000); // 60.000 ms = 1 minuto
+  }, 60000); // 60.000 ms = 1 minuto 
 }
   // Flood / validações (mantido exatamente como você tinha) HTML
   const htmlPattern = /<[^>]*>/g;

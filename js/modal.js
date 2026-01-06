@@ -10,6 +10,8 @@ import { auth, db } from "./firebase-config.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 import { showToast } from "./ui.js";
 
+import {fetchSignInMethodsForEmail} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
 // ======================== CONSTANTES ========================
 const DEFAULT_AVATAR = "img/avatar.png";
 
@@ -131,6 +133,16 @@ document.getElementById("registerBtn")?.addEventListener("click", async () => {
       return;
     }
   }
+
+
+
+// 🔒 BLOQUEIA CADASTRO SE O EMAIL JÁ USA GOOGLE
+const methods = await fetchSignInMethodsForEmail(auth, email);
+
+if (methods.includes("google.com")) {
+  showToast("Este e-mail já possui login com Google. Use o botão Google.");
+  return;
+}
 
   try {
     const cred = await createUserWithEmailAndPassword(auth, email, password);
