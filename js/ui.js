@@ -50,26 +50,6 @@ export function getColorFromName(name) {
   return palette[Math.abs(hash) % palette.length];
 }
 
-function normalizeColor(value) {
-  const temp = document.createElement("div");
-  temp.style.color = value || "#353434";
-  document.body.appendChild(temp);
-  const computed = getComputedStyle(temp).color;
-  temp.remove();
-
-  const match = computed.match(/rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
-  if (!match) {
-    return { color: "#353434", r: 53, g: 52, b: 52 };
-  }
-
-  const [, r, g, b] = match;
-  return { color: `rgb(${r}, ${g}, ${b})`, r: Number(r), g: Number(g), b: Number(b) };
-}
-
-function buildTransparentColor({ r, g, b }, alpha = 0.14) {
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
 // Faz scroll automático, só se estiver no fim
 export function scrollToBottom(container) {
   const nearBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 150;
@@ -91,7 +71,7 @@ function extractYouTubeId(url) {
 }
 
 // Caixa estilo WhatsApp
-export function showReplyPreview(msgId, msgText, author, accentColor) {
+export function showReplyPreview(msgId, msgText, author) {
   let preview = document.getElementById("replyPreview");
 
   if (!preview) {
@@ -122,10 +102,6 @@ export function showReplyPreview(msgId, msgText, author, accentColor) {
   if (/^\p{Emoji}$/u.test(msgText)) {
     shortText = msgText;
   }
-
-  const safeColor = normalizeColor(accentColor || getColorFromName(author));
-  const translucentBg = buildTransparentColor(safeColor);
-
   preview.innerHTML = `
     ${mediaHTML}
 
@@ -137,8 +113,6 @@ export function showReplyPreview(msgId, msgText, author, accentColor) {
     <span class="close-reply">✕</span>
   `;
 
-  preview.style.setProperty("--reply-accent", safeColor.color);
-  preview.style.setProperty("--reply-bg", translucentBg);
   preview.style.display = "inline-flex";
   window.replyingTo = msgId;
 
@@ -147,3 +121,4 @@ export function showReplyPreview(msgId, msgText, author, accentColor) {
     window.replyingTo = null;
   };
 }
+
