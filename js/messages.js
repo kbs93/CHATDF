@@ -208,7 +208,10 @@ export function initMessages(chat, sala) {
           event.target.classList.contains("sticker-img")
         ) return;
 
-        showReplyPreview(msgId, msg.text, msg.user);
+        const nameEl = div.querySelector(".user-name");
+        const accent = nameEl ? getComputedStyle(nameEl).color : userColor;
+
+        showReplyPreview(msgId, msg.text, msg.user, accent);
       });
 
       fragment.appendChild(div);
