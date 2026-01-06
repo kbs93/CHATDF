@@ -123,27 +123,26 @@ footer {font-size: 0.9rem;text-align: center;}
 
 
 /*========================  EDITA O CAMPO DE RESPONDER OS USUARIOS MENCIONADOS ==================================*/
+
 .reply-preview {
-  posição : absoluta;
+  position: absolute;
   bottom: 65px; /* modo DeskTop Aumentado para não encostar */
-  exibição : inline-flex;
-  flex-direction : linha;
-  alinhamento-itens : início-flexível;
-  largura : automática;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: auto;
   max-width: 80vw;  /*largura máxima confortável */
-  largura mínima : 200px ;
-  fundo : var (--reply-bg, #e7e7e7 ) ;
-  borda-esquerda : 4px sólida var (--reply-accent, #353434 ) ;
-   borda-direita : 4px sólida var (--reply-accent, #353434 ) ;
-  raio da borda : 12px ;
-  preenchimento : 12px 14px ;
- 
-  espaço : 12px ;
-  Índice z : 50 ;
-  animação : slideUp 0.2s ease;
+  min-width: 200px;
+  background: #e7e7e7;
+  border-left: 4px solid #353434;
+   border-right: 4px solid #353434;
+  border-radius: 12px;
+  padding: 12px 14px;
+  gap: 12px;
+  z-index: 50;
+  animation: slideUp 0.2s ease;
   
 }
-
 
 /* IMAGEM / STICKER */
 .reply-preview img {
@@ -163,10 +162,8 @@ footer {font-size: 0.9rem;text-align: center;}
 
 /* Nome */
 .reply-preview .reply-author {
- 
-  peso da fonte : negrito;
-  margem-inferior : 4px ;
-  cor : var (--reply-accent, #353434 );
+  font-weight: bold;
+  margin-bottom: 4px;
 }
 
 /* edita a quantidade de linha na menção Texto em 4 linhas naturais  */
@@ -914,29 +911,6 @@ footer {background: #0d6efd;}
 @keyframes slideUp {from {opacity: 0;transform: translateY(22px);}to {opacity: 1;transform: translateY(0);}}
 @keyframes float {0% {transform: translateY(0);}50% {transform: translateY(-10px);}100% {transform: translateY(0);}}
 @media (max-width: 991px) {.hero::after {background-position: center 75%;background-size: 280px;opacity: 0.15;}.hero {padding-top: 32px;}.stats {gap: 10px;}}
-
-
-
-
-
-
-
-
-
-/*========================CHEGAR EM CASA EDITAR ESSA PARTE =========================================*/
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*
