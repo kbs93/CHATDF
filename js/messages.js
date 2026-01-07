@@ -81,7 +81,7 @@ function renderYouTube(id) {
     </div>
   `;
 }
-//=============================== EDITA AS MENSAGEM NO CHAT =====================
+
 async function renderReply(msg) {
   if (!msg.replyTo) return "";
   try {
@@ -126,6 +126,7 @@ async function renderReply(msg) {
   }
 }
 
+
 function toSoftBackground(color, alpha) {
   if (!color) return `rgba(0,0,0,${alpha})`;
   if (color.startsWith("rgb")) {
@@ -146,7 +147,6 @@ function toSoftBackground(color, alpha) {
   }
   return `rgba(0,0,0,${alpha})`;
 }
-
 
 
 
