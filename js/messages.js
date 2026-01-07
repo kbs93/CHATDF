@@ -148,6 +148,19 @@ function toSoftBackground(color, alpha) {
   return `rgba(0,0,0,${alpha})`;
 }
 
+function getReplyUserColor(userName, replyToId, fallbackColor) {
+  const nameEl = replyToId
+    ? document.querySelector(`.message[data-id="${replyToId}"] .user-name`)
+    : null;
+  const dataColor = nameEl?.dataset?.userColor || nameEl?.dataset?.color;
+  if (dataColor) return dataColor;
+  if (nameEl) {
+    const computed = window.getComputedStyle(nameEl).color;
+    if (computed) return computed;
+  }
+  if (fallbackColor) return fallbackColor;
+  return getColorFromName(userName);
+}
 
 
 
