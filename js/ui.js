@@ -30,7 +30,7 @@ export function highlightMentions(text) {
 // Gera cor consistente com base no nome
 export function getColorFromName(name) {
 
-  // 🔥 BLINDAGEM OBRIGATÓRIA
+  // BLINDAGEM OBRIGATÓRIA
   if (!name || typeof name !== "string") {
     return "#000000"; // cor padrão segura
   }
@@ -112,6 +112,23 @@ export function showReplyPreview(msgId, msgText, author) {
 
     <span class="close-reply">✕</span>
   `;
+
+
+
+//  FORÇA a cor do FUNDO pelo NOME do usuário
+const userColor = getColorFromName(author);
+
+// fundo sólido (sem transparência)
+preview.style.backgroundColor = userColor;
+
+// texto sempre legível
+preview.style.color = "#ffffff";
+
+// detalhe lateral opcional
+preview.style.borderLeft = `4px solid ${userColor}`;
+
+
+
 
   preview.style.display = "inline-flex";
   window.replyingTo = msgId;
