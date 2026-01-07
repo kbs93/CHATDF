@@ -88,13 +88,7 @@ async function renderReply(msg) {
     const repliedDoc = await getDoc(doc(chatRef, msg.replyTo));
     if (!repliedDoc.exists()) return "";
     const d = repliedDoc.data();
-
-   const color = d.color || getColorFromName(d.user);
-    const softBg = toSoftBackground(color, 0.12);
-  
-
-
-
+    const color = getColorFromName(d.user);
     let content = "";
     if (isSticker(d.text)) {
       content = renderSticker(d.text);}
@@ -114,7 +108,7 @@ async function renderReply(msg) {
     }
 
     return `
-      <div class="quoted-reply-box" style="border-left:4px solid ${color};background-color:${softBg};">
+      <div class="quoted-reply-box" style="border-left:4px solid ${color};">
         <div class="quoted-header" style="color:${color};"><strong>${d.user}</strong></div>
         ${content}
       </div>
@@ -125,51 +119,6 @@ async function renderReply(msg) {
     return "";
   }
 }
-
-
-function toSoftBackground(color, alpha) {
-  if (!color) return `rgba(0,0,0,${alpha})`;
-  if (color.startsWith("rgb")) {
-    const values = color.match(/\d+(\.\d+)?/g);
-    if (!values || values.length < 3) return `rgba(0,0,0,${alpha})`;
-    const [r, g, b] = values;
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  }
-  let hex = color.replace("#", "").trim();
-  if (hex.length === 3) {
-    hex = hex.split("").map((c) => c + c).join("");
-  }
-  if (hex.length >= 6) {
-    const r = parseInt(hex.slice(0, 2), 16);
-    const g = parseInt(hex.slice(2, 4), 16);
-    const b = parseInt(hex.slice(4, 6), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  }
-  return `rgba(0,0,0,${alpha})`;
-}
-
-function getReplyUserColor(userName, replyToId, fallbackColor) {
-  const nameEl = replyToId
-    ? document.querySelector(`.message[data-id="${replyToId}"] .user-name`)
-    : null;
-  const dataColor = nameEl?.dataset?.userColor || nameEl?.dataset?.color;
-  if (dataColor) return dataColor;
-  if (nameEl) {
-    const computed = window.getComputedStyle(nameEl).color;
-    if (computed) return computed;
-  }
-  if (fallbackColor) return fallbackColor;
-  return getColorFromName(userName);
-}
-
-
-
-
-
-
-
-
-
 
 // =====================INIT LISTENER DE MENSAGENS =======================================================
 export function initMessages(chat, sala) {
