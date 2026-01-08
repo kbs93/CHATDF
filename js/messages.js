@@ -25,6 +25,10 @@ let floodResetTimeout = null;
 let ultimaMensagem = "";
 let repetidas = 0;
 
+
+
+
+
 //======================= ID ORGANIZADO  =============================================================
 function gerarIdISO() {
   const d = new Date();
@@ -82,17 +86,61 @@ function renderYouTube(id) {
   `;
 }
 
+
+// --------------------------------- edita AS CORES COR DO campo das mensagem respondida no chat ---------------
+function toRGBA(color, alpha = 0.15) {
+  const el = document.createElement("span");
+  el.style.color = color;
+  document.body.appendChild(el);
+
+  const rgb = getComputedStyle(el).color;
+  document.body.removeChild(el);
+
+  return rgb.replace("rgb(", "rgba(").replace(")", `, ${alpha})`);
+}
+
 async function renderReply(msg) {
   if (!msg.replyTo) return "";
   try {
     const repliedDoc = await getDoc(doc(chatRef, msg.replyTo));
     if (!repliedDoc.exists()) return "";
     const d = repliedDoc.data();
-    const color = getColorFromName(d.user);
+
+    // =====================================================
+    // DEFINIÇÃO PROFISSIONAL DA COR DO REPLY
+    // Prioridade:
+    // 1) Firestore (msg.replyUserColor)
+    // 2) DOM (nome renderizado)
+    // 3) Fallback fixo
+    // =====================================================
+
+    let color = msg.replyUserColor || null;
+
+    // 🔹 Fallback DOM (mensagens recentes)
+    if (!color) {
+      const messageEl = document.querySelector(
+        `[data-id="${msg.replyTo}"]`
+      );
+
+      if (messageEl) {
+        const nameEl = messageEl.querySelector(".user-name");
+        if (nameEl) {
+          color = getComputedStyle(nameEl).color;
+        }
+      }
+    }
+
+    // 🔹 Fallback final (mensagens antigas)
+    if (!color) {
+      color = "#3f3f3f"; // cinza neutro profissional
+    }
+
+    // =====================================================
+
     let content = "";
     if (isSticker(d.text)) {
-      content = renderSticker(d.text);}
-    else {
+      content = renderSticker(d.text);
+    } else {
       const ytId = extractYouTubeId(d.text);
       if (ytId) {
         const thumb = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
@@ -102,14 +150,26 @@ async function renderReply(msg) {
           </div>
         `;
       } else {
-        const short = d.text.length > 200 ? d.text.slice(0, 190) + "..." : d.text;// edita a parte de menção de usuario no desktop
+        const short =
+          d.text.length > 200
+            ? d.text.slice(0, 190) + "..."
+            : d.text;
         content = `<div class="quoted-text">${short}</div>`;
       }
     }
 
+    const bg = toRGBA(color, 0.17); // transparência do fundo
+
     return `
-      <div class="quoted-reply-box" style="border-left:4px solid ${color};">
-        <div class="quoted-header" style="color:${color};"><strong>${d.user}</strong></div>
+      <div class="quoted-reply-box"
+           style="
+             border-left:4px solid ${color};
+             background:${bg};
+           ">
+        <div class="quoted-header"
+             style="color:${color}; font-weight:600;">
+          <strong>${d.user}</strong>
+        </div>
         ${content}
       </div>
     `;
@@ -120,9 +180,11 @@ async function renderReply(msg) {
   }
 }
 
+
+
 // =====================INIT LISTENER DE MENSAGENS =======================================================
 export function initMessages(chat, sala) {
-  // 🔒 PROTEÇÃO TOTAL (evita erro no GitHub)
+  // PROTEÇÃO TOTAL (evita erro no GitHub)
   if (!chat) {
     console.warn("initMessages: container de chat não encontrado");
     return;
@@ -171,7 +233,7 @@ export function initMessages(chat, sala) {
       else if (ytId) content = renderYouTube(ytId);
       else content = renderPlainMessage(msg);
 
-      // ✅ AVATAR SEGURO (usuários antigos e novos)
+      // AVATAR SEGURO (usuários antigos e novos)
       const avatar = msg.photo && msg.photo.startsWith("http")
         ? msg.photo
         : "img/avatar.png";
@@ -346,14 +408,25 @@ if (text.length > 1000) {
     const idOrganizado = gerarIdISO();
     // TIMESTAMP PROVISÓRIO (mostrar imediatamente)
 const now = new Date();
-    await setDoc(doc(chatRef, idOrganizado), {
-      user: currentUser.displayName,
-      photo: currentUser.photoURL,
-      text,
-      color: userColorChoice,
-      createdAt: serverTimestamp(),
-      replyTo: window.replyingTo || null,
-    });
+// COR DO NOME DO USUÁRIO RESPONDIDO
+let replyUserColor = null;
+
+if (window.replyingTo) {
+  const replyPreview = document.getElementById("replyPreview");
+  replyUserColor = replyPreview?.dataset?.replyColor || null;
+}
+
+await setDoc(doc(chatRef, idOrganizado), {
+  user: currentUser.displayName,
+  photo: currentUser.photoURL,
+  text,
+  color: userColorChoice,        // cor do TEXTO
+  replyTo: window.replyingTo || null,
+  replyColor: replyUserColor,    // cor do NOME
+  createdAt: serverTimestamp(),
+});
+
+
     // LIMPAR UI — não remove mais a caixa!
     input.value = "";
     window.replyingTo = null;
