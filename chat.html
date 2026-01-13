@@ -102,6 +102,9 @@
 <div id="chat-container" class="container-fluid"></div>
 <!--  Campo de envio -->
 <div id="message-input-area">
+
+
+
   <div class="attachment-wrapper">
     <button id="attachBtn" title="Anexar" class="btn-attach" aria-expanded="false">
       <i class="bi bi-paperclip"></i>
@@ -110,35 +113,35 @@
       <div class="attachment-grid">
         <button class="attachment-item" data-action="gallery">
           <span class="attachment-icon icon-gallery"><i class="bi bi-image"></i></span>
-          <span class="attachment-label">Galeria</span>
+          <span class="attachment-label">rascunho</span>
         </button>
         <button class="attachment-item" data-action="camera">
           <span class="attachment-icon icon-camera"><i class="bi bi-camera-fill"></i></span>
-          <span class="attachment-label">Câmera</span>
+          <span class="attachment-label">rascunho</span>
         </button>
         <button class="attachment-item" data-action="location">
           <span class="attachment-icon icon-location"><i class="bi bi-geo-alt-fill"></i></span>
-          <span class="attachment-label">Localização</span>
+          <span class="attachment-label">rascunho</span>
         </button>
         <button class="attachment-item" data-action="contact">
           <span class="attachment-icon icon-contact"><i class="bi bi-person-badge-fill"></i></span>
-          <span class="attachment-label">Contato</span>
+          <span class="attachment-label">rascunho</span>
         </button>
         <button class="attachment-item" data-action="documento">
           <span class="attachment-icon icon-document"><i class="bi bi-file-earmark-text"></i></span>
-          <span class="attachment-label">Documento</span>
+          <span class="attachment-label">rascunho</span>
         </button>
         <button class="attachment-item" data-action="audio">
           <span class="attachment-icon icon-audio"><i class="bi bi-headphones"></i></span>
-          <span class="attachment-label">Áudio</span>
+          <span class="attachment-label">rascunho</span>
         </button>
         <button class="attachment-item" data-action="poll">
           <span class="attachment-icon icon-poll"><i class="bi bi-bar-chart-line-fill"></i></span>
-          <span class="attachment-label">Enquete</span>
+          <span class="attachment-label">rascunho</span>
         </button>
         <button class="attachment-item" data-action="event">
           <span class="attachment-icon icon-event"><i class="bi bi-calendar-event-fill"></i></span>
-          <span class="attachment-label">Evento</span>
+          <span class="attachment-label">rascunho</span>
         </button>
         <button class="attachment-item" id="stickerBtn" data-action="stickers">
           <span class="attachment-icon icon-sticker"><img src="img/sorrir.png" alt="Figurinhas" width="24" height="24"></span>
@@ -149,12 +152,18 @@
           <span class="attachment-label">Cor do texto</span>
         </button>
         <button class="attachment-item" data-action="ai">
-          <span class="attachment-icon icon-ai"><i class="bi bi-stars"></i></span>
-          <span class="attachment-label">Imagens de IA</span>
-        </button>
+         <span class="attachment-icon icon-ai">
+      <i class="bi bi-stars"></i>
+      </span>
+     <span class="attachment-label">Sugerir melhoria</span>
+    </button>
       </div>
     </div>
   </div>
+
+
+
+
   <button id="emojiBtn" title="Adicionar emoji"><i class="bi bi-emoji-smile"></i></button>
 <div id="replyPreview" class="reply-preview" style="display:none;"></div>
 <textarea id="messageInput" class="message-input" placeholder="Digite sua mensagem..." rows="1"></textarea>
@@ -171,18 +180,32 @@
 <!-- 🔹 Toast -->
 <div id="toast"></div>
 
+
+<!--================== MODAL DO FEEDBAR Botao de melhoria =============================-->
+<div id="feedbackModal" class="feedback-modal hidden">
+  <div class="feedback-box">
+    <h4>Sugerir melhoria</h4>
+    <textarea id="feedbackText" placeholder="Escreva sua sugestão..."></textarea>
+    <div class="feedback-actions">
+      <button id="cancelFeedback">Cancelar</button>
+      <button id="sendFeedback">Enviar</button>
+    </div>
+  </div>
+</div>
+
+
+
 <!-- 🔹 Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-
-
 <script type="module">
 /* ======================================================
    🚀 NOVA PALETA DE CORES (DINÂMICA / SALVA NO FIREBASE)
 ====================================================== */
 
 import { auth, db } from "./js/firebase-config.js";
-import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import {doc,getDoc,setDoc,addDoc,collection,serverTimestamp
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
 import { showToast } from "./js/ui.js";
 
 let selectedColor = "#000000";   // ⭐ SEMPRE COMEÇA COM PRETO
@@ -206,7 +229,11 @@ const attachmentActions = {
   audio: () => showToast("Áudio em breve."),
   poll: () => showToast("Enquete em breve."),
   event: () => showToast("Evento em breve."),
-  ai: () => showToast("Imagens de IA em breve.")
+  ai: () => {
+  const modal = document.getElementById("feedbackModal");
+  if (modal) modal.classList.remove("hidden");
+}
+
 };
 
 const closeAttachmentPanel = () => {
@@ -362,7 +389,7 @@ colorBtn.addEventListener("click", () => {
 window.getSelectedColor = () => selectedColor;
 
 /* ============================================
-   📎 Painel de anexos estilo WhatsApp
+    Painel de anexos estilo WhatsApp
 ============================================ */
 attachBtn?.addEventListener("click", (e) => {
   e.stopPropagation();
@@ -391,6 +418,62 @@ document.addEventListener("click", (e) => {
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeAttachmentPanel();
 });
+
+
+
+// ======================= EDITA o script do botao feedback sujeri melhoria ======== 
+
+const FEEDBACK_COOLDOWN = 300; // segundos
+
+const feedbackText = document.getElementById("feedbackText");
+document.getElementById("cancelFeedback")?.addEventListener("click", () => {
+  document.getElementById("feedbackModal")?.classList.add("hidden");
+});
+
+
+
+document.getElementById("sendFeedback")?.addEventListener("click", async () => {
+  const text = feedbackText.value.trim();
+  if (!text) {
+    showToast("Escreva uma sugestão.");
+    return;
+  }
+
+  const lastSent = localStorage.getItem("lastFeedbackTime");
+  const now = Date.now();
+
+  if (lastSent && (now - lastSent) < FEEDBACK_COOLDOWN * 1000) {
+    const wait = Math.ceil(
+      (FEEDBACK_COOLDOWN * 1000 - (now - lastSent)) / 1000
+    );
+    showToast(`Aguarde ${wait}s para enviar outra sugestão.`);
+    return;
+  }
+
+  try {
+    const user = auth.currentUser;
+
+    await addDoc(collection(db, "feedbacks"), {
+      text,
+      uid: user?.uid || null,
+      name: user?.displayName || "Anônimo",
+      createdAt: serverTimestamp()
+    });
+
+    localStorage.setItem("lastFeedbackTime", now);
+
+    feedbackText.value = "";
+    document.getElementById("feedbackModal")?.classList.add("hidden");
+    showToast("Obrigado pela sugestão!");
+
+  } catch (err) {
+    console.error("Erro ao enviar feedback:", err);
+    showToast("Erro ao enviar sugestão.");
+  }
+});
+
+
+
 
 </script>
 

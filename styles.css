@@ -16,17 +16,66 @@ scroll-behavior: smooth;
 }
    
 /* ================== CHAT =================== */
-.chat-box {height: 65vh;/*ocupa 65% da altura da tela*/
-  overflow-y: auto;background: #e6d9d9;border-radius: 4px;padding: 10px;}
-/* ================== HERO =================== */
+
+/* ================== HERO =================== nao apagar esse hero 08-01-26 edita a cor AZUL das animação
 .hero {background: linear-gradient(to right, #007bff, #0056b3);height: 70vh;position: relative;overflow: hidden;
   z-index: 1;display: flex;align-items: center;justify-content: center;text-align: center;}
+
+
+.chat-box {height: 65vh;
+  overflow-y: auto;background: #e6d9d9;border-radius: 4px;padding: 10px;}
+
+
+*/
 #background-animation {
 position: absolute;top: 0;left: 0;width: 100%;height: 100%;z-index: 0;}
-#background-animation {display: block;width: 100%;height: 100%;overflow: hidden; /* opcional */}
+
+
+
+/*
+#background-animation {display: block;width: 100%;height: 100%;overflow: hidden; }
 .hero .container {position: relative;z-index: 1;color: #fff;}
+
+/* ------------------ edita a cor AZUL das animação ------     ALTURA DO FUNDO AZUL   min-height: 70vh; ----------------------------------*/
+.hero {position: relative;background: linear-gradient(135deg, #621ae9d8 0%, #437dff 40%, #74b9ff 100%);
+overflow: hidden;  justify-content: center;           }
+.hero-avatar {max-width: 320px;width: 100%;filter: drop-shadow(0 14px 40px rgba(0, 0, 0, 0.25));animation: float 6s ease-in-out infinite;}
+
+
+.hero .container,
+.hero .row,
+.hero [class^="col-"] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/*
+.hero h1 {font-size: clamp(2rem, 3vw + 1rem, 3.2rem);letter-spacing: -0.02em;}
 .hero h1 {font-size: 2.5rem;font-weight: bold;}
 .hero p {font-size: 1.25rem;}
+*/
+
+/*.hero::after editand a imagem img dentro da animação
+  .hero .lead {max-width: 760px;margin: 0 auto;}
+*/
+
+
+
+/*.hero h1,
+.hero h2 {
+  white-space: normal; 
+  text-align: center;
+}
+
+.hero p {
+  max-width: 700px;
+  text-align: center;
+}
+*/
+
 /* ================== NAVBAR =================== */
 .navbar-brand {
   font-size: 1.2;}
@@ -217,10 +266,10 @@ footer {font-size: 0.9rem;text-align: center;}
 
 
 .quoted-text {
-  color: #000;
+  color: #353232; /* edita a cor das mensagema o responder o usuario */
   white-space: pre-wrap;
   display: block;
-      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 /*.quoted-header {
@@ -880,15 +929,8 @@ box-shadow: 0 10px 30px rgba(13, 110, 253, 0.25);}
 .navbar .navbar-brand {color: #ffffff !important;}
 .navbar .navbar-toggler {border: 1px solid rgba(255, 255, 255, 0.5);}
 .navbar .navbar-toggler-icon {filter: brightness(10);}
-.hero {position: relative;min-height: 70vh;background: linear-gradient(135deg, #0d6efd 0%, #437dff 40%, #74b9ff 100%);
-overflow: hidden;}
-/*.hero::after editand a imagem img dentro da animação*/
-.hero::after {content: "";position: absolute;inset: 0;background: url('img/imagem3.png') no-repeat right 8% center/360px;
-opacity: 0.25;pointer-events: none;}
-.hero .container {position: relative;z-index: 2;}
-.hero h1 {font-size: clamp(2rem, 3vw + 1rem, 3.2rem);letter-spacing: -0.02em;}
-.hero .lead {max-width: 760px;margin: 0 auto;}
-.hero-avatar {max-width: 320px;width: 100%;filter: drop-shadow(0 14px 40px rgba(0, 0, 0, 0.25));animation: float 6s ease-in-out infinite;}
+
+
 .pill-badge {display: inline-flex;align-items: center;gap: 10px;background: rgba(255, 255, 255, 0.16);border-radius: 999px;
 padding: 8px 18px;backdrop-filter: blur(2px);color: #fff;font-weight: 600;text-transform: uppercase;
 font-size: 0.85rem;letter-spacing: 0.02em;}
@@ -919,13 +961,101 @@ padding: 22px;height: 100%;box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);}
 footer {background: #0d6efd;}
 .animate-fade {animation: fadeIn 0.9s ease forwards;opacity: 0;}
 .animate-slide {animation: slideUp 0.9s ease forwards;opacity: 0;}
+
 .delay-1 {animation-delay: 0.15s;}
 .delay-2 {animation-delay: 0.3s;}
 .delay-3 {animation-delay: 0.45s;}
 @keyframes fadeIn {from {opacity: 0;}to {opacity: 1;}}
 @keyframes slideUp {from {opacity: 0;transform: translateY(22px);}to {opacity: 1;transform: translateY(0);}}
 @keyframes float {0% {transform: translateY(0);}50% {transform: translateY(-10px);}100% {transform: translateY(0);}}
-@media (max-width: 991px) {.hero::after {background-position: center 75%;background-size: 280px;opacity: 0.15;}.hero {padding-top: 32px;}.stats {gap: 10px;}}
+
+/*
+@media (max-width: 991px) {.hero::after {background-position: center 75%;background-size: 280px;opacity: 0.15;}
+.hero {padding-top: 32px;}.stats {gap: 10px;}}*/
+
+
+
+
+/*=============== edita o Botao de feedback sujestao de melhoria ====================*/
+
+/* ===============================
+    MODAL DE FEEDBACK — ESTÉTICA
+================================ */
+.feedback-modal {position: fixed;inset: 0;background: rgba(0, 0, 0, 0.45);display: flex; align-items: center;
+  justify-content: center; z-index: 9999; animation: fadeIn 0.2s ease;}
+@keyframes fadeIn {from { opacity: 0; }to { opacity: 1; }}
+.feedback-box {background: #ffffff;width: 92%;max-width: 400px;border-radius: 16px;padding: 18px 20px;box-shadow: 0 20px 50px rgba(0,0,0,.25);
+  animation: scaleIn 0.2s ease;
+}
+@keyframes scaleIn {from { transform: scale(0.96); opacity: 0; }to { transform: scale(1); opacity: 1; }
+}
+.feedback-box h4 {margin: 0 0 10px;font-size: 18px;font-weight: 600;color: #1f2937;}
+.feedback-box textarea {width: 100%;min-height: 110px;padding: 12px 14px; border-radius: 12px; border: 1px solid #d1d5db;
+  font-size: 14px;resize: none;outline: none;transition: border .2s, box-shadow .2s;}
+.feedback-box textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+}
+
+/* ===============================
+    BOTÕES
+================================ */
+
+.feedback-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+/* Cancelar */
+.feedback-actions button:first-child {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  
+}
+
+.feedback-actions button:first-child:hover {
+  background: #f3f4f6;
+}
+
+/* Enviar (ação principal) */
+.feedback-actions button:last-child {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border: none;
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(37,99,235,.35);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.feedback-actions button:last-child:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(37,99,235,.45);
+}
+
+.feedback-actions button:last-child:active {
+  transform: scale(0.97);
+}
+
+/* ===============================
+    UTIL
+================================ */
+
+.hidden {
+  display: none;
+}
+
+
 
 
 /*

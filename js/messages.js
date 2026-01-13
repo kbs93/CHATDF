@@ -292,9 +292,6 @@ export function initMessages(chat, sala) {
 // ================= ENVIO — AGORA COM REPLY FUNCIONANDO =========================================================
 export async function sendMessage(input) {
 
-
-
-  
   const text = input.value.trim();
   if (!text) return;
 if (floodCount >= 5) {showToast(" Aguarde um instante.");return;} // usuario so pode enviar 5 mensagens rapido 
@@ -426,7 +423,6 @@ await setDoc(doc(chatRef, idOrganizado), {
   createdAt: serverTimestamp(),
 });
 
-
     // LIMPAR UI — não remove mais a caixa!
     input.value = "";
     window.replyingTo = null;
@@ -451,6 +447,7 @@ setTimeout(() => {
     showToast("Erro ao enviar: " + err.message);
   }
 }
+
 
 // ======================================================
 // EVENTOS
