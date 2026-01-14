@@ -285,7 +285,7 @@ export function initMessages(chat, sala) {
     });
 
     chat.appendChild(fragment);
-    chat.scrollTop = chat.scrollHeight;
+    window.smartScrollToBottom?.();  // EDITA O BOTAO DE MENSAGEM NOVA 
   });
 }
 
@@ -463,3 +463,62 @@ document.addEventListener("click", (e) => {
     window.open(`https://www.youtube.com/watch?v=${videoId}`, "_blank");
   }
 });
+
+
+
+// ======================================================
+// EDITA O NOVO BOTA DE ROLAR A TELA NO CHAT 
+// ======================================================
+const chat = document.getElementById("chat-container");
+const newMessagesBtn = document.getElementById("newMessagesBtn");
+
+if (chat && newMessagesBtn) {
+  let isUserReading = false;
+
+  chat.addEventListener("scroll", () => {
+    const nearBottom =
+      chat.scrollHeight - chat.scrollTop - chat.clientHeight < 60;
+
+    if (nearBottom) {
+      isUserReading = false;
+      newMessagesBtn.classList.add("hidden");
+    } else {
+      isUserReading = true;
+    }
+  });
+
+newMessagesBtn.addEventListener("click", () => {
+  isUserReading = false;
+  newMessagesBtn.classList.add("hidden");
+
+  requestAnimationFrame(() => {
+    chat.scrollTo({
+      top: chat.scrollHeight,
+      behavior: "smooth"
+    });
+  });
+});
+
+
+  // use essa função quando chegar mensagem nova MOSTRA O BOTAO DE MENSAGEMNOVA 
+  window.smartScrollToBottom = () => {
+    if (!isUserReading) {
+      chat.scrollTop = chat.scrollHeight;
+    } else {
+      newMessagesBtn.classList.remove("hidden");
+    }
+  };
+}
+document.addEventListener("click", (e) => {
+  if (!newMessagesBtn.classList.contains("hidden")) {
+    // se clicou fora do botão
+    if (!newMessagesBtn.contains(e.target)) {
+      newMessagesBtn.classList.add("hidden");
+    }
+  }
+});
+
+
+
+
+

@@ -998,112 +998,35 @@ footer {background: #0d6efd;}
 }
 
 /* ===============================
-    BOTÕES
+    BOTAO do feedback
 ================================ */
-
-.feedback-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 14px;
-}
-
+.feedback-actions {display: flex;justify-content: flex-end;gap: 10px;margin-top: 14px;}
 /* Cancelar */
-.feedback-actions button:first-child {
-  background: transparent;
-  border: 1px solid #d1d5db;
-  color: #374151;
-  padding: 8px 14px;
-  border-radius: 10px;
-  font-size: 13px;
-  cursor: pointer;
-  
-}
-
-.feedback-actions button:first-child:hover {
-  background: #f3f4f6;
-}
-
+.feedback-actions button:first-child {background: transparent;border: 1px solid #d1d5db;color: #374151;padding: 8px 14px;
+  border-radius: 10px;font-size: 13px;cursor: pointer;}
+.feedback-actions button:first-child:hover {background: #f3f4f6;}
 /* Enviar (ação principal) */
 .feedback-actions button:last-child {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  border: none;
-  color: #ffffff;
-  padding: 8px 18px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 8px 18px rgba(37,99,235,.35);
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-
-.feedback-actions button:last-child:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 24px rgba(37,99,235,.45);
-}
-
-.feedback-actions button:last-child:active {
-  transform: scale(0.97);
-}
-
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);border: none;color: #ffffff;padding: 8px 18px;
+  border-radius: 10px;font-size: 13px;font-weight: 600;cursor: pointer;box-shadow: 0 8px 18px rgba(37,99,235,.35);
+transition: transform .15s ease, box-shadow .15s ease;}
+.feedback-actions button:last-child:hover {transform: translateY(-1px);box-shadow: 0 12px 24px rgba(37,99,235,.45);}
+.feedback-actions button:last-child:active {transform: scale(0.97);}
 /* ===============================
     UTIL
 ================================ */
+.hidden {display: none;}
+/* ===============================
+ EDITA O BOTAO DE MOSTRA MENSAGEM NOVA 
+ ===============================*/
 
-.hidden {
-  display: none;
+.new-messages-btn {position: fixed;bottom: 90px;left: 50%;transform: translateX(-50%);background: #0501fd5b;color: #fff;
+  border: none;border-radius: 999px;padding: 6px 14px;font-size: 13px;font-weight: 500;
+  cursor: pointer;box-shadow: 0 6px 18px rgba(44, 89, 187, 0.397);z-index: 50;
+}
+.new-messages-btn.hidden {opacity: 0;pointer-events: none;
+}
+/*MELHORIA DE TOQUE NO MOBILE*/
+.new-messages-btn {min-height: 36px;padding: 8px 18px;
 }
 
-
-
-
-/*
-
-.register-message {
-  margin-top: 12px;
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 14px;
-  display: none;
-}
-
-.register-message.success {
-  background: #e6f7ee;
-  color: #1e7f4f;
-}
-
-.register-message.error {
-  background: #fdecea;
-  color: #b3261e;
-}
-.user-top-area {
-  position: absolute;
-  top: 50%;
-  right: 70px;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  z-index: 1200;
-}
-
-.user-top-area img {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-}
-
-.user-top-area span {
-  color: #fff;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.user-top-area button {
-  background: none;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-}
-*/

@@ -81,34 +81,20 @@
   </div>
 </nav>
 
-<script>
-  // Garante que o menu comece fechado ao carregar a página
-  document.addEventListener("DOMContentLoaded", () => {
-    const navbarNav = document.getElementById("navbarNav");
-    const toggler = document.querySelector(".navbar-toggler");
-    if (navbarNav?.classList.contains("show")) {
-      navbarNav.classList.remove("show");
-    }
-    if (toggler) {
-      toggler.setAttribute("aria-expanded", "false");
-    }
-  });
-</script>
-
-
 <!-- Título da Sala -->
 <div id="salaTitulo" style="margin-top: 80px; text-align: center; font-weight: bold;">Carregando sala...</div>
 <!--  Mensagens -->
 <div id="chat-container" class="container-fluid"></div>
+<!--  BOTAO DE MOSTRA MENSAGEM NOVA -->
+<button id="newMessagesBtn" class="new-messages-btn hidden">
+  ⬇ Novas mensagens
+</button>
+
+
 <!--  Campo de envio -->
 <div id="message-input-area">
-
-
-
   <div class="attachment-wrapper">
-    <button id="attachBtn" title="Anexar" class="btn-attach" aria-expanded="false">
-      <i class="bi bi-paperclip"></i>
-    </button>
+    <button id="attachBtn" title="Anexar" class="btn-attach" aria-expanded="false"><i class="bi bi-paperclip"></i></button>
     <div id="attachmentPanel" class="attachment-panel">
       <div class="attachment-grid">
         <button class="attachment-item" data-action="gallery">
@@ -160,10 +146,6 @@
       </div>
     </div>
   </div>
-
-
-
-
   <button id="emojiBtn" title="Adicionar emoji"><i class="bi bi-emoji-smile"></i></button>
 <div id="replyPreview" class="reply-preview" style="display:none;"></div>
 <textarea id="messageInput" class="message-input" placeholder="Digite sua mensagem..." rows="1"></textarea>
@@ -171,16 +153,14 @@
 </div>
 <!-- 🔹 Painel de Figurinhas -->
 <div id="stickerPanel"><div id="stickerList"></div></div>
-<!-- 🎨 Painel de Cores -->
+<!-- Painel de Cores -->
 <div id="colorPanel">
   <div class="fw-bold mb-2 text-center">Escolha uma cor</div>
   <div class="color-grid" id="dynamicColors"></div>
 </div>
 
-<!-- 🔹 Toast -->
+<!-- Toast -->
 <div id="toast"></div>
-
-
 <!--================== MODAL DO FEEDBAR Botao de melhoria =============================-->
 <div id="feedbackModal" class="feedback-modal hidden">
   <div class="feedback-box">
@@ -198,6 +178,20 @@
 <!-- 🔹 Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module">
+
+  // Garante que o menu comece fechado ao carregar a página
+  document.addEventListener("DOMContentLoaded", () => {
+    const navbarNav = document.getElementById("navbarNav");
+    const toggler = document.querySelector(".navbar-toggler");
+    if (navbarNav?.classList.contains("show")) {
+      navbarNav.classList.remove("show");
+    }
+    if (toggler) {
+      toggler.setAttribute("aria-expanded", "false");
+    }
+  });
+
+
 /* ======================================================
    🚀 NOVA PALETA DE CORES (DINÂMICA / SALVA NO FIREBASE)
 ====================================================== */
@@ -263,7 +257,7 @@ palette.forEach(color => {
   box.style.backgroundColor = color;
   box.dataset.color = color;
 
-  // ⭐ ÍCONE ✔ DA COR SELECIONADA
+  //  ÍCONE ✔ DA COR SELECIONADA
   const check = document.createElement("span");
   check.classList.add("color-check");
   check.textContent = "✔";
@@ -273,12 +267,12 @@ palette.forEach(color => {
 });
 
 /* ============================================
-   🔥 1. Carregar cor do Firebase no LOGIN
+    1. Carregar cor do Firebase no LOGIN
 ============================================ */
 auth.onAuthStateChanged(async (user) => {
   if (!user) return;
 
-  // ⭐ SEMPRE VOLTA PARA PRETO ANTES DE CARREGAR COR DO FIREBASE
+  //  SEMPRE VOLTA PARA PRETO ANTES DE CARREGAR COR DO FIREBASE
   selectedColor = "#000000";
   messageInput.style.color = "#000000";
 
@@ -290,7 +284,7 @@ if (snap.exists() && snap.data().chatColor) {
     selectedColor = snap.data().chatColor;
     messageInput.style.color = selectedColor;
 
-    // 🔥 Só bloqueia se a cor NÃO for preto
+    // Só bloqueia se a cor NÃO for preto
     if (selectedColor !== "#000000") {
         colorLocked = true;
     } else {
@@ -313,7 +307,7 @@ if (snap.exists() && snap.data().chatColor) {
 });
 
 /* ============================================
-   🔥 RESET GERAL DA PALETA AO SAIR DA CONTA
+   RESET GERAL DA PALETA AO SAIR DA CONTA
 ============================================ */
 window.addEventListener("resetColorPicker", () => {
 
@@ -330,16 +324,16 @@ window.addEventListener("resetColorPicker", () => {
     b.style.opacity = "1";
   });
 
-  console.log("🎨 Paleta resetada após logout");
+  console.log(" Paleta resetada após logout");
 });
 
 /* ============================================
-   🔥 2. Escolher cor (SE NÃO estiver travado)
+    2. Escolher cor (SE NÃO estiver travado)
 ============================================ */
 document.addEventListener("click", async (e) => {
   if (e.target.classList.contains("color-box")) {
 
-    // ❌ Já escolheu e está logado → não permite
+    //  Já escolheu e está logado → não permite
     if (colorLocked) {
       showToast("Você já escolheu uma cor!.");
       return;
