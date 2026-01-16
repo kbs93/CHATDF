@@ -16,7 +16,7 @@ import { showToast, getColorFromName, highlightMentions } from "./ui.js";
 import { showReplyPreview } from "./ui.js";   // ⭐ IMPORTANTE ⭐
 
 // =================== STATE ===========================================================================
-window.replyingTo = null;    // ⭐ Agora global, e não some
+window.replyingTo = null;    // Agora global, e não some
 let chatRef = null;
 let renderedMessages = new Set();
 
@@ -26,6 +26,15 @@ let ultimaMensagem = "";
 let repetidas = 0;
 
 
+// ================= PERFORMANCE limite de mensagens no DOM 15-01 =================
+const MAX_MESSAGES_DESKTOP = 120;
+const MAX_MESSAGES_MOBILE = 80;
+
+function getMaxMessages() {
+  return window.innerWidth < 600
+    ? MAX_MESSAGES_MOBILE
+    : MAX_MESSAGES_DESKTOP;
+}
 
 
 
@@ -181,6 +190,26 @@ async function renderReply(msg) {
 }
 
 
+// ================= PERFORMANCE limite de mensagens no DOM 15-01 =================
+
+function trimMessages(chat) {
+  const max = getMaxMessages();
+  const excess = chat.children.length - max;
+
+  if (excess > 0) {
+    for (let i = 0; i < excess; i++) {
+      const first = chat.firstElementChild;
+      if (!first) break;
+
+      // remove também do Set para não crescer infinito
+      const id = first.dataset?.id;
+      if (id) renderedMessages.delete(id);
+
+      chat.removeChild(first);
+    }
+  }
+}
+
 
 // =====================INIT LISTENER DE MENSAGENS =======================================================
 export function initMessages(chat, sala) {
@@ -283,9 +312,11 @@ export function initMessages(chat, sala) {
         });
       }
     });
+// ------ PERFORMANCE limite de mensagens no DOM 15-01 ----------------- 
+   chat.appendChild(fragment);
+trimMessages(chat);//  PERFORMANCE: mantém DOM leve
+window.smartScrollToBottom?.();// scroll inteligente
 
-    chat.appendChild(fragment);
-    window.smartScrollToBottom?.();  // EDITA O BOTAO DE MENSAGEM NOVA 
   });
 }
 
@@ -464,8 +495,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-
-
 // ======================================================
 // EDITA O NOVO BOTA DE ROLAR A TELA NO CHAT 
 // ======================================================
@@ -510,11 +539,11 @@ newMessagesBtn.addEventListener("click", () => {
   };
 }
 document.addEventListener("click", (e) => {
-  if (!newMessagesBtn.classList.contains("hidden")) {
-    // se clicou fora do botão
-    if (!newMessagesBtn.contains(e.target)) {
-      newMessagesBtn.classList.add("hidden");
-    }
+  const btn = document.getElementById("newMessagesBtn");
+  if (!btn) return; // index não tem o botão
+
+  if (!btn.classList.contains("hidden") && !btn.contains(e.target)) {
+    btn.classList.add("hidden");
   }
 });
 

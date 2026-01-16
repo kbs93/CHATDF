@@ -74,12 +74,28 @@
         </li>
       </ul>
     </div>
-
     <!-- USUÁRIO (FORA DO MENU — ÚNICO userArea) -->
     <div id="userArea" class="user-fixed-area ms-3 ms-lg-auto order-1 order-lg-3"></div>
 
   </div>
 </nav>
+
+<script>
+  // Garante que o menu comece fechado ao carregar a página
+  document.addEventListener("DOMContentLoaded", () => {
+    const navbarNav = document.getElementById("navbarNav");
+    const toggler = document.querySelector(".navbar-toggler");
+    if (navbarNav?.classList.contains("show")) {
+      navbarNav.classList.remove("show");
+    }
+    if (toggler) {
+      toggler.setAttribute("aria-expanded", "false");
+    }
+  });
+</script>
+
+
+
 
 <!-- Título da Sala -->
 <div id="salaTitulo" style="margin-top: 80px; text-align: center; font-weight: bold;">Carregando sala...</div>
@@ -87,7 +103,7 @@
 <div id="chat-container" class="container-fluid"></div>
 <!--  BOTAO DE MOSTRA MENSAGEM NOVA -->
 <button id="newMessagesBtn" class="new-messages-btn hidden">
-  ⬇ Novas mensagens
+  Novas mensagens
 </button>
 
 
@@ -178,22 +194,8 @@
 <!-- 🔹 Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module">
-
-  // Garante que o menu comece fechado ao carregar a página
-  document.addEventListener("DOMContentLoaded", () => {
-    const navbarNav = document.getElementById("navbarNav");
-    const toggler = document.querySelector(".navbar-toggler");
-    if (navbarNav?.classList.contains("show")) {
-      navbarNav.classList.remove("show");
-    }
-    if (toggler) {
-      toggler.setAttribute("aria-expanded", "false");
-    }
-  });
-
-
 /* ======================================================
-   🚀 NOVA PALETA DE CORES (DINÂMICA / SALVA NO FIREBASE)
+   NOVA PALETA DE CORES (DINÂMICA / SALVA NO FIREBASE)
 ====================================================== */
 
 import { auth, db } from "./js/firebase-config.js";
@@ -202,11 +204,11 @@ import {doc,getDoc,setDoc,addDoc,collection,serverTimestamp
 
 import { showToast } from "./js/ui.js";
 
-let selectedColor = "#000000";   // ⭐ SEMPRE COMEÇA COM PRETO
+let selectedColor = "#000000";   // EMPRE COMEÇA COM PRETO
 let colorLocked = false;
 
 const messageInput = document.getElementById("messageInput");
-messageInput.style.color = "#000000";   // ⭐ GARANTE QUE SEMPRE INICIA PRETO
+messageInput.style.color = "#000000";   // GARANTE QUE SEMPRE INICIA PRETO
 
 const colorBtn = document.getElementById("colorBtn");
 const colorPanel = document.getElementById("colorPanel");
@@ -267,7 +269,7 @@ palette.forEach(color => {
 });
 
 /* ============================================
-    1. Carregar cor do Firebase no LOGIN
+   Carregar cor do Firebase no LOGIN
 ============================================ */
 auth.onAuthStateChanged(async (user) => {
   if (!user) return;
@@ -328,7 +330,7 @@ window.addEventListener("resetColorPicker", () => {
 });
 
 /* ============================================
-    2. Escolher cor (SE NÃO estiver travado)
+   Escolher cor (SE NÃO estiver travado)
 ============================================ */
 document.addEventListener("click", async (e) => {
   if (e.target.classList.contains("color-box")) {
@@ -343,7 +345,7 @@ document.addEventListener("click", async (e) => {
     selectedColor = color;
     messageInput.style.color = color;
 
-    // ⭐ MARCAR ✔ VISUAL NA COR ESCOLHIDA
+    // MARCAR ✔ VISUAL NA COR ESCOLHIDA
     document.querySelectorAll(".color-box").forEach(b => b.classList.remove("selected"));
     e.target.classList.add("selected");
 
