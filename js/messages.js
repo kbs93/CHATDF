@@ -26,6 +26,11 @@ let ultimaMensagem = "";
 let repetidas = 0;
 
 
+// ================= HISTÓRICO OCULTO 18-01-2026 =======================================
+let hiddenMessages = []; // mensagens removidas do DOM
+const LOAD_BATCH_SIZE = 100;
+
+
 // ================= PERFORMANCE limite de mensagens no DOM 15-01 =================
 const MAX_MESSAGES_DESKTOP = 120;
 const MAX_MESSAGES_MOBILE = 80;
@@ -192,23 +197,34 @@ async function renderReply(msg) {
 
 // ================= PERFORMANCE limite de mensagens no DOM 15-01 =================
 
+
 function trimMessages(chat) {
   const max = getMaxMessages();
-  const excess = chat.children.length - max;
 
-  if (excess > 0) {
-    for (let i = 0; i < excess; i++) {
+  while (chat.children.length > max) {
+    const first = chat.firstElementChild;
+    if (!first) break;
+
+    hiddenMessages.push(first); // guarda mensagem antiga
+    chat.removeChild(first);
+  }
+
+  toggleLoadMoreButton();
+}
+
+/*function trimMessages(chat) {
+  const max = getMaxMessages();
+  const excess = chat.children.length - max;
+  if (excess > 0) {for (let i = 0; i < excess; i++) {
       const first = chat.firstElementChild;
       if (!first) break;
-
       // remove também do Set para não crescer infinito
       const id = first.dataset?.id;
       if (id) renderedMessages.delete(id);
-
       chat.removeChild(first);
     }
   }
-}
+}  */
 
 
 // =====================INIT LISTENER DE MENSAGENS =======================================================
@@ -325,7 +341,7 @@ export async function sendMessage(input) {
 
   const text = input.value.trim();
   if (!text) return;
-if (floodCount >= 5) {showToast(" Aguarde um instante.");return;} // usuario so pode enviar 5 mensagens rapido 
+if (floodCount >= 155) {showToast(" Aguarde um instante.");return;} // usuario so pode enviar 5 mensagens rapido 
 // Incrementa contador
 floodCount++;
 // Reseta contador automaticamente em 1 minuto
@@ -496,7 +512,7 @@ document.addEventListener("click", (e) => {
 });
 
 // ======================================================
-// EDITA O NOVO BOTA DE ROLAR A TELA NO CHAT 
+// EDITA O NOVO BOTA DE ROLAR A TELA NO CHAT 15-01-26
 // ======================================================
 const chat = document.getElementById("chat-container");
 const newMessagesBtn = document.getElementById("newMessagesBtn");
@@ -548,6 +564,33 @@ document.addEventListener("click", (e) => {
 });
 
 
+// ============================================================
+// EDITA O NOVO BOTAO DE MOSTRA MENSAGEM ANTIGAS  18-01-2026
+// ============================================================
+
+const loadMoreBtn = document.getElementById("loadMoreBtn");
+
+function toggleLoadMoreButton() {
+  if (!loadMoreBtn) return;
+
+  if (hiddenMessages.length > 0) {
+    loadMoreBtn.classList.remove("hidden");
+  } else {
+    loadMoreBtn.classList.add("hidden");
+  }
+}
 
 
+loadMoreBtn?.addEventListener("click", () => {
+  if (hiddenMessages.length === 0) return;
+
+  const batch = hiddenMessages.splice(-LOAD_BATCH_SIZE);
+  const fragment = document.createDocumentFragment();
+
+  batch.forEach(msg => fragment.appendChild(msg));
+
+  chat.insertBefore(fragment, chat.firstChild);
+
+  toggleLoadMoreButton();
+});
 

@@ -1020,7 +1020,8 @@ transition: transform .15s ease, box-shadow .15s ease;}
  EDITA O BOTAO DE MOSTRA MENSAGEM NOVA 
  ===============================*/
 
-.new-messages-btn {position: fixed;bottom: 90px;left: 50%;transform: translateX(-50%);background: #0501fd5b;color: #fff;
+.new-messages-btn {position: fixed;bottom: 90px;left: 50%;transform: translateX(-50%);  background: #eef4ff;
+  color: #1e40af;  border: 1px solid #254ef3;
   border: none;border-radius: 999px;padding: 6px 14px;font-size: 13px;font-weight: 500;
   cursor: pointer;box-shadow: 0 6px 18px rgba(44, 89, 187, 0.397);z-index: 50;
 }
@@ -1028,5 +1029,49 @@ transition: transform .15s ease, box-shadow .15s ease;}
 }
 /*MELHORIA DE TOQUE NO MOBILE*/
 .new-messages-btn {min-height: 36px;padding: 8px 18px;
+}
+
+
+
+/* ==================== BOTAO VER AS ULTIMAS 100 MENSAGEM ANTIGAS 18-01-26 =====================*/
+.load-more-btn {
+  position: sticky;
+  top: 64px; /* abaixo da navbar */
+  z-index: 5;
+
+  width: fit-content;
+  margin: 8px auto;
+  padding: 6px 14px;
+
+  background: #eef4ff;
+  color: #1e40af;
+
+  border-radius: 999px;
+  border: 1px solid #c7d2fe;
+
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  transition: all 0.2s ease;
+}
+
+.load-more-btn:hover {
+  background: #e0e7ff;
+  transform: translateY(-1px);
+}
+
+.load-more-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.load-more-btn.hidden {
+  display: none;
 }
 
