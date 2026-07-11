@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O Chat - Conecte e Converse</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Ícone -->
+  <link rel="shortcut icon" href="imagem2.jpeg" />
+  <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- 🔹 NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top">
+    <div class="container">
+      <img src="imagem3.png" style="width:62px; height:52px"></img>
+      <a class="navbar-brand fw-bold" href="#">ChatDF</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link active" href="#sobre">Quem Somos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contato">Contato</a></li>
+          <li class="nav-item"><a class="nav-link" href="#cadastro">Cadastro</a></li>
+          <li class="nav-item"><a class="nav-link" href="#login">Login</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 🔹 HERO -->
+  <header class="hero d-flex align-items-center text-center text-white">
+    <canvas id="background-animation"></canvas>
+    <div class="container">
+      <h1 class="h2 fw-bold">Bem-vindo ao O Chat </h1>
+      <p class="lead">Entre, converse e faça novas amizades em tempo real!</p>
+      <a href="#salas" class="btn btn-light btn-lg mt-3">Comece Agora</a>
+    </div>
+  </header>
+
+  <!-- 🔹 SALAS DISPONÍVEIS -->
+  <section id="salas" class="py-5 bg-light">
+    <div class="container text-center">
+      <h2 class="mb-4">Selecione uma Sala & Comece a Conversar!</h2>
+      <div class="row justify-content-center salas-container" id="salas-lista">
+        <!-- As salas são criadas dinamicamente -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 🔹 SEÇÃO SOBRE -->
+  <section id="sobre" class="py-5">
+    <div class="container">
+      <h2>Quem Somos</h2>
+      <p>Somos uma plataforma de chat moderna e segura, onde você pode conversar com pessoas do mundo todo, fazer novas amizades e se divertir em tempo real.</p>
+    </div>
+  </section>
+
+  <!-- 🔹 CONTATO -->
+  <section id="contato" class="bg-light py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">Contato</h2>
+      <form class="col-md-8 mx-auto">
+        <div class="mb-3">
+          <input type="text" class="form-control" placeholder="Seu nome">
+        </div>
+        <div class="mb-3">
+          <input type="email" class="form-control" placeholder="Seu e-mail">
+        </div>
+        <div class="mb-3">
+          <textarea class="form-control" rows="4" placeholder="Escreva sua mensagem..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Enviar</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- 🔹 RODAPÉ -->
+  <footer class="bg-primary text-white text-center py-3">
+    <p class="mb-0">&copy; 2025 O Chat - Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Script de Salas + Animação -->
+  <script>
+    // --- Criação das salas ---
+    const salas = [
+      "Bate papo Geral",
+      "Religião",
+      "Política",
+      "Trânsito",
+      "Lugares para sair",
+      "Futebol",
+      "Eventos",
+      "DESABAFO"
+    ];
+
+    const container = document.getElementById("salas-lista");
+    salas.forEach((nome) => {
+      const col = document.createElement("div");
+      col.className = "col-md-3 col-6 sala-col d-flex justify-content-center";
+      const link = document.createElement("a");
+      link.href = `chat.html?sala=${encodeURIComponent(nome)}`;
+      link.className = "sala-btn w-100";
+      link.innerText = nome;
+      col.appendChild(link);
+      container.appendChild(col);
+    });
+
+    // --- Canvas e partículas ---
+    const canvas = document.getElementById('background-animation');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+
+    const imageSrc = "ch2.png";
+    const img = new Image();
+    img.src = imageSrc;
+
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight * 0.9;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    
+// 🔹 Criação dos balões 3D espalhados por toda a área azul
+const chatBalloons = [];
+const numBalloons = 15; // aumenta a quantidade total
+
+for (let i = 0; i < numBalloons; i++) {
+  chatBalloons.push({
+    // espalha os balões por toda a tela
+    x: (Math.random() - 0.5) * window.innerWidth * 1.5, 
+    y: (Math.random() - 0.5) * window.innerHeight * 1.2,
+    z: Math.random() * 1000 + 200,
+    speed: 0.6 + Math.random() * 1.2,
+    size: 60 + Math.random() * 70
+  });
+}
+
+
+// 🔹 Mini avatares flutuando (representam usuários online)
+const miniAvatars = [];
+const numAvatars = 25;
+
+for (let i = 0; i < numAvatars; i++) {
+  miniAvatars.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    size: 6 + Math.random() * 6,
+    opacity: 0.2 + Math.random() * 0.5,
+    speedY: 0.3 + Math.random() * 0.6,
+    sway: Math.random() * 1.5, // movimento lateral
+    phase: Math.random() * Math.PI * 2
+  });
+}
+
+    
+
+
+    // --- Função principal ---
+  function draw() {
+  ctx.clearRect(0, 0, width, height);
+
+  // 🔸 Linhas entre partículas
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 100) {
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(255,255,255,0.1)";
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // 🔸 Partículas
+  for (let p of particles) {
+    if (p.hasImage && img.complete) {
+      ctx.globalAlpha = p.opacity;
+      ctx.drawImage(img, p.x - 8, p.y - 8, 16, 16);
+      ctx.globalAlpha = 1;
+    } else {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+      ctx.fill();
+    }
+    p.x += p.dx;
+    p.y += p.dy;
+    if (p.x < 0 || p.x > width) p.dx *= -1;
+    if (p.y < 0 || p.y > height) p.dy *= -1;
+  }
+
+  // 🔹 Balões 3D com perspectiva real
+
+// 🔹 Mini avatares flutuando
+for (let a of miniAvatars) {
+  // movimento suave: sobe e balança
+  a.y -= a.speedY;
+  a.x += Math.sin(Date.now() * 0.001 + a.phase) * a.sway * 0.2;
+
+  // reposiciona quando sai da tela
+  if (a.y < -10) {
+    a.y = window.innerHeight + 10;
+    a.x = Math.random() * window.innerWidth;
+  }
+
+  // brilho pulsante leve
+  const pulse = 0.7 + 0.3 * Math.sin(Date.now() * 0.002 + a.phase);
+
+  ctx.beginPath();
+  ctx.fillStyle = `rgba(255,255,255,${a.opacity * pulse})`;
+  ctx.arc(a.x, a.y, a.size / 2, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+
+const fov = 500;
+const time = Date.now() * 0.001;
+
+// 🔹 Primeiro, projetamos as posições 2D dos balões (necessário para as conexões)
+const projectedBalloons = [];
+
+for (let b of chatBalloons) {
+  // Movimento no eixo Z (profundidade)
+  b.z -= b.speed;
+  if (b.z < 100) {
+    b.z = 1200;
+    b.x = (Math.random() - 0.5) * window.innerWidth * 1.5;
+    b.y = (Math.random() - 0.5) * window.innerHeight * 1.2;
+  }
+
+  // 🔸 Flutuação vertical suave (efeito “subindo no ar”)
+  b.y -= 0.1 * Math.cos(time + b.x * 0.01);
+  if (b.y < -window.innerHeight / 1.5) {
+    b.y = window.innerHeight / 1.5;
+  }
+
+  // 🔸 Rotação 3D simulada no eixo Y
+  const rotation = Math.sin(time + b.x * 0.002) * 0.6 + 1.2;
+  const scale = fov / (fov + b.z);
+  const x2d = width / 2 + b.x * scale;
+  const y2d = height / 2 + b.y * scale;
+
+  // Guarda posição projetada para conectar depois
+  projectedBalloons.push({ x2d, y2d, scale });
+
+  // 🔹 Desenho do balão
+  ctx.save();
+  ctx.translate(x2d, y2d);
+  ctx.scale(scale * rotation, scale);
+  ctx.rotate(Math.sin(b.x * 0.002 + Date.now() / 2000) * 0.2);
+
+  // Gradiente translúcido (efeito vidro)
+  const grad = ctx.createLinearGradient(-b.size / 2, -b.size / 3, b.size / 2, b.size / 3);
+  grad.addColorStop(0, "rgb(0, 102, 255)");
+  grad.addColorStop(0.5, "rgb(51, 133, 255)");
+  grad.addColorStop(1, "rgb(102, 163, 255)");
+  ctx.fillStyle = grad;
+
+  // Corpo do balão
+  ctx.beginPath();
+  ctx.roundRect(-b.size / 2, -b.size / 3, b.size, b.size / 1.5, 20);
+  ctx.fill();
+
+  // Ponta do balão
+  ctx.beginPath();
+  ctx.moveTo(0, b.size / 3);
+  ctx.lineTo(10, b.size / 2);
+  ctx.lineTo(-10, b.size / 3);
+  ctx.closePath();
+  ctx.fill();
+
+  // 🔸 Reflexo animado (simula luz passando pelo vidro)
+  const reflectionX = Math.sin(time + b.x * 0.004) * (b.size / 4);
+  const reflectionY = Math.cos(time * 1.5 + b.y * 0.002) * (b.size / 6);
+  ctx.fillStyle = "rgba(255,255,255,0.12)";
+  ctx.beginPath();
+  ctx.arc(-b.size / 4 + reflectionX, -b.size / 5 + reflectionY, b.size / 8, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+// 🔹 Conexões entre balões próximos (rede de chat)
+for (let i = 0; i < projectedBalloons.length; i++) {
+  for (let j = i + 1; j < projectedBalloons.length; j++) {
+    const a = projectedBalloons[i];
+    const b = projectedBalloons[j];
+    const dx = a.x2d - b.x2d;
+    const dy = a.y2d - b.y2d;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist < 180) {
+      const opacity = Math.max(0, 0.15 - dist / 180);
+      ctx.beginPath();
+      ctx.strokeStyle = `rgba(255,255,255,${opacity})`;
+      ctx.lineWidth = 1 * ((a.scale + b.scale) / 2);
+      ctx.moveTo(a.x2d, a.y2d);
+      ctx.lineTo(b.x2d, b.y2d);
+      ctx.stroke();
+    }
+  }
+}
+
+requestAnimationFrame(draw);
+
+  }
+    draw();
+  </script>
+
+
+
+
+
+
+
+
+
+<div id="replyPreview" class="reply-preview" style="display:none;"></div>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

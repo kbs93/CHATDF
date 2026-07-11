@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>O Chat</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <!-- Estilos personalizados -->
+  <link href="styles.css" rel="stylesheet">
+  <link rel="shortcut icon" href="./img/imgicon2.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
+
+</head>
+<body class="chat-page">
+<nav class="chat-navbar  navbar-dark bg-dark ">
+
+  <!-- CENTRO --  aparece os nomes das salas 
+<div class="chat-center">
+  <span id="chatRoomName" class="chat-title"></span>
+</div>  ---->
+
+<!-- ESQUERDA -->
+<div class="chat-left">
+  <a href="./index.html" class="nav-btn" id="txlogot">
+    <img src="./img/inicio1.png" alt="Home">
+  </a>
+</div>
+
+<!-- DIREITA -->
+<div class="chat-right">
+
+  <div id="userArea" class="user-area-shell" aria-live="polite">
+    <div class="user-area-loading">
+      <img
+        src="./img/avatar.png"
+        alt="Avatar"
+        class="user-area-avatar"
+        onerror="this.src='./img/avatar.png'"
+      >
+
+      <span class="user-area-name"></span>
+    </div>
+  </div>
+
+</div>
+</nav>
+
+<!--  ESTRUTURA REAL DO CHAT  -->
+<div id="chat-layout">
+  <div id="chat-main-column">
+
+    <!-- Mensagens -->
+    <div id="chat-container" class="container-fluid">
+      <div id="chat-messages"></div>
+    </div>
+
+    <!-- BOTÃO DE MOSTRAR MENSAGENS NOVAS -->
+    <button id="newMessagesBtn" class="hidden whatsapp-scroll-btn">
+      <div class="scroll-icon">
+        <svg class="arrow1" viewBox="0 0 24 24">
+          <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+        <svg class="arrow2" viewBox="0 0 24 24">
+          <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="msg-badge"></span>
+    </button>
+
+    <!-- CAMPO DE ENVIO -->
+    <!-- CAMPO DE ENVIO -->
+<div id="message-input-wrapper">
+  <div id="messageProfileLock" class="message-profile-lock hidden">
+    Entre, complete seu perfil para conversar.
+  </div>
+
+  <div id="message-input-area">
+        <div class="attachment-wrapper">
+          <button id="attachBtn" title="Anexar" class="btn-attach" aria-expanded="false">
+            <i class="bi bi-paperclip"></i>
+          </button>
+
+          <!-- Painel de Anexos -->
+          <div id="attachmentOverlay" class="online-overlay"></div>
+
+          <div id="attachmentPanel" class="attachment-panel floating-panel">
+            <div class="attachment-grid">
+             <button class="attachment-item" data-action="profile">
+           <span class="attachment-icon icon-event">
+             <i class="bi bi-person-plus-fill"></i>
+            </span>
+            <span class="attachment-label">Meu perfil</span>
+            </button>
+              <button class="attachment-item" data-action="users">
+                <span class="attachment-icon icon-gallery">
+              <i class="bi bi-people-fill"></i>
+                </span>
+                <span class="attachment-label">Usuarios on-line</span>
+              </button>
+
+              <button class="attachment-item" id="colorBtn" data-action="color">
+                <span class="attachment-icon icon-color"><i class="bi bi-palette-fill"></i></span>
+                <span class="attachment-label">Cor do texto</span>
+              </button>
+
+              <button class="attachment-item" data-action="ai">
+                <span class="attachment-icon icon-ai"><i class="bi bi-stars"></i></span>
+                <span class="attachment-label">FeedBack</span>
+              </button>
+
+              <button class="attachment-item" data-action="camera">
+                <span class="attachment-icon icon-camera"><i class="bi bi-camera-fill"></i></span>
+                <span class="attachment-label">rascunho</span>
+              </button>
+
+              <button class="attachment-item" data-action="location">
+                <span class="attachment-icon icon-location"><i class="bi bi-geo-alt-fill"></i></span>
+                <span class="attachment-label">rascunho</span>
+              </button>
+
+              <button class="attachment-item" data-action="contact">
+                <span class="attachment-icon icon-contact"><i class="bi bi-person-badge-fill"></i></span>
+                <span class="attachment-label">rascunho</span>
+              </button>
+
+              <button class="attachment-item" data-action="documento">
+                <span class="attachment-icon icon-document"><i class="bi bi-file-earmark-text"></i></span>
+                <span class="attachment-label">rascunho</span>
+              </button>
+
+              <button class="attachment-item" data-action="audio">
+                <span class="attachment-icon icon-audio"><i class="bi bi-headphones"></i></span>
+                <span class="attachment-label">rascunho</span>
+              </button>
+
+              <button class="attachment-item" data-action="poll">
+                <span class="attachment-icon icon-poll"><i class="bi bi-bar-chart-line-fill"></i></span>
+                <span class="attachment-label">rascunho</span>
+              </button>
+
+            </div>
+          </div>
+        </div>
+
+        <button id="emojiBtn" title="Adicionar emoji">
+          <i class="bi bi-emoji-smile"></i>
+        </button>
+
+        <div id="replyPreview" class="reply-preview" style="display:none;">
+  <div class="reply-preview-content"></div>
+  
+  <span id="replyReportBtn" class="reply-report-action">Denuncia</span>
+</div>
+
+        <textarea id="messageInput" class="message-input"
+          placeholder="Digite sua mensagem..." rows="1"></textarea>
+
+        <button id="sendBtn" title="Enviar">
+          <i class="bi bi-send-fill"></i>
+        </button>
+      </div>
+
+<!-- Painel de Cores -->
+<div id="colorPanel" class="floating-panel color-panel">
+  <div class="color-panel-header">
+    <span class="color-title">Escolha uma cor</span>
+    <button id="closeColorPanel" class="color-close-btn">✕</button>
+  </div>
+  <div class="color-grid" id="dynamicColors"></div>
+</div>
+
+<!-- Painel de Figurinhas / Emoji -->
+<div id="stickerPanel" class="sticker-panel floating-panel">
+  <div class="sticker-header">
+    <div class="sticker-tabs">
+      <button class="expr-tab active" data-mode="emoji">Emojis</button>
+      <button class="expr-tab" data-mode="sticker">Stickers</button>
+      <button class="expr-tab" data-mode="anim">Animações</button>
+    </div>
+    <button id="stickerClose">✕</button>
+  </div>
+
+  <div id="expressionContent">
+    <div id="emojiList" class="expr-list"></div>
+    <div id="stickerList" class="expr-list"></div>
+    <div id="animList" class="expr-list"></div>
+  </div>
+
+  <div class="sticker-categories">
+    <button class="sticker-cat active" data-cat="all">Todos</button>
+    <button class="sticker-cat" data-cat="Teste1">Teste1</button>
+    <button class="sticker-cat" data-cat="Teste2">Teste2</button>
+    <button class="sticker-cat" data-cat="Teste3">Teste3</button>
+    <button class="sticker-cat" data-cat="Teste4">Teste4</button>
+    <button class="sticker-cat" data-cat="Teste5">Teste5</button>
+    <button class="sticker-cat" data-cat="Teste5">Teste6</button>
+    <button class="sticker-cat" data-cat="Teste5">Teste7</button>
+    <button class="sticker-cat" data-cat="Teste5">Teste8</button>
+  </div>
+
+  <div class="sticker-categories anim-categories">
+    <button class="anim-cat active" data-cat="all">Todas</button>
+    <button class="anim-cat" data-cat="Emoji">Emoji</button>
+    <button class="anim-cat" data-cat="Amor">Amor</button>
+    <button class="anim-cat" data-cat="Reacoes">Reações</button>
+    <button class="anim-cat" data-cat="Meme">Memes</button>
+    <button class="anim-cat" data-cat="Meme">TESTE</button>
+    <button class="anim-cat" data-cat="Meme">TESTE2</button>
+  </div>
+</div>
+</div>
+</div>
+
+  <!-- PAINEL ONLINE AGORA COMO COLUNA REAL -->
+  <div id="onlineUsersPanel" class="online-users-panel">
+    <div class="online-header">
+      <span>🟢 Online <span id="onlineCount">0</span></span>
+      <button id="closeOnlinePanel" type="button">✕</button>
+    </div>
+
+    <div id="onlineUsersList" class="online-users-list">
+      <!-- usuários online aparecem aqui -->
+    </div>
+  </div>
+
+
+  
+</div>
+
+<div id="onlineOverlay" class="online-overlay"></div>
+
+<!-- ================= SHOW TOAST  ================= -->
+<div id="toast"></div>
+
+
+
+
+<!-- ================= PERFIL DO USUÁRIO ================= -->
+
+<div id="profileOverlay" class="hidden"></div>
+
+<div id="profilePanel" class="profile-panel hidden">
+<div class="profile-body">
+  <div class="profile-cover">
+      <button id="reportUserBtn" type="button" aria-label="Denunciar usuário" style="display: none;">
+        <i class="bi bi-flag-fill"></i>
+      </button>
+      <div class="profile-header-actions profile-cover-actions">
+        <button id="editProfileCoverBtn" type="button" aria-label="Editar cor da capa">
+          <i class="bi bi-pencil-square"></i>
+        </button>
+        <button id="closeProfilePanel" type="button" aria-label="Fechar painel">✕</button>
+      </div>
+    </div>
+<div class="profile-avatar-wrap">
+  <div class="profile-avatar">
+    <img id="profileAvatar" src="img/avatar.png" alt="Avatar do usuário">
+  </div>
+
+  <span id="profileOnlineDot" class="profile-online-dot hidden"></span>
+</div>
+
+
+    <div class="profile-user-info">
+      <h3 id="profileName">Usuário</h3>
+      
+      <p id="profileMood">Sem recado no momento.</p>
+    </div>
+    <div class="profile-tabs">
+      <button class="profile-tab active" data-tab="info" type="button">Info</button>
+      <button class="profile-tab" data-tab="edit" type="button">Editar perfil</button>
+    </div>
+    <div class="profile-content">
+      <!-- INFO -->
+    <div class="profile-section active" id="profileInfo">
+  <p><strong>Cidade:</strong> <span id="profileCity">-</span></p>
+  <p><strong>Idade:</strong> <span id="profileAge">-</span></p>
+  <p><strong>Gênero:</strong> <span id="profileGender">-</span></p>
+  <p><strong>Membro desde:</strong> <span id="profileMemberSince">-</span></p>
+</div>
+
+      <!-- EDITAR -->
+<div class="profile-section" id="profileEdit">
+
+  <label class="profile-field">
+    <i class="bi bi-person profile-field-icon"></i>
+    <span class="profile-field-body">
+      <span class="profile-field-label">Nome</span>
+      <input type="text" id="editName" placeholder="Nome de Usuário" maxlength="10">
+    </span>
+  </label>
+
+  <label class="profile-field">
+    <i class="bi bi-calendar-heart profile-field-icon"></i>
+    <span class="profile-field-body">
+      <span class="profile-field-label">Idade</span>
+      <input type="text" id="editAge" placeholder="Somente números" inputmode="numeric" pattern="[0-9]*">
+    </span>
+  </label>
+
+  <label class="profile-field">
+    <i class="bi bi-gender-ambiguous profile-field-icon"></i>
+    <span class="profile-field-body">
+      <span class="profile-field-label">Gênero</span>
+      <input type="text" id="editGender" placeholder="Digite seu gênero" maxlength="15">
+    </span>
+  </label>
+
+  <label class="profile-field">
+    <i class="bi bi-geo-alt profile-field-icon"></i>
+    <span class="profile-field-body">
+      <span class="profile-field-label">Cidade</span>
+      <input type="text" id="editCity" placeholder="Digite sua cidade"maxlength="22">
+    </span>
+  </label>
+
+  <label class="profile-field">
+    <i class="bi bi-chat-square-text profile-field-icon"></i>
+    <span class="profile-field-body">
+      <span class="profile-field-label">Recado</span>
+      <input type="text" id="editMood" placeholder="Frase curta"maxlength="50">
+    </span>
+  </label>
+
+  <button id="saveProfileBtn" type="button">Salvar</button>
+</div>
+    </div>
+
+  </div>
+</div>
+<div id="profileEditorModal" class="profile-editor-modal hidden">
+  <div class="profile-editor-card">
+<div class="profile-editor-header">
+  <button id="showBannerEditorBtn" type="button" class="profile-editor-tab active">
+    Editar capa
+  </button>
+  <button id="openAvatarPickerBtn" type="button" class="profile-editor-tab">
+    Escolher avatar
+  </button>
+  <button id="closeProfileEditorBtn" type="button" aria-label="Fechar editor de perfil">✕</button>
+</div>
+    <div id="profileEditorBannerPreview" class="profile-editor-banner-preview"></div>
+    <div id="profileEditorBannerColors" class="profile-editor-banner-colors"></div>
+
+
+<!-- 03-06-26 =================== ÁREA DE AVATARES ==========================================-->
+
+<div id="profileEditorAvatarArea" class="profile-editor-avatar-area hidden">
+      <div class="profile-editor-avatar-cats">
+        <button class="profile-avatar-cat active" data-cat="eles" type="button">Eles</button>
+        <button class="profile-avatar-cat" data-cat="elas" type="button">Elas</button>
+        <button class="profile-avatar-cat" data-cat="unissex" type="button">Unissex</button>
+        <button class="profile-avatar-cat" data-cat="aleatorios" type="button">Aleatórios</button>
+      </div>
+      <div id="profileEditorAvatarGrid" class="profile-editor-avatar-grid" style="overflow-y: auto; max-height: 280px; display: grid; gap: 10px;">
+      </div>
+    </div>
+   <button id="saveProfileEditorBtn" type="button">Confirmar</button>
+
+
+  </div>
+</div>
+
+<!-- ================= MENU CONTEXTUAL DA MENSAGEM ================= 06-05-26 -->
+<div id="messageContextMenu" class="message-context-menu hidden">
+
+  <div class="context-menu-header">
+    <button id="closeContextMenu" type="button">✕</button>
+  </div>
+  <button type="button" id="contextProfileBtn">
+    <i class="bi bi-person-circle"></i>
+    Ver perfil
+  </button>
+  <!----------
+  <button type="button" id="contextReplyBtn">
+    <i class="bi bi-reply-fill"></i>
+    Responder
+  </button>----->
+
+  <button type="button" id="contextReportBtn">
+    <i class="bi bi-flag-fill"></i>
+    Denunciar usuario
+  </button>
+</div>
+
+<div id="feedbackModal" class="feedback-modal hidden">
+  <div class="feedback-box">
+    <h4>FeedBack</h4>
+    <textarea id="feedbackText" placeholder="Escreva sua sugestão..."></textarea><br><br><br><br>
+    <div class="feedback-actions">
+      <button id="cancelFeedback">Cancelar</button>
+      <button id="sendFeedback">Enviar</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- 01-07-26 MODAL DE DENÚNCIA dentro do painel do Usuário  Estrutura do Modal dentro do painel do Usuario de Denúncia (CHAT-DF UX) -->
+<!-- 01-07-26 MODAL DE DENÚNCIA dentro do painel do Usuário  Estrutura do Modal dentro do painel do Usuario de Denúncia (CHAT-DF UX) -->
+<div id="reportUserModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 10005;">
+  <div style="background: #ffffff; width: 90%; max-width: 450px; padding: 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; font-family: sans-serif;">
+    <button id="closeReportModalX" type="button" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 18px; cursor: pointer; color: #666;">✕</button>
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; color: #d32f2f;">
+      <i class="bi bi-exclamation-triangle-fill" style="font-size: 24px;"></i>
+      <h3 style="margin: 0; font-size: 20px; font-weight: 700; color: #1a1a1a;">Reporta uma Denúncia</h3>
+    </div>
+    <p style="font-size: 14px; color: #555; line-height: 1.4; margin-bottom: 20px;">
+      Por favor, envie apenas denúncias de infrações passíveis de ação. Abusos ou denúncias falsas podem resultar em medidas contra a sua própria conta. Selecione o motivo para denunciar este Usuário.
+    </p>
+    <label style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Motivo para a denúncia</label>
+    <select id="reportReasonSelect" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; background: #f9f9f9; outline: none; margin-bottom: 24px;">
+      <option value="">Selecione um motivo</option>
+      <option value="perfil inapropriado">perfil inapropriado</option>
+      <option value="Assédio / Ofensas">Assédio / Ofensas</option>
+      <option value="Mensagem preconceituosa">Mensagem preconceituosa</option>
+      <option value="Discurso de ódio">Discurso de ódio</option>
+      <option value="Conteudo sexual">Conteudo sexual</option>
+    </select>
+    <div style="display: flex; gap: 12px; justify-content: flex-end;">
+      <button id="cancelReportBtn" type="button" style="padding: 12px 24px; border: none; background: #212121; color: #fff; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancela</button>
+      <button id="submitReportBtn" type="button" style="padding: 12px 24px; border: none; background: #00a2d3; color: #fff; border-radius: 8px; font-weight: 600; cursor: pointer;">Reporta</button>
+    </div>
+  </div>
+</div>
+
+<!-- 🔹 Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@multiavatar/multiavatar/multiavatar.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+<script type="module" src="./js/main.js?v=2"></script>
+<script type="module" src="./js/stickers.js"></script>
+
+
+</body>
+</html>

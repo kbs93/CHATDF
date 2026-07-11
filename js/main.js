@@ -1,0 +1,2229 @@
+// ============================== IMPORTS ======================================================
+import { avataresEles, avataresElas, avataresUnissex } from "./avatar.js"; // 03-06-26 não apagar, é a lista de avatares para o perfil
+import { initAuth } from "./auth.js";
+import { initMessages, sendMessage } from './messages.js?v=2'; 
+import { showToast, openAttachmentSheet, openUIPanel, textColorPalette } from "./ui.js";
+import { initStickerPanel } from "./stickers-panel.js"; // esse codigo e dos sticker 17-02-26
+import { auth, db, rtdb } from "./firebase-config.js";
+import { initUsersPanel } from "./users-panel.js"; // USER-PANEL
+import { updateProfile } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { animations } from "./animations.js"; // Importa a lista de animações em JSON
+
+
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  setDoc
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+// ESSE CODIGO E DO PAINEL SOMBRA DO PAINEL   let overlay;    NAO APAGAR  17-03-26 
+let overlay;  
+document.body.classList.add("chat-loading");
+
+// ================= GERENCIADOR DE PAINÉIS padronizando mobile e desktop ================= 17-03-26
+let currentPanel = null;
+function openPanel(panelName) {
+  // fecha tudo antes
+  closeAllPanels();
+  currentPanel = panelName;
+  if (panelName === "users") {
+    document.getElementById("onlineUsersPanel")?.classList.add("open");
+    overlay?.classList.add("open");
+  }
+  if (panelName === "attachments") {
+    attachmentPanel?.classList.add("show");
+  }
+}
+
+// padronizando 17-03 
+function closeAllPanels() {
+
+  currentPanel = null;
+
+  // USERS
+  document.getElementById("onlineUsersPanel")?.classList.remove("open");
+
+  // ATTACHMENTS
+  attachmentPanel?.classList.remove("show");
+
+  // STICKERS
+  document.getElementById("stickerPanel")?.classList.remove("show");
+
+  // COLOR (UI.JS)
+  if (window.closeColorPanel) {
+    window.closeColorPanel();
+  }
+
+  // OVERLAY
+  overlay?.classList.remove("open");
+
+}
+
+
+//--------- edita o novo campo de usuario mostra so o perfil de outros usuario 12-04 -------------------
+const attachmentActions = {
+users: () => {
+  openPanel("users");
+},
+
+profile: async () => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  if (typeof window.openMainProfilePanel === "function") {
+    await window.openMainProfilePanel(user.uid);
+  } else {
+    showToast("Painel de perfil ainda não criado.");
+  }
+},
+
+
+
+  gallery: () => showToast("Galeria em breve."),
+  camera: () => showToast("Câmera em breve."),
+  location: () => showToast("Localização em breve."),
+  contact: () => showToast("Contato em breve."),
+  documento: () => showToast("Documento em breve."),
+  audio: () => showToast("Áudio em breve."),
+  poll: () => showToast("Enquete em breve."),
+  event: () => showToast("Evento em breve."),
+  ai: () => {
+    const modal = document.getElementById("feedbackModal");
+    modal?.classList.remove("hidden");
+  }
+};
+//  EXPÕE AÇÕES PARA O UI (MOBILE) PAINEL IGUAL DO WATSAP
+window.attachmentActions = attachmentActions;
+
+//  DOM ELEMENTS 
+const isChatRoute = window.location.pathname.includes("chat.html");
+const attachBtn = document.getElementById("attachBtn");
+const attachmentPanel = document.getElementById("attachmentPanel");
+let messageInput;
+let chatInitialized = false;
+
+
+
+
+//  INPUT DE ENVIAR MENSAGEM 
+function autoResize() {
+  if (!messageInput) return;
+  const scrollHeight = messageInput.scrollHeight;
+  const currentHeight = messageInput.offsetHeight;
+  if (scrollHeight !== currentHeight) {
+    messageInput.style.height = scrollHeight + "px";
+  }
+}
+
+
+
+//  SALA DA URL 
+const urlParams = new URLSearchParams(window.location.search);
+const sala = urlParams.get("sala") || "geral";
+
+const appState = {
+  userReady: false,
+  currentUser: null,
+  currentRoom: sala,
+  chatMounted: false,
+  unsubscribeMessages: null,
+  unsubscribeProfileLock: null,
+  reportCount: 0 // 07-07-26 ADICIONADO: Contador global de denúncias por sessão/login
+};
+// 01-05-26
+window.appState = appState;
+// ================= PRESENÇA DA SALA RTDB ================= 18-05-26 E 07-07-26 ADICIONADO: Contador de denúncias por sessão/login
+
+async function updateUserRoomPresence() {
+  const user = auth.currentUser;
+  if (!user) return;
+try {
+    // Importa o update para não sobrescrever outros campos salvos no nó (como a trava)
+    const { update } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js");
+    const userStatusRef = ref(rtdb, "status/" + user.uid);
+
+    // Altera de set para update para blindar o campo bloqueioDenuncia após o F5
+    await update(userStatusRef, {
+      uid: user.uid,
+      name: appState.currentUser?.nome || appState.currentUser?.displayNameChat || user.displayName || "Usuário",
+      avatar: appState.currentUser?.photoURL || "./img/avatar.png",
+      online: true,
+      sala: appState.currentRoom || null,
+      lastChanged: Date.now()
+    });
+
+  } catch (err) {
+    console.error("Erro ao atualizar presença da sala:", err);
+  }
+}
+
+
+
+// ------------------------ BLOQUEAR ÁREA DE ENVIO SEM PERFIL COMPLETO 21-05-26 --------------------------
+function atualizarBloqueioCampoMensagem(perfilCompleto) {
+  const wrapper = document.getElementById("message-input-wrapper");
+  let aviso = document.getElementById("messageProfileLock");
+  const input = document.getElementById("messageInput");
+  const sendBtn = document.getElementById("sendBtn");
+
+  if (!wrapper) return;
+
+  if (perfilCompleto === true) {
+    wrapper.classList.remove("profile-locked");
+    if (aviso) aviso.classList.add("hidden");
+    input?.removeAttribute("disabled");
+    sendBtn?.removeAttribute("disabled");
+    return;
+  }
+
+  // CORREÇÃO 21-06-26: Transforma a trava em um botão interativo, centralizado e otimizado para clique mobile
+  if (aviso) {
+    aviso.className = "message-profile-lock-btn";
+    aviso.innerHTML = `<i class="bi bi-pencil-square" style="font-size:22px;"></i> Complete o seu perfil para liberar o envio de mensagens`;
+    
+    // Injeção de estilos inline profissionais para centralização e ganho de área de toque (mobile friendly)
+    aviso.style.display = "flex";
+    aviso.style.alignItems = "center";
+    aviso.style.justifyContent = "center";
+    aviso.style.textAlign = "center";
+    aviso.style.width = "100%";
+    aviso.style.height = "50%"; // Ocupa toda a altura do wrapper bloqueado
+    aviso.style.padding = "10px 16px"; // Botão maior e mais robusto
+    aviso.style.boxSizing = "border-box";
+    aviso.style.gap = "1px";
+    aviso.style.cursor = "pointer";
+    aviso.style.fontSize = "0.95rem";
+    aviso.style.fontWeight = "600";
+    aviso.style.color = "#213883c7";
+
+    aviso.onclick = (e) => {
+      e.preventDefault();
+      document.dispatchEvent(new CustomEvent("chatdf:open-profile"));
+    };
+  }
+
+  wrapper.classList.add("profile-locked");
+  if (aviso) aviso.classList.remove("hidden");
+  input?.setAttribute("disabled", "disabled");
+  sendBtn?.setAttribute("disabled", "disabled");
+}
+
+
+
+
+/*O que isso faz           20-04-2024
+Essa parte cria a lógica: usuário autenticado → mountChatIfReady()
+usuário saiu → limpa visual do chat sem recarregar página  */
+function mountChatIfNeeded() {
+  if (!isChatRoute) return;
+  if (appState.chatMounted) return;
+
+  setupChat();
+}
+// melhoira 01-05-26
+function handleUserReady(detail = {}) {
+  appState.userReady = true;
+  appState.currentUser = detail.user || auth.currentUser || null;
+// melhoria 06-05 
+if (detail.userData?.nome) {
+  appState.currentUser.nome = detail.userData.nome;
+  appState.currentUser.displayNameChat = detail.userData.nome;
+}
+
+
+  appState.userCity = null;
+  if (detail.userData && detail.userData.cidade) {
+    appState.userCity = detail.userData.cidade;
+  }
+
+  // ------------------------ OUVIR PERFIL E BLOQUEAR ENVIO SE NÃO ESTIVER COMPLETO --------------------------
+// ------------------------ OUVIR PERFIL VIA EVENTOS (Leitura Inteligente sem onSnapshot Duplicado) 21-06-26 --------------------------
+  if (isChatRoute) {
+    // Escuta o perfil atualizado que já é transmitido pelo onSnapshot do auth.js
+    if (detail.userData) {
+      atualizarBloqueioCampoMensagem(detail.userData.perfilCompleto === true);
+    }
+  }
+}
+
+
+function handleUserLogout() {
+  appState.userReady = false;
+  appState.currentUser = null;
+  appState.reportCount = 0; // 07-07-26 ADICIONADO: Zera o contador de denúncias ao deslogar
+
+  window.replyingTo = null;
+
+  const roomTitle = document.getElementById("chatRoomName");
+  if (roomTitle) {
+    roomTitle.textContent = appState.currentRoom || sala;
+  }
+
+  document.body.classList.remove("keyboard-open");
+  closeAllPanels();
+
+  // ------------------------ LIMPAR BLOQUEIO DO CAMPO AO SAIR 11-05-26 --------------------------
+  if (typeof appState.unsubscribeProfileLock === "function") {
+    appState.unsubscribeProfileLock();
+    appState.unsubscribeProfileLock = null;
+  }
+
+// ------------------------ LIMPAR BLOQUEIO DO CAMPO AO SAIR 11-05-26 --------------------------
+atualizarBloqueioCampoMensagem(false);
+}
+function cleanupChatMessages() {
+  if (typeof appState.unsubscribeMessages === "function") {
+    appState.unsubscribeMessages();
+    appState.unsubscribeMessages = null;
+  }
+}
+
+
+//   AUTH + MENSAGENS=
+initAuth(showToast);
+initUsersPanel(openPanel, closeAllPanels);
+document.addEventListener("chatdf:user-ready", (e) => {
+  handleUserReady(e.detail || {});
+});
+
+document.addEventListener("chatdf:user-logout", () => {
+  handleUserLogout();
+});
+
+
+// ABRIR PERFIL PELO MENU DO USUÁRIO NO INDEX / NAVBAR  08-05-2026
+document.addEventListener("chatdf:open-profile", async () => {
+  const user = auth.currentUser;
+
+  if (!user) {
+    showToast("Faça login para editar seu perfil.");
+    return;
+  }
+
+  if (typeof window.openMainProfilePanel === "function") {
+    await window.openMainProfilePanel(user.uid);
+  } else {
+    showToast("Painel de perfil ainda não carregado.");
+  }
+});
+
+// =====esse script  BOTÃO HERO "FAÇA LOGIN" e desee html  <a href="#" class="btn btn-outline-light btn-lg fw-bold open-login">Faça login</a>=====
+// 06-06-26 abre o modal de privacidade ao clicar no link "Política de Privacidade" do rodapé
+
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".open-login");
+  if (btn) {
+    e.preventDefault();
+    const modal = document.getElementById("loginModal");
+    if (modal) modal.classList.remove("hidden");
+    return;
+  }
+
+// Ação para abrir a Modal de Política de Privacidade
+  const openPrivacyBtn = e.target.closest("#openPrivacyModalBtn");
+  if (openPrivacyBtn) {
+    e.preventDefault();
+    const privacyWrapper = document.getElementById("privacyTermsWrapper");
+    if (privacyWrapper) {
+      privacyWrapper.classList.remove("hidden");
+      privacyWrapper.style.pointerEvents = "auto"; // Ativa cliques no modal
+      document.body.style.overflow = "hidden"; // 🔒 TRAVA A ROLAGEM DO INDEX
+    }
+    return;
+  }
+
+  // Ações para fechar a Modal de Política de Privacidade
+  const closePrivacyBtn = e.target.closest("#closePrivacyModalBtn") || e.target.closest("#agreePrivacyBtn");
+  if (closePrivacyBtn) {
+    e.preventDefault();
+    const privacyWrapper = document.getElementById("privacyTermsWrapper");
+    if (privacyWrapper) {
+      privacyWrapper.classList.add("hidden");
+      privacyWrapper.style.pointerEvents = "none"; // Desativa cliques para sumir a parede invisível
+      document.body.style.overflow = ""; // 🔓 LIBERA A ROLAGEM DO INDEX NOVAMENTE
+    }
+    return;
+  }
+
+
+});
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  initNavbarCollapse();
+
+  if (!isChatRoute) return;
+
+  mountChatIfNeeded();
+
+  if (auth.currentUser) {
+    handleUserReady({ user: auth.currentUser });
+  }
+});
+
+
+
+
+
+// ====================================AÇÕES DOS ANEXOS (DESKTOP) ELEMENTOS DEFINIDOS ================================================
+
+function setupChat() {
+  if (chatInitialized) return;
+  const chat = document.getElementById("chat-container");
+  const input = document.getElementById("messageInput");
+  const sendBtn = document.getElementById("sendBtn");
+  const emojiBtn = document.getElementById("emojiBtn");
+  const stickerBtn = document.getElementById("stickerBtn");
+  const stickerPanel = document.getElementById("stickerPanel");
+  const stickerList = document.getElementById("stickerList");
+  const animBtn = document.getElementById("animBtn");
+  const colorBtn = document.getElementById("colorBtn");
+  const attachBtn = document.getElementById("attachBtn");
+  const openOnlineUsersBtn = document.getElementById("openOnlineUsers");
+ overlay = document.getElementById("onlineOverlay");
+ let stickerReady = false;
+  if (!chat || !input || !sendBtn) {
+    console.warn("Elementos do chat não encontrados; inicialização cancelada.");
+    return;
+  }
+
+// FAZ O TECLADO MOBILE FECHAR AO ROLAR A TELA 05-06-20026
+let lastScrollTop = 0;
+let isKeyboardOpen = false;
+
+input.addEventListener("focus", () => {
+  isKeyboardOpen = true;
+});
+
+input.addEventListener("blur", () => {
+  isKeyboardOpen = false;
+});
+
+
+// 21-06-26 melhoria para evitar que o teclado feche com rolagens pequenas acidentais, só fecha se o usuário rolar mais de 15px
+// CORREÇÃO: Fecha o teclado mobile ao rolar a tela, exigindo uma distância mínima calculada (delta) para evitar blurs acidentais
+let touchStartY = 0;
+
+chat.addEventListener("touchstart", (e) => {
+  if (window.innerWidth > 768) return;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+chat.addEventListener("touchmove", (e) => {
+  if (window.innerWidth > 768) return;
+
+  if (document.activeElement === input) {
+    let touchCurrentY = e.touches[0].clientY;
+    let deltaY = Math.abs(touchCurrentY - touchStartY);
+    
+    // Só fecha se o usuário realmente arrastar o dedo por mais de 25 pixels verticalmente
+    if (deltaY > 25) {
+      input.blur();
+    }
+  }
+}, { passive: true });
+
+
+
+// Emoji
+emojiBtn?.addEventListener("click", () => {
+
+  closeAllPanels();
+
+  if (window.innerWidth <= 768) {
+    openUIPanel("emoji");
+  }
+
+});
+
+// Stickers
+stickerBtn?.addEventListener("click", () => {
+  if (window.innerWidth <= 768) {
+    openUIPanel("stickers");
+    return;
+  }
+});
+
+// Animações
+animBtn?.addEventListener("click", () => {
+  if (window.innerWidth <= 768) {
+    openUIPanel("animations");
+    return;
+  }
+});
+// BOTÃO CLIP — DESKTOP x MOBILE (MESMO PAINEL)
+attachBtn?.addEventListener("click", (e) => {
+
+  e.preventDefault();
+  e.stopImmediatePropagation();
+
+  closeAllPanels();
+
+  if (window.innerWidth <= 768) {
+    openAttachmentSheet();
+    return;
+  }
+
+  openPanel("attachments");
+
+});
+
+
+
+openOnlineUsersBtn?.addEventListener("click", (e) => {
+
+  e.preventDefault();
+  e.stopImmediatePropagation();
+
+  openPanel("users");
+
+});
+
+chatInitialized = true;
+appState.chatMounted = true;
+messageInput = input;
+document.title = `Chat - ${appState.currentRoom || sala}`;
+
+const roomTitle = document.getElementById("chatRoomName");
+if (roomTitle) {
+  roomTitle.textContent = appState.currentRoom || sala;
+}
+
+cleanupChatMessages();
+appState.unsubscribeMessages = initMessages(chat, appState.currentRoom || sala);
+updateUserRoomPresence(); // presença da sala RTDB 18-05-26
+setTimeout(() => {
+  document.body.classList.remove("chat-loading");
+}, 500);
+
+
+//21-05-26 melhoria para evitar que o botão enviar fique "grudado" no dedo em telas touch, causando envios acidentais ao tentar clicar em outros elementos próximos
+sendBtn.addEventListener("mousedown", (e) => {
+  e.preventDefault();
+});
+  // BOTÃO ENVIAR
+  sendBtn.onclick = () => sendMessage(input);
+  // ENTER PARA ENVIAR
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage(input);
+    }
+  });
+  // EXPANDIR TEXTO (Mostrar mais / menos)
+  chat.addEventListener("click", (e) => {
+    if (e.target.classList.contains("toggle-expand")) {
+      const textEl = e.target.previousElementSibling;
+      if (textEl && textEl.classList.contains("msg-text")) {
+        const expanded = textEl.classList.toggle("expanded");
+        textEl.style.maxHeight = expanded ? "none" : "4.5em";
+        e.target.textContent = expanded ? "Ler menos" : "Ler mais";
+      }
+    }
+  });
+
+  // DETECTAR TECLADO MOBILE
+  (function handleKeyboardMobile() {
+    const detectKeyboard = () => {
+      if (window.innerWidth <= 768) {
+        const vh = window.innerHeight;
+        const body = document.body;
+        if (vh < 500) body.classList.add("keyboard-open");
+        else body.classList.remove("keyboard-open");
+      }
+    };
+    window.visualViewport?.addEventListener("resize", detectKeyboard);
+    window.addEventListener("resize", detectKeyboard);
+  })();
+  // TEXTAREA AUTO-RESIZE
+  messageInput.addEventListener("input", autoResize);
+  initStickerPanel(); // esse codigo e dos sticker 17-02-26
+  stickerReady = true;
+  
+
+
+
+
+}// fim da function setupChat
+
+
+// Reset após envio
+export function resetMessageInput() {
+  if (!messageInput) return;
+  messageInput.removeEventListener("input", autoResize);
+  messageInput.value = "";
+  messageInput.style.height = "44px";
+  requestAnimationFrame(() => {
+    messageInput.addEventListener("input", autoResize);
+  });
+}
+
+
+
+
+function initNavbarCollapse() {
+  const navbarNav = document.getElementById("navbarNav");
+  const toggler = document.querySelector(".navbar-toggler");
+  if (!navbarNav || typeof bootstrap === "undefined") return;
+  const collapse = bootstrap.Collapse.getOrCreateInstance(navbarNav, { toggle: false });
+  // Garante que o menu sempre inicie fechado, mesmo após reload / bfcache
+  collapse.hide();
+  if (toggler) {
+    toggler.setAttribute("aria-expanded", "false");
+    toggler.classList.add("collapsed");
+  }
+  const navLinks = navbarNav.querySelectorAll("a");
+  navLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      collapse.hide();
+      if (toggler) {
+        toggler.setAttribute("aria-expanded", "false");
+        toggler.classList.add("collapsed");
+      }
+    });
+  });
+}
+
+// CLIQUE NAS OPÇÕES (DESKTOP)
+attachmentPanel?.addEventListener("click", (e) => {
+  const item = e.target.closest(".attachment-item");
+  if (!item) return;
+closeAllPanels();
+  const action = item.dataset.action;
+  const handler = attachmentActions[action];
+  handler?.();
+});
+
+// GERENCIADOR CENTRAL DE CLIQUES FORA (ANTI-CONFLITO) 21-06-26
+document.addEventListener("click", (e) => {
+  // 1. Controle do Painel de Figurínhas/Stickers (Desktop)
+  const stickerPanelEl = document.getElementById("stickerPanel");
+  const emojiBtnEl = document.getElementById("emojiBtn");
+  if (stickerPanelEl?.classList.contains("show")) {
+    if (!stickerPanelEl.contains(e.target) && !emojiBtnEl?.contains(e.target) && !e.target.closest("#emojiBtn")) {
+      stickerPanelEl.classList.remove("show");
+    }
+  }
+
+  // 2. Controle do Painel de Anexos/Clip (Desktop)
+  const attachmentPanelEl = document.getElementById("attachmentPanel");
+  const attachBtnEl = document.getElementById("attachBtn");
+  if (attachmentPanelEl?.classList.contains("show")) {
+    if (!attachmentPanelEl.contains(e.target) && !attachBtnEl?.contains(e.target) && !e.target.closest("#attachBtn")) {
+      closeAllPanels();
+    }
+  }
+});
+
+// FECHAR COM ESC
+document.addEventListener("keydown", (e) => {
+if (e.key === "Escape") closeAllPanels();
+});
+
+
+// =================================== FEEDBACK (AI)============================
+const FEEDBACK_COOLDOWN = 300;
+const feedbackText = document.getElementById("feedbackText");
+document.getElementById("cancelFeedback")?.addEventListener("click", () => {
+  document.getElementById("feedbackModal")?.classList.add("hidden");
+});
+
+document.getElementById("sendFeedback")?.addEventListener("click", async () => {
+  const text = feedbackText.value.trim();
+  if (!text) {
+    showToast("Escreva uma sugestão.");
+    return;
+  }
+  const lastSent = localStorage.getItem("lastFeedbackTime");
+  const now = Date.now();
+  if (lastSent && now - lastSent < FEEDBACK_COOLDOWN * 1000) {
+    const wait = Math.ceil(
+      (FEEDBACK_COOLDOWN * 1000 - (now - lastSent)) / 1000
+    );
+    showToast(`Aguarde ${wait}s para enviar outra sugestão.`);
+    return;
+  }
+
+  try {
+    const user = auth.currentUser;
+    await addDoc(collection(db, "feedbacks"), {
+      text,
+      uid: user?.uid || null,
+      name: user?.displayName || "Anônimo",
+      createdAt: serverTimestamp()
+    });
+
+    localStorage.setItem("lastFeedbackTime", now);
+    feedbackText.value = "";
+    document.getElementById("feedbackModal")?.classList.add("hidden");
+    showToast("Obrigado pela sugestão!");
+  } catch (err) {
+    console.error(err);
+    showToast("Erro ao enviar sugestão.");
+  }
+});
+
+
+// AÇÕES DE ANEXO VINDAS DO BOTTOM SHEET (MOBILE)
+window.addEventListener("attachmentAction", (e) => {
+  const action = attachmentActions[e.detail];
+  action?.();
+});
+
+// PAINEL DE ANEXOS — DESKTOP
+const toggleAttachmentPanel = () => {
+  if (!attachmentPanel) return;
+  if (attachmentPanel.classList.contains("show")) {
+  closeAllPanels();
+} else {
+  openPanel("attachments");
+}
+  
+ attachBtn?.setAttribute(
+  "aria-expanded",
+  attachmentPanel.classList.contains("show") ? "true" : "false"
+);
+};
+
+const closeAttachmentPanel = () => {
+  attachmentPanel?.classList.remove("show");
+  attachBtn?.setAttribute("aria-expanded", "false");
+};
+
+
+
+// padronizando funcao global 17-03-26
+window.closeAllPanels = closeAllPanels;
+
+
+// ================= VER PERFIL PELO MENU DA MENSAGEM 06-05-26  =================
+document.getElementById("contextProfileBtn")?.addEventListener("click", async (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  const menu = document.getElementById("messageContextMenu");
+  if (!menu) return;
+
+  const userId = menu.dataset.uid;
+
+  menu.classList.add("hidden");
+
+  if (!userId) {
+    showToast("Perfil não encontrado para essa mensagem antiga.");
+    return;
+  }
+
+  if (typeof window.openMainProfilePanel === "function") {
+    await window.openMainProfilePanel(userId);
+  }
+});
+
+// ================= DENUNCIAR MENSAGEM PELO MINI MENU 06-05-26 E 04-07-26 =================
+// ================= DENUNCIAR USUÁRIO PELO MINI MENU DA MENSAGEM (CHAT-DF UX) =================
+// ================= DENUNCIAR USUÁRIO PELO MINI MENU DA MENSAGEM (CHAT-DF UX) =================
+document.getElementById("contextReportBtn")?.addEventListener("click", (e) => {
+  e.preventDefault(); 
+  // Removido o stopPropagation para permitir que o clique chegue perfeitamente até a validação unificada do users-panel.js
+
+  const menu = document.getElementById("messageContextMenu");
+  const reportUserModal = document.getElementById("reportUserModal");
+  const reportUserBtn = document.getElementById("reportUserBtn");
+  const reportReasonSelect = document.getElementById("reportReasonSelect");
+
+  if (!menu || !reportUserModal) return;
+
+  const targetUid = menu.dataset.uid;
+
+  if (!targetUid) {
+    showToast("Não foi possível identificar o usuário desta mensagem.");
+    return;
+  }
+
+  if (reportUserBtn) {
+    reportUserBtn.setAttribute("data-target-uid", targetUid);
+  }
+
+  menu.classList.add("hidden");
+});
+
+document.getElementById("cancelReport")?.addEventListener("click", () => {
+  document.getElementById("reportModal")?.classList.add("hidden");
+  currentReportData = null;
+});
+
+document.getElementById("sendReport")?.addEventListener("click", async () => {
+  const user = auth.currentUser;
+  const reportText = document.getElementById("reportText");
+  const reason = reportText?.value.trim() || "";
+
+  if (!user) {
+    showToast("Faça login para denunciar.");
+    return;
+  }
+
+  if (!currentReportData) {
+    showToast("Mensagem não encontrada para denunciar.");
+    return;
+  }
+
+  if (!reason) {
+    showToast("Escreva o motivo da denúncia.");
+    return;
+  }
+// essa parte editar os campos do firebase 06-05-26
+  try {
+const agora = new Date();
+const pad = (n) => String(n).padStart(2, "0");
+const dataId =
+  agora.getFullYear() + "-" +
+  pad(agora.getMonth() + 1) + "-" +
+  pad(agora.getDate()) + "_" +
+  pad(agora.getHours()) + "-" +
+  pad(agora.getMinutes()) + "-" +
+  pad(agora.getSeconds());
+
+const reporterSnap = await getDoc(doc(db, "users", user.uid));
+const reporterData = reporterSnap.exists() ? reporterSnap.data() : {};
+
+const reporterChatName =
+  reporterData.nome ||
+  user.displayName ||
+  "Usuario";
+
+const nomeLimpo = reporterChatName
+  .trim()
+  .replace(/\s+/g, "_")
+  .replace(/[^\wÀ-ÿ_-]/g, "");
+
+const reportId = `${nomeLimpo}_${dataId}`;
+
+await setDoc(doc(db, "denuncias", reportId), {
+      sala: currentReportData.sala,
+      messageId: currentReportData.messageId,
+      reportedUid: currentReportData.reportedUid,
+      reportedUser: currentReportData.reportedUser,
+      messageText: currentReportData.messageText,
+      reason,
+      reporterUid: user.uid,
+reporterName: reporterChatName,
+      createdAt: serverTimestamp()
+    });
+
+    reportText.value = "";
+    currentReportData = null;
+
+    document.getElementById("reportModal")?.classList.add("hidden");
+    showToast("Denúncia enviada. Obrigado por ajudar.");
+  } catch (err) {
+    console.error(err);
+    showToast("Erro ao enviar denúncia.");
+  }
+});
+
+
+
+// ===================== PERFIL DO USUÁRIO PERFIL===================== 03-04-26
+
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+// ELEMENTOS
+const profilePanel = document.getElementById("profilePanel");
+const profileOverlay = document.getElementById("profileOverlay");
+const closeProfileBtn = document.getElementById("closeProfilePanel");
+const editProfileCoverBtn = document.getElementById("editProfileCoverBtn");
+
+const profileName = document.getElementById("profileName");
+
+const profileMood = document.getElementById("profileMood");
+const profileCity = document.getElementById("profileCity");
+const profileAvatar = document.getElementById("profileAvatar");
+const profileOnlineDot = document.getElementById("profileOnlineDot"); // bplinha verde 03-05-26
+
+const editName = document.getElementById("editName");
+const editCity = document.getElementById("editCity");
+const editMood = document.getElementById("editMood");
+const editAge = document.getElementById("editAge");
+const editGender = document.getElementById("editGender"); // Garantindo mapeamento estável no DOM
+const saveProfileBtn = document.getElementById("saveProfileBtn");
+
+// ================= LISTA PADRÃO DE CIDADES DO DF 01-05-26 DENTRO PAINEL PERFIL=================
+const CIDADES_DF = [
+  "Águas Claras","Arniqueira","Asa Norte","Asa Sul","Brazlândia","Candangolândia","Ceilândia","Cruzeiro","Fercal","Gama",
+  "Guará","Guará II","Itapoã","Jardim Botânico","Lago Norte","Lago Sul","Núcleo Bandeirante","Paranoá","Park Way","Planaltina",
+  "Plano Piloto","Recanto das Emas","Riacho Fundo","Riacho Fundo II","Samambaia N","Samambaia S","Santa Maria","São Sebastião",
+  "Estrutural","SIA","Sobradinho","Sobradinho II","Sol Nascente","Pôr do Sol","Sudoeste","Octogonal","Taguatinga","Taguatinga N",
+  "Taguatinga S","Varjão","Vicente Pires"
+];
+
+function criarListaCidadesPerfil() {
+  if (!editCity) return;
+
+  editCity.setAttribute("readonly", "readonly");
+  editCity.setAttribute("placeholder", "Selecione sua cidade");
+
+  const antigo = document.getElementById("cityDropdownProfile");
+  if (antigo) antigo.remove();
+
+  const lista = document.createElement("div");
+  lista.id = "cityDropdownProfile";
+  lista.className = "city-dropdown-profile hidden";
+
+  CIDADES_DF.forEach((cidade) => {
+    const item = document.createElement("button");
+    item.type = "button";
+    item.className = "city-dropdown-item";
+    item.textContent = cidade;
+
+    item.addEventListener("click", () => {
+      editCity.value = cidade;
+      lista.classList.add("hidden");
+    });
+
+    lista.appendChild(item);
+  });
+
+  editCity.parentElement.appendChild(lista);
+
+  editCity.addEventListener("click", (e) => {
+    e.stopPropagation();
+    lista.classList.toggle("hidden");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!lista.contains(e.target) && e.target !== editCity) {
+      lista.classList.add("hidden");
+    }
+  });
+}
+
+
+
+// ================= LISTA PADRÃO DE GÊNERO 01-05-26 =================
+const GENEROS_PADRAO = [
+  "Masculino",
+  "Feminino",
+  "Prefiro não dizer"
+];
+
+function criarListaGeneroPerfil() {
+  if (!editGender) return;
+
+  editGender.setAttribute("readonly", "readonly");
+  editGender.setAttribute("placeholder", "Selecione seu gênero");
+
+  const antigo = document.getElementById("genderDropdownProfile");
+  if (antigo) antigo.remove();
+
+  const lista = document.createElement("div");
+  lista.id = "genderDropdownProfile";
+  lista.className = "gender-dropdown-profile hidden";
+
+  GENEROS_PADRAO.forEach((genero) => {
+    const item = document.createElement("button");
+    item.type = "button";
+    item.className = "gender-dropdown-item";
+    item.textContent = genero;
+
+    item.addEventListener("click", () => {
+      editGender.value = genero;
+      lista.classList.add("hidden");
+    });
+
+    lista.appendChild(item);
+  });
+
+  editGender.parentElement.appendChild(lista);
+
+  editGender.addEventListener("click", (e) => {
+    e.stopPropagation();
+    lista.classList.toggle("hidden");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!lista.contains(e.target) && e.target !== editGender) {
+      lista.classList.add("hidden");
+    }
+  });
+}
+
+
+
+
+
+
+
+
+
+// melhoria 29-04-26
+const profileAge = document.getElementById("profileAge");
+const profileGender = document.getElementById("profileGender");
+const profileMemberSince = document.getElementById("profileMemberSince");
+
+// melhoria 29-04-26 editar o campo de idade do perfil impede do usuario digitar letra ao invez de numero 
+editAge?.addEventListener("input", () => {
+  let value = editAge.value.replace(/\D/g, "");
+
+  if (value !== "" && Number(value) > 100) {
+    value = "100";
+  }
+
+  editAge.value = value;
+});
+
+const profileCover = document.querySelector(".profile-cover");
+const profileBannerPreview = document.getElementById("profileBannerPreview");
+const profileBannerColors = document.getElementById("profileBannerColors");
+
+const profileEditorModal = document.getElementById("profileEditorModal");
+const closeProfileEditorBtn = document.getElementById("closeProfileEditorBtn");
+const profileEditorBannerPreview = document.getElementById("profileEditorBannerPreview");
+const profileEditorBannerColors = document.getElementById("profileEditorBannerColors");
+const showBannerEditorBtn = document.getElementById("showBannerEditorBtn");
+const openAvatarPickerBtn = document.getElementById("openAvatarPickerBtn");
+const profileEditorAvatarArea = document.getElementById("profileEditorAvatarArea");
+const profileEditorAvatarGrid = document.getElementById("profileEditorAvatarGrid");
+const saveProfileEditorBtn = document.getElementById("saveProfileEditorBtn");
+
+
+//=============================              =========================================12-04-2026 
+const profileInfoSection = document.getElementById("profileInfo");
+const profileEditSection = document.getElementById("profileEdit");
+const profileInfoTab = document.querySelector('.profile-tab[data-tab="info"]');
+const profileEditTab = document.querySelector('.profile-tab[data-tab="edit"]');
+let currentViewedProfileId = null;
+let currentProfileIsOwner = false;
+let profileRequestToken = 0;
+const DEFAULT_PROFILE_AVATAR = "./img/avatar.png";
+
+// painel perfil editar a parte membro desde, mostra a data e hora dentro, melhoria 29-04-26
+function formatProfileDate(value) {
+  if (!value) return "-";
+
+  let date;
+
+  if (typeof value === "number") {
+    date = new Date(value);
+  } else if (value?.toDate) {
+    date = value.toDate();
+  } else {
+    date = new Date(value);
+  }
+
+  if (isNaN(date.getTime())) return "-";
+
+  return date.toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    //hour: "2-digit",
+    //minute: "2-digit"
+  });
+}
+
+let selectedBannerColor = "#000000";
+let selectedProfileAvatar = DEFAULT_PROFILE_AVATAR;
+let isProfileEditLocked = false;
+let profileEditRemainingDays = 0;
+
+
+// =====================  BLOQUEIo NO PAINEL PERFIL DO USUARIO USUARIO 23-04-2026 ================== 
+const PROFILE_EDIT_COOLDOWN_DAYS = 1; // depois pode mudar para 2
+const PROFILE_EDIT_COOLDOWN_MS =
+  PROFILE_EDIT_COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
+
+function getRemainingEditDays(lastEditAt) {
+  if (!lastEditAt) return 0;
+  const diff = Date.now() - lastEditAt;
+  if (diff >= PROFILE_EDIT_COOLDOWN_MS) return 0;
+  return Math.ceil(
+    (PROFILE_EDIT_COOLDOWN_MS - diff) / (24 * 60 * 60 * 1000)
+  );
+}
+function openProfileEditor() {
+  if (!currentProfileIsOwner || !profileEditorModal) return;
+  profileEditorModal.classList.remove("hidden");
+  requestAnimationFrame(() => {
+    profileEditorModal.classList.add("open");
+  });
+  showBannerEditorBtn?.classList.add("active");
+  openAvatarPickerBtn?.classList.remove("active");
+  profileEditorBannerPreview?.classList.remove("hidden");
+  profileEditorBannerColors?.classList.remove("hidden");
+  profileEditorAvatarArea?.classList.add("hidden");
+  if (profileEditorBannerPreview) {
+    profileEditorBannerPreview.style.background = selectedBannerColor || "#000000";
+  }
+  renderProfileEditorBannerPalette();
+}
+
+//25-04-26
+function closeProfileEditor() {
+  if (!profileEditorModal) return;
+  profileEditorModal.classList.remove("open");
+  const finalizeClose = () => {
+    profileEditorModal.classList.add("hidden");
+    profileEditorModal.removeEventListener("transitionend", handleTransitionEnd);
+  };
+  const handleTransitionEnd = (e) => {
+    if (e.target !== profileEditorModal) return;
+    finalizeClose();
+  };
+  profileEditorModal.addEventListener("transitionend", handleTransitionEnd);
+  setTimeout(finalizeClose, 320);
+}
+
+function renderProfileEditorBannerPalette() {
+  if (!profileEditorBannerColors) return;
+
+  profileEditorBannerColors.innerHTML = "";
+
+  textColorPalette.forEach(color => {
+    if (!color || color === "<br>") return;
+
+    const box = document.createElement("div");
+    box.className = "profile-banner-editor-color-box";
+    box.style.backgroundColor = color;
+    box.dataset.color = color;
+
+    if (color === selectedBannerColor) {
+      box.classList.add("selected");
+    }
+
+    box.addEventListener("click", () => {
+      if (!currentProfileIsOwner) return;
+
+      selectedBannerColor = color;
+
+      if (profileEditorBannerPreview) {
+        profileEditorBannerPreview.style.background = color;
+      }
+
+      profileEditorBannerColors
+        .querySelectorAll(".profile-banner-editor-color-box")
+        .forEach(el => el.classList.remove("selected"));
+
+      box.classList.add("selected");
+    });
+
+    profileEditorBannerColors.appendChild(box);
+  });
+}
+
+
+
+
+//15-04-2026
+function renderProfileBannerPalette() {
+  if (!profileBannerColors) return;
+
+  profileBannerColors.innerHTML = "";
+
+  textColorPalette.forEach(color => {
+    if (!color || color === "<br>") return;
+
+    const box = document.createElement("div");
+    box.className = "profile-banner-color-box";
+    box.style.backgroundColor = color;
+    box.dataset.color = color;
+
+    if (color === selectedBannerColor) {
+      box.classList.add("selected");
+    }
+
+    box.addEventListener("click", () => {
+      if (!currentProfileIsOwner) return;
+
+      selectedBannerColor = color;
+
+      if (profileCover) {
+        profileCover.style.background = color;
+      }
+
+      if (profileBannerPreview) {
+        profileBannerPreview.style.background = color;
+      }
+
+      profileBannerColors.querySelectorAll(".profile-banner-color-box").forEach(el => {
+        el.classList.remove("selected");
+      });
+
+      box.classList.add("selected");
+    });
+
+    profileBannerColors.appendChild(box);
+  });
+}
+
+
+
+/*-------------- 12-04-26 --------------------
+Essa função é a função central que abre e atualiza o painel principal de perfil.
+
+Em português simples, ela faz isso:
+
+O papel dela
+
+Quando você clica em:
+
+Meu perfil
+ou em um usuário online
+
+é essa função que:
+
+decide de quem é o perfil
+abre o painel se ele ainda estiver fechado
+troca o painel para modo:
+dono do perfil
+ou visitante
+busca os dados no Firestore
+preenche nome, email, cidade, telefone e foto
+
+
+
+
+*/ 
+let unsubscribeProfileListener = null; // melhoria 03-05-26 
+window.openMainProfilePanel = async (userId, options = {}) => {
+  if (!auth.currentUser) {
+    if (typeof showToast === "function") {
+      showToast("Faça login para ver o perfil");
+    }
+
+    const modal = document.getElementById("loginModal");
+    if (modal) modal.classList.remove("hidden");
+
+    return;
+  }
+
+  if (!userId) return;
+
+  const loggedUser = auth.currentUser;
+  const isOwner = !!loggedUser && loggedUser.uid === userId;
+  const isPanelOpen = profilePanel?.classList.contains("open");
+
+  // 07-07-26Alimenta a variável local e a do estado global para o users-panel.js ter acesso
+  currentViewedProfileId = userId;
+  if (window.appState) {
+    window.appState.currentViewedProfileId = userId;
+  }
+  
+  profileRequestToken += 1;
+  const requestToken = profileRequestToken;
+
+  if (!isPanelOpen) {
+    openProfilePanel();
+  }
+
+  renderProfileBannerPalette();
+
+  document.body.classList.toggle("viewing-other-profile", !isOwner);
+  applyProfileMode(isOwner);
+
+  await new Promise(resolve => requestAnimationFrame(resolve));
+
+  try {
+    const refUser = doc(db, "users", userId);
+
+    if (unsubscribeProfileListener) {
+      unsubscribeProfileListener();
+    }
+
+    unsubscribeProfileListener = onSnapshot(refUser, (snap) => {
+      if (requestToken !== profileRequestToken) return;
+
+      if (!snap.exists()) {
+        profileName.textContent = "Usuário";
+        profileMood.textContent = "Sem recado no momento.";
+        profileCity.textContent = "-";
+        profileAvatar.src = "img/avatar.png";
+        selectedBannerColor = "#8b898963";
+
+        if (profileCover) {
+          profileCover.style.background = selectedBannerColor;
+        }
+
+        if (profileEditorBannerPreview) {
+          profileEditorBannerPreview.style.background = selectedBannerColor;
+        }
+
+        renderProfileBannerPalette();
+        renderProfileEditorBannerPalette();
+        return;
+      }
+
+      const data = snap.data();
+
+      //bolinha verde dentro do perfil painel 03-05-26
+const statusRef = ref(rtdb, "status/" + userId);
+
+onValue(statusRef, (statusSnap) => {
+  const statusData = statusSnap.val();
+  const isOnline = statusData?.online === true;
+
+  if (profileOnlineDot) {
+    profileOnlineDot.classList.toggle("hidden", !isOnline);
+  }
+});
+
+      window.__currentProfileData = data;
+
+      profileEditRemainingDays = getRemainingEditDays(data.lastProfileEditAt);
+      isProfileEditLocked = isOwner && profileEditRemainingDays > 0;
+      applyProfileMode(isOwner);
+
+      const nome = data.nome || "Usuário";
+      const foto = data.foto || "img/avatar.png";
+      const mood = data.mood || "Sem recado no momento.";
+      const cidade = data.cidade || "-";
+      const idade = data.idade || "-";
+      const genero = data.genero || "-";
+      const membroDesde = data.membroDesde || data.createdAt || null;
+      const bannerColor = data.bannerColor || "#00000063";
+
+      selectedBannerColor = bannerColor;
+      selectedProfileAvatar = foto;
+
+      profileName.textContent = nome;
+      profileMood.textContent = mood;
+      profileCity.textContent = cidade;
+      profileAvatar.src = foto;
+
+      if (profileAge) profileAge.textContent = idade;
+      if (profileGender) profileGender.textContent = genero;
+      if (profileMemberSince) {
+        profileMemberSince.textContent = formatProfileDate(membroDesde);
+      }
+
+      if (profileCover) {
+        profileCover.style.background = bannerColor;
+      }
+
+      if (profileEditorBannerPreview) {
+        profileEditorBannerPreview.style.background = bannerColor;
+      }
+
+      renderProfileBannerPalette();
+      renderProfileEditorBannerPalette();
+
+      editName.value = nome;
+      editCity.value = data.cidade || "";
+      editMood.value = data.mood || "";
+
+      if (editAge) editAge.value = data.idade || "";
+      if (editGender) editGender.value = data.genero || "";
+
+      criarListaCidadesPerfil();
+      criarListaGeneroPerfil();
+      setTimeout(perfilEstaCompleto, 200);//04-06-26 melhoria para verificar se o perfil está completo após carregar os dados, 
+      // e não antes como era feito, evitando erros de verificação por conta do carregamento assíncrono dos dados do perfil
+    });
+
+  } catch (err) {
+    if (requestToken !== profileRequestToken) return;
+    console.error(err);
+    showToast("Erro ao carregar perfil");
+  }
+};
+
+
+
+/* EDITA ESSA FUNÇÃO function applyProfileMode  Ela         15-04-26
+configura o painel de perfil:
+se for dono, mostra edição
+se for outro usuário, esconde edição.*/
+
+function applyProfileMode(isOwner) {
+  currentProfileIsOwner = isOwner;
+  
+  const reportBtn = document.getElementById("reportUserBtn");
+  const lockDaysText = `${PROFILE_EDIT_COOLDOWN_DAYS} dia(s)`;
+  let isLocked = false;
+
+  if (isOwner && auth.currentUser) {
+    const profileDoc = window.__currentProfileData || {};
+    const remainingDays = getRemainingEditDays(profileDoc.lastProfileEditAt);
+    isLocked = remainingDays > 0;
+  }
+
+  // Reseta estados das abas
+  tabs.forEach(t => t.classList.remove("active"));
+  sections.forEach(s => {
+    s.classList.remove("active");
+    s.classList.remove("hidden");
+    s.hidden = false;
+    s.style.display = "";
+  });
+
+  profileInfoTab?.classList.add("active");
+  profileInfoSection?.classList.add("active");
+
+  if (isOwner) {
+    // Se o perfil for meu, esconde a bandeira nativamente para não piscar
+    if (reportBtn) reportBtn.style.display = "none";
+
+    if (!isLocked) {
+      if (profileEditTab) {
+        profileEditTab.hidden = false;
+        profileEditTab.style.display = "";
+        profileEditTab.classList.remove("hidden", "active");
+      }
+      if (profileEditSection) {
+        profileEditSection.hidden = false;
+        profileEditSection.style.display = "";
+        profileEditSection.classList.remove("hidden", "active");
+      }
+      if (saveProfileBtn) {
+        saveProfileBtn.hidden = false;
+        saveProfileBtn.style.display = "";
+        saveProfileBtn.classList.remove("hidden");
+      }
+      if (editProfileCoverBtn) {
+        editProfileCoverBtn.hidden = false;
+        editProfileCoverBtn.style.display = "";
+        editProfileCoverBtn.classList.remove("hidden");
+      }
+      editName?.removeAttribute("disabled");
+      editCity?.removeAttribute("disabled");
+      editMood?.removeAttribute("disabled");
+    } else {
+      // Se estiver bloqueado por dias
+      if (profileEditTab) {
+        profileEditTab.hidden = false;
+        profileEditTab.style.display = "";
+        profileEditTab.classList.remove("hidden");
+        profileEditTab.style.opacity = "0.45";
+        profileEditTab.style.pointerEvents = "";
+      }
+      if (editProfileCoverBtn) {
+        editProfileCoverBtn.hidden = false;
+        editProfileCoverBtn.style.display = "";
+        editProfileCoverBtn.classList.remove("hidden");
+        editProfileCoverBtn.style.opacity = "0.45";
+        editProfileCoverBtn.style.pointerEvents = "";
+        editProfileCoverBtn.title = `Liberado em ${lockDaysText}`;
+      }
+      if (saveProfileBtn) {
+        saveProfileBtn.style.opacity = "0.45";
+        saveProfileBtn.style.pointerEvents = "none";
+      }
+    }} else {
+    // Se for perfil de OUTRO usuário, exibe a bandeira de forma estável e garante que esteja ativa para cliques
+    if (reportBtn) {
+      reportBtn.style.display = "flex";
+      reportBtn.style.opacity = "1";
+      reportBtn.style.pointerEvents = "auto";
+      reportBtn.removeAttribute("disabled");
+    }
+
+    // Oculta abas de edição para visitantes
+ 
+
+    // Oculta abas de edição para visitantes
+    if (profileEditTab) {
+      profileEditTab.classList.remove("active");
+      profileEditTab.classList.add("hidden");
+      profileEditTab.hidden = true;
+      profileEditTab.style.display = "none";
+    }
+    if (profileEditSection) {
+      profileEditSection.classList.remove("active");
+      profileEditSection.classList.add("hidden");
+      profileEditSection.hidden = true;
+      profileEditSection.style.display = "none";
+    }
+    if (saveProfileBtn) {
+      saveProfileBtn.classList.add("hidden");
+      saveProfileBtn.hidden = true;
+      saveProfileBtn.style.display = "none";
+    }
+    if (editProfileCoverBtn) {
+      editProfileCoverBtn.classList.add("hidden");
+      editProfileCoverBtn.hidden = true;
+      editProfileCoverBtn.style.display = "none";
+    }
+    editName?.setAttribute("disabled", "disabled");
+    editCity?.setAttribute("disabled", "disabled");
+    editMood?.setAttribute("disabled", "disabled");
+  }
+
+  // Mantém sua validação final de trava de edição ativa
+  if (isOwner && isProfileEditLocked) {
+    if (profileEditTab) {
+      profileEditTab.hidden = false;
+      profileEditTab.style.display = "";
+      profileEditTab.style.opacity = "0.45";
+      profileEditTab.style.cursor = "not-allowed";
+    }
+    if (editProfileCoverBtn) {
+      editProfileCoverBtn.hidden = false;
+      editProfileCoverBtn.style.display = "";
+      editProfileCoverBtn.style.opacity = "0.45";
+      editProfileCoverBtn.style.cursor = "not-allowed";
+    }
+    if (editName) editName.disabled = true;
+    if (editCity) editCity.disabled = true;
+    if (editMood) editMood.disabled = true;
+    if (saveProfileBtn) {
+      saveProfileBtn.disabled = true;
+      saveProfileBtn.style.opacity = "0.45";
+      saveProfileBtn.style.cursor = "not-allowed";
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// ABAS
+const tabs = document.querySelectorAll(".profile-tab");
+const sections = document.querySelectorAll(".profile-section");
+
+
+// ----------------- ABAS ------------------
+tabs.forEach(tab => {
+  //editado 23-04-26
+ tab.addEventListener("click", () => {
+  if (
+    isProfileEditLocked &&
+    tab.dataset.tab === "edit"
+  ) {
+    showToast(`Você poderá editar novamente em ${profileEditRemainingDays} dia(s).`);
+    return;
+  }
+    tabs.forEach(t => t.classList.remove("active"));
+    sections.forEach(s => s.classList.remove("active"));
+
+    tab.classList.add("active");
+
+    const target = tab.dataset.tab;
+    document.getElementById(
+      target === "info" ? "profileInfo" : "profileEdit"
+    )?.classList.add("active");
+  });
+});
+
+// --------------- ABRIR / FECHAR ------------------
+function openProfilePanel() {
+  if (!profilePanel) return;
+
+  window.__profileScrollY = window.scrollY || 0;
+
+  profilePanel.classList.remove("hidden");
+  profileOverlay?.classList.remove("hidden");
+
+  document.body.classList.add("profile-open");
+  document.body.style.top = `-${window.__profileScrollY}px`;
+
+  requestAnimationFrame(() => {
+    profilePanel.classList.add("open");
+    profileOverlay?.classList.add("show");
+  });
+}
+
+function closeProfilePanel(force = false) {
+  if (!profilePanel) return;
+  profilePanel.classList.remove("open");
+  profilePanel.classList.remove("dragging");
+  profilePanel.style.transform = "";
+  profileOverlay?.classList.remove("show");
+if (force) {
+  profilePanel.classList.add("hidden");
+  profileOverlay?.classList.add("hidden");
+//adicionado  11-05-26
+  document.body.classList.remove("profile-open");
+  document.body.style.top = "";
+  document.body.style.position = "";
+  document.body.style.overflow = "";
+  document.body.style.height = "";
+  document.body.style.width = "";
+
+  window.scrollTo(0, window.__profileScrollY || 0);
+
+  if (typeof unlockProfileBackground === "function") {
+    unlockProfileBackground();
+  }
+
+  document.body.classList.remove("viewing-other-profile");
+  currentViewedProfileId = null;
+  currentProfileIsOwner = false;
+
+  return;
+}
+
+  let closed = false;
+
+  const finalizeClose = () => {
+    if (closed) return;
+    closed = true;
+    profilePanel.removeEventListener("transitionend", handleTransitionEnd);
+if (!profilePanel.classList.contains("open")) {
+  profilePanel.classList.add("hidden");
+  profileOverlay?.classList.add("hidden");
+  //adicionado  11-05-26
+  document.body.classList.remove("profile-open");
+  document.body.style.top = "";
+  document.body.style.position = "";
+  document.body.style.overflow = "";
+  document.body.style.height = "";
+  document.body.style.width = "";
+
+window.scrollTo(0, window.__profileScrollY || 0);//11-05-26
+  if (typeof unlockProfileBackground === "function") {
+    unlockProfileBackground();
+  }
+
+  document.body.classList.remove("viewing-other-profile");
+  currentViewedProfileId = null;
+currentProfileIsOwner = false;
+}
+
+  };
+
+  const handleTransitionEnd = (e) => {
+    if (e.target !== profilePanel) return;
+    if (e.propertyName !== "transform") return;
+    finalizeClose();
+  };
+
+  profilePanel.addEventListener("transitionend", handleTransitionEnd);
+
+  requestAnimationFrame(() => {
+    const duration = getComputedStyle(profilePanel).transitionDuration || "0s";
+    const first = duration.split(",")[0].trim();
+    const time =
+      first.endsWith("ms") ? parseFloat(first) : parseFloat(first) * 1000;
+
+    setTimeout(finalizeClose, isNaN(time) ? 300 : time + 40);
+  });
+}
+
+closeProfileBtn?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  closeProfilePanel(true);
+});
+
+//15-04-2026
+
+editProfileCoverBtn?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+if (!currentProfileIsOwner) return;
+
+if (isProfileEditLocked) {
+  showToast(`Você poderá editar novamente em ${profileEditRemainingDays} dia(s).`);
+  return;
+}
+
+  openProfileEditor();
+});
+
+closeProfileEditorBtn?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  closeProfileEditor();
+});
+
+profileEditorModal?.addEventListener("click", (e) => {
+  if (e.target === profileEditorModal) {
+    closeProfileEditor();
+  }
+});
+
+
+
+
+
+
+
+showBannerEditorBtn?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  showBannerEditorBtn.classList.add("active");
+  openAvatarPickerBtn?.classList.remove("active");
+
+  profileEditorBannerPreview?.classList.remove("hidden");
+  profileEditorBannerColors?.classList.remove("hidden");
+  profileEditorAvatarArea?.classList.add("hidden");
+
+  renderProfileEditorBannerPalette();
+});
+
+
+
+
+//========================================= novo avatar picker 03-06-26 =========================================
+// 03-06-26  EVENTO UNIFICADO PARA ABRIR O SELETOR DE AVATAR JÁ CARREGANDO "ELES"
+openAvatarPickerBtn?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  openAvatarPickerBtn.classList.add("active");
+  showBannerEditorBtn?.classList.remove("active");
+
+  profileEditorBannerPreview?.classList.add("hidden");
+  profileEditorBannerColors?.classList.add("hidden");
+  profileEditorAvatarArea?.classList.remove("hidden");
+
+  carregarCategoria("eles"); // Aciona o lote inicial masculino do avatar.js
+});
+
+
+
+// ====================== 03-06-26 NOVO MOTOR MULTIAVATAR ======================
+
+// ====================== MOTOR MULTIAVATAR CORRIGIDO COM BOTÕES BOOTSTRAP ======================
+
+let listaAtual = [];
+let avataresRenderizados = 0;
+const LOTE_TAMANHO = 15;
+let categoriaAtual = "eles";
+
+// Índices numéricos isolados para a linha de montagem genética
+let partesDna = {
+  ambiente: 0,
+  roupas: 0,
+  cabeca: 0,
+  boca: 0,
+  olhos: 0,
+  cabelo: 0
+};
+
+// ENGINES DE RESOLUÇÃO SEPARADAS (CONFORME A DOCUMENTAÇÃO OFICIAL)
+function gerarAvatarDnaUri(dna12Digitos) {
+    // O parâmetro 'true' desliga a criptografia e lê as coordenadas das peças de 00 a 47
+    const svgCode = multiavatar(dna12Digitos, true);
+    return "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgCode)));
+}
+
+function gerarAvatarUri(texto) {
+    // Modo clássico por semente (usado para renderizar os lotes fixos do avatar.js)
+    const svgCode = multiavatar(texto);
+    return "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgCode)));
+}
+
+function renderizarLote() {
+    if (!profileEditorAvatarGrid) return;
+    
+    let html = "";
+    let limite = avataresRenderizados + LOTE_TAMANHO;
+    
+    for (let i = avataresRenderizados; i < limite; i++) {
+        let codigo;
+        if (categoriaAtual === "aleatorios") {
+            codigo = Math.random().toString(36).substring(7);
+        } else {
+            if (i >= listaAtual.length) break;
+            codigo = listaAtual[i];
+        }
+        
+        let imagemUri = gerarAvatarUri(codigo);
+        html += `<img src="${imagemUri}" class="avatar-option" data-uri="${imagemUri}" style="width: 65px; height: 65px; cursor: pointer; border-radius: 50%; border: 3px solid transparent;" />`;
+    }
+
+    profileEditorAvatarGrid.insertAdjacentHTML("beforeend", html);
+    avataresRenderizados += LOTE_TAMANHO;
+}
+
+// Controla a troca de abas ocultando ou exibindo o Construtor Dinâmico
+function carregarCategoria(categoria) {
+    categoriaAtual = categoria;
+    avataresRenderizados = 0;
+    
+    const construtorContainer = document.getElementById("avatarConstructorContainer");
+    if (profileEditorAvatarGrid) profileEditorAvatarGrid.innerHTML = "";
+    
+    if (categoria === "criar") {
+        profileEditorAvatarGrid?.classList.add("hidden");
+        construtorContainer?.classList.remove("hidden");
+        atualizarPreviewConstrutor();
+        return;
+    }
+    
+    construtorContainer?.classList.add("hidden");
+    profileEditorAvatarGrid?.classList.remove("hidden");
+    
+    if (categoria === "eles") listaAtual = avataresEles;
+    else if (categoria === "elas") listaAtual = avataresElas;
+    else if (categoria === "unissex") listaAtual = avataresUnissex;
+    else if (categoria === "aleatorios") listaAtual = [];
+    
+    renderizarLote();
+}
+
+function padDoisDigitos(val) {
+    return String(val).padStart(2, "0");
+}
+
+// Junta as 6 variáveis em Direct DNA e reconecta na visualização profissional
+function atualizarPreviewConstrutor() {
+    if(document.getElementById("valAmbiente")) document.getElementById("valAmbiente").textContent = padDoisDigitos(partesDna.ambiente);
+    if(document.getElementById("valRoupas")) document.getElementById("valRoupas").textContent = padDoisDigitos(partesDna.roupas);
+    if(document.getElementById("valCabeca")) document.getElementById("valCabeca").textContent = padDoisDigitos(partesDna.cabeca);
+    if(document.getElementById("valBoca")) document.getElementById("valBoca").textContent = padDoisDigitos(partesDna.boca);
+    if(document.getElementById("valOlhos")) document.getElementById("valOlhos").textContent = padDoisDigitos(partesDna.olhos);
+    if(document.getElementById("valCabelo")) document.getElementById("valCabelo").textContent = padDoisDigitos(partesDna.cabelo);
+
+    // Amarra os 6 blocos sequenciais da esquerda para a direita
+    const dnaFinal = padDoisDigitos(partesDna.ambiente) + 
+                     padDoisDigitos(partesDna.roupas) + 
+                     padDoisDigitos(partesDna.cabeca) + 
+                     padDoisDigitos(partesDna.boca) + 
+                     padDoisDigitos(partesDna.olhos) + 
+                     padDoisDigitos(partesDna.cabelo);
+                     
+    // CORREÇÃO: Puxa o renderizador direto de peças sem embaralhar o boneco
+    const novaUri = gerarAvatarDnaUri(dnaFinal);
+    const previewImg = document.getElementById("constructorPreview");
+    if (previewImg) previewImg.src = novaUri;
+    
+    selectedProfileAvatar = novaUri; 
+}
+
+// Configura as ações de avanço e recuo das setas (Limite de 00 a 47)
+function VincularAcaoParte(idPrev, idNext, chaveParte) {
+    document.getElementById(idPrev)?.addEventListener("click", (e) => {
+        e.preventDefault();
+        partesDna[chaveParte] = partesDna[chaveParte] <= 0 ? 47 : partesDna[chaveParte] - 1;
+        atualizarPreviewConstrutor();
+    });
+    document.getElementById(idNext)?.addEventListener("click", (e) => {
+        e.preventDefault();
+        partesDna[chaveParte] = partesDna[chaveParte] >= 47 ? 0 : partesDna[chaveParte] + 1;
+        atualizarPreviewConstrutor();
+    });
+}
+
+// Vincula as ações individuais das setas do Bootstrap
+VincularAcaoParte("prevAmbiente", "nextAmbiente", "ambiente");
+VincularAcaoParte("prevRoupas", "nextRoupas", "roupas");
+VincularAcaoParte("prevCabeca", "nextCabeca", "cabeca");
+VincularAcaoParte("prevBoca", "nextBoca", "boca");
+VincularAcaoParte("prevOlhos", "nextOlhos", "olhos");
+VincularAcaoParte("prevCabelo", "nextCabelo", "cabelo");
+
+profileEditorAvatarGrid?.addEventListener("scroll", function() {
+    if (categoriaAtual !== "criar" && this.scrollTop + this.clientHeight >= this.scrollHeight - 15) {
+        renderizarLote();
+    }
+});
+
+profileEditorAvatarGrid?.addEventListener("click", (e) => {
+    if (e.target.tagName === "IMG" && e.target.classList.contains("avatar-option")) {
+        profileEditorAvatarGrid.querySelectorAll("img").forEach(img => {
+            img.style.border = "3px solid transparent";
+            img.classList.remove("selected");
+        });
+        e.target.style.border = "3px solid #ff6b6b";
+        e.target.classList.add("selected");
+        selectedProfileAvatar = e.target.getAttribute("data-uri"); 
+    }
+});
+
+document.querySelectorAll(".profile-avatar-cat").forEach(botao => {
+    botao.addEventListener("click", (e) => {
+        e.preventDefault();
+        document.querySelectorAll(".profile-avatar-cat").forEach(b => b.classList.remove("active"));
+        botao.classList.add("active");
+        const cat = botao.getAttribute("data-cat");
+        carregarCategoria(cat);
+    });
+});
+
+window.renderProfileAvatarGrid = function() {
+    carregarCategoria("eles");
+};
+//========================================================== DAQUI PRA CIMA ===================================
+
+window.attachmentActions.profile = async () => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  await window.openMainProfilePanel(user.uid);
+};
+
+//======================= adicionando 06-06-26 ========================
+//======================= VALIDAÇÃO EVOLUÍDA EM TEMPO REAL E ALERTA SEQUENCIAL ========================
+function perfilEstaCompleto() {
+  const nome = editName?.value.trim();
+  const cidade = editCity?.value.trim();
+  const recado = editMood?.value.trim();
+  const idade = editAge?.value.trim();
+  const genero = editGender?.value.trim();
+
+  const avatarValido =
+    selectedProfileAvatar &&
+    selectedProfileAvatar !== DEFAULT_PROFILE_AVATAR &&
+    selectedProfileAvatar !== "./img/avatar.png" &&
+    selectedProfileAvatar !== "img/avatar.png";
+
+  const bannerValido =
+    selectedBannerColor &&
+    selectedBannerColor !== "#00000063" &&
+    selectedBannerColor !== "#8b898963" &&
+    selectedBannerColor !== "#000000";
+
+  const completo = !!(
+    nome &&
+    cidade &&
+    recado &&
+    idade &&
+    genero &&
+    avatarValido &&
+    bannerValido
+  );
+
+  if (saveProfileBtn) {
+    if (currentProfileIsOwner && !isProfileEditLocked) {
+      saveProfileBtn.removeAttribute("disabled");
+      saveProfileBtn.style.opacity = "1";
+      saveProfileBtn.style.cursor = "pointer";
+    } else {
+      saveProfileBtn.setAttribute("disabled", "disabled");
+      saveProfileBtn.style.opacity = "0.5";
+      saveProfileBtn.style.cursor = "not-allowed";
+    }
+  }
+
+  return completo;
+}
+
+setTimeout(() => {
+  [editName, editAge, editMood].forEach(input => {
+    input?.addEventListener("input", perfilEstaCompleto);
+  });
+
+  document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("city-dropdown-item") || e.target.classList.contains("gender-dropdown-item")) {
+      setTimeout(perfilEstaCompleto, 50);
+    }
+  });
+
+  saveProfileEditorBtn?.addEventListener("click", () => {
+    setTimeout(perfilEstaCompleto, 100);
+  });
+}, 1000);
+
+// 06-06-26  APLICA AS MUDANÇAS DE AVATAR E BANNER NO PAINEL DE EDIÇÃO ANTES DE SALVAR, PARA MELHOR VISUALIZAÇÃO DO USUÁRIO
+saveProfileEditorBtn?.addEventListener("click", async () => {
+  const user = auth.currentUser;
+  if (!user) return;
+  if (!currentProfileIsOwner || currentViewedProfileId !== user.uid) return;
+
+  if (profileCover) {
+    profileCover.style.background = selectedBannerColor;
+  }
+  if (profileAvatar) {
+    profileAvatar.src = selectedProfileAvatar;
+  }
+
+  showToast("Alteração aplicada! Lembre-se de clicar em Salvar para gravar o perfil.");
+});
+
+
+
+
+saveProfileBtn?.addEventListener("click", async () => {
+  const user = auth.currentUser;
+  if (!user) return;
+  if (!currentProfileIsOwner || currentViewedProfileId !== user.uid) {
+    showToast("Você só pode editar o seu próprio perfil.");
+    return;
+  }
+
+  const refUser = doc(db, "users", user.uid);
+
+  const snap = await getDoc(refUser);
+  const data = snap.data() || {};
+  const remainingDays = getRemainingEditDays(data.lastProfileEditAt);
+
+  if (remainingDays > 0) {
+    showToast(`Você poderá editar novamente em ${remainingDays} dia(s).`);
+    return;
+  }
+
+  const bannerValido = selectedBannerColor && selectedBannerColor !== "#00000063" && selectedBannerColor !== "#8b898963" && selectedBannerColor !== "#000000";
+  if (!bannerValido) {
+    showToast("Editar capa e selecione uma cor de fundo.");
+    return;
+  }
+
+  const avatarValido = selectedProfileAvatar && selectedProfileAvatar !== DEFAULT_PROFILE_AVATAR && selectedProfileAvatar !== "./img/avatar.png" && selectedProfileAvatar !== "img/avatar.png";
+  if (!avatarValido) {
+    showToast("Selecione um avatar.");
+    return;
+  }
+
+  if (!editName.value.trim()) {
+    showToast("Por favor, preencha o campo: Nome.");
+    return;
+  }
+
+  if (!editAge || !editAge.value.trim()) {
+    showToast("Por favor, preencha o campo: Idade.");
+    return;
+  }
+
+  const generoSelecionado = editGender ? editGender.value.trim() : "";
+  if (!generoSelecionado || !GENEROS_PADRAO.includes(generoSelecionado)) {
+    showToast("Por favor, selecione um Gênero válido da lista.");
+    return;
+  }
+
+  const cidadeSelecionada = editCity.value.trim();
+  if (!cidadeSelecionada || !CIDADES_DF.includes(cidadeSelecionada)) {
+    showToast("Por favor, selecione uma Cidade válida da lista.");
+    return;
+  }
+
+  if (!editMood.value.trim()) {
+    showToast("Por favor, preencha o seu Recado (Frase Favorita).");
+    return;
+  }
+
+  try {
+    await updateDoc(refUser, {
+      nome: editName.value.trim(),
+      cidade: cidadeSelecionada,
+      mood: editMood.value.trim(),
+      idade: editAge.value.trim(),
+      genero: generoSelecionado,
+      foto: selectedProfileAvatar,
+      bannerColor: selectedBannerColor, 
+      perfilCompleto: true,
+      lastProfileEditAt: Date.now()
+    });
+
+    if (!selectedProfileAvatar.startsWith("data:image")) {
+      await updateProfile(user, { photoURL: selectedProfileAvatar });
+    }
+
+    const userStatusRef = ref(rtdb, "status/" + user.uid);
+    await set(userStatusRef, {
+      uid: user.uid,
+      name: editName.value.trim() || "Usuário",
+      avatar: selectedProfileAvatar || "./img/avatar.png",
+      online: true,
+      sala: appState.currentRoom || sala,
+      lastChanged: Date.now()
+    });
+
+    showToast("Perfil salvo e atualizado com sucesso!");
+    document.getElementById("profileEditTooltip")?.classList.remove("show");
+
+    window.attachmentActions.profile();
+
+  } catch (err) {
+    console.error(err);
+    showToast("Erro ao salvar perfil");
+  }
+});
+
+
+
+
+// ---------------- DRAG MOBILE / DESKTOP ----------------
+let startY = 0;
+let currentY = 0;
+let isDraggingProfile = false;
+let profileStartTranslate = 0;
+
+function getTranslateY(element) {
+  const style = window.getComputedStyle(element);
+  const transform = style.transform || style.webkitTransform;
+
+  if (!transform || transform === "none") return 0;
+
+  const matrix = new DOMMatrix(transform);
+  return matrix.m42;
+}
+
+function onProfileDragStart(e) {
+if (document.body.classList.contains("index-page")) return;//10-05-26
+    // 01-05-26  impede o painel de tentar fechar quando o usuário estiver rolando o conteúdo/formulário
+  if (
+    e.target.closest(".profile-content") ||
+    e.target.closest("#profileEdit") ||
+    e.target.closest("#profileInfo") ||
+    e.target.closest(".profile-field") ||
+    e.target.closest("input") ||
+    e.target.closest("button")
+  ) {
+    return;
+  }
+
+// 01-05-26 edita o toque do mobile dentro da lista de cidade
+  if (
+    e.target.closest(".city-dropdown-profile") ||
+    e.target.closest(".gender-dropdown-profile")
+  ) {
+    return;
+  }  
+
+
+  if (window.innerWidth > 768) return;
+  if (!profilePanel || !profilePanel.classList.contains("open")) return;
+
+  isDraggingProfile = true;
+  profilePanel.classList.add("dragging");
+
+  startY = e.touches ? e.touches[0].clientY : e.clientY;
+  profileStartTranslate = getTranslateY(profilePanel);
+}
+
+function onProfileDragMove(e) {
+  if (!isDraggingProfile || !profilePanel) return;
+
+  currentY = e.touches ? e.touches[0].clientY : e.clientY;
+  const diff = currentY - startY;
+
+  let nextTranslate = profileStartTranslate + diff;
+
+  if (nextTranslate < 0) {
+   nextTranslate = 0;
+  }
+
+  profilePanel.style.transform = `translateY(${nextTranslate}px)`;
+}
+
+function onProfileDragEnd() {
+  if (!isDraggingProfile || !profilePanel) return;
+
+  isDraggingProfile = false;
+  profilePanel.classList.remove("dragging");
+
+  const currentTranslate = getTranslateY(profilePanel);
+  const panelHeight = profilePanel.offsetHeight;
+
+  if (currentTranslate > panelHeight * 0.22) {
+    closeProfilePanel();
+  } else {
+    profilePanel.classList.add("open");
+    profilePanel.style.transform = "";
+  }
+}
+
+if (profilePanel) {
+  profilePanel.addEventListener("touchstart", onProfileDragStart, { passive: true });
+  profilePanel.addEventListener("touchmove", onProfileDragMove, { passive: true });
+  profilePanel.addEventListener("touchend", onProfileDragEnd);
+
+  profilePanel.addEventListener("mousedown", onProfileDragStart);
+  window.addEventListener("mousemove", onProfileDragMove);
+  window.addEventListener("mouseup", onProfileDragEnd);
+}
+
+profileOverlay?.addEventListener("click", () => {
+  closeProfilePanel();
+});
+
+// ================== DETECTAR VERIFICAÇÃO DE EMAIL ==================
+// DESATIVADO: estava deslogando usuários verificados ao atualizar a página.
+// A verificação de e-mail deve acontecer apenas no fluxo de cadastro/login,
+// não toda vez que o site carregar.
+
+
+
+// ================== ANIMAÇÃO DAS FOTOS 28-04-2026  ==================
+const heroAnimation = document.getElementById("heroAnimation");
+
+  const images = [
+    "img/1.png",
+  "img/2.png",
+  "img/3.png",
+  "img/4.png",
+  "img/5.png",
+  "img/6.png",
+  "img/7.png",
+  "img/8.png",
+  "img/9.png",
+  "img/10.png",
+  "img/11.png",
+  "img/12.png",
+ 
+  ];
+
+
+let imageIndex = 0;
+
+function createImg() {
+  const img = document.createElement("img");
+
+  img.src = images[imageIndex];
+
+  imageIndex++;
+  if (imageIndex >= images.length) {
+    imageIndex = 0;
+  }
+
+  img.alt = "";
+  img.loading = "eager";
+img.decoding = "async";
+  return img;
+}
+  function createPhotoGrid() {
+    const wall = document.createElement("div");
+    wall.classList.add("photo-wall");
+
+    const gridOne = document.createElement("div");
+    const gridTwo = document.createElement("div");
+
+    gridOne.classList.add("photo-grid");
+    gridTwo.classList.add("photo-grid");
+
+ for (let i = 0; i < 70; i++) {
+  const img1 = createImg();
+  const img2 = img1.cloneNode(true);
+
+  gridOne.appendChild(img1);
+  gridTwo.appendChild(img2);
+}
+
+    wall.appendChild(gridOne);
+    wall.appendChild(gridTwo);
+    heroAnimation.appendChild(wall);
+
+    setTimeout(() => {
+      wall.classList.add("ready");
+    }, 100);
+  }
+
+window.addEventListener("load", () => {
+  if (heroAnimation) {
+    createPhotoGrid();
+  }
+});
+
+// ================= RENDERIZADOR DE EMOJIS LOTTIE (CHAT-DF UX) =================
+window.renderizarEmojiLottie = function(containerId, caminhoJson) {
+  if (typeof lottie === "undefined") {
+    console.warn("Biblioteca Lottie não carregada no HTML.");
+    return;
+  }
+  
+  lottie.loadAnimation({
+    container: document.getElementById(containerId),
+    renderer: 'svg', // Mantém o vetor nítido em qualquer tela mobile/desktop
+    loop: true,
+    autoplay: true,
+    path: caminhoJson
+  });
+};
