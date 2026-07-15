@@ -5422,3 +5422,191 @@ justify-content:space-between;
 
 
 
+/* ============================== 13-07-26 =========================================== 
+   BOTÃO DE UPLOAD DE FOTO DE PERFIL (CANTINHO DA FOTO)
+   ========================================================================= */
+/* ========================================================================= 
+   BOTÃO DE UPLOAD DE FOTO DE PERFIL (CANTINHO DA FOTO - CORRIGIDO FORA)
+   ========================================================================= */
+.profile-avatar-wrap {
+  position: relative; /* Garante que o posicionamento absoluto do botão seja em relação a todo o bloco do avatar */
+}
+
+.profile-photo-upload-btn {
+  position: absolute;
+  /* Posiciona o botão ligeiramente mais para baixo e ajustado à curva do círculo */
+  bottom: -9px; /* Mudamos de 4px para -4px para ele descer mais */
+  left: calc(50% - 58px); /* Ajustado sutilmente para acompanhar a descida na curva do círculo */
+  width: 36px;
+  height: 36px;
+  background: #080808;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 3px solid #0000008f; /* Borda branca grossa para dar o destaque de app profissional */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  /* Garante que o botão fique na camada acima de qualquer corte de imagem */
+  z-index: 90; 
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.profile-photo-upload-btn i {
+  font-size: 24px;
+  color: #faf7ff; /* Mantém a identidade de cor dos seus botões */
+}
+
+.profile-photo-upload-btn:hover {
+  transform: scale(1.1);
+  background: #020202;
+}
+
+.profile-photo-upload-btn:active {
+  transform: scale(0.95);
+}
+
+/* Oculta o botão automaticamente se você estiver visitando o perfil de outra pessoa */
+body.viewing-other-profile .profile-photo-upload-btn {
+  display: none !important;
+}
+
+
+/* ========================================================================= 
+   14-07-26  MODAL DE CORTE NATIVO DO ZERO (MÁSCARA CIRCULAR E SLIDER)
+   ========================================================================= */
+.crop-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.crop-modal-content {
+  background: #fffefe;
+  padding: 24px;
+  border-radius: 28px;
+  width: 90%;
+  max-width: 420px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.crop-close {
+  position: absolute;
+  top: 14px;
+  right: 20px;
+  font-size: 26px;
+  font-weight: bold;
+  color: #000000;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Container da Imagem com Overflow Oculto para simular o visor de corte */
+.crop-container-box {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  background: #5c5a5a3a;
+  overflow: hidden;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#cropPreviewImg {
+  position: absolute;
+  max-width: none;
+  max-height: none;
+  transform-origin: center center;
+  cursor: move;
+  user-select: none;
+}
+
+/* Máscara inteligente: cria o círculo transparente com fundo escurecido nas bordas */
+.crop-mask-circle {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  z-index: 10;
+  border: 2px solid #ffffff;
+}
+
+/* Área do Slider de Zoom */
+.crop-zoom-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 85%;
+  margin: 20px 0;
+  gap: 12px;
+}
+
+.zoom-btn {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  padding: 0 6px;
+}
+
+#cropZoomSlider {
+  -webkit-appearance: none; /* Mantém para navegadores mais antigos e Safari */
+  appearance: none;         /* Propriedade padrão que remove a linha amarela */
+  flex: 1;
+  height: 6px;}
+
+#cropZoomSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #8e8e93;
+  cursor: pointer;
+}
+
+/* Botões Inferiores */
+.crop-buttons-container {
+  display: flex;
+  gap: 14px;
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-crop-select {
+  background: #212121;
+  color: #ffffff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-crop-save {
+  background: #26035e;
+  color: #ffffff;
+  border: none;
+  padding: 10px 32px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}

@@ -99,8 +99,6 @@ export const animations = {
 "animations/emo95.json",
 "animations/emo96.json",
 "animations/emo97.json",
-
-
   ],
 
   Amor: [

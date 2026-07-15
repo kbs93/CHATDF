@@ -7,8 +7,9 @@ import { initStickerPanel } from "./stickers-panel.js"; // esse codigo e dos sti
 import { auth, db, rtdb } from "./firebase-config.js";
 import { initUsersPanel } from "./users-panel.js"; // USER-PANEL
 import { updateProfile } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 import { animations } from "./animations.js"; // Importa a lista de animações em JSON
+import { ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js"; // 13-07-2026 ADICIONADO: Importações do RTDB para presença da sala
 
 
 import {
@@ -349,10 +350,6 @@ document.addEventListener("click", (e) => {
 
 });
 
-
-
-
-
 document.addEventListener("DOMContentLoaded", () => {
   initNavbarCollapse();
 
@@ -364,9 +361,6 @@ document.addEventListener("DOMContentLoaded", () => {
     handleUserReady({ user: auth.currentUser });
   }
 });
-
-
-
 
 
 // ====================================AÇÕES DOS ANEXOS (DESKTOP) ELEMENTOS DEFINIDOS ================================================
@@ -1340,10 +1334,12 @@ configura o painel de perfil:
 se for dono, mostra edição
 se for outro usuário, esconde edição.*/
 
+// 13-07-26 melhoria para travar edição de perfil quando estiver bloqueado por dias
 function applyProfileMode(isOwner) {
   currentProfileIsOwner = isOwner;
   
   const reportBtn = document.getElementById("reportUserBtn");
+  const uploadPhotoBtn = document.getElementById("btnUploadPhoto");
   const lockDaysText = `${PROFILE_EDIT_COOLDOWN_DAYS} dia(s)`;
   let isLocked = false;
 
@@ -1366,8 +1362,10 @@ function applyProfileMode(isOwner) {
   profileInfoSection?.classList.add("active");
 
   if (isOwner) {
+    // 13-07-2026 melhoria para travar edição de perfil quando estiver bloqueado por dias
     // Se o perfil for meu, esconde a bandeira nativamente para não piscar
     if (reportBtn) reportBtn.style.display = "none";
+    if (uploadPhotoBtn) uploadPhotoBtn.classList.remove("hidden");
 
     if (!isLocked) {
       if (profileEditTab) {
@@ -1415,13 +1413,16 @@ function applyProfileMode(isOwner) {
         saveProfileBtn.style.pointerEvents = "none";
       }
     }} else {
-    // Se for perfil de OUTRO usuário, exibe a bandeira de forma estável e garante que esteja ativa para cliques
+    // Se for perfil de OUTRO usuário, exibe a bandeira de forma estável e garante que esteja ativa para cliques 13-07-26
     if (reportBtn) {
       reportBtn.style.display = "flex";
       reportBtn.style.opacity = "1";
       reportBtn.style.pointerEvents = "auto";
       reportBtn.removeAttribute("disabled");
     }
+    if (uploadPhotoBtn) uploadPhotoBtn.classList.add("hidden");
+
+    // Oculta abas de edição para visitantes
 
     // Oculta abas de edição para visitantes
  
@@ -1939,8 +1940,7 @@ saveProfileEditorBtn?.addEventListener("click", async () => {
 });
 
 
-
-
+// 14-07-2026
 saveProfileBtn?.addEventListener("click", async () => {
   const user = auth.currentUser;
   if (!user) return;
@@ -2000,27 +2000,47 @@ saveProfileBtn?.addEventListener("click", async () => {
   }
 
   try {
+    showToast("Salvando alterações...");
+    
+    let linkFotoFinal = selectedProfileAvatar;
+
+    // SE HOUVER UMA FOTO DE PRÉVIA NA MEMÓRIA, FAZEMOS O UPLOAD AGORA!
+// SE HOUVER UMA FOTO DE PRÉVIA NA MEMÓRIA, FAZEMOS O UPLOAD AGORA!
+    if (window.blobFotoTemporaria) {
+      showToast("Enviando foto ao servidor...");
+      const storage = getStorage();
+      const fotoRef = sRef(storage, `profile_foto/${user.uid}.jpg`);
+
+      await uploadBytes(fotoRef, window.blobFotoTemporaria);
+      linkFotoFinal = await getDownloadURL(fotoRef);
+
+      // Limpa a memória temporária após o sucesso do upload
+      window.blobFotoTemporaria = null;
+    }
+
+    // Grava todas as alterações juntas de uma vez só no Firestore
     await updateDoc(refUser, {
       nome: editName.value.trim(),
       cidade: cidadeSelecionada,
       mood: editMood.value.trim(),
       idade: editAge.value.trim(),
       genero: generoSelecionado,
-      foto: selectedProfileAvatar,
+      foto: linkFotoFinal,
       bannerColor: selectedBannerColor, 
       perfilCompleto: true,
       lastProfileEditAt: Date.now()
     });
 
-    if (!selectedProfileAvatar.startsWith("data:image")) {
-      await updateProfile(user, { photoURL: selectedProfileAvatar });
+    if (!linkFotoFinal.startsWith("data:image")) {
+      await updateProfile(user, { photoURL: linkFotoFinal });
     }
 
+    // Atualiza a presença online com o novo link de foto definitivo
     const userStatusRef = ref(rtdb, "status/" + user.uid);
     await set(userStatusRef, {
       uid: user.uid,
       name: editName.value.trim() || "Usuário",
-      avatar: selectedProfileAvatar || "./img/avatar.png",
+      avatar: linkFotoFinal || "./img/avatar.png",
       online: true,
       sala: appState.currentRoom || sala,
       lastChanged: Date.now()
@@ -2036,7 +2056,6 @@ saveProfileBtn?.addEventListener("click", async () => {
     showToast("Erro ao salvar perfil");
   }
 });
-
 
 
 
@@ -2227,3 +2246,210 @@ window.renderizarEmojiLottie = function(containerId, caminhoJson) {
     path: caminhoJson
   });
 };
+// ========================== 13-07-26 PRÉVIA LOCAL DA FOTO DE PERFIL (COMPRESSÃO) ==========================
+// Variável global temporária para guardar o arquivo que o usuário escolheu antes dele salvar definitivamente
+// ========================== 14-07-26 ENGINE DE CORTE E ZOOM DO ZERO NATIVO ==========================
+
+
+// ========================== 14-07-26 ENGINE DE CORTE E ZOOM DO ZERO NATIVO (CORRIGIDO) ==========================
+// DEIXE APENAS ESTA NO ESCOPO GLOBAL DO ARQUIVO (FORA DE QUALQUER FUNCTION OU DOMCONTENTLOADED)
+window.blobFotoTemporaria = null; 
+
+document.addEventListener("DOMContentLoaded", () => {
+  const cameraBtnLabel = document.getElementById("btnUploadPhoto");
+  const cropModal = document.getElementById("cropModal");
+  const closeCropModal = document.getElementById("closeCropModal");
+  const btnSelectCropFile = document.getElementById("btnSelectCropFile");
+  const btnSaveCropPhoto = document.getElementById("btnSaveCropPhoto");
+  const cropInputFile = document.getElementById("cropInputFile");
+  const cropPreviewImg = document.getElementById("cropPreviewImg");
+  const cropZoomSlider = document.getElementById("cropZoomSlider");
+  const btnZoomOut = document.getElementById("btnZoomOut");
+  const btnZoomIn = document.getElementById("btnZoomIn");
+
+  let zoomAtual = 0.5;
+  let imgX = 0;
+  let imgY = 0;
+  let estaArrastando = false;
+  let startX, startY;
+  let imgLarguraOriginal = 0;
+  let imgAlturaOriginal = 0;
+
+  cameraBtnLabel?.addEventListener("click", (e) => {
+    e.preventDefault();
+    cropModal?.classList.remove("hidden");
+  });
+
+  // Função para limpar apenas o visual do visor ao fechar no X
+  const resetarVisorVisual = () => {
+    if (cropPreviewImg) {
+      cropPreviewImg.src = "";
+      cropPreviewImg.style.display = "none";
+    }
+    if (cropInputFile) {
+      cropInputFile.value = "";
+    }
+    imgX = 0;
+    imgY = 0;
+    zoomAtual = 0.5;
+    if (cropZoomSlider) {
+      cropZoomSlider.min = "0.2";
+      cropZoomSlider.value = "0.5";
+    }
+  };
+
+  closeCropModal?.addEventListener("click", () => {
+    resetarVisorVisual();
+    cropModal?.classList.add("hidden");
+  });
+
+  btnSelectCropFile?.addEventListener("click", () => {
+    cropInputFile?.click();
+  });
+
+  cropInputFile?.addEventListener("change", function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      showToast("Por favor, selecione uma imagem válida.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      if (cropPreviewImg) {
+        cropPreviewImg.src = event.target.result;
+        cropPreviewImg.style.display = "block";
+        
+        zoomAtual = 0.5;
+        imgX = 0;
+        imgY = 0;
+        if (cropZoomSlider) {
+          cropZoomSlider.min = "0.2";
+          cropZoomSlider.value = "0.5";
+        }
+        
+        cropPreviewImg.onload = function() {
+          const proporcao = cropPreviewImg.naturalWidth / cropPreviewImg.naturalHeight;
+          if (proporcao > 1) {
+            cropPreviewImg.style.height = "280px";
+            cropPreviewImg.style.width = (280 * proporcao) + "px";
+          } else {
+            cropPreviewImg.style.width = "280px";
+            cropPreviewImg.style.height = (280 / proporcao) + "px";
+          }
+          imgLarguraOriginal = parseFloat(cropPreviewImg.style.width);
+          imgAlturaOriginal = parseFloat(cropPreviewImg.style.height);
+          atualizarTransformacaoImagem();
+        };
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+
+  function atualizarTransformacaoImagem() {
+    if (!cropPreviewImg) return;
+    cropPreviewImg.style.transform = `translate(${imgX}px, ${imgY}px) scale(${zoomAtual})`;
+  }
+
+  const iniciarArrasto = (e) => {
+    estaArrastando = true;
+    const clienteX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clienteY = e.touches ? e.touches[0].clientY : e.clientY;
+    startX = clienteX - imgX;
+    startY = clienteY - imgY;
+  };
+
+  const moverArrasto = (e) => {
+    if (!estaArrastando) return;
+    const clienteX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clienteY = e.touches ? e.touches[0].clientY : e.clientY;
+    imgX = clienteX - startX;
+    imgY = clienteY - startY;
+    atualizarTransformacaoImagem();
+  };
+
+  const finalizarArrasto = () => { estaArrastando = false; };
+
+  cropPreviewImg?.addEventListener("mousedown", iniciarArrasto);
+  window.addEventListener("mousemove", moverArrasto);
+  window.addEventListener("mouseup", finalizarArrasto);
+
+  cropPreviewImg?.addEventListener("touchstart", iniciarArrasto, { passive: true });
+  window.addEventListener("touchmove", moverArrasto, { passive: true });
+  window.addEventListener("touchend", finalizarArrasto);
+
+  cropZoomSlider?.addEventListener("input", (e) => {
+    zoomAtual = parseFloat(e.target.value);
+    atualizarTransformacaoImagem();
+  });
+
+  btnZoomOut?.addEventListener("click", () => {
+    zoomAtual = Math.max(0.2, zoomAtual - 0.1);
+    if (cropZoomSlider) cropZoomSlider.value = zoomAtual;
+    atualizarTransformacaoImagem();
+  });
+
+  btnZoomIn?.addEventListener("click", () => {
+    zoomAtual = Math.min(3, zoomAtual + 0.1);
+    if (cropZoomSlider) cropZoomSlider.value = zoomAtual;
+    atualizarTransformacaoImagem();
+  });
+
+  // O RECORTE DO CANVAS COM MATEMÁTICA CORRIGIDA (CENTRALIZAÇÃO PREMIUM)
+  btnSaveCropPhoto?.addEventListener("click", () => {
+    if (!cropPreviewImg || !cropPreviewImg.src) return;
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = 150;
+    canvas.height = 150;
+
+    // Obtém o fator real de escala entre os pixels naturais da foto e a renderização na tela
+    const escalaExibicao = imgLarguraOriginal / cropPreviewImg.naturalWidth;
+    const fatorZoomReal = zoomAtual * escalaExibicao;
+
+    // Visor central quadrado tem 280x280. O círculo centralizado de corte tem 200x200.
+    // Portanto, a margem de recuo do topo esquerdo do círculo até a borda do visor é exatamente 40px ( (280 - 200) / 2 ).
+    const margemCorteVisor = 40;
+
+    // Cálculo absoluto corrigindo o deslocamento central e o alinhamento flex da tag img
+    const renderX = (280 - imgLarguraOriginal * zoomAtual) / 2 + imgX;
+    const renderY = (280 - imgAlturaOriginal * zoomAtual) / 2 + imgY;
+
+    const corteRealX = (margemCorteVisor - renderX) / fatorZoomReal;
+    const corteRealY = (margemCorteVisor - renderY) / fatorZoomReal;
+    const tamanhoRealCorte = 200 / fatorZoomReal;
+
+    ctx.drawImage(
+      cropPreviewImg,
+      corteRealX, corteRealY, tamanhoRealCorte, tamanhoRealCorte,
+      0, 0, 150, 150
+    );
+
+canvas.toBlob((blob) => {
+      if (!blob) return;
+
+      // Vincula diretamente à propriedade global visível por todo o arquivo main.js
+      window.blobFotoTemporaria = blob;
+
+      const urlPreview = URL.createObjectURL(blob);
+      selectedProfileAvatar = urlPreview;
+
+      const profileAvatarEl = document.getElementById("profileAvatar");
+      if (profileAvatarEl) {
+        profileAvatarEl.src = urlPreview;
+      }
+
+      if (typeof perfilEstaCompleto === "function") {
+        perfilEstaCompleto();
+      }
+
+      resetarVisorVisual();
+      cropModal?.classList.add("hidden");
+      showToast("Foto recortada! Clique em Salvar abaixo para concluir.");
+
+    }, "image/jpeg", 0.85);
+  });
+});

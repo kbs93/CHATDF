@@ -12,6 +12,7 @@
   <link href="styles.css" rel="stylesheet">
   <link rel="shortcut icon" href="./img/imgicon2.png" />
   <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
+  
 
 </head>
 <body class="chat-page">
@@ -255,10 +256,17 @@
         <button id="closeProfilePanel" type="button" aria-label="Fechar painel">✕</button>
       </div>
     </div>
+    <!-- 13-07-2026 mudança de posição do avatar para dentro do painel do usuário -->
 <div class="profile-avatar-wrap">
   <div class="profile-avatar">
     <img id="profileAvatar" src="img/avatar.png" alt="Avatar do usuário">
   </div>
+
+  <!-- Botão de Upload agora fica do lado de fora da máscara de corte -->
+  <label id="btnUploadPhoto" class="profile-photo-upload-btn hidden" title="Adicionar foto de perfil">
+   <i class="bi bi-camera"></i>
+    <input type="file" id="uploadProfilePic" accept="image/jpeg, image/png, image/webp" style="display: none;">
+  </label>
 
   <span id="profileOnlineDot" class="profile-online-dot hidden"></span>
 </div>
@@ -427,6 +435,44 @@
     </div>
   </div>
 </div>
+
+
+
+<!-------============================= 14-07-2026 =========================================--->
+<!-- 14-07-26 Modal de Corte de Imagem Nativo (Feito do Zero) -->
+<div id="cropModal" class="crop-modal hidden">
+  <div class="crop-modal-content">
+    <span id="closeCropModal" class="crop-close">&times;</span>
+    
+    <!-- Recipiente onde a imagem carregada vai se mover -->
+    <div class="crop-container-box">
+      <div class="crop-mask-circle"></div>
+      <img id="cropPreviewImg" src="" alt="Prévia" style="display: none;" />
+    </div>
+    
+    <!-- Controle de Zoom Nativo com - e + -->
+    <div class="crop-zoom-wrapper">
+      <button id="btnZoomOut" class="zoom-btn" type="button">—</button>
+      <input type="range" id="cropZoomSlider" min="1" max="3" step="0.01" value="1" />
+      <button id="btnZoomIn" class="zoom-btn" type="button">+</button>
+    </div>
+    
+    <!-- Botões de Comando Inferiores -->
+    <div class="crop-buttons-container">
+      <button id="btnSelectCropFile" class="btn-crop-select" type="button">Seleciona</button>
+      <button id="btnSaveCropPhoto" class="btn-crop-save" type="button">Salvar</button>
+    </div>
+    
+    <!-- Input oculto que abre o gerenciador de arquivos do celular/PC -->
+    <input type="file" id="cropInputFile" accept="image/jpeg, image/png, image/webp" style="display: none;" />
+  </div>
+</div>
+
+
+
+
+
+
 
 <!-- 🔹 Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
