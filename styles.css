@@ -1147,7 +1147,7 @@ font-size: 20px;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 3px 0 5px 9px;
+  padding: 3px 0 5px 13px;
   background: #ffffff;
   -webkit-overflow-scrolling: touch;
 }
@@ -1180,6 +1180,7 @@ font-size: 20px;
   cursor: pointer;
   transition: 0.2s;
   flex-shrink: 0;
+  
 }
 /*botao de enviar */
 #message-input-area button:hover {
@@ -1248,6 +1249,7 @@ border:
 /*  background: linear-gradient(180deg, #2f23c7, #3b2fd6);*/
   color: white;
   flex-shrink: 0;
+ 
 }
 
 /* lados */
@@ -1272,6 +1274,7 @@ border:
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  
 }
 
 /* botão */
@@ -1585,6 +1588,7 @@ flex: unset;
   white-space: pre-wrap;
   word-break: break-word;
   transition: border-color 0.2s ease;
+  
 }
 
 .message-input:focus {
@@ -1611,7 +1615,7 @@ flex: unset;
 
 /*EDITA A COR DE FUNDO DAS mensagens*/
 .message {
-  background: #ffffff;
+  background: #fdfdff;
   border-radius: 18px;
   max-width: 98%;
   margin-top: 1px;
@@ -1619,10 +1623,11 @@ flex: unset;
   word-wrap: break-word;
   overflow-wrap: anywhere;
 }
-
+/*tamanho do texto no chat e o espaçamento do texto*/
 .message span {
   font-size: 1em;
-  line-height: 1.5em;
+  line-height: 1.7em;
+ 
 }
 
 /*editar o Botao de sair*/
@@ -1639,12 +1644,13 @@ flex: unset;
 
 /*================== Edita as imagem e a Hora ===========================================================*/
 .user-photo {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 6px;
+  margin-right: 3px;
   flex-shrink: 0;
+  
 }
 
 .message-time {
@@ -1684,6 +1690,7 @@ flex: unset;
   cursor: pointer;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
+  
 }
 
 .message.show-actions .message-more-btn {
@@ -1747,6 +1754,12 @@ flex: unset;
   .message-context-menu button {
     padding: 12px;
     font-size: 15px;
+  }
+
+
+  .message span {
+    font-size: 1.1em;
+    
   }
 }
 
@@ -2222,8 +2235,8 @@ emoji-picker {
   }
 
   .user-photo {
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 40px;
   }
 
   .sticker-img {
@@ -2231,6 +2244,7 @@ emoji-picker {
     height: 56px;
   }
 }
+
 
 /*====================== EMOJIS ================================================== */
 #emojiList {
@@ -5318,7 +5332,7 @@ justify-content:space-between;
 
 /* 2. Zera todas as margens para as mensagens se fundirem e colarem umas nas outras */
 .message.is-grouped {
-  margin-top: 8px !important; 
+  margin-top: 3px !important; 
   margin-bottom: 0px !important;
   padding-top: 0px !important;
   padding-bottom: 0px !important;
@@ -5338,7 +5352,7 @@ justify-content:space-between;
 
 /* 5. Mantém o respiro maior SOMENTE quando for uma mensagem nova de outro usuário */
 .message:not(.is-grouped) {
-  margin-top: 14px; 
+  margin-top: 3px; 
 }
 
 
@@ -5386,7 +5400,7 @@ justify-content:space-between;
 
 
 /* ========================================================================= 
-   01-07-26  BOTÃO DE DENÚNCIA DENTRO DO PAINEL DO USUARIO ESQUERDO COM BANDEIRA (UX PREMIUM)
+   01-07-26  BOTÃO DE DENUNCIA DENTRO DO PAINEL DO USUARIO ESQUERDO COM BANDEIRA (UX PREMIUM)
    ========================================================================= */
 
 #reportUserBtn {
@@ -5532,6 +5546,7 @@ body.viewing-other-profile .profile-photo-upload-btn {
   transform-origin: center center;
   cursor: move;
   user-select: none;
+  touch-action: none; /* ESSA LINHA: Libera o arraste com os dedos no celular sem travar */
 }
 
 /* Máscara inteligente: cria o círculo transparente com fundo escurecido nas bordas */

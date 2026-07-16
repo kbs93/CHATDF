@@ -19,6 +19,7 @@ if (messageInput) {
 }
 
 // PALETA de CORES 
+// na paleta de cores nao pode usar a cor preta pois ela e padrao do meu chat 
 export const textColorPalette = [
   "#0D1B2A","#1B263B","#274060","#2C3E50","#34495E",
   "#003049","#1F3A5F","#0A2540","#102A43","#1E3A8A",
@@ -29,7 +30,7 @@ export const textColorPalette = [
   "#1F2937","#111827","#27272A","#3F3F46","#4B5563",
   "#00b300","#01a37b","#cc00cc","#e67300","#996633",
   "#cc0052","#d84d4d","#ff9966","#999900","#86b300",
-  "#e60000","#000000","#3399ff","#590085","#800066",
+  "#e60000","#3399ff","#590085","#800066",
   "#00a6c9","#7a66a3","#80bfff","#1a4c8c","#00cce0",
   "#006666","#660033","#266073","#4794b2","#6bb2ad",
   "#5c5c7a","#555532","#82ffab","#b2ad7f","#a2b9bc",

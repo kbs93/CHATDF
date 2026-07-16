@@ -1361,13 +1361,18 @@ function applyProfileMode(isOwner) {
   profileInfoTab?.classList.add("active");
   profileInfoSection?.classList.add("active");
 
-  if (isOwner) {
+if (isOwner) {
     // 13-07-2026 melhoria para travar edição de perfil quando estiver bloqueado por dias
     // Se o perfil for meu, esconde a bandeira nativamente para não piscar
+    // 15-07-2026 TRAVA DOS BOTAO camera, lapis, editar perfil 
     if (reportBtn) reportBtn.style.display = "none";
-    if (uploadPhotoBtn) uploadPhotoBtn.classList.remove("hidden");
 
     if (!isLocked) {
+      if (uploadPhotoBtn) {
+        uploadPhotoBtn.classList.remove("hidden");
+        uploadPhotoBtn.style.opacity = "1";
+        uploadPhotoBtn.style.cursor = "pointer";
+      }
       if (profileEditTab) {
         profileEditTab.hidden = false;
         profileEditTab.style.display = "";
@@ -1392,7 +1397,12 @@ function applyProfileMode(isOwner) {
       editCity?.removeAttribute("disabled");
       editMood?.removeAttribute("disabled");
     } else {
-      // Se estiver bloqueado por dias
+      // Se estiver bloqueado por dias - Aplica também ao botão da câmera da foto
+      if (uploadPhotoBtn) {
+        uploadPhotoBtn.classList.remove("hidden");
+        uploadPhotoBtn.style.opacity = "0.45";
+        uploadPhotoBtn.style.cursor = "not-allowed";
+      }
       if (profileEditTab) {
         profileEditTab.hidden = false;
         profileEditTab.style.display = "";
@@ -1412,7 +1422,9 @@ function applyProfileMode(isOwner) {
         saveProfileBtn.style.opacity = "0.45";
         saveProfileBtn.style.pointerEvents = "none";
       }
-    }} else {
+    }}
+    
+    else {
     // Se for perfil de OUTRO usuário, exibe a bandeira de forma estável e garante que esteja ativa para cliques 13-07-26
     if (reportBtn) {
       reportBtn.style.display = "flex";
@@ -2275,8 +2287,17 @@ document.addEventListener("DOMContentLoaded", () => {
   let imgLarguraOriginal = 0;
   let imgAlturaOriginal = 0;
 
-  cameraBtnLabel?.addEventListener("click", (e) => {
+
+   // 15-07-2026 Sincroniza cirurgicamente com a trava global de tempo do perfil
+cameraBtnLabel?.addEventListener("click", (e) => {
     e.preventDefault();
+    
+   
+    if (isProfileEditLocked) {
+      showToast(`Você poderá editar novamente em ${profileEditRemainingDays} dia(s).`);
+      return;
+    }
+    
     cropModal?.classList.remove("hidden");
   });
 
@@ -2353,8 +2374,24 @@ document.addEventListener("DOMContentLoaded", () => {
     cropPreviewImg.style.transform = `translate(${imgX}px, ${imgY}px) scale(${zoomAtual})`;
   }
 
+
+// Variáveis extras para o cálculo matemático de dois dedos (Zoom por Toque)
+  let distanciaPinchInicial = 0;
+  let zoomPinchInicial = 1;
+
   const iniciarArrasto = (e) => {
     estaArrastando = true;
+
+    // FLUXO DE 2 DEDOS: Zoom por toque (Pinch)
+    if (e.touches && e.touches.length === 2) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      distanciaPinchInicial = Math.sqrt(dx * dx + dy * dy); 
+      zoomPinchInicial = zoomAtual;
+      return; 
+    }
+
+    // FLUXO DE 1 DEDO / MOUSE: Arraste normal de posicionamento
     const clienteX = e.touches ? e.touches[0].clientX : e.clientX;
     const clienteY = e.touches ? e.touches[0].clientY : e.clientY;
     startX = clienteX - imgX;
@@ -2363,6 +2400,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const moverArrasto = (e) => {
     if (!estaArrastando) return;
+
+    if (e.touches) {
+      e.preventDefault(); // Impede a rolagem padrão da página no mobile
+
+      // SE ESTIVER COM 2 DEDOS NA TELA: Calcula o Zoom Dinâmico
+      if (e.touches.length === 2 && distanciaPinchInicial > 0) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const distanciaAtual = Math.sqrt(dx * dx + dy * dy);
+
+        const proporcaoMapeamento = distanciaAtual / distanciaPinchInicial;
+        let novoZoom = zoomPinchInicial * proporcaoMapeamento;
+
+        // Limita o zoom entre o mínimo (0.2) e o máximo (3)
+        zoomAtual = Math.max(0.2, Math.min(3, novoZoom));
+        
+        if (cropZoomSlider) {
+          cropZoomSlider.value = zoomAtual;
+        }
+
+        atualizarTransformacaoImagem();
+        return;
+      }
+    }
+
+    // SE ESTIVER COM 1 DEDO OU MOUSE: Arraste normal de posicionamento
+    if (e.touches && e.touches.length > 1) return; 
     const clienteX = e.touches ? e.touches[0].clientX : e.clientX;
     const clienteY = e.touches ? e.touches[0].clientY : e.clientY;
     imgX = clienteX - startX;
@@ -2370,15 +2434,25 @@ document.addEventListener("DOMContentLoaded", () => {
     atualizarTransformacaoImagem();
   };
 
-  const finalizarArrasto = () => { estaArrastando = false; };
+  const finalizarArrasto = (e) => { 
+    estaArrastando = false; 
+    distanciaPinchInicial = 0;
+  };
 
+  // Cadastro estável das escutas sem travas passivas
   cropPreviewImg?.addEventListener("mousedown", iniciarArrasto);
   window.addEventListener("mousemove", moverArrasto);
   window.addEventListener("mouseup", finalizarArrasto);
 
-  cropPreviewImg?.addEventListener("touchstart", iniciarArrasto, { passive: true });
-  window.addEventListener("touchmove", moverArrasto, { passive: true });
+  cropPreviewImg?.addEventListener("touchstart", iniciarArrasto);
+  window.addEventListener("touchmove", moverArrasto, { passive: false });
   window.addEventListener("touchend", finalizarArrasto);
+
+
+
+
+
+
 
   cropZoomSlider?.addEventListener("input", (e) => {
     zoomAtual = parseFloat(e.target.value);
