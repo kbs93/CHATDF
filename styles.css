@@ -948,6 +948,7 @@ footer a {
   display: flex;
   align-items: center;
   min-width: 0;
+  
 }
 
 
@@ -3919,7 +3920,7 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
   bottom: 0;
   top: auto;
   width: 100%;
-  height: 80dvh;
+  height: 92dvh;/*edita a altura do painel no chat modo mobile*/
   background: #fff;
   border-radius: 22px 22px 0 0;
   display: flex;
@@ -3945,7 +3946,7 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
     bottom: auto;
     width: 490px;
     height: calc(100vh - 92px);
-    max-height: 620px;
+    max-height: 720px; /*edita a altura do painel */
     border-radius: 22px;
     transform: scale(0.96);
     transform-origin: top right;
@@ -3965,7 +3966,7 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
 }
 
 
-/* PROFILE PANEL TABLET CHAT  */
+/* PROFILE PAINEL USUARIO TABLET CHAT  */
 
 @media (min-width: 769px) and (max-width: 991px) {
 
@@ -3996,10 +3997,7 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
 }
 
 
-
-
-
-/* ================== PERFIL NO INDEX (MODAL NORMAL) 10-05-2026  =================== */
+/* ================== PERFIL do usuario NO INDEX (MODAL NORMAL) 10-05-2026  =================== */
 body.index-page .profile-panel {
   top: 76px;
   right: clamp(14px, 3vw, 40px);
@@ -4203,53 +4201,60 @@ transform: translateY(0);
 /*04-06-26 TEXTO / RECADO / FRASE em baixo do nome - Ajuste Fino para UX Premium */
 #profileMood {
   display: block;
-  font-size: 15px;
+  font-size: 17px;
   color: #445;
-  margin-top: 6px;
-  
+  margin-top: 2px;
   /* Melhores práticas de UX para quebra de texto */
   white-space: pre-wrap;     /* Mantém as quebras de linha manuais do usuário e quebra automaticamente nas bordas */
   overflow-wrap: anywhere;   /* Força a quebra de links gigantes ou textos infinitos sem espaços */
   word-break: normal;        /* Evita que palavras normais sejam cortadas no meio de forma feia */
-  
   /* Delimitação física do espaço */
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
   text-align: center;        /* Mantém o alinhamento estético centralizado */
-  padding: 0 16px;           /* Evita que o texto encoste colado nas laterais do card */
+  padding: 0 4px;           /* Evita que o texto encoste colado nas laterais do card */
 }
+/*recado de baixo do nome do perfil*/
 .profile-user-info {
-  padding: 14px 18px 8px;
+  padding: 14px 18px -8px;
   text-align: center;
   min-width: 0; /* Isso aqui impede que containers flex do Bootstrap estiquem para os lados com textos compridos */
+  margin: 0 0 -6px; /* Pequeno espaçamento inferior para separar do conteúdo abaixo */
 }
 
-/*edita a parte da informação e editar perfil*/
+/*edita a parte da informação, editar perfil e vip*/
 .profile-tabs {
   display: flex;
   gap: 10px;
   padding: 14px 16px 10px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  background: #fff;
+  background: #ffffff;
   position: sticky;
   top: 0;
   z-index: 3;
   flex-shrink: 0;
+ 
 }
 
 .profile-tab {
   flex: 1;
-  min-height: 42px;
+  min-height: 32px;
   border: none;
-  border-radius: 999px;
-  background: #f2f3f5;
-  color: #222;
-  font-size: 14px;
-  font-weight: 600;
+  border-radius: 99px;
+  background: #fbfcfd;
+  color: #565557ce;
+  font-size: 17px;
+  font-weight: 700;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  
 }
+/*edita os dados da informacao info do painel do usuario*/
+.dados-info{
+  padding: 3px;
+}
+
 
 .profile-tab:hover {
   background: #e9ebee;
@@ -5667,9 +5672,6 @@ body.viewing-other-profile .profile-photo-upload-btn {
 /* ========================================================================= 
    16-07-26  MÓDULO DE ESTILOS VIP (RECURSOS EXCLUSIVOS E PREMIUM)
    ========================================================================= */
-/* ========================================================================= 
-   MÓDULO DE DESIGN VIP PREMIUM - ADAPTADO PARA UX MOBILE (SEM IMPORTANT)
-   ========================================================================= */
 
 /* Abas de Perfil - Destaque VIP */
 .profile-tabs .tab-vip-highlight {
@@ -6142,6 +6144,7 @@ body.viewing-other-profile .profile-photo-upload-btn {
   color: #333;
   cursor: pointer;
   transition: background 0.15s ease;
+  
 }
 
 .vip-dropdown-option:hover {
@@ -6152,4 +6155,170 @@ body.viewing-other-profile .profile-photo-upload-btn {
 .vip-dropdown-option.active {
   background: #6f42c1;
   color: #ffffff;
+}
+
+
+
+
+/* ========================================================================= 
+   18-07-2026 SISTEMA DE ACORDEÃO VIP PROFESSIONAL (UX CHAT-DF)
+   ========================================================================= */
+.vip-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+.icon-vip{
+  color:#737373;
+  font-size: 20px;}
+
+
+.vip-accordion-item {
+  border: 1px solid rgba(111, 66, 193, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  transition: border-color 0.2s ease;
+}
+
+.vip-accordion-item.active {
+  border-color: #6f42c1;
+}
+
+/*edita os nome  inicial*/
+.vip-accordion-header {
+  width: 100%;
+  min-height: 48px;
+  background: #fdfbfe;
+  border: none;
+  padding: 2px 6px;
+  text-align: left;
+  font-size: 16.5px;
+  font-weight: 700;
+  color: #1e1b4b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.vip-accordion-header::after {
+  content: "➔";
+  font-size: 11px;
+  color: #64748b;
+  transform: rotate(90deg);
+  transition: transform 0.2s ease;
+}
+
+.vip-accordion-item.active .vip-accordion-header::after {
+  transform: rotate(-90deg);
+}
+
+.vip-accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s cubic-bezier(0, 1, 0, 1);
+}
+
+.vip-accordion-item.active .vip-accordion-content {
+  max-height: 1000px; /* Expande dinamicamente */
+  transition: max-height 0.3s ease-in-out;
+}
+/* ========================================================================= 
+  18-07-26 VIP CARROSSEL COM DESIGN NATIVO DE APLICATIVO (UX PREMIUM - CHAT-DF)
+   ========================================================================= */
+.vip-carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: #ffffff;
+  padding: 6px 0;
+}
+
+/* Customização da linha horizontal fluida */
+.vip-carousel-wrapper .color-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 12px;
+  width: 100%;
+  max-height: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 8px 6px;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  
+}
+
+.vip-carousel-wrapper .color-grid::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.vip-carousel-wrapper .color-grid .color-box {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px; /* Cantos levemente arredondados estilo iOS/Android */
+  scroll-snap-align: start;
+}
+
+/* O Estilo Real de Aplicativo nos Botões Laterais */
+.vip-carousel-wrapper .carousel-arrow {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  background-color: #5553532c;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 50%;
+  color: #1e1b4b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+  /* Sombra suave multidirecional típica de elementos flutuantes de Apps */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+
+/* Tamanho cirúrgico do ícone interno do Bootstrap */
+.vip-carousel-wrapper .carousel-arrow i {
+  font-size: 27px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hover refinado sem quebrar a identidade visual */
+.vip-carousel-wrapper .carousel-arrow:hover {
+  background: #f8fafc;
+  color: #6f42c1;
+  box-shadow: 0 4px 12px rgba(111, 66, 193, 0.15);
+}
+
+/* Efeito físico imediato ao pressionar com o dedo */
+.vip-carousel-wrapper .carousel-arrow:active {
+  transform: scale(0.9);
+  background: #f1f5f9;
+}
+
+/* Margens de separação limpas */
+.vip-carousel-wrapper .carousel-arrow.left {
+  margin-right: 6px;
+}
+
+.vip-carousel-wrapper .carousel-arrow.right {
+  margin-left: 6px;
 }

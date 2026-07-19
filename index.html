@@ -513,33 +513,57 @@ aria-expanded="false">
     </div>
 
 <!---====================== 16-07-26 ADICIONANDO NOVO PAINEL VIP ===================---->
-<div class="profile-tabs d-flex justify-content-center align-items-center gap-1 py-2">
-      <button class="profile-tab active px-3 py-1.5" data-tab="info" type="button" style="border-radius: 20px;">Info</button>
-      <button class="profile-tab px-3 py-1.5  border-0" data-tab="edit" type="button" style="color: #666;">Editar perfil</button>
+<div class="profile-tabs">
+      <button class="profile-tab" data-tab="info" type="button">Info</button>
+      <button class="profile-tab" data-tab="edit" type="button">Editar perfil</button>
     </div>
     
     <div class="profile-content px-3">
       <!-- INFO -->
   <!-- INFO -->
-     <!-- INFO -->
-      <div class="profile-section active" id="profileInfo">
-        <p class="m-0 py-1 d-flex align-items-center gap-2">
-          <i class="bi bi-geo-alt text-secondary fs-5"></i>
-          <strong>Cidade:</strong> <span id="profileCity">-</span>
-        </p>
-        <p class="m-0 py-1 d-flex align-items-center gap-2">
-          <i class="bi bi-calendar-heart text-secondary fs-5"></i>
-          <strong>Idade:</strong> <span id="profileAge">-</span>
-        </p>
-        <p class="m-0 py-1 d-flex align-items-center gap-2">
-          <i class="bi bi-gender-ambiguous text-secondary fs-5"></i>
-          <strong>Gênero:</strong> <span id="profileGender">-</span>
-        </p>
-        <p class="m-0 py-1 d-flex align-items-center gap-2">
-          <i class="bi bi-person-check text-secondary fs-5"></i>
-          <strong>Membro desde:</strong> <span id="profileMemberSince">-</span>
-        </p>
-      </div>
+ <!-- INFO -->
+<div class="profile-section active" id="profileInfo">
+  <!-- Linha 1: Cidade -->
+  <div class="m-0 py-1 d-flex align-items-center border-bottom row g-0 text-dark">
+    <div class="col-6 d-flex align-items-center gap-2">
+      <i class="bi bi-geo-alt text-secondary fs-5"></i>
+      <strong>Cidade:</strong>
+    </div>
+    <div class="col-6 text-start">
+      <span id="profileCity">-</span>
+    </div>
+  </div>
+  <!-- Linha 2: Idade -->
+  <div class="m-0 py-1 d-flex align-items-center border-bottom row g-0 text-dark">
+    <div class="col-6 d-flex align-items-center gap-2">
+      <i class="bi bi-calendar-heart text-secondary fs-5"></i>
+      <strong>Idade:</strong>
+    </div>
+    <div class="col-6 text-start">
+      <span id="profileAge">-</span>
+    </div>
+  </div>
+  <!-- Linha 3: Gênero -->
+  <div class="m-0 py-1 d-flex align-items-center border-bottom row g-0 text-dark">
+    <div class="col-6 d-flex align-items-center gap-2">
+      <i class="bi bi-gender-ambiguous text-secondary fs-5"></i>
+      <strong>Gênero:</strong>
+    </div>
+    <div class="col-6 text-start">
+      <span id="profileGender">-</span>
+    </div>
+  </div>
+  <!-- Linha 4: Membro desde -->
+  <div class="m-0 py-1 d-flex align-items-center border-bottom row g-0 text-dark">
+    <div class="col-6 d-flex align-items-center gap-2">
+      <i class="bi bi-person-check text-secondary fs-5"></i>
+      <strong>Membro desde:</strong>
+    </div>
+    <div class="col-6 text-start">
+      <span id="profileMemberSince">-</span>
+    </div>
+  </div>
+</div>
       <!-- EDITAR -->
 <div class="profile-section" id="profileEdit">
   <label class="profile-field">

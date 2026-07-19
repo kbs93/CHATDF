@@ -1529,6 +1529,35 @@ function inicializarPainelVipDinamico() {
   vincularEventosPreviewVip();
 }
 
+// =========== 18-07-2026  SISTEMA DE ACORDEÃO VIP PROFESSIONAL (UX CHAT-DF) ======================
+
+// ENGINE DO ACORDEÃO VIP (Apenas uma gaveta aberta por vez)
+  const accordionHeaders = document.querySelectorAll(".vip-accordion-header");
+  accordionHeaders.forEach(header => {
+    // Remove listeners antigos para evitar duplicações no onSnapshot
+    header.replaceWith(header.cloneNode(true));
+  });
+
+  // Re-seleciona após clonagem para mapear o novo evento limpo
+  document.querySelectorAll(".vip-accordion-header").forEach(header => {
+    header.addEventListener("click", (e) => {
+      e.preventDefault();
+      const currentItem = header.parentElement;
+      const isAlreadyActive = currentItem.classList.contains("active");
+
+      // Fecha todos os blocos abertos
+      document.querySelectorAll(".vip-accordion-item").forEach(item => {
+        item.classList.remove("active");
+      });
+
+      // Se não estava ativo, abre o clicado
+      if (!isAlreadyActive) {
+        currentItem.classList.add("active");
+      }
+    });
+  });
+
+
 window.__vipMENSAGEM_COR_SELECIONADA = "#333333";
 window.__vipNOME_COR_SELECIONADA = "#6f42c1";
 
