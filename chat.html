@@ -9,10 +9,11 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <!-- Estilos personalizados -->
-  <link href="styles.css" rel="stylesheet">
+  <link href="styles.css?v=2" rel="stylesheet">
   <link rel="shortcut icon" href="./img/imgicon2.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
-  
+  <!-- Carga de Fontes de Elite para Customização VIP do Chat-DF -->
+  <!-- Importação de Fontes VIP Corrigida e Mapeada para o Chat-DF -->
+ 
 
 </head>
 <body class="chat-page">
@@ -102,10 +103,11 @@
                 <span class="attachment-label">Usuarios on-line</span>
               </button>
 
+              <!----- NAO APAGR E AS CORES DO TEXTO 
               <button class="attachment-item" id="colorBtn" data-action="color">
                 <span class="attachment-icon icon-color"><i class="bi bi-palette-fill"></i></span>
                 <span class="attachment-label">Cor do texto</span>
-              </button>
+              </button> --->
 
               <button class="attachment-item" data-action="ai">
                 <span class="attachment-icon icon-ai"><i class="bi bi-stars"></i></span>
@@ -277,22 +279,54 @@
       
       <p id="profileMood">Sem recado no momento.</p>
     </div>
-    <div class="profile-tabs">
-      <button class="profile-tab active" data-tab="info" type="button">Info</button>
-      <button class="profile-tab" data-tab="edit" type="button">Editar perfil</button>
+<!---====================== 16-07-26 ADICIONANDO NOVO PAINEL VIP ===================---->
+<div class="profile-tabs d-flex justify-content-center align-items-center gap-1 py-2">
+      <button class="profile-tab active px-3 py-1.5" data-tab="info" type="button" style="border-radius: 20px;">Info</button>
+      <button class="profile-tab px-3 py-1.5  border-0" data-tab="edit" type="button" style="color: #666;">Editar perfil</button>
+      <button class="profile-tab tab-vip-highlight px-3 py-1.5 bg-transparent border-0" data-tab="vip" type="button" style="color: #666;">
+        <i class="bi bi-gem"></i> VIP
+      </button>
     </div>
-    <div class="profile-content">
+    
+    <div class="profile-content px-3">
+      <!-- INFORMAÇÃO -->
       <!-- INFO -->
-    <div class="profile-section active" id="profileInfo">
-  <p><strong>Cidade:</strong> <span id="profileCity">-</span></p>
-  <p><strong>Idade:</strong> <span id="profileAge">-</span></p>
-  <p><strong>Gênero:</strong> <span id="profileGender">-</span></p>
-  <p><strong>Membro desde:</strong> <span id="profileMemberSince">-</span></p>
-</div>
-
-      <!-- EDITAR -->
+      <div class="profile-section active" id="profileInfo">
+        <div class="m-0 py-2 row align-items-center border-bottom w-100 mx-0">
+          <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
+            <i class="bi bi-geo-alt text-secondary fs-5"></i>
+            <strong>Cidade</strong>
+          </span>
+          <span id="profileCity" class="col-7 px-0 text-dark">-</span>
+        </div>
+        
+        <div class="m-0 py-2 row align-items-center border-bottom w-100 mx-0">
+          <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
+            <i class="bi bi-calendar-heart text-secondary fs-5"></i>
+            <strong>Idade</strong>
+          </span>
+          <span id="profileAge" class="col-7 px-0 text-dark">-</span>
+        </div>
+        
+        <div class="m-0 py-2 row align-items-center border-bottom w-100 mx-0">
+          <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
+            <i class="bi bi-gender-ambiguous text-secondary fs-5"></i>
+            <strong>Gênero</strong>
+          </span>
+          <span id="profileGender" class="col-7 px-0 text-dark">-</span>
+        </div>
+        
+        <div class="m-0 py-2 row align-items-center border-bottom w-100 mx-0">
+          <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
+            <i class="bi bi-person-check text-secondary fs-5"></i>
+            <strong>Membro desde</strong>
+          </span>
+          <span id="profileMemberSince" class="col-7 px-0 text-dark">-</span>
+        </div>
+      </div>
+     
+            <!-- EDITAR -->
 <div class="profile-section" id="profileEdit">
-
   <label class="profile-field">
     <i class="bi bi-person profile-field-icon"></i>
     <span class="profile-field-body">
@@ -300,7 +334,6 @@
       <input type="text" id="editName" placeholder="Nome de Usuário" maxlength="10">
     </span>
   </label>
-
   <label class="profile-field">
     <i class="bi bi-calendar-heart profile-field-icon"></i>
     <span class="profile-field-body">
@@ -308,7 +341,6 @@
       <input type="text" id="editAge" placeholder="Somente números" inputmode="numeric" pattern="[0-9]*">
     </span>
   </label>
-
   <label class="profile-field">
     <i class="bi bi-gender-ambiguous profile-field-icon"></i>
     <span class="profile-field-body">
@@ -316,7 +348,6 @@
       <input type="text" id="editGender" placeholder="Digite seu gênero" maxlength="15">
     </span>
   </label>
-
   <label class="profile-field">
     <i class="bi bi-geo-alt profile-field-icon"></i>
     <span class="profile-field-body">
@@ -324,17 +355,424 @@
       <input type="text" id="editCity" placeholder="Digite sua cidade"maxlength="22">
     </span>
   </label>
-
-  <label class="profile-field">
-    <i class="bi bi-chat-square-text profile-field-icon"></i>
-    <span class="profile-field-body">
-      <span class="profile-field-label">Recado</span>
-      <input type="text" id="editMood" placeholder="Frase curta"maxlength="50">
-    </span>
-  </label>
-
-  <button id="saveProfileBtn" type="button">Salvar</button>
+<label class="profile-field" style="align-items: flex-start; padding-top: 8px;">
+  <i class="bi bi-chat-square-text profile-field-icon"></i>
+  <span class="profile-field-body">
+    <span class="profile-field-label">Recado</span>
+    <textarea id="editMood" placeholder="Frase Favorita " maxlength="100" rows="3"></textarea>
+  </span>
+</label>
+  <div id="editTrackingState" data-capa-alterada="false" data-avatar-alterado="false" class="d-none"></div>
+  <button id="saveProfileBtn" type="button" disabled style="opacity: 0.5; cursor: not-allowed;">Salvar</button>
 </div>
+
+
+
+      <!-- SEÇÃO VIP CORRIGIDA -->
+      <div class="profile-section d-none" id="profileVip">
+        
+        <!-- CARD DO STATUS VIP & EXPIRAÇÃO -->
+        <div class="vip-card-status mb-3 p-3 text-center" style="border-radius: 12px; border: 1px solid rgba(255, 193, 7, 0.3); background: linear-gradient(145deg, #1e1b4b, #0f0c20); color: #fff;">
+          <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+            <i class="bi bi-gem text-warning animate-pulse" style="filter: drop-shadow(0 0 5px #ffc107);"></i>
+            <h5 class="m-0 fw-bold text-white">Área Exclusiva</h5>
+          </div>
+          
+          <!-- Contador de Tempo / Renovação -->
+          <div id="vipExpiryRow" class="mt-2 d-none">
+            <p class="small m-0 text-white-50">Seu plano VIP expira em: <span id="vipExpiryDays" class="text-warning fw-bold">X dias</span></p>
+            <button id="btnRenewVip" class="btn btn-sm btn-outline-warning py-0.5 px-2 mt-1" style="font-size: 11px; border-radius: 20px;">Renovar assinatura</button>
+          </div>
+        </div>
+
+        <!-- SEÇÃO 1: APENAS PARA QUEM NÃO É VIP -->
+        <div id="vipPromoSection" class="vip-sub-section">
+          <p class="text-center small text-muted mb-3">Ative o VIP e ganhe destaque com recursos visuais incríveis!</p>
+          
+          <div class="vip-preview-benefits d-flex flex-column gap-2 mb-3">
+            <div class="d-flex align-items-center gap-2.5 p-2 rounded-3 bg-light text-start">
+              <i class="bi bi-palette-fill text-primary"></i>
+              <span class="small" style="font-size: 12.5px;">Nome Colorido & Gradientes Animados</span>
+            </div>
+            <div class="d-flex align-items-center gap-2.5 p-2 rounded-3 bg-light text-start">
+              <i class="bi bi-type-strikethrough text-success"></i>
+              <span class="small" style="font-size: 12.5px;">Fontes e Cores exclusivas para suas mensagens</span>
+            </div>
+            <div class="d-flex align-items-center gap-2.5 p-2 rounded-3 bg-light text-start">
+              <i class="bi bi-person-bounding-box text-warning"></i>
+              <span class="small" style="font-size: 12.5px;">Molduras de Avatar (Frames) Neon e Led Animadas</span>
+            </div>
+            <div class="d-flex align-items-center gap-2.5 p-2 rounded-3 bg-light text-start">
+              <i class="bi bi-image-fill text-danger"></i>
+              <span class="small" style="font-size: 12.5px;">Capa de Perfil Personalizada (Degradês Animados)</span>
+            </div>
+          </div>
+
+          <button id="btnBuyVip" class="btn w-100 py-2.5 fw-bold text-white shadow-sm" style="background: linear-gradient(135deg, #ff9f0a, #ff375f); border: none; border-radius: 10px;">
+            <i class="bi bi-unlock-fill"></i> Quero ser VIP agora!
+          </button>
+        </div>
+
+
+
+
+
+
+        <!-- SEÇÃO 2: PARA QUEM JÁ É VIP -->
+        <div id="vipSettingsSection" class="vip-sub-section d-none">
+          
+          <!-- PREVIEW EM TEMPO REAL -->
+          <div class="vip-preview-box text-start mb-3 border rounded-3 bg-light">
+            <span class="text-muted d-block mb-2" style="font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 12px 0 12px;">Preview em Tempo Real</span>
+            
+            <div id="vipPreviewBanner" class="mb-3" style="height: 85px; border-radius: 8px; background: #8b898963; margin: 0 12px; transition: background 0.2s ease;">
+              <span style="font-size: 9px; color: rgba(255,255,255,0.8); font-weight: bold; padding: 4px 8px; display: inline-block; text-transform: uppercase;">Sua Capa VIP</span>
+            </div>
+
+            <div class="d-flex gap-2.5 align-items-start" style="padding: 0 12px 12px 12px;">
+              <div class="position-relative" style="width: 40px; height: 40px; flex-shrink: 0;">
+                <img id="vipPreviewAvatar" src="img/avatar.png" class="rounded-circle w-100 h-100 object-fit-cover" alt="Preview Avatar">
+                <div id="vipPreviewFrame" class="position-absolute top-0 start-0 w-100 h-100 rounded-circle" style="pointer-events: none; box-sizing: border-box;"></div>
+              </div>
+
+              <div class="bg-white p-2.5 rounded-3 shadow-sm border flex-grow-1" style="max-width: 80%;">
+                <div class="d-flex align-items-center gap-1.5 mb-0.5">
+                  <span id="vipPreviewName" class="fw-bold" style="font-size: 13.5px; font-family: inherit;">Saga</span>
+                  <span id="vipPreviewTag" style="font-size:9px; padding: 2px 4px;"><img src="img/diamante.png" alt="VIP" class="img-fluid" width="19" height="19"></span>
+                </div>
+                <p id="vipPreviewText" class="m-0" style="font-size: 13px; color: #333; line-height: 1.3;">Olá! Olha como fica bonita a minha mensagem!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTROLE 1 DEGRADE NO NOME -->
+          <div class="vip-control-card text-start mb-3 p-2 border rounded bg-white">
+            <h6 class="fw-bold mb-2" style="font-size: 13.5px; color: #1e1b4b;"><i class="bi bi-person-fill text-primary"></i> Estilo do seu Nome</h6>
+            <div class="mb-2 position-relative">
+              <label class="small mb-1" style="font-size: 11px; font-weight: 600; color: #475569;">Tipo de Pintura</label>
+              <button type="button" id="btnVipNameColorType" class="vip-custom-select-btn">Cor Sólida Comum</button>
+              <div id="listVipNameColorType" class="vip-custom-dropdown hidden">
+                <div class="vip-dropdown-option active" data-value="solid">Cor Sólida Comum</div>
+                <!-- DEGRADÊS ESTÁTICOS -->
+                <div class="vip-dropdown-option" data-value="gradient-blue-purple">Degradê Azul & Roxo</div>
+                <div class="vip-dropdown-option" data-value="gradient-gold">Degradê Dourado de Elite</div>
+                <div class="vip-dropdown-option" data-value="gradient-sunset">Degradê Pôr do Sol</div>
+                <div class="vip-dropdown-option" data-value="gradient-ocean">Degradê Oceano Profundo</div>
+                <div class="vip-dropdown-option" data-value="gradient-forest">Degradê Esmeralda Imperial</div>
+                <div class="vip-dropdown-option" data-value="gradient-ruby">Degradê Rubi Real</div>
+                <div class="vip-dropdown-option" data-value="gradient-cyberpunk">Degradê Cyberpunk 2077</div>
+                <div class="vip-dropdown-option" data-value="gradient-cotton">Degradê Algodão Doce</div>
+                <div class="vip-dropdown-option" data-value="gradient-lavender">Degradê Lavanda Suave</div>
+                <div class="vip-dropdown-option" data-value="gradient-fire">Degradê Labareda de Fogo</div>
+                <div class="vip-dropdown-option" data-value="gradient-platinum">Degradê Platina Cromada</div>
+                <div class="vip-dropdown-option" data-value="gradient-vintage">Degradê Vintage Retrô</div>
+                <div class="vip-dropdown-option" data-value="gradient-bubblegum">Degradê Chiclete Pop</div>
+                <div class="vip-dropdown-option" data-value="gradient-galaxy">Degradê Nebulosa Espacial</div>
+                <div class="vip-dropdown-option" data-value="gradient-mint">Degradê Hortelã Refrescante</div>
+                <!-- DEGRADÊS ANIMADOS -->
+                <div class="vip-dropdown-option" data-value="gradient-neon">Degradê Neon Psicodélico (Animado)</div>
+                <div class="vip-dropdown-option" data-value="anim-rainbow">Degradê Arco-Íris Infinito (Animado)</div>
+                <div class="vip-dropdown-option" data-value="anim-aurora">Degradê Aurora Cósmica (Animado)</div>
+                <div class="vip-dropdown-option" data-value="anim-magma">Degradê Magma Vulcânico (Animado)</div>
+                <div class="vip-dropdown-option" data-value="anim-matrix">Degradê Linhas da Matrix (Animado)</div>
+                <div class="vip-dropdown-option" data-value="anim-electric">Degradê Choque Elétrico (Animado)</div>
+                <div class="vip-dropdown-option" data-value="anim-gold-flow">Degradê Ouro Líquido (Animado)</div>
+                <div class="vip-dropdown-option" data-value="anim-glitch">Degradê Glitch Hacker (Animado)</div>
+                <div class="vip-dropdown-option" data-value="anim-ice">Degradê Gelo Glacial (Animado)</div>
+                <div class="vip-dropdown-option" data-value="anim-vampire">Degradê Sangue de Vampiro (Animado)</div>
+                <div class="vip-dropdown-option" data-value="anim-candy">Degradê Doce Mágico (Animado)</div>
+                <div class="vip-dropdown-option" data-value="anim-toxic">Degradê Ácido Tóxico (Animado)</div>
+                <div class="vip-dropdown-option" data-value="anim-shadow">Degradê Sombra Sombria (Animado)</div>
+                <div class="vip-dropdown-option" data-value="anim-miami">Degradê Miami Vice Wave (Animado)</div>
+                <div class="vip-dropdown-option" data-value="anim-phoenix">Degradê Fênix Renascida (Animado)</div>
+              </div>
+              <select id="vipNameColorType" class="d-none">
+                <option value="solid" selected>Cor Sólida Comum</option>
+                <option value="gradient-blue-purple">Degradê Azul & Roxo</option>
+                <option value="gradient-gold">Degradê Dourado de Elite</option>
+                <option value="gradient-sunset">Degradê Pôr do Sol</option>
+                <option value="gradient-ocean">Degradê Oceano Profundo</option>
+                <option value="gradient-forest">Degradê Esmeralda Imperial</option>
+                <option value="gradient-ruby">Degradê Rubi Real</option>
+                <option value="gradient-cyberpunk">Degradê Cyberpunk 2077</option>
+                <option value="gradient-cotton">Degradê Algodão Doce</option>
+                <option value="gradient-lavender">Degradê Lavanda Suave</option>
+                <option value="gradient-fire">Degradê Labareda de Fogo</option>
+                <option value="gradient-platinum">Degradê Platina Cromada</option>
+                <option value="gradient-vintage">Degradê Vintage Retrô</option>
+                <option value="gradient-bubblegum">Degradê Chiclete Pop</option>
+                <option value="gradient-galaxy">Degradê Nebulosa Espacial</option>
+                <option value="gradient-mint">Degradê Hortelã Refrescante</option>
+                <option value="gradient-neon">Degradê Neon Psicodélico (Animado)</option>
+                <option value="anim-rainbow">Degradê Arco-Íris Infinito (Animado)</option>
+                <option value="anim-aurora">Degradê Aurora Cósmica (Animado)</option>
+                <option value="anim-magma">Degradê Magma Vulcânico (Animado)</option>
+                <option value="anim-matrix">Degradê Linhas da Matrix (Animado)</option>
+                <option value="anim-electric">Degradê Choque Elétrico (Animado)</option>
+                <option value="anim-gold-flow">Degradê Ouro Líquido (Animado)</option>
+                <option value="anim-glitch">Degradê Glitch Hacker (Animado)</option>
+                <option value="anim-ice">Degradê Gelo Glacial (Animado)</option>
+                <option value="anim-vampire">Degradê Sangue de Vampiro (Animado)</option>
+                <option value="anim-candy">Degradê Doce Mágico (Animado)</option>
+                <option value="anim-toxic">Degradê Ácido Tóxico (Animado)</option>
+                <option value="anim-shadow">Degradê Sombra Sombria (Animado)</option>
+                <option value="anim-miami">Degradê Miami Vice Wave (Animado)</option>
+                <option value="anim-phoenix">Degradê Fênix Renascida (Animado)</option>
+              </select>
+            </div>
+
+            <div id="vipSolidColorWrapper" class="mb-2">
+              <label class="small mb-1" style="font-size: 11px; font-weight: 600; color: #475569;">Escolha a Cor do seu Nome</label>
+              <div class="color-grid" id="vipNameColorGrid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; max-height: 140px; overflow-y: auto; padding-right: 4px;"></div>
+            </div>
+
+            <!-- Fontes dos Nomes -->
+            <div class="mb-0 position-relative">
+              <label class="small mb-1" style="font-size: 11px; font-weight: 600; color: #475569;">Estilo da Fonte</label>
+              <button type="button" id="btnVipNameFont" class="vip-custom-select-btn">Padrão do Chat</button>
+              <div id="listVipNameFont" class="vip-custom-dropdown hidden">
+                <div class="vip-dropdown-option active" data-value="default">Padrão do Chat</div>
+                <div class="vip-dropdown-option" data-value="BebasNeue">Bebas Neue</div>
+                <div class="vip-dropdown-option" data-value="RubikVinyl">Rubik Vinyl</div>
+                <div class="vip-dropdown-option" data-value="Lobster">Lobster</div>
+                <div class="vip-dropdown-option" data-value="Barrio">Barrio</div>
+                <div class="vip-dropdown-option" data-value="BraahOne">Braah One</div>
+                <div class="vip-dropdown-option" data-value="BungeeShade">Bungee Shade</div>
+                <div class="vip-dropdown-option" data-value="CaesarDressing">CaesarDressing</div>
+                <div class="vip-dropdown-option" data-value="Charm-Bold">Charm Bold</div>
+                <div class="vip-dropdown-option" data-value="CherryBombOne">Cherry Bomb One</div>
+                <div class="vip-dropdown-option" data-value="CinzelDecorative">Cinzel Decorative</div>
+                <div class="vip-dropdown-option" data-value="Cuprum-Italic">Cuprum Italic</div>
+                <div class="vip-dropdown-option" data-value="Urbanist-Italic">Urbanist Italic</div>
+                <div class="vip-dropdown-option" data-value="EduAUVICWANTHand">Edu AUVICWANT Hand</div>
+                <div class="vip-dropdown-option" data-value="GeostarFill">Geostar Fill</div>
+                <div class="vip-dropdown-option" data-value="Kablammo">Kablammo</div>
+                <div class="vip-dropdown-option" data-value="KumarOneOutline">Kumar One Outline</div>
+                <div class="vip-dropdown-option" data-value="LibertinusKeyboard">Libertinus Keyboard</div>
+                <div class="vip-dropdown-option" data-value="Limelight">Limelight</div>
+                <div class="vip-dropdown-option" data-value="ManufacturingConsent">Manufacturing Consent</div>
+                <div class="vip-dropdown-option" data-value="Matangi">Matangi</div>
+                <div class="vip-dropdown-option" data-value="Matemasie">Matemasie</div>
+                <div class="vip-dropdown-option" data-value="MeaCulpa">Mea Culpa</div>
+                <div class="vip-dropdown-option" data-value="PlaywriteBEVLG">Playwrite BE VL G</div>
+                <div class="vip-dropdown-option" data-value="Praise">Praise</div>
+                <div class="vip-dropdown-option" data-value="Pridi">Pridi</div>
+                <div class="vip-dropdown-option" data-value="Pridi-ExtraLight">Pridi Extra Light</div>
+                <div class="vip-dropdown-option" data-value="Pridi-SemiBold">Pridi Semi Bold</div>
+                <div class="vip-dropdown-option" data-value="RockSalt">Rock Salt</div>
+                <div class="vip-dropdown-option" data-value="Tangerine">Tangerine</div>
+                <div class="vip-dropdown-option" data-value="TASAExplorer">TASA Explorer</div>
+                <div class="vip-dropdown-option" data-value="TiltPrism">Tilt Prism</div>
+                <div class="vip-dropdown-option" data-value="UnifrakturMaguntia">Unifraktur Maguntia</div>
+              </div>
+              <select id="vipNameFont" class="d-none">
+                <option value="default" selected>Padrão do Chat</option>
+                <option value="BebasNeue">Bebas Neue</option>
+                <option value="RubikVinyl">Rubik Vinyl</option>
+                <option value="Lobster">Lobster</option>
+                <option value="Barrio">Barrio</option>
+                <option value="BraahOne">Braah One</option>
+                <option value="BungeeShade">Bungee Shade</option>
+                <option value="CaesarDressing">CaesarDressing</option>
+                <option value="Charm-Bold">Charm Bold</option>
+                <option value="CherryBombOne">Cherry Bomb One</option>
+                <option value="CinzelDecorative">Cinzel Decorative</option>
+                <option value="Cuprum-Italic">Cuprum Italic</option>
+                <option value="Urbanist-Italic">Urbanist Italic</option>
+                <option value="EduAUVICWANTHand">Edu AUVICWANT Hand</option>
+                <option value="GeostarFill">Geostar Fill</option>
+                <option value="Kablammo">Kablammo</option>
+                <option value="KumarOneOutline">Kumar One Outline</option>
+                <option value="LibertinusKeyboard">Libertinus Keyboard</option>
+                <option value="Limelight">Limelight</option>
+                <option value="ManufacturingConsent">Manufacturing Consent</option>
+                <option value="Matangi">Matangi</option>
+                <option value="Matemasie">Matemasie</option>
+                <option value="MeaCulpa">Mea Culpa</option>
+                <option value="PlaywriteBEVLG">Playwrite BE VL G</option>
+                <option value="Praise">Praise</option>
+                <option value="Pridi">Pridi</option>
+                <option value="Pridi-ExtraLight">Pridi Extra Light</option>
+                <option value="Pridi-SemiBold">Pridi Semi Bold</option>
+                <option value="RockSalt">Rock Salt</option>
+                <option value="Tangerine">Tangerine</option>
+                <option value="TASAExplorer">TASA Explorer</option>
+                <option value="TiltPrism">Tilt Prism</option>
+                <option value="UnifrakturMaguntia">Unifraktur Maguntia</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- CONTROLE 2 -->
+          <div class="vip-control-card text-start mb-3 p-2 border rounded bg-white">
+            <h6 class="fw-bold mb-2.5" style="font-size: 13.5px; color: #1e1b4b;"><i class="bi bi-chat-left-text-fill text-success"></i> Cor do Texto do Chat</h6>
+            <div class="mb-2">
+              <span class="small text-dark fw-semibold d-block mb-1" style="font-size: 12px;">Sua Mensagem Exclusiva</span>
+              <span class="small text-muted d-block mb-2" style="font-size: 10.5px; line-height: 1.2;">Escolha uma das cores exclusivas abaixo para o envio das suas mensagens.</span>
+            </div>
+            <div class="color-grid" id="vipMsgColorGrid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; max-height: 140px; overflow-y: auto; padding-right: 4px;"></div>
+          </div>
+
+          <!-- CONTROLE 3 MOLDURA EM VOLTA DO AVATAR-->
+          <div class="vip-control-card text-start mb-3 p-2 border rounded bg-white">
+            <h6 class="fw-bold mb-2.5" style="font-size: 13.5px; color: #1e1b4b;"><i class="bi bi-person-bounding-box text-warning"></i> Moldura de Avatar (Frames)</h6>
+            <div class="position-relative">
+              <button type="button" id="btnVipAvatarFrameSelect" class="vip-custom-select-btn">Nenhuma Moldura</button>
+              <div id="listVipAvatarFrameSelect" class="vip-custom-dropdown hidden">
+                <div class="vip-dropdown-option active" data-value="none">Nenhuma Moldura</div>
+                <div class="vip-dropdown-option" data-value="frame-plasma-fire">Fogo Incandescente (Brasas de Plasma)</div>
+                <div class="vip-dropdown-option" data-value="frame-fiber-neon">Neon Fibra Óptica (Luz Infinita)</div>
+                <div class="vip-dropdown-option" data-value="frame-aura-pulse">Aura Pulsante (Luz Vital)</div>
+                <div class="vip-dropdown-option" data-value="frame-electric-spark">Faíscas Elétricas (Alta Voltagem)</div>
+              </div>
+              <select id="vipAvatarFrameSelect" class="d-none">
+                <option value="none" selected>Nenhuma Moldura</option>
+                <option value="frame-plasma-fire">Fogo Incandescente (Brasas de Plasma)</option>
+                <option value="frame-fiber-neon">Neon Fibra Óptica (Luz Infinita)</option>
+                <option value="frame-aura-pulse">Aura Pulsante (Luz Vital)</option>
+                <option value="frame-electric-spark">Faíscas Elétricas (Alta Voltagem)</option>
+              </select>
+            </div>
+            <span class="small text-muted d-block mt-1.5" style="font-size: 10.5px; line-height: 1.2;">A moldura é exibida ao redor da sua foto no chat e no seu painel.</span>
+          </div>
+
+          <!-- CONTROLE 4 DEGRADE DO BANNER-->
+          <div class="vip-control-card text-start mb-3 p-2 border rounded bg-white">
+            <h6 class="fw-bold mb-2.5" style="font-size: 13.5px; color: #1e1b4b;"><i class="bi bi-image text-danger"></i> Capa de Perfil (Banner)</h6>
+            <div class="position-relative">
+              <button type="button" id="btnVipProfileBannerSelect" class="vip-custom-select-btn">Padrão do Systema</button>
+              <div id="listVipProfileBannerSelect" class="vip-custom-dropdown hidden">
+                <div class="vip-dropdown-option active" data-value="default">Padrão do Sistema</div>
+                <!-- DEGRADÊS ESTÁTICOS DE ELITE -->
+                <div class="vip-dropdown-option" data-value="banner-grad-purple">Degradê Roxo Espacial</div>
+                <div class="vip-dropdown-option" data-value="banner-grad-gold">Degradê Ouro de Elite</div>
+                <div class="vip-dropdown-option" data-value="banner-grad-sunset">Degradê Pôr do Sol no DF</div>
+                <div class="vip-dropdown-option" data-value="banner-grad-ocean">Degradê Oceano Profundo</div>
+                <div class="vip-dropdown-option" data-value="banner-grad-emerald">Degradê Esmeralda Imperial</div>
+                <div class="vip-dropdown-option" data-value="banner-grad-ruby">Degradê Rubi Real</div>
+                <div class="vip-dropdown-option" data-value="banner-grad-cyberpunk">Degradê Cyberpunk 2077</div>
+                <div class="vip-dropdown-option" data-value="banner-grad-cotton">Degradê Algodão Doce</div>
+                <div class="vip-dropdown-option" data-value="banner-grad-lavender">Degradê Lavanda Suave</div>
+                <div class="vip-dropdown-option" data-value="banner-grad-fire">Degradê Labareda de Fogo</div>
+                <div class="vip-dropdown-option" data-value="banner-grad-platinum">Degradê Platina Cromada</div>
+                <div class="vip-dropdown-option" data-value="banner-grad-vintage">Degradê Vintage Retrô</div>
+                <div class="vip-dropdown-option" data-value="banner-grad-bubblegum">Degradê Chiclete Pop</div>
+                <div class="vip-dropdown-option" data-value="banner-grad-galaxy">Degradê Nebulosa Espacial</div>
+                <div class="vip-dropdown-option" data-value="banner-grad-mint">Degradê Hortelã Refrescante</div>
+                <!-- DEGRADÊS ANIMADOS PREMIUM -->
+                <div class="vip-dropdown-option" data-value="banner-anim-aurora">Aurora Boreal Cósmica (Animado)</div>
+                <div class="vip-dropdown-option" data-value="banner-anim-neon">Neon Psicodélico (Animado)</div>
+                <div class="vip-dropdown-option" data-value="banner-anim-rainbow">Arco-Íris Infinito (Animado)</div>
+                <div class="vip-dropdown-option" data-value="banner-anim-magma">Magma Vulcânico (Animado)</div>
+                <div class="vip-dropdown-option" data-value="banner-anim-matrix">Fluxo da Matrix (Animado)</div>
+                <div class="vip-dropdown-option" data-value="banner-anim-electric">Choque Elétrico (Animado)</div>
+                <div class="vip-dropdown-option" data-value="banner-anim-gold-flow">Ouro Líquido Premium (Animado)</div>
+                <div class="vip-dropdown-option" data-value="banner-anim-glitch">Glitch Hacker Cyber (Animado)</div>
+                <div class="vip-dropdown-option" data-value="banner-anim-ice">Gelo Glacial Cristal (Animado)</div>
+                <div class="vip-dropdown-option" data-value="banner-anim-vampire">Sangue de Vampiro (Animado)</div>
+                <div class="vip-dropdown-option" data-value="banner-anim-candy">Doce Mágico Encantado (Animado)</div>
+                <div class="vip-dropdown-option" data-value="banner-anim-toxic">Ácido Tóxico Radioativo (Animado)</div>
+                <div class="vip-dropdown-option" data-value="banner-anim-shadow">Sombra Sombria Dark (Animado)</div>
+                <div class="vip-dropdown-option" data-value="banner-anim-miami">Miami Vice Wave Retro (Animado)</div>
+                <div class="vip-dropdown-option" data-value="banner-anim-phoenix">Fênix Renascida (Animado)</div>
+              </div>
+              <select id="vipProfileBannerSelect" class="d-none">
+                <option value="default" selected>Padrão do Sistema</option>
+                <option value="banner-grad-purple">Degradê Roxo Espacial</option>
+                <option value="banner-grad-gold">Degradê Ouro de Elite</option>
+                <option value="banner-grad-sunset">Degradê Pôr do Sol no DF</option>
+                <option value="banner-grad-ocean">Degradê Oceano Profundo</option>
+                <option value="banner-grad-emerald">Degradê Esmeralda Imperial</option>
+                <option value="banner-grad-ruby">Degradê Rubi Real</option>
+                <option value="banner-grad-cyberpunk">Degradê Cyberpunk 2077</option>
+                <option value="banner-grad-cotton">Degradê Algodão Doce</option>
+                <option value="banner-grad-lavender">Degradê Lavanda Suave</option>
+                <option value="banner-grad-fire">Degradê Labareda de Fogo</option>
+                <option value="banner-grad-platinum">Degradê Platina Cromada</option>
+                <option value="banner-grad-vintage">Degradê Vintage Retrô</option>
+                <option value="banner-grad-bubblegum">Degradê Chiclete Pop</option>
+                <option value="banner-grad-galaxy">Degradê Nebulosa Espacial</option>
+                <option value="banner-grad-mint">Degradê Hortelã Refrescante</option>
+                <option value="banner-anim-aurora">Aurora Boreal Cósmica (Animado)</option>
+                <option value="banner-anim-neon">Neon Psicodélico (Animado)</option>
+                <option value="banner-anim-rainbow">Arco-Íris Infinito (Animado)</option>
+                <option value="banner-anim-magma">Magma Vulcânico (Animado)</option>
+                <option value="banner-anim-matrix">Fluxo da Matrix (Animado)</option>
+                <option value="banner-anim-electric">Choque Elétrico (Animado)</option>
+                <option value="banner-anim-gold-flow">Ouro Líquido Premium (Animado)</option>
+                <option value="banner-anim-glitch">Glitch Hacker Cyber (Animado)</option>
+                <option value="banner-anim-ice">Gelo Glacial Cristal (Animado)</option>
+                <option value="banner-anim-vampire">Sangue de Vampiro (Animado)</option>
+                <option value="banner-anim-candy">Doce Mágico Encantado (Animado)</option>
+                <option value="banner-anim-toxic">Ácido Tóxico Radioativo (Animado)</option>
+                <option value="banner-anim-shadow">Sombra Sombria Dark (Animado)</option>
+                <option value="banner-anim-miami">Miami Vice Wave Retro (Animado)</option>
+                <option value="banner-anim-phoenix">Fênix Renascida (Animado)</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="btnSaveVipSettings" class="btn btn-dark w-100 py-2.5 fw-bold" style="border-radius: 10px; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+            Salvar Minhas Vantagens VIP
+          </button>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
     </div>
 
   </div>

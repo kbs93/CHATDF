@@ -42,7 +42,10 @@ export const textColorPalette = [
 const palette = textColorPalette;
 window.textColorPalette = textColorPalette;
 // RENDERIZA PALETA
-if (grid) {
+// RENDERIZA PALETAS REESTRUTURADAS (CAMPOS SINCROIZADOS)
+function renderizarPaletaNoContainer(targetGridElement, salvarNoLocalStorage = false) {
+  if (!targetGridElement) return;
+  
   palette.forEach(color => {
     if (!color || color === "<br>") return;
 
@@ -50,15 +53,27 @@ if (grid) {
     box.className = "color-box";
     box.style.backgroundColor = color;
     box.dataset.color = color;
+    box.style.width = "32px";
+    box.style.height = "32px";
+    box.style.borderRadius = "6px";
+    box.style.cursor = "pointer";
+    box.style.position = "relative";
+    box.style.display = "flex";
+    box.style.alignItems = "center";
+    box.style.justifyContent = "center";
 
     const check = document.createElement("span");
     check.className = "color-check";
     check.textContent = "✔";
+    check.style.color = "white";
+    check.style.fontWeight = "bold";
+    check.style.display = "none";
 
     box.appendChild(check);
-    grid.appendChild(box);
+    targetGridElement.appendChild(box);
   });
 }
+
 
 // SELECIONAR COR
 // ================= SELECIONAR COR =================
@@ -75,18 +90,41 @@ document.addEventListener("click", (e) => {
 
   if (messageInput) messageInput.style.color = color;
 
-  localStorage.setItem(USER_COLOR_KEY, color);
+localStorage.setItem(USER_COLOR_KEY, color);
 
+  // Mantém todas as cores com opacidade normal (Sem ofuscar nada)
   document.querySelectorAll(".color-box").forEach(b => {
     b.classList.remove("selected");
-    b.style.opacity = "0.5";
   });
 
   box.classList.add("selected");
-  box.style.opacity = "1";
-
   colorLocked = true;
 });
+
+// RENDERIZAÇÃO AUTOMÁTICA DAS PALETAS (TEXTO DO CHAT E NOME DO USUÁRIO)
+function inicializarGradesVipGlobais() {
+  const containerTexto = document.getElementById("vipMsgColorGrid");
+  const containerNome = document.getElementById("vipNameColorGrid");
+
+  if (containerTexto) {
+    containerTexto.innerHTML = "";
+    renderizarPaletaNoContainer(containerTexto, false);
+  }
+  if (containerNome) {
+    containerNome.innerHTML = "";
+    renderizarPaletaNoContainer(containerNome, false);
+  }
+}
+
+// Injeção na caixa flutuante antiga se existir
+if (grid) renderizarPaletaNoContainer(grid, true);
+
+// Dispara a montagem das duas paletas da área VIP nativamente
+document.addEventListener("DOMContentLoaded", () => {
+  inicializarGradesVipGlobais();
+});
+// Expõe a função global para reinicialização estável se necessário
+window.__rebuildVipGrids = inicializarGradesVipGlobais;
 
 
 // ================= FECHAR PAINEL AO CLICAR FORA (PROTEGIDO) 21-06-26=================

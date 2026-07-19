@@ -40,6 +40,43 @@ body.chat-loading .message {
   transform: none !important;
 }
 
+/* ========================================================================= 
+   MAPEAMENTO DE FONTES LOCAIS EXCLUSIVAS VIP (MÉTODO LOCAL SEGURO)
+   ========================================================================= */
+@font-face { font-family: 'BebasNeue'; src: url('./fonts/BebasNeue-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'RubikVinyl'; src: url('./fonts/RubikVinyl-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Lobster'; src: url('./fonts/Lobster-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Barrio'; src: url('./fonts/Barrio-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'BraahOne'; src: url('./fonts/BraahOne-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'BungeeShade'; src: url('./fonts/BungeeShade-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'CaesarDressing'; src: url('./fonts/ CaesarDressing-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Charm-Bold'; src: url('./fonts/Charm-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'CherryBombOne'; src: url('./fonts/CherryBombOne-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'CinzelDecorative'; src: url('./fonts/CinzelDecorative-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Cuprum-Italic'; src: url('./fonts/Cuprum-Italic-VariableFont_wght.ttf') format('truetype'); }
+@font-face { font-family: 'EduAUVICWANTHand'; src: url('./fonts/EduAUVICWANTHand-VariableFont_wght.ttf') format('truetype'); }
+@font-face { font-family: 'FasterOne'; src: url('./fonts/FasterOne-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'GeostarFill'; src: url('./fonts/GeostarFill-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Kablammo'; src: url('./fonts/Kablammo-Regular-VariableFont_MORF.ttf') format('truetype'); }
+@font-face { font-family: 'KumarOneOutline'; src: url('./fonts/KumarOneOutline-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'LibertinusKeyboard'; src: url('./fonts/LibertinusKeyboard-VariableFont_wght.ttf') format('truetype'); }
+@font-face { font-family: 'Limelight'; src: url('./fonts/Limelight-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'ManufacturingConsent'; src: url('./fonts/ManufacturingConsent-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Matangi'; src: url('./fonts/Matangi-VariableFont_wght.ttf') format('truetype'); }
+@font-face { font-family: 'Matemasie'; src: url('./fonts/Matemasie-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'MeaCulpa'; src: url('./fonts/MeaCulpa-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'PlaywriteBEVLG'; src: url('./fonts/PlaywriteBEVLG-VariableFont_wght.ttf') format('truetype'); }
+@font-face { font-family: 'Praise'; src: url('./fonts/Praise-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Pridi'; src: url('./fonts/Pridi-Medium.ttf') format('truetype'); }
+@font-face { font-family: 'Pridi-ExtraLight'; src: url('./fonts/Pridi-ExtraLight.ttf') format('truetype'); }
+@font-face { font-family: 'Pridi-SemiBold'; src: url('./fonts/Pridi-SemiBold.ttf') format('truetype'); }
+@font-face { font-family: 'RockSalt'; src: url('./fonts/RockSalt-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Tangerine'; src: url('./fonts/Tangerine-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'TASAExplorer'; src: url('./fonts/TASAExplorer-VariableFont_wght.ttf') format('truetype'); }
+@font-face { font-family: 'TiltPrism'; src: url('./fonts/TiltPrism-Regular-VariableFont_XROT,YROT.ttf') format('truetype'); }
+@font-face { font-family: 'UnifrakturMaguntia'; src: url('./fonts/UnifrakturMaguntia-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Urbanist-Italic'; src: url('./fonts/Urbanist-Italic-VariableFont_wght.ttf') format('truetype'); }
+
 /* ================== HERO =================== */
 
 #background-animation {
@@ -3874,7 +3911,7 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
 }
 
 
-/* ===================== PROFILE PANEL PERFIL NO CHAT===================== */
+/* ===================== PROFILE PAINEL PERFIL NO CHAT===================== */
 .profile-panel {
   position: fixed;
   left: 0;
@@ -3898,7 +3935,7 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
   will-change: transform, opacity;
 }
 
-/*  PROFILE PANEL DESKTOP CHAT  13-05-2026  */
+/*  PERFIL PAINEL USUARIO DESKTOP CHAT  13-05-2026  */
 
 @media (min-width: 992px) {
   body.chat-page .profile-panel {
@@ -3906,7 +3943,7 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
     right: 18px;
     left: auto;
     bottom: auto;
-    width: 420px;
+    width: 490px;
     height: calc(100vh - 92px);
     max-height: 620px;
     border-radius: 22px;
@@ -4099,8 +4136,8 @@ transform: translateY(0);
 .profile-cover {
   position: relative;
   width: 100%;
-  min-height: 190px;
-  background:"#00000063";
+  min-height: 200px;
+  background: #00000063;
   flex-shrink: 0;
 }
 
@@ -4223,7 +4260,7 @@ transform: translateY(0);
 }
 
 .profile-tab.active {
-  background: #28065e;
+  background: #adadaf;
   color: #fff;
 }
 
@@ -4363,7 +4400,7 @@ body:has(.profile-panel.open) {
 }
 
 
-/*  - PERFIL do usuario NO INDEX RESPONSIVO  11-05 */
+/*  - PERFIL PAINEL do usuario NO INDEX RESPONSIVO  11-05 */
 /* ================= PERFIL INDEX RESPONSIVO PROFISSIONAL ================= */
 
 
@@ -5624,4 +5661,495 @@ body.viewing-other-profile .profile-photo-upload-btn {
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
+}
+
+
+/* ========================================================================= 
+   16-07-26  MÓDULO DE ESTILOS VIP (RECURSOS EXCLUSIVOS E PREMIUM)
+   ========================================================================= */
+/* ========================================================================= 
+   MÓDULO DE DESIGN VIP PREMIUM - ADAPTADO PARA UX MOBILE (SEM IMPORTANT)
+   ========================================================================= */
+
+/* Abas de Perfil - Destaque VIP */
+.profile-tabs .tab-vip-highlight {
+  position: relative;
+  font-weight: 700;
+  color: #6f42c1;
+  transition: all 0.25s ease;
+}
+
+.profile-tabs .tab-vip-highlight:hover {
+  color: #a020f0;
+}
+
+.profile-tabs .profile-tab.tab-vip-highlight.active {
+  background: linear-gradient(135deg, #6f42c1, #a020f0);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(111, 66, 193, 0.35);
+}
+
+/* Card Principal VIP de Status */
+#profileVip .vip-card-status {
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15);
+  animation: vipGlow 3s infinite alternate;
+}
+
+@keyframes vipGlow {
+  0% { box-shadow: 0 4px 15px rgba(255, 193, 7, 0.1); border-color: rgba(255, 193, 7, 0.2); }
+  100% { box-shadow: 0 4px 22px rgba(255, 193, 7, 0.3); border-color: rgba(255, 193, 7, 0.5); }
+}
+
+.animate-pulse {
+  animation: pulseIcon 1.8s infinite ease-in-out;
+}
+
+@keyframes pulseIcon {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.18); opacity: 1; }
+}
+
+/* Lista de Benefícios VIP da interface de Atração */
+#profileVip .vip-preview-benefits .bg-light {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s ease;
+}
+
+#profileVip .vip-preview-benefits .bg-light:hover {
+  transform: translateX(4px);
+  background-color: #f1f5f9;
+}
+
+/* Box de Preview Real da Mensagem */
+/* Box de Preview Real da Mensagem - Fixado no topo para UX Mobile */
+/* Box de Preview Real da Mensagem - Fixado e Isolado com Sucesso */
+#profileVip .vip-preview-box {
+  border: 1px dashed rgba(111, 66, 193, 0.3);
+  background-color: #fdfbfe; /* Mantém a cor sólida para cobrir os elementos que sobem */
+  
+  position: sticky;
+  top: 0;
+  z-index: 20; /* Camada superior para empurrar as cores para trás dele */
+  
+  margin-bottom: 16px;
+  border-radius: 12px;
+}
+
+/* Força os elementos que sobem na rolagem a passarem por baixo do Preview */
+#profileVip .vip-control-card {
+  position: relative;
+  z-index: 5; /* Camada inferior à do preview fixo */
+}
+
+/* CARDS INDIVIDUAIS DE CONFIGURAÇÃO VIP (UX MOBILE) */
+#profileVip .vip-control-card {
+  border: 1px solid rgba(111, 66, 193, 0.14);
+  background-color: #ffffff; 
+  border-radius: 16px; 
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03); 
+  padding: 16px;
+  margin-bottom: 12px; 
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#profileVip .vip-control-card:focus-within {
+  border-color: #6f42c1;
+  box-shadow: 0 4px 14px rgba(111, 66, 193, 0.1);
+}
+
+/* Customização Estética dos Dropdowns nativos do Bootstrap */
+#profileVip .vip-control-card .form-select-sm {
+  height: 42px; 
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 13.5px;
+  color: #0f172a;
+  background-color: #f8fafc;
+  padding-left: 10px;
+}
+
+#profileVip .vip-control-card .form-select-sm:focus {
+  border-color: #6f42c1;
+  box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.15);
+}
+
+/* Títulos internos h6 e labels */
+#profileVip .vip-control-card h6 {
+  font-size: 14px;
+  color: #1e1b4b;
+  margin-bottom: 12px;
+}
+
+#profileVip .vip-control-card label {
+  font-weight: 600;
+  color: #475569; 
+  margin-bottom: 5px;
+}
+
+/* Customização Limpa do Seletor de Cores Sólidas */
+#profileVip .vip-control-card .form-control-color {
+  width: 44px; 
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  padding: 3px;
+  cursor: pointer;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* ========================================================================= 
+   MÓDULO DE FONTES E DEGRADÊS - EXCLUSIVO PARA AS LETRAS DO NOME (#vipPreviewName)
+   ========================================================================= */
+
+/* Regra reativa: a transparência e mascaramento de texto SÓ se ativam se houver classe de degradê */
+#profileVip #vipPreviewName[class*="nick-gradient-"],
+#profileVip #vipPreviewName[class*="nick-anim-"] {
+  display: inline-block;
+  background-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* --- DEGRADÊS ESTÁTICOS SÓ NAS LETRAS --- */
+#profileVip #vipPreviewName.nick-gradient-blue-purple { background-image: linear-gradient(135deg, #0d6efd, #a020f0); }
+#profileVip #vipPreviewName.nick-gradient-gold { background-image: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); font-weight: bold; }
+#profileVip #vipPreviewName.nick-gradient-sunset { background-image: linear-gradient(135deg, #ff512f, #dd2476); }
+#profileVip #vipPreviewName.nick-gradient-ocean { background-image: linear-gradient(135deg, #02aab0, #00cdac); }
+#profileVip #vipPreviewName.nick-gradient-forest { background-image: linear-gradient(135deg, #11998e, #38ef7d); }
+#profileVip #vipPreviewName.nick-gradient-ruby { background-image: linear-gradient(135deg, #cb2d3e, #ef473a); }
+#profileVip #vipPreviewName.nick-gradient-cyberpunk { background-image: linear-gradient(135deg, #f12711, #f5af19); }
+#profileVip #vipPreviewName.nick-gradient-cotton { background-image: linear-gradient(135deg, #ff9a9e, #fecfef); }
+#profileVip #vipPreviewName.nick-gradient-lavender { background-image: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+#profileVip #vipPreviewName.nick-gradient-fire { background-image: linear-gradient(135deg, #f12711, #f5af19); }
+#profileVip #vipPreviewName.nick-gradient-platinum { background-image: linear-gradient(135deg, #757f9a, #d7dde8); }
+#profileVip #vipPreviewName.nick-gradient-vintage { background-image: linear-gradient(135deg, #ca7345, #735135); }
+#profileVip #vipPreviewName.nick-gradient-bubblegum { background-image: linear-gradient(135deg, #ff00cc, #333399); }
+#profileVip #vipPreviewName.nick-gradient-galaxy { background-image: linear-gradient(135deg, #654ea3, #eaafc8); }
+#profileVip #vipPreviewName.nick-gradient-mint { background-image: linear-gradient(135deg, #00c6ff, #0072ff); }
+
+/* --- RECURSOS ANIMADOS SÓ NAS LETRAS --- */
+/* --- RECURSOS ANIMADOS SÓ NAS LETRAS COM CONTORNO E NEON GLOW --- */
+#profileVip #vipPreviewName.nick-gradient-neon { background-image: linear-gradient(90deg, #ff007f, #39ff14, #00f0ff, #ff007f); background-size: 300% 100%; animation: nameFlowAnim 4s linear infinite; filter: drop-shadow(0px 0px 3px rgba(57, 255, 20, 0.6)); }
+#profileVip #vipPreviewName.nick-anim-rainbow { background-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet, red); background-size: 300% 100%; animation: nameFlowAnim 3s linear infinite; filter: drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.5)); }
+#profileVip #vipPreviewName.nick-anim-aurora { background-image: linear-gradient(90deg, #0575e6, #00f260, #0575e6); background-size: 200% 100%; animation: nameFlowAnim 5s ease infinite; filter: drop-shadow(0px 0px 3px rgba(0, 242, 96, 0.5)); }
+#profileVip #vipPreviewName.nick-anim-magma { background-image: linear-gradient(90deg, #f12711, #f5af19, #f12711); background-size: 200% 100%; animation: nameFlowAnim 2.5s ease infinite; filter: drop-shadow(0px 0px 3px rgba(241, 39, 17, 0.7)); }
+#profileVip #vipPreviewName.nick-anim-matrix { background-image: linear-gradient(90deg, #00FF00, #003300, #00FF00); background-size: 200% 100%; animation: nameFlowAnim 4s linear infinite; -webkit-text-stroke: 0.5px #003300; }
+#profileVip #vipPreviewName.nick-anim-electric { background-image: linear-gradient(90deg, #00ffff, #ffffff, #0072ff, #00ffff); background-size: 300% 100%; animation: nameFlowAnim 1.5s linear infinite; filter: drop-shadow(0px 0px 4px rgba(0, 240, 255, 0.8)); }
+#profileVip #vipPreviewName.nick-anim-gold-flow { background-image: linear-gradient(90deg, #bf953f, #aa771c, #fcf6ba, #bf953f); background-size: 300% 100%; animation: nameFlowAnim 3s linear infinite; font-weight: bold; -webkit-text-stroke: 0.3px #543d0c; }
+#profileVip #vipPreviewName.nick-anim-glitch { background-image: linear-gradient(90deg, #2b2b2b, #ff0000, #00ffff, #2b2b2b); background-size: 300% 100%; animation: nameFlowAnim 1s steps(4) infinite; }
+#profileVip #vipPreviewName.nick-anim-ice { background-image: linear-gradient(90deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa); background-size: 300% 100%; animation: nameFlowAnim 4s ease infinite; filter: drop-shadow(0px 0px 3px rgba(128, 222, 234, 0.6)); }
+#profileVip #vipPreviewName.nick-anim-vampire { background-image: linear-gradient(90deg, #4a0000, #ff0000, #4a0000); background-size: 200% 100%; animation: nameFlowAnim 3s ease-in-out infinite; -webkit-text-stroke: 0.5px #110000; }
+#profileVip #vipPreviewName.nick-anim-candy { background-image: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c); background-size: 200% 100%; animation: nameFlowAnim 3s linear infinite; filter: drop-shadow(0px 0px 3px rgba(255, 126, 179, 0.6)); }
+#profileVip #vipPreviewName.nick-anim-toxic { background-image: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f); background-size: 200% 100%; animation: nameFlowAnim 2s linear infinite; filter: drop-shadow(0px 0px 4px rgba(168, 255, 120, 0.7)); }
+#profileVip #vipPreviewName.nick-anim-shadow { background-image: linear-gradient(90deg, #000000, #434343, #000000); background-size: 200% 100%; animation: nameFlowAnim 5s linear infinite; -webkit-text-stroke: 0.5px #ffffff; }
+#profileVip #vipPreviewName.nick-anim-miami { background-image: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe); background-size: 200% 100%; animation: nameFlowAnim 3s ease-in-out infinite; filter: drop-shadow(0px 0px 3px rgba(0, 242, 254, 0.6)); }
+#profileVip #vipPreviewName.nick-anim-phoenix { background-image: linear-gradient(90deg, #f857a6, #ff5858, #f857a6); background-size: 200% 100%; animation: nameFlowAnim 2.5s ease infinite; filter: drop-shadow(0px 0px 4px rgba(255, 88, 88, 0.6)); }
+@keyframes nameFlowAnim {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+/* Força os estilos de fonte reativos do select inline a dominarem de forma limpa */
+#profileVip #vipPreviewName[style*="font-family"] {
+  display: inline-block;
+}
+
+/* ========================================================================= 
+   MOLDURAS E CAPAS EXCLUSIVAS (AVATAR FRAMES)
+   ========================================================================= */
+/* ========================================================================= 
+   MOLDURAS EXCLUSIVAS (AVATAR FRAMES - APLICAÇÃO EM TEMPO REAL)
+   ========================================================================= */
+#profileVip .frame-gold {
+  border: 3px solid #ffd700;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
+
+#profileVip .frame-neon-pulse {
+  border: 3px solid #39ff14;
+  animation: neonPulse 1.5s infinite alternate;
+}
+
+#profileVip .frame-rainbow {
+  border: 3px solid transparent;
+  background-image: linear-gradient(#fff, #fff), linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  animation: rainbowSpin 4s linear infinite;
+}
+
+@keyframes rainbowSpin {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+#profileVip .frame-diamond {
+  border: 3px solid #00f0ff;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5), inset 0 0 5px rgba(0, 240, 255, 0.3);
+  background-image: radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+/* ========================================================================= 
+   CAPAS DE PERFIL / BANNER DOS VIP (SUPORTE PARA PERFIL REAL E MINI-PREVIEW)
+   ========================================================================= */
+
+/* Capa Roxo Espacial */
+.banner-grad-purple,
+#profileVip #vipPreviewBanner.banner-grad-purple {
+  background: linear-gradient(135deg, #1e0034 0%, #44006b 50%, #1e0034 100%);
+}
+
+/* Capa Ouro com Glitter */
+.banner-grad-gold,
+#profileVip #vipPreviewBanner.banner-grad-gold {
+  background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728);
+}
+
+/* Capa Aurora Boreal Animada */
+.banner-anim-aurora,
+#profileVip #vipPreviewBanner.banner-anim-aurora {
+  background: linear-gradient(270deg, #0575e6, #00f260, #0575e6);
+  background-size: 200% 200%;
+  animation: auroraFlow 8s ease infinite;
+}
+
+/* ========================================================================= 
+   PROJETO VIP PREMIUM - 30 CLASSES EXCLUSIVAS PARA AS CAPAS DE PERFIL (BANNERS)
+   ========================================================================= */
+
+/* ─── 15 CAPAS COM DEGRADÊS ESTÁTICOS DE ELITE ─── */
+.banner-grad-purple, #profileVip #vipPreviewBanner.banner-grad-purple { background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #1e1b4b 100%); }
+.banner-grad-gold, #profileVip #vipPreviewBanner.banner-grad-gold { background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 50%, #b38728 100%); }
+.banner-grad-sunset, #profileVip #vipPreviewBanner.banner-grad-sunset { background: linear-gradient(135deg, #ff512f 0%, #dd2476 100%); }
+.banner-grad-ocean, #profileVip #vipPreviewBanner.banner-grad-ocean { background: linear-gradient(135deg, #02aab0 0%, #00cdac 100%); }
+.banner-grad-emerald, #profileVip #vipPreviewBanner.banner-grad-emerald { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+.banner-grad-ruby, #profileVip #vipPreviewBanner.banner-grad-ruby { background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%); }
+.banner-grad-cyberpunk, #profileVip #vipPreviewBanner.banner-grad-cyberpunk { background: linear-gradient(135deg, #f12711 0%, #f5af19 100%); }
+.banner-grad-cotton, #profileVip #vipPreviewBanner.banner-grad-cotton { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+.banner-grad-lavender, #profileVip #vipPreviewBanner.banner-grad-lavender { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+.banner-grad-fire, #profileVip #vipPreviewBanner.banner-grad-fire { background: linear-gradient(135deg, #ff0000 0%, #ff7300 50%, #ffcc00 100%); }
+.banner-grad-platinum, #profileVip #vipPreviewBanner.banner-grad-platinum { background: linear-gradient(135deg, #757f9a 0%, #d7dde8 100%); }
+.banner-grad-vintage, #profileVip #vipPreviewBanner.banner-grad-vintage { background: linear-gradient(135deg, #ca7345 0%, #735135 100%); }
+.banner-grad-bubblegum, #profileVip #vipPreviewBanner.banner-grad-bubblegum { background: linear-gradient(135deg, #ff00cc 0%, #333399 100%); }
+.banner-grad-galaxy, #profileVip #vipPreviewBanner.banner-grad-galaxy { background: linear-gradient(135deg, #654ea3 0%, #eaafc8 100%); }
+.banner-grad-mint, #profileVip #vipPreviewBanner.banner-grad-mint { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); }
+
+/* ─── 15 CAPAS COM DEGRADÊS ANIMADOS PREMIUM ─── */
+.banner-anim-aurora, #profileVip #vipPreviewBanner.banner-anim-aurora { background: linear-gradient(270deg, #0575e6, #00f260, #0575e6); background-size: 400% 400%; animation: bannerMoveEngine 6s ease infinite; }
+.banner-anim-neon, #profileVip #vipPreviewBanner.banner-anim-neon { background: linear-gradient(270deg, #ff007f, #39ff14, #00f0ff, #ff007f); background-size: 400% 400%; animation: bannerMoveEngine 5s linear infinite; }
+.banner-anim-rainbow, #profileVip #vipPreviewBanner.banner-anim-rainbow { background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet, red); background-size: 400% 400%; animation: bannerMoveEngine 8s linear infinite; }
+.banner-anim-magma, #profileVip #vipPreviewBanner.banner-anim-magma { background: linear-gradient(270deg, #f12711, #f5af19, #f12711); background-size: 400% 400%; animation: bannerMoveEngine 4s ease infinite; }
+.banner-anim-matrix, #profileVip #vipPreviewBanner.banner-anim-matrix { background: linear-gradient(180deg, #001100, #00ff00, #001100); background-size: 100% 400%; animation: bannerMoveEngine 3s linear infinite; }
+.banner-anim-electric, #profileVip #vipPreviewBanner.banner-anim-electric { background: linear-gradient(270deg, #00ffff, #ffffff, #0072ff, #00ffff); background-size: 400% 400%; animation: bannerMoveEngine 2s linear infinite; }
+.banner-anim-gold-flow, #profileVip #vipPreviewBanner.banner-anim-gold-flow { background: linear-gradient(270deg, #bf953f, #aa771c, #fcf6ba, #bf953f); background-size: 400% 400%; animation: bannerMoveEngine 5s ease-in-out infinite; }
+.banner-anim-glitch, #profileVip #vipPreviewBanner.banner-anim-glitch { background: linear-gradient(270deg, #2b2b2b, #ff0000, #00ffff, #2b2b2b); background-size: 400% 400%; animation: bannerMoveEngine 1.5s steps(4) infinite; }
+.banner-anim-ice, #profileVip #vipPreviewBanner.banner-anim-ice { background: linear-gradient(270deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa); background-size: 400% 400%; animation: bannerMoveEngine 6s ease infinite; }
+.banner-anim-vampire, #profileVip #vipPreviewBanner.banner-anim-vampire { background: linear-gradient(270deg, #4a0000, #ff0000, #4a0000); background-size: 400% 400%; animation: bannerMoveEngine 4s ease-in-out infinite; }
+.banner-anim-candy, #profileVip #vipPreviewBanner.banner-anim-candy { background: linear-gradient(270deg, #ff758c, #ff7eb3, #ff758c); background-size: 400% 400%; animation: bannerMoveEngine 5s linear infinite; }
+.banner-anim-toxic, #profileVip #vipPreviewBanner.banner-anim-toxic { background: linear-gradient(270deg, #56ab2f, #a8ff78, #56ab2f); background-size: 400% 400%; animation: bannerMoveEngine 3s linear infinite; }
+.banner-anim-shadow, #profileVip #vipPreviewBanner.banner-anim-shadow { background: linear-gradient(270deg, #000000, #434343, #000000); background-size: 400% 400%; animation: bannerMoveEngine 7s linear infinite; }
+.banner-anim-miami, #profileVip #vipPreviewBanner.banner-anim-miami { background: linear-gradient(270deg, #00f2fe, #4facfe, #00f2fe); background-size: 400% 400%; animation: bannerMoveEngine 4s ease infinite; }
+.banner-anim-phoenix, #profileVip #vipPreviewBanner.banner-anim-phoenix { background: linear-gradient(270deg, #f857a6, #ff5858, #f857a6); background-size: 400% 400%; animation: bannerMoveEngine 5s ease infinite; }
+
+/* MOTOR DE RENDERIZAÇÃO E MOVIMENTO DOS DEGRADÊS ANIMADOS VIP */
+@keyframes bannerMoveEngine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+
+@keyframes rainbowSpin {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+#profileVip .frame-diamond {
+  border: 3px solid #00f0ff;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5), inset 0 0 5px rgba(0, 240, 255, 0.3);
+  background-image: radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+
+
+
+
+
+/* ========================================================================= 
+   PROJETO VIP PREMIUM - 4 MOLDURAS EXCLUSIVAS COM EFEITOS FÍSICOS TÁTEIS
+   ========================================================================= */
+
+/* 1. MOLDURA DE VIDRO LAPIDADO (GLASSMORPHISM 3D) */
+#profileVip .frame-glass-3d {
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+    0 4px 12px rgba(255, 255, 255, 0.25),
+    inset 0 4px 6px rgba(255, 255, 255, 0.3);
+}
+
+/* 2. ESTILO "CYBER" COM COMPONENTES TECNOLÓGICOS INDICADORES */
+#profileVip .frame-cyber-tech {
+  border: 2px dashed #00ffaa;
+  box-shadow: 0 0 8px rgba(0, 255, 170, 0.4);
+}
+#profileVip .frame-cyber-tech::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 255, 170, 0.3);
+}
+#profileVip .frame-cyber-tech::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: #ffffff;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 6px #00ffaa;
+}
+
+/* 3. MOLDURA SOMBRA DE ECLIPSE REAL (GLOW TRIDIMENSIONAL FOSCO) */
+#profileVip .frame-eclipse-shadow {
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  box-shadow: 
+    0 0 16px 4px rgba(0, 0, 0, 0.65),
+    inset 0 0 12px 6px rgba(0, 0, 0, 0.85);
+}
+
+/* 4. MOLDURA CROMADA METÁLICA REFLEXIVA (METAL LÍQUIDO) */
+#profileVip .frame-liquid-chrome {
+  border: 3px solid transparent;
+  background: 
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(135deg, #757f9a 0%, #ffffff 25%, #d7dde8 50%, #757f9a 75%, #ffffff 100%) border-box;
+  box-shadow: 
+    0 4px 10px rgba(0, 0, 0, 0.15),
+    inset 0 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+/* ========================================================================= 
+   PROJETO VIP PREMIUM - 4 CONTORNOS DE LUZ E ENERGIA EM TORNO DO AVATAR
+   ========================================================================= */
+
+/* 1. FOGO INCANDESCENTE (BRASAS DE PLASMA) */
+#profileVip .frame-plasma-fire {
+  border: 2px solid #ff4500;
+  box-shadow: 
+    0 0 10px #ff4500,
+    0 -4px 12px rgba(255, 69, 0, 0.65); /* Projeta o calor sutilmente para cima */
+}
+
+/* 2. NEON FIBRA ÓPTICA (LUZ INFINITA) */
+#profileVip .frame-fiber-neon {
+  border: 2px solid #00f0ff;
+  box-shadow: 
+    0 0 12px #00f0ff,
+    inset 0 0 4px #00f0ff;
+}
+
+/* 3. AURA PULSANTE (LUZ VITAL SEGURO MOBILE) */
+#profileVip .frame-aura-pulse {
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 8px #ffd700;
+  animation: auraPulseEngine 2s infinite ease-in-out;
+}
+@keyframes auraPulseEngine {
+  0%, 100% { box-shadow: 0 0 6px rgba(255, 215, 0, 0.4); border-color: rgba(255, 215, 0, 0.7); }
+  50% { box-shadow: 0 0 16px rgba(255, 215, 0, 0.9); border-color: rgba(255, 215, 0, 1); }
+}
+
+/* 4. FAÍSCAS ELÉTRICAS (ALTA VOLTAGEM) */
+#profileVip .frame-electric-spark {
+  border: 2px solid #7000ff;
+  box-shadow: 
+    0 0 8px #7000ff,
+    0 0 14px rgba(112, 0, 255, 0.5);
+}
+
+
+/* ========================================================================= 
+   DROPDOWNS E LISTAS INTERNAS MODERNAS DA SEÇÃO VIP
+   ========================================================================= */
+.vip-custom-select-btn {
+  width: 100%;
+  min-height: 44px;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 0 14px;
+  font-size: 13.5px;
+  color: #0f172a;
+  text-align: left;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.vip-custom-select-btn::after {
+  content: "➔";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  font-size: 10px;
+  color: #64748b;
+  transition: transform 0.2s ease;
+}
+
+.vip-custom-select-btn:focus {
+  border-color: #6f42c1;
+  box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.15);
+}
+
+.vip-custom-dropdown {
+  position: relative; /* Mudado de absolute para relative para expandir e empurrar para baixo */
+  margin-top: 8px;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.03); /* Sombra interna mais sutil para o efeito de expansão */
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 6px;
+  z-index: 5;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.vip-dropdown-option {
+  width: 100%;
+  padding: 9px 12px;
+  text-align: left;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.vip-dropdown-option:hover {
+  background: #f3edff;
+  color: #6f42c1;
+}
+
+.vip-dropdown-option.active {
+  background: #6f42c1;
+  color: #ffffff;
 }

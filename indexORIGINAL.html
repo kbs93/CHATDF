@@ -16,13 +16,11 @@
 <!------fonte pra textos-->
 <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-<!-- Carga de Fontes de Elite para Customização VIP do Chat-DF -->
-<!-- Importação de Fontes VIP Corrigida e Mapeada para o Chat-DF -->
-  
+<link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-<link href="styles.css?v=2" rel="stylesheet">
+<link href="styles.css" rel="stylesheet">
 
 <!-- Caminhos RELATIVOS corretos -->
 <script type="module" src="./js/salas.js"></script>
@@ -512,34 +510,19 @@ aria-expanded="false">
     
     </div>
 
-<!---====================== 16-07-26 ADICIONANDO NOVO PAINEL VIP ===================---->
-<div class="profile-tabs d-flex justify-content-center align-items-center gap-1 py-2">
-      <button class="profile-tab active px-3 py-1.5" data-tab="info" type="button" style="border-radius: 20px;">Info</button>
-      <button class="profile-tab px-3 py-1.5  border-0" data-tab="edit" type="button" style="color: #666;">Editar perfil</button>
+    <div class="profile-tabs">
+      <button class="profile-tab active" data-tab="info" type="button">Info</button>
+      <button class="profile-tab" data-tab="edit" type="button">Editar perfil</button>
     </div>
-    
-    <div class="profile-content px-3">
+    <div class="profile-content">
       <!-- INFO -->
-  <!-- INFO -->
-     <!-- INFO -->
-      <div class="profile-section active" id="profileInfo">
-        <p class="m-0 py-1 d-flex align-items-center gap-2">
-          <i class="bi bi-geo-alt text-secondary fs-5"></i>
-          <strong>Cidade:</strong> <span id="profileCity">-</span>
-        </p>
-        <p class="m-0 py-1 d-flex align-items-center gap-2">
-          <i class="bi bi-calendar-heart text-secondary fs-5"></i>
-          <strong>Idade:</strong> <span id="profileAge">-</span>
-        </p>
-        <p class="m-0 py-1 d-flex align-items-center gap-2">
-          <i class="bi bi-gender-ambiguous text-secondary fs-5"></i>
-          <strong>Gênero:</strong> <span id="profileGender">-</span>
-        </p>
-        <p class="m-0 py-1 d-flex align-items-center gap-2">
-          <i class="bi bi-person-check text-secondary fs-5"></i>
-          <strong>Membro desde:</strong> <span id="profileMemberSince">-</span>
-        </p>
-      </div>
+    <div class="profile-section active" id="profileInfo">
+  <p><strong>Cidade:</strong> <span id="profileCity">-</span></p>
+  <p><strong>Idade:</strong> <span id="profileAge">-</span></p>
+  <p><strong>Gênero:</strong> <span id="profileGender">-</span></p>
+  <p><strong>Membro desde:</strong> <span id="profileMemberSince">-</span></p>
+</div>
+
       <!-- EDITAR -->
 <div class="profile-section" id="profileEdit">
   <label class="profile-field">

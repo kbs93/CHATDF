@@ -312,7 +312,22 @@ document.addEventListener("chatdf:open-profile", async () => {
 // =====esse script  BOTÃO HERO "FAÇA LOGIN" e desee html  <a href="#" class="btn btn-outline-light btn-lg fw-bold open-login">Faça login</a>=====
 // 06-06-26 abre o modal de privacidade ao clicar no link "Política de Privacidade" do rodapé
 
+//16-07-26  Adicionado: Clique no botão VIP para liberar as configurações e o Preview na mesma hora
 document.addEventListener("click", (e) => {
+  // Captura o clique do botão VIP para liberar as configurações e o Preview na mesma hora
+  const vipBuyBtn = e.target.closest("#btnBuyVip");
+  if (vipBuyBtn) {
+    e.preventDefault();
+    const promoSec = document.getElementById("vipPromoSection");
+    const settingsSec = document.getElementById("vipSettingsSection");
+    
+    if (promoSec && settingsSec) {
+      promoSec.classList.add("d-none");
+      settingsSec.classList.remove("d-none");
+    }
+    return;
+  }
+
   const btn = e.target.closest(".open-login");
   if (btn) {
     e.preventDefault();
@@ -321,7 +336,7 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-// Ação para abrir a Modal de Política de Privacidade
+  // Ação para abrir a Modal de Política de Privacidade
   const openPrivacyBtn = e.target.closest("#openPrivacyModalBtn");
   if (openPrivacyBtn) {
     e.preventDefault();
@@ -346,8 +361,6 @@ document.addEventListener("click", (e) => {
     }
     return;
   }
-
-
 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -1335,11 +1348,13 @@ se for dono, mostra edição
 se for outro usuário, esconde edição.*/
 
 // 13-07-26 melhoria para travar edição de perfil quando estiver bloqueado por dias
+// 13-07-26 melhoria para travar edição de perfil quando estiver bloqueado por dias
 function applyProfileMode(isOwner) {
   currentProfileIsOwner = isOwner;
   
   const reportBtn = document.getElementById("reportUserBtn");
   const uploadPhotoBtn = document.getElementById("btnUploadPhoto");
+  const vipTabBtn = document.querySelector('.profile-tab[data-tab="vip"]');
   const lockDaysText = `${PROFILE_EDIT_COOLDOWN_DAYS} dia(s)`;
   let isLocked = false;
 
@@ -1349,23 +1364,15 @@ function applyProfileMode(isOwner) {
     isLocked = remainingDays > 0;
   }
 
-  // Reseta estados das abas
-  tabs.forEach(t => t.classList.remove("active"));
-  sections.forEach(s => {
-    s.classList.remove("active");
-    s.classList.remove("hidden");
-    s.hidden = false;
-    s.style.display = "";
-  });
-
-  profileInfoTab?.classList.add("active");
-  profileInfoSection?.classList.add("active");
-
-if (isOwner) {
-    // 13-07-2026 melhoria para travar edição de perfil quando estiver bloqueado por dias
-    // Se o perfil for meu, esconde a bandeira nativamente para não piscar
-    // 15-07-2026 TRAVA DOS BOTAO camera, lapis, editar perfil 
+  // Removido o loop cego que limpava e forçava a aba info toda vez que o Firebase atualizava dados
+  if (isOwner) {
     if (reportBtn) reportBtn.style.display = "none";
+
+    if (vipTabBtn) {
+      vipTabBtn.hidden = false;
+      vipTabBtn.style.display = "block";
+      vipTabBtn.classList.remove("hidden");
+    }
 
     if (!isLocked) {
       if (uploadPhotoBtn) {
@@ -1375,122 +1382,30 @@ if (isOwner) {
       }
       if (profileEditTab) {
         profileEditTab.hidden = false;
-        profileEditTab.style.display = "";
-        profileEditTab.classList.remove("hidden", "active");
-      }
-      if (profileEditSection) {
-        profileEditSection.hidden = false;
-        profileEditSection.style.display = "";
-        profileEditSection.classList.remove("hidden", "active");
-      }
-      if (saveProfileBtn) {
-        saveProfileBtn.hidden = false;
-        saveProfileBtn.style.display = "";
-        saveProfileBtn.classList.remove("hidden");
-      }
-      if (editProfileCoverBtn) {
-        editProfileCoverBtn.hidden = false;
-        editProfileCoverBtn.style.display = "";
-        editProfileCoverBtn.classList.remove("hidden");
+        profileEditTab.style.display = "block";
+        profileEditTab.classList.remove("hidden");
       }
       editName?.removeAttribute("disabled");
       editCity?.removeAttribute("disabled");
       editMood?.removeAttribute("disabled");
     } else {
-      // Se estiver bloqueado por dias - Aplica também ao botão da câmera da foto
       if (uploadPhotoBtn) {
-        uploadPhotoBtn.classList.remove("hidden");
         uploadPhotoBtn.style.opacity = "0.45";
         uploadPhotoBtn.style.cursor = "not-allowed";
       }
       if (profileEditTab) {
-        profileEditTab.hidden = false;
-        profileEditTab.style.display = "";
-        profileEditTab.classList.remove("hidden");
         profileEditTab.style.opacity = "0.45";
-        profileEditTab.style.pointerEvents = "";
       }
-      if (editProfileCoverBtn) {
-        editProfileCoverBtn.hidden = false;
-        editProfileCoverBtn.style.display = "";
-        editProfileCoverBtn.classList.remove("hidden");
-        editProfileCoverBtn.style.opacity = "0.45";
-        editProfileCoverBtn.style.pointerEvents = "";
-        editProfileCoverBtn.title = `Liberado em ${lockDaysText}`;
-      }
-      if (saveProfileBtn) {
-        saveProfileBtn.style.opacity = "0.45";
-        saveProfileBtn.style.pointerEvents = "none";
-      }
-    }}
-    
-    else {
-    // Se for perfil de OUTRO usuário, exibe a bandeira de forma estável e garante que esteja ativa para cliques 13-07-26
-    if (reportBtn) {
-      reportBtn.style.display = "flex";
-      reportBtn.style.opacity = "1";
-      reportBtn.style.pointerEvents = "auto";
-      reportBtn.removeAttribute("disabled");
     }
+  } else {
+    if (reportBtn) reportBtn.style.display = "flex";
     if (uploadPhotoBtn) uploadPhotoBtn.classList.add("hidden");
 
-    // Oculta abas de edição para visitantes
-
-    // Oculta abas de edição para visitantes
- 
-
-    // Oculta abas de edição para visitantes
-    if (profileEditTab) {
-      profileEditTab.classList.remove("active");
-      profileEditTab.classList.add("hidden");
-      profileEditTab.hidden = true;
-      profileEditTab.style.display = "none";
-    }
-    if (profileEditSection) {
-      profileEditSection.classList.remove("active");
-      profileEditSection.classList.add("hidden");
-      profileEditSection.hidden = true;
-      profileEditSection.style.display = "none";
-    }
-    if (saveProfileBtn) {
-      saveProfileBtn.classList.add("hidden");
-      saveProfileBtn.hidden = true;
-      saveProfileBtn.style.display = "none";
-    }
-    if (editProfileCoverBtn) {
-      editProfileCoverBtn.classList.add("hidden");
-      editProfileCoverBtn.hidden = true;
-      editProfileCoverBtn.style.display = "none";
-    }
-    editName?.setAttribute("disabled", "disabled");
-    editCity?.setAttribute("disabled", "disabled");
-    editMood?.setAttribute("disabled", "disabled");
-  }
-
-  // Mantém sua validação final de trava de edição ativa
-  if (isOwner && isProfileEditLocked) {
-    if (profileEditTab) {
-      profileEditTab.hidden = false;
-      profileEditTab.style.display = "";
-      profileEditTab.style.opacity = "0.45";
-      profileEditTab.style.cursor = "not-allowed";
-    }
-    if (editProfileCoverBtn) {
-      editProfileCoverBtn.hidden = false;
-      editProfileCoverBtn.style.display = "";
-      editProfileCoverBtn.style.opacity = "0.45";
-      editProfileCoverBtn.style.cursor = "not-allowed";
-    }
-    if (editName) editName.disabled = true;
-    if (editCity) editCity.disabled = true;
-    if (editMood) editMood.disabled = true;
-    if (saveProfileBtn) {
-      saveProfileBtn.disabled = true;
-      saveProfileBtn.style.opacity = "0.45";
-      saveProfileBtn.style.cursor = "not-allowed";
-    }
+    if (vipTabBtn) vipTabBtn.style.display = "none";
+    if (profileEditTab) profileEditTab.style.display = "none";
   }
 }
+
 
 
 
@@ -1507,28 +1422,264 @@ if (isOwner) {
 const tabs = document.querySelectorAll(".profile-tab");
 const sections = document.querySelectorAll(".profile-section");
 
-
 // ----------------- ABAS ------------------
+// ----------------- ABAS REESTRUTURADAS (INCLUINDO VIP COM PREVIEW) ------------------
+// ----------------- ABAS REESTRUTURADAS (TOTALMENTE INDEPENDENTES) ------------------
+// =================================== REESTRUTURAÇÃO DAS ABAS E MOTOR VIP DEFINITIVO ===================================
 tabs.forEach(tab => {
-  //editado 23-04-26
- tab.addEventListener("click", () => {
-  if (
-    isProfileEditLocked &&
-    tab.dataset.tab === "edit"
-  ) {
-    showToast(`Você poderá editar novamente em ${profileEditRemainingDays} dia(s).`);
-    return;
-  }
-    tabs.forEach(t => t.classList.remove("active"));
-    sections.forEach(s => s.classList.remove("active"));
+  tab.addEventListener("click", () => {
+    const target = tab.dataset.tab;
+
+    if (target === "edit" && isProfileEditLocked) {
+      showToast(`Você poderá editar novamente em ${profileEditRemainingDays} dia(s).`);
+      return;
+    }
+
+    tabs.forEach(t => {
+      t.classList.remove("active");
+      if (t.dataset.tab === "edit" || t.dataset.tab === "vip") {
+        t.style.background = "transparent";
+        t.style.color = "#666";
+      }
+    });
+
+    sections.forEach(s => {
+      s.classList.remove("active");
+      s.classList.add("hidden");
+      s.style.setProperty("display", "none", "important"); // Destrói heranças invisíveis do Bootstrap
+    });
 
     tab.classList.add("active");
 
-    const target = tab.dataset.tab;
-    document.getElementById(
-      target === "info" ? "profileInfo" : "profileEdit"
-    )?.classList.add("active");
+    let sectionId = "profileInfo";
+    if (target === "edit") sectionId = "profileEdit";
+    if (target === "vip") sectionId = "profileVip";
+
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+      targetSection.classList.remove("hidden");
+      targetSection.classList.add("active");
+      targetSection.style.setProperty("display", "block", "important"); // Força a renderização
+    }
+
+    if (target === "vip") {
+      inicializarPainelVipDinamico();
+    }
   });
+});
+
+function inicializarPainelVipDinamico() {
+  const promoSec = document.getElementById("vipPromoSection");
+  const settingsSec = document.getElementById("vipSettingsSection");
+  const expiryRow = document.getElementById("vipExpiryRow");
+
+  // Força a exibição da Seção 2 diretamente ao clicar na aba VIP, pulando travas do Firestore
+  if (promoSec) { promoSec.classList.add("d-none"); promoSec.style.setProperty("display", "none", "important"); }
+  if (settingsSec) { settingsSec.classList.remove("d-none"); settingsSec.style.setProperty("display", "block", "important"); }
+  if (expiryRow) { expiryRow.classList.remove("d-none"); expiryRow.style.setProperty("display", "block", "important"); }
+
+  // Renderização estável dos quadradinhos da paleta de cores do Nome VIP
+  const vipNameGrid = document.getElementById("vipNameColorGrid");
+  if (vipNameGrid && vipNameGrid.children.length === 0) {
+    vipNameGrid.innerHTML = "";
+    textColorPalette.forEach(color => {
+      if (!color || color === "<br>") return;
+      const box = document.createElement("div");
+      box.className = "color-box";
+      box.style.width = "32px";
+      box.style.height = "32px";
+      box.style.backgroundColor = color;
+      box.style.borderRadius = "6px";
+      box.style.cursor = "pointer";
+      box.style.display = "inline-block";
+      box.style.margin = "3px";
+      box.dataset.color = color;
+      box.innerHTML = `<span class="color-check" style="display:none; color:#fff; text-align:center; line-height:32px;">✓</span>`;
+      vipNameGrid.appendChild(box);
+    });
+  }
+
+  // Renderização estável dos quadradinhos da paleta de cores da Mensagem VIP
+  const vipMsgGrid = document.getElementById("vipMsgColorGrid");
+  if (vipMsgGrid && vipMsgGrid.children.length === 0) {
+    vipMsgGrid.innerHTML = "";
+    textColorPalette.forEach(color => {
+      if (!color || color === "<br>") return;
+      const box = document.createElement("div");
+      box.className = "color-box";
+      box.style.width = "32px";
+      box.style.height = "32px";
+      box.style.backgroundColor = color;
+      box.style.borderRadius = "6px";
+      box.style.cursor = "pointer";
+      box.style.display = "inline-block";
+      box.style.margin = "3px";
+      box.dataset.color = color;
+      box.innerHTML = `<span class="color-check" style="display:none; color:#fff; text-align:center; line-height:32px;">✓</span>`;
+      vipMsgGrid.appendChild(box);
+    });
+  }
+
+  const previewName = document.getElementById("vipPreviewName");
+  const previewAvatar = document.getElementById("vipPreviewAvatar");
+  
+  if (previewName) previewName.textContent = editName?.value || "Usuário";
+  if (previewAvatar) previewAvatar.src = selectedProfileAvatar || "./img/avatar.png";
+
+  vincularEventosPreviewVip();
+}
+
+window.__vipMENSAGEM_COR_SELECIONADA = "#333333";
+window.__vipNOME_COR_SELECIONADA = "#6f42c1";
+
+function vincularEventosPreviewVip() {
+  const typeSelect = document.getElementById("vipNameColorType");
+  const fontSelect = document.getElementById("vipNameFont");
+  const frameSelect = document.getElementById("vipAvatarFrameSelect");
+  const bannerSelect = document.getElementById("vipProfileBannerSelect");
+  
+  const previewName = document.getElementById("vipPreviewName");
+  const previewText = document.getElementById("vipPreviewText");
+  const previewFrame = document.getElementById("vipPreviewFrame");
+  const previewBanner = document.getElementById("vipPreviewBanner");
+  const solidWrapper = document.getElementById("vipSolidColorWrapper");
+  const vipMsgGrid = document.getElementById("vipMsgColorGrid");
+  const vipNameGrid = document.getElementById("vipNameColorGrid");
+
+  const atualizarSimulacao = () => {
+    if (!previewName || !previewText || !previewFrame) return;
+
+    previewName.className = "fw-bold"; 
+    previewName.style.background = "";
+    previewName.style.webkitBackgroundClip = "";
+    previewName.style.webkitTextFillColor = "";
+
+    if (typeSelect && typeSelect.value === "solid") {
+      if (solidWrapper) solidWrapper.style.setProperty("display", "block", "important");
+      previewName.style.color = window.__vipNOME_COR_SELECIONADA;
+    } else if (typeSelect) {
+      if (solidWrapper) solidWrapper.style.setProperty("display", "none", "important");
+      previewName.classList.add(`nick-${typeSelect.value}`);
+    }
+
+    if (fontSelect) {
+      if (fontSelect.value === "default") {
+        previewName.style.fontFamily = "inherit";
+      } else {
+        let herancaTipo = "sans-serif";
+        if (["Courgette", "Lobster", "Bangers", "Pacifico", "Satisfy"].includes(fontSelect.value)) {
+          herancaTipo = "cursive";
+        }
+        previewName.style.fontFamily = `'${fontSelect.value}', ${herancaTipo}`;
+      }
+    }
+    
+    previewText.style.color = window.__vipMENSAGEM_COR_SELECIONADA;
+
+    previewFrame.className = "position-absolute top-0 start-0 w-100 h-100 rounded-circle";
+    if (frameSelect && frameSelect.value !== "none") {
+      previewFrame.classList.add(frameSelect.value);
+    }
+
+    if (previewBanner && bannerSelect) {
+      previewBanner.className = "mb-3";
+      if (bannerSelect.value === "default") {
+        previewBanner.style.background = "#8b898963";
+      } else {
+        previewBanner.style.background = "";
+        previewBanner.classList.add(bannerSelect.value);
+      }
+    }
+  };
+
+  vipNameGrid?.addEventListener("click", (e) => {
+    const box = e.target.closest(".color-box");
+    if (!box) return;
+    window.__vipNOME_COR_SELECIONADA = box.dataset.color;
+    vipNameGrid.querySelectorAll(".color-box").forEach(b => {
+      b.classList.remove("selected");
+      const c = b.querySelector(".color-check");
+      if(c) c.style.display = "none";
+    });
+    box.classList.add("selected");
+    const check = box.querySelector(".color-check");
+    if(check) check.style.display = "block";
+    atualizarSimulacao();
+  });
+
+  vipMsgGrid?.addEventListener("click", (e) => {
+    const box = e.target.closest(".color-box");
+    if (!box) return;
+    window.__vipMENSAGEM_COR_SELECIONADA = box.dataset.color;
+    vipMsgGrid.querySelectorAll(".color-box").forEach(b => {
+      b.classList.remove("selected");
+      const c = b.querySelector(".color-check");
+      if(c) c.style.display = "none";
+    });
+    box.classList.add("selected");
+    const check = box.querySelector(".color-check");
+    if(check) check.style.display = "block";
+    atualizarSimulacao();
+  });
+
+  [typeSelect, fontSelect, frameSelect, bannerSelect].forEach(element => {
+    element?.addEventListener("change", atualizarSimulacao);
+  });
+
+  atualizarSimulacao();
+}
+
+// Vincula a gravação dos dados VIP ao botão de Salvar exclusivo
+document.getElementById("btnSaveVipSettings")?.addEventListener("click", async () => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  try {
+    showToast("Gravando configurações VIP...");
+    const refUser = doc(db, "users", user.uid);
+
+await updateDoc(refUser, {
+      vipNameColorType: document.getElementById("vipNameColorType").value,
+      vipNameColorSolid: document.getElementById("vipNameColorPicker").value,
+      vipNameFont: document.getElementById("vipNameFont").value,
+      vipMsgColor: window.__vipMENSAGEM_COR_SELECIONADA, // Salva o valor da paleta nativa mobile friendly!
+      vipAvatarFrame: document.getElementById("vipAvatarFrameSelect").value,
+      vipProfileBanner: document.getElementById("vipProfileBannerSelect").value
+    });
+
+    showToast("Vantagens VIP salvas e aplicadas com sucesso!");
+    inicializarPainelVipDinamico();
+  } catch (err) {
+    console.error("Erro ao salvar dados VIP:", err);
+    showToast("Erro ao salvar configurações.");
+  }
+});
+
+
+// Vincula a gravação dos dados VIP ao botão de Salvar exclusivo
+document.getElementById("btnSaveVipSettings")?.addEventListener("click", async () => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  try {
+    showToast("Gravando configurações VIP...");
+    const refUser = doc(db, "users", user.uid);
+
+ await updateDoc(refUser, {
+  vipNameColorType: document.getElementById("vipNameColorType").value,
+  vipNameColorSolid: window.__vipNOME_COR_SELECIONADA || "#6f42c1", // Salva a cor do quadradinho do nome
+  vipNameFont: document.getElementById("vipNameFont").value,
+  vipMsgColor: window.__vipMENSAGEM_COR_SELECIONADA || "#333333", // Salva a cor do quadradinho do texto
+  vipAvatarFrame: document.getElementById("vipAvatarFrameSelect").value,
+  vipProfileBanner: document.getElementById("vipProfileBannerSelect").value
+});
+
+    showToast("Vantagens VIP salvas e aplicadas com sucesso!");
+    inicializarPainelVipDinamico();
+  } catch (err) {
+    console.error("Erro ao salvar dados VIP:", err);
+    showToast("Erro ao salvar configurações.");
+  }
 });
 
 // --------------- ABRIR / FECHAR ------------------
@@ -2526,4 +2677,54 @@ canvas.toBlob((blob) => {
 
     }, "image/jpeg", 0.85);
   });
+});
+
+
+
+//=============== 18-07-26  NOVO SELETOR DE CIDADE E GÊNERO ESTILIZADO  DENTRO DO BOTAO VIP =====================
+// CORREÇÃO DOS DROPDOWNS VIP (EXPANDIR PARA BAIXO E PEGAR TODOS OS BOTÕES)
+document.querySelectorAll('.vip-custom-dropdown').forEach(dropdown => {
+  const wrapper = dropdown.parentElement;
+  const btn = wrapper.querySelector('.vip-custom-select-btn');
+  const selectNativo = wrapper.querySelector('select');
+
+  if (btn && selectNativo) {
+    // Clique para abrir/fechar expandindo para baixo
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      
+      // Fecha outros dropdowns VIP que estejam abertos
+      document.querySelectorAll('.vip-custom-dropdown').forEach(d => {
+        if (d !== dropdown) d.classList.add('hidden');
+      });
+      
+      dropdown.classList.toggle('hidden');
+    });
+
+    // Mapeia cliques nas opções da lista
+    dropdown.querySelectorAll('.vip-dropdown-option').forEach(option => {
+      option.addEventListener('click', () => {
+        const val = option.getAttribute('data-value');
+        
+        // Atualiza o select nativo oculto
+        selectNativo.value = val;
+        selectNativo.dispatchEvent(new Event('change'));
+
+        // Atualiza o texto do botão
+        btn.textContent = option.textContent;
+
+        // Alterna a classe ativa visualmente
+        dropdown.querySelectorAll('.vip-dropdown-option').forEach(o => o.classList.remove('active'));
+        option.classList.add('active');
+        
+        // Fecha a lista após selecionar
+        dropdown.classList.add('hidden');
+      });
+    });
+  }
+});
+
+// Fecha as listas se clicar em qualquer outra parte da tela
+document.addEventListener('click', () => {
+  document.querySelectorAll('.vip-custom-dropdown').forEach(d => d.classList.add('hidden'));
 });
