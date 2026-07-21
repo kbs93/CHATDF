@@ -1,12 +1,10 @@
 body {
   font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
- background:
-linear-gradient(
-  180deg,
-  #f7f9fc 0%,
-  #ffffff 35%,
-  #f8fbff 100%
-);
+  background:
+    linear-gradient(180deg,
+      #f7f9fc 0%,
+      #ffffff 35%,
+      #f8fbff 100%);
   color: #1154a1;
   margin: 0;
   min-width: 0;
@@ -14,17 +12,33 @@ linear-gradient(
 
 /* Evita pull-to-refresh no mobile */
 html,
-body {width: 100%;min-height: 100%; }
+body {
+  width: 100%;
+  min-height: 100%;
+}
+
 /*Isso impede o index de “puxar para baixo” por trás do painel. 10-05-2026*/
-body.profile-open {overflow: hidden;height: 100vh;touch-action: none;position: fixed;width: 100%;overscroll-behavior: none;}
+body.profile-open {
+  overflow: hidden;
+  height: 100vh;
+  touch-action: none;
+  position: fixed;
+  width: 100%;
+  overscroll-behavior: none;
+}
+
 *,
 *::before,
-*::after {box-sizing: border-box;}
+*::after {
+  box-sizing: border-box;
+}
+
 img,
 video,
 canvas,
-svg {max-width: 100%;
-height: auto;
+svg {
+  max-width: 100%;
+  height: auto;
 }
 
 button,
@@ -43,39 +57,170 @@ body.chat-loading .message {
 /* ========================================================================= 
    MAPEAMENTO DE FONTES LOCAIS EXCLUSIVAS VIP (MÉTODO LOCAL SEGURO)
    ========================================================================= */
-@font-face { font-family: 'BebasNeue'; src: url('./fonts/BebasNeue-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'RubikVinyl'; src: url('./fonts/RubikVinyl-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Lobster'; src: url('./fonts/Lobster-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Barrio'; src: url('./fonts/Barrio-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'BraahOne'; src: url('./fonts/BraahOne-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'BungeeShade'; src: url('./fonts/BungeeShade-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'CaesarDressing'; src: url('./fonts/ CaesarDressing-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Charm-Bold'; src: url('./fonts/Charm-Bold.ttf') format('truetype'); }
-@font-face { font-family: 'CherryBombOne'; src: url('./fonts/CherryBombOne-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'CinzelDecorative'; src: url('./fonts/CinzelDecorative-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Cuprum-Italic'; src: url('./fonts/Cuprum-Italic-VariableFont_wght.ttf') format('truetype'); }
-@font-face { font-family: 'EduAUVICWANTHand'; src: url('./fonts/EduAUVICWANTHand-VariableFont_wght.ttf') format('truetype'); }
-@font-face { font-family: 'FasterOne'; src: url('./fonts/FasterOne-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'GeostarFill'; src: url('./fonts/GeostarFill-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Kablammo'; src: url('./fonts/Kablammo-Regular-VariableFont_MORF.ttf') format('truetype'); }
-@font-face { font-family: 'KumarOneOutline'; src: url('./fonts/KumarOneOutline-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'LibertinusKeyboard'; src: url('./fonts/LibertinusKeyboard-VariableFont_wght.ttf') format('truetype'); }
-@font-face { font-family: 'Limelight'; src: url('./fonts/Limelight-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'ManufacturingConsent'; src: url('./fonts/ManufacturingConsent-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Matangi'; src: url('./fonts/Matangi-VariableFont_wght.ttf') format('truetype'); }
-@font-face { font-family: 'Matemasie'; src: url('./fonts/Matemasie-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'MeaCulpa'; src: url('./fonts/MeaCulpa-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'PlaywriteBEVLG'; src: url('./fonts/PlaywriteBEVLG-VariableFont_wght.ttf') format('truetype'); }
-@font-face { font-family: 'Praise'; src: url('./fonts/Praise-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Pridi'; src: url('./fonts/Pridi-Medium.ttf') format('truetype'); }
-@font-face { font-family: 'Pridi-ExtraLight'; src: url('./fonts/Pridi-ExtraLight.ttf') format('truetype'); }
-@font-face { font-family: 'Pridi-SemiBold'; src: url('./fonts/Pridi-SemiBold.ttf') format('truetype'); }
-@font-face { font-family: 'RockSalt'; src: url('./fonts/RockSalt-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Tangerine'; src: url('./fonts/Tangerine-Bold.ttf') format('truetype'); }
-@font-face { font-family: 'TASAExplorer'; src: url('./fonts/TASAExplorer-VariableFont_wght.ttf') format('truetype'); }
-@font-face { font-family: 'TiltPrism'; src: url('./fonts/TiltPrism-Regular-VariableFont_XROT,YROT.ttf') format('truetype'); }
-@font-face { font-family: 'UnifrakturMaguntia'; src: url('./fonts/UnifrakturMaguntia-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Urbanist-Italic'; src: url('./fonts/Urbanist-Italic-VariableFont_wght.ttf') format('truetype'); }
+@font-face {
+  font-family: 'BebasNeue';
+  src: url('./fonts/BebasNeue-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'RubikVinyl';
+  src: url('./fonts/RubikVinyl-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Lobster';
+  src: url('./fonts/Lobster-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Barrio';
+  src: url('./fonts/Barrio-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'BraahOne';
+  src: url('./fonts/BraahOne-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'BungeeShade';
+  src: url('./fonts/BungeeShade-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'CaesarDressing';
+  src: url('./fonts/ CaesarDressing-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Charm-Bold';
+  src: url('./fonts/Charm-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'CherryBombOne';
+  src: url('./fonts/CherryBombOne-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'CinzelDecorative';
+  src: url('./fonts/CinzelDecorative-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Cuprum-Italic';
+  src: url('./fonts/Cuprum-Italic-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'EduAUVICWANTHand';
+  src: url('./fonts/EduAUVICWANTHand-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'FasterOne';
+  src: url('./fonts/FasterOne-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'GeostarFill';
+  src: url('./fonts/GeostarFill-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Kablammo';
+  src: url('./fonts/Kablammo-Regular-VariableFont_MORF.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'KumarOneOutline';
+  src: url('./fonts/KumarOneOutline-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'LibertinusKeyboard';
+  src: url('./fonts/LibertinusKeyboard-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Limelight';
+  src: url('./fonts/Limelight-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'ManufacturingConsent';
+  src: url('./fonts/ManufacturingConsent-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Matangi';
+  src: url('./fonts/Matangi-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Matemasie';
+  src: url('./fonts/Matemasie-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'MeaCulpa';
+  src: url('./fonts/MeaCulpa-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'PlaywriteBEVLG';
+  src: url('./fonts/PlaywriteBEVLG-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Praise';
+  src: url('./fonts/Praise-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Pridi';
+  src: url('./fonts/Pridi-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Pridi-ExtraLight';
+  src: url('./fonts/Pridi-ExtraLight.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Pridi-SemiBold';
+  src: url('./fonts/Pridi-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'RockSalt';
+  src: url('./fonts/RockSalt-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Tangerine';
+  src: url('./fonts/Tangerine-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'TASAExplorer';
+  src: url('./fonts/TASAExplorer-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'TiltPrism';
+  src: url('./fonts/TiltPrism-Regular-VariableFont_XROT,YROT.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'UnifrakturMaguntia';
+  src: url('./fonts/UnifrakturMaguntia-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Urbanist-Italic';
+  src: url('./fonts/Urbanist-Italic-VariableFont_wght.ttf') format('truetype');
+}
 
 /* ================== HERO =================== */
 
@@ -98,6 +243,7 @@ body.chat-loading .message {
   padding: 90px 20px 40px;
   min-height: 70vh;
 }
+
 .hero::after {
   content: "";
   position: absolute;
@@ -105,9 +251,10 @@ body.chat-loading .message {
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(circle at center, rgba(2, 6, 114, 0.596), rgba(2, 6, 114, 0.596)),rgba(2, 6, 114, 0.466);
-    
+    radial-gradient(circle at center, rgba(2, 6, 114, 0.596), rgba(2, 6, 114, 0.596)), rgba(2, 6, 114, 0.466);
+
 }
+
 .hero .container {
   position: relative;
   z-index: 2;
@@ -142,12 +289,12 @@ body.chat-loading .message {
 
 .hero img {
   opacity: 1;
- 
+
 }
 
 .hero p {
   color: rgba(255, 255, 255, 0.92);
-    min-height: 28px;
+  min-height: 28px;
   margin-bottom: 14px;
 }
 
@@ -158,11 +305,13 @@ body.chat-loading .message {
   font-weight: 700;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
+
 .hero .btn:hover {
   color: #000000;
   background: rgb(255, 255, 255);
- 
+
 }
+
 /* ================== HERO / PHOTO WALL =================== */
 
 .photo-wall {
@@ -254,13 +403,14 @@ body.chat-loading .message {
   left: 0;
   right: 0;
   z-index: 999;
-  background: linear-gradient(135deg, #0000001c );
+  background: linear-gradient(135deg, #0000001c);
   border-bottom: none;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
   color: #ffffff !important;
 }
-.navbar > .container,
-.navbar > .container-fluid {
+
+.navbar>.container,
+.navbar>.container-fluid {
   position: relative;
 }
 
@@ -320,6 +470,7 @@ body.chat-loading .message {
   flex-wrap: nowrap;
   overflow: visible;
 }
+
 .navbar,
 .navbar .container {
   overflow: visible;
@@ -456,6 +607,7 @@ body.chat-loading .message {
   align-items: center;
   min-width: 0;
 }
+
 .user-menu-btn {
   display: flex;
   align-items: center;
@@ -496,6 +648,7 @@ body.chat-loading .message {
   font-weight: 700;
   font-size: 15px;
 }
+
 .user-dropdown {
   position: absolute;
   top: calc(100% + 6px);
@@ -526,6 +679,7 @@ body.chat-loading .message {
   align-items: center;
   gap: 10px;
 }
+
 .user-dropdown-item:hover,
 .user-dropdown-item:active {
   background: #42424227;
@@ -615,7 +769,7 @@ body.chat-loading .message {
     top: 100%;
     left: 0;
     right: 0;
-    background:#1a1d20;
+    background: #1a1d20;
     z-index: 998;
     padding: 10px 0;
     box-shadow: 0 12px 26px rgba(0, 0, 0, 0.25);
@@ -658,7 +812,8 @@ body.chat-loading .message {
   text-align: center;
   font-size: 31px;
 }
-.text-sub{
+
+.text-sub {
   letter-spacing: -0.01em;
   color: #0d0e3e;
   text-align: center;
@@ -677,19 +832,19 @@ body.chat-loading .message {
   position: relative;
 
   background:
-    rgba(255,255,255,0.88);
+    rgba(255, 255, 255, 0.88);
 
   border-radius: 28px;
 
   padding: 28px;
 
   border:
-    1px solid rgba(255,255,255,0.9);
+    1px solid rgba(255, 255, 255, 0.9);
 
   backdrop-filter: blur(10px);
 
   box-shadow:
-    0 10px 30px rgba(15,23,42,0.06);
+    0 10px 30px rgba(15, 23, 42, 0.06);
 
   transition:
     transform .25s ease,
@@ -698,15 +853,16 @@ body.chat-loading .message {
 
   overflow: hidden;
 }
+
 .category-card:hover {
   transform:
     translateY(-8px);
 
   box-shadow:
-    0 20px 45px rgba(15,23,42,0.12);
+    0 20px 45px rgba(15, 23, 42, 0.12);
 
   border-color:
-    rgba(13,110,253,0.14);
+    rgba(13, 110, 253, 0.14);
 }
 
 .category-icon {
@@ -777,13 +933,14 @@ body.chat-loading .message {
   font-weight: 700;
   margin-bottom: 10px;
 }
+
 /*edita os card da sala 17-05-26*/
 .chat-rooms {
   position: relative;
   background: rgb(255, 255, 255);
   border-radius: 32px;
   padding: clamp(4px, 4vw, 2px);
-  border: 1px solid rgba(255,255,255,0.7);
+  border: 1px solid rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(14px);
   overflow: hidden;
 }
@@ -921,8 +1078,8 @@ footer a {
   margin-left: auto;
 }
 
-.chat-page .navbar > .container,
-.chat-page .navbar > .container-fluid {
+.chat-page .navbar>.container,
+.chat-page .navbar>.container-fluid {
   display: flex;
   align-items: center;
   min-width: 0;
@@ -943,12 +1100,12 @@ footer a {
 }
 
 /* garante alinhamento vertical */
-.chat-page .navbar > .container,
-.chat-page .navbar > .container-fluid {
+.chat-page .navbar>.container,
+.chat-page .navbar>.container-fluid {
   display: flex;
   align-items: center;
   min-width: 0;
-  
+
 }
 
 
@@ -959,33 +1116,35 @@ footer a {
 .salas-container {
   margin-top: 40px;
 }
-.room-card-left{
-  display:inline-flex;
-  align-items:center;
-  gap:14px;
-  
+
+.room-card-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+
 }
 
 /*edita o icone dentro dos card das salas*/
-.room-icon{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:20px;
-  height:20px;
-  border-radius:12px;
-  flex-shrink:0;
+.room-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 12px;
+  flex-shrink: 0;
 }
 
-.room-icon i{
-font-size: 20px;
-  color:#2800b9;
+.room-icon i {
+  font-size: 20px;
+  color: #2800b9;
 }
 
-.room-content strong{
-  display:block;
-  margin-bottom:2px;
+.room-content strong {
+  display: block;
+  margin-bottom: 2px;
 }
+
 .sala-btn {
   background: #226fff;
   color: #fff;
@@ -1063,7 +1222,7 @@ font-size: 20px;
     border-radius: 16px;
 
   }
-  
+
 }
 
 /* 3. Ajuste do rodapé em telas menores */
@@ -1115,10 +1274,12 @@ font-size: 20px;
   flex-shrink: 0;
   width: 100%;
 }
+
 /* ------------------------ OFUSCAR CAMPO DE ENVIO  SEM PERFIL COMPLETO ENVIAR MENSAGEM 11-05-26-------------------------- */
 #message-input-wrapper.profile-locked #message-input-area {
   opacity: 0.57;
-  background-color: #1900ff02; /*cor doc campo de enviar mensagem*/
+  background-color: #1900ff02;
+  /*cor doc campo de enviar mensagem*/
   filter: grayscale(100%);
   pointer-events: none;
 }
@@ -1152,6 +1313,7 @@ font-size: 20px;
   border-right: 7px solid transparent;
   border-top: 7px solid #ffffff;
 }
+
 /* ------------------------ OFUSCAR CAMPO DE ENVIO MOBILE 11-05-26-------------------------- */
 @media (max-width: 576px) {
   .message-profile-lock {
@@ -1203,6 +1365,7 @@ font-size: 20px;
   min-height: var(--input-area-height, 62px);
   flex-shrink: 0;
 }
+
 /*todos os botao do input de eviar */
 #message-input-area button {
   background: none;
@@ -1218,8 +1381,9 @@ font-size: 20px;
   cursor: pointer;
   transition: 0.2s;
   flex-shrink: 0;
-  
+
 }
+
 /*botao de enviar */
 #message-input-area button:hover {
   color: #3700ff;
@@ -1227,8 +1391,8 @@ font-size: 20px;
 
 #message-input-area input {
   flex: 1;
-border:
-1px solid rgba(15,23,42,0.08);
+  border:
+    1px solid rgba(15, 23, 42, 0.08);
   border-radius: 50px;
   padding: 10px 15px;
   font-size: 1rem;
@@ -1283,11 +1447,12 @@ border:
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 122px;/*espaçamento na foto do usuario no index*/
-/*  background: linear-gradient(180deg, #2f23c7, #3b2fd6);*/
+  padding: 0 122px;
+  /*espaçamento na foto do usuario no index*/
+  /*  background: linear-gradient(180deg, #2f23c7, #3b2fd6);*/
   color: white;
   flex-shrink: 0;
- 
+
 }
 
 /* lados */
@@ -1312,7 +1477,7 @@ border:
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  
+
 }
 
 /* botão */
@@ -1326,7 +1491,8 @@ border:
   .chat-navbar {
     height: 56px;
     min-height: 56px;
-    padding: 0 32px;/*espaçamento na foto do usuario no index*/
+    padding: 0 32px;
+    /*espaçamento na foto do usuario no index*/
   }
 
   .chat-center {
@@ -1341,6 +1507,7 @@ border:
 }
 
 @media (max-width: 480px) {
+
   /*Botao de enviar mensagem altura e largura */
   #message-input-area button {
     min-width: 36px;
@@ -1381,10 +1548,8 @@ border:
   max-width: min(80vw, 680px);
 
   background-color: var(--reply-bg-color, #e7e7e7);
-  background-image: linear-gradient(
-    rgba(255, 255, 255, 0.75),
-    rgba(255, 255, 255, 0.75)
-  );
+  background-image: linear-gradient(rgba(255, 255, 255, 0.75),
+      rgba(255, 255, 255, 0.75));
 
   color: #ffffff;
   border-left: 4px solid var(--reply-border-color, #353434);
@@ -1395,8 +1560,8 @@ border:
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
   animation: slideUp 0.2s ease;
   width: fit-content;
-min-width: unset;
-flex: unset;
+  min-width: unset;
+  flex: unset;
 }
 
 /* ============= REPLY PREVIEW – TEXTO GRANDE mostra mais dentro da menção 16-02-26 ========================= */
@@ -1445,7 +1610,7 @@ flex: unset;
   -webkit-tap-highlight-color: transparent;
 }
 
-.reply-preview .reply-text.expanded + .reply-toggle {
+.reply-preview .reply-text.expanded+.reply-toggle {
   background-image: url("img/botao2.png");
 }
 
@@ -1626,7 +1791,7 @@ flex: unset;
   white-space: pre-wrap;
   word-break: break-word;
   transition: border-color 0.2s ease;
-  
+
 }
 
 .message-input:focus {
@@ -1661,11 +1826,12 @@ flex: unset;
   word-wrap: break-word;
   overflow-wrap: anywhere;
 }
+
 /*tamanho do texto no chat e o espaçamento do texto*/
 .message span {
   font-size: 1em;
   line-height: 1.7em;
- 
+
 }
 
 /*editar o Botao de sair*/
@@ -1688,7 +1854,7 @@ flex: unset;
   object-fit: cover;
   margin-right: 3px;
   flex-shrink: 0;
-  
+
 }
 
 .message-time {
@@ -1728,7 +1894,7 @@ flex: unset;
   cursor: pointer;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
-  
+
 }
 
 .message.show-actions .message-more-btn {
@@ -1751,7 +1917,7 @@ flex: unset;
   border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.message-context-menu > button {
+.message-context-menu>button {
   width: 100%;
   border: none;
   background: transparent;
@@ -1767,8 +1933,8 @@ flex: unset;
   -webkit-tap-highlight-color: transparent;
 }
 
-.message-context-menu > button:hover,
-.message-context-menu > button:active {
+.message-context-menu>button:hover,
+.message-context-menu>button:active {
   background: #f1f3f7;
 }
 
@@ -1797,7 +1963,7 @@ flex: unset;
 
   .message span {
     font-size: 1.1em;
-    
+
   }
 }
 
@@ -1808,11 +1974,13 @@ flex: unset;
 .message.show-actions .message-more-btn {
   display: inline;
 }
+
 .context-menu-header {
   position: relative;
   height: 20px;
   margin-bottom: 6px;
 }
+
 #closeContextMenu {
   position: absolute;
   top: -2px;
@@ -1828,7 +1996,7 @@ flex: unset;
 }
 
 #closeContextMenu:active {
-  background: rgba(0,0,0,0.1);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 
@@ -2331,7 +2499,8 @@ emoji-picker {
   #sendBtn {
     font-size: 1.45rem;
   }
-/*ocultando o emoji no modo mobile 12-05-26*/
+
+  /*ocultando o emoji no modo mobile 12-05-26*/
 
 
 
@@ -2499,6 +2668,7 @@ emoji-picker {
   min-height: 0;
   -webkit-overflow-scrolling: touch;
 }
+
 /*edita a largura e altura dos stickers no chat*/
 #animList .sticker-img {
   display: inline-block;
@@ -2538,13 +2708,14 @@ emoji-picker {
   display: none;
 }
 
-.expr-tab[data-mode="sticker"].active ~ .sticker-categories:not(.anim-categories),
-.expr-tab[data-mode="anim"].active ~ .sticker-categories.anim-categories {
+.expr-tab[data-mode="sticker"].active~.sticker-categories:not(.anim-categories),
+.expr-tab[data-mode="anim"].active~.sticker-categories.anim-categories {
   display: flex;
 }
 
 /* ===================== AJUSTES FINOS – MOBILE (SEM QUEBRAR SCROLL) ===================== */
 @media (max-width: 480px) {
+
   #anim-Panel,
   .anim-panel {
     height: 45vh;
@@ -2681,6 +2852,7 @@ emoji-picker {
   filter: grayscale(100%);
   transition: all 0.3s ease;
 }
+
 /*-----------------------*/
 .modal-login-box {
   width: 100%;
@@ -2831,7 +3003,7 @@ emoji-picker {
   border-bottom-color: #ff6b6b;
 }
 
-.login-right input + input {
+.login-right input+input {
   margin-top: 14px;
 }
 
@@ -3059,8 +3231,8 @@ emoji-picker {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
   border-radius: 18px;
   padding: 12px;
-min-width: 390px;
-max-width: 420px;
+  min-width: 390px;
+  max-width: 420px;
   max-height: 65vh;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -3155,17 +3327,49 @@ max-width: 420px;
   object-fit: contain;
 }
 
-.icon-gallery { background: linear-gradient(135deg, #4e9efc, #5be0ff); }
-.icon-camera { background: linear-gradient(135deg, #ff5f6d, #ff9a44); }
-.icon-location { background: linear-gradient(135deg, #2ecc71, #1abc9c); }
-.icon-contact { background: linear-gradient(135deg, #7b68ee, #9b59b6); }
-.icon-document { background: linear-gradient(135deg, #6c7efc, #8fcbff); }
-.icon-audio { background: linear-gradient(135deg, #ff9f1c, #ff6f61); }
-.icon-poll { background: linear-gradient(135deg, #00c6ff, #0072ff); }
-.icon-event { background: linear-gradient(135deg, #ff6cab, #7366ff); }
-.icon-sticker { background: linear-gradient(135deg, #ffc371, #ff5f6d); }
-.icon-color { background: linear-gradient(135deg, #f953c6, #b91d73); }
-.icon-ai { background: linear-gradient(135deg, #1e3c72, #2a5298); }
+.icon-gallery {
+  background: linear-gradient(135deg, #4e9efc, #5be0ff);
+}
+
+.icon-camera {
+  background: linear-gradient(135deg, #ff5f6d, #ff9a44);
+}
+
+.icon-location {
+  background: linear-gradient(135deg, #2ecc71, #1abc9c);
+}
+
+.icon-contact {
+  background: linear-gradient(135deg, #7b68ee, #9b59b6);
+}
+
+.icon-document {
+  background: linear-gradient(135deg, #6c7efc, #8fcbff);
+}
+
+.icon-audio {
+  background: linear-gradient(135deg, #ff9f1c, #ff6f61);
+}
+
+.icon-poll {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+}
+
+.icon-event {
+  background: linear-gradient(135deg, #ff6cab, #7366ff);
+}
+
+.icon-sticker {
+  background: linear-gradient(135deg, #ffc371, #ff5f6d);
+}
+
+.icon-color {
+  background: linear-gradient(135deg, #f953c6, #b91d73);
+}
+
+.icon-ai {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
 
 
 
@@ -3184,8 +3388,13 @@ max-width: 420px;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .feedback-box {
@@ -3375,12 +3584,13 @@ max-width: 420px;
     top: 12px;
     right: 12px;
   }
+
   .youtube-preview .youtube-play {
-  left: 20%;
-  top: 20% ;
-  top: 62px;
-  
-}
+    left: 20%;
+    top: 20%;
+    top: 62px;
+
+  }
 }
 
 /* ==================== BOTAO VER AS ULTIMAS 100 MENSAGEM ANTIGAS 18-01-26 =====================*/
@@ -3800,6 +4010,7 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
 
 /* modo mobile */
 @media (max-width: 768px) {
+
   html,
   body {
     overflow-x: hidden;
@@ -3920,7 +4131,8 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
   bottom: 0;
   top: auto;
   width: 100%;
-  height: 92dvh;/*edita a altura do painel no chat modo mobile*/
+  height: 92dvh;
+  /*edita a altura do painel no chat modo mobile*/
   background: #fff;
   border-radius: 22px 22px 0 0;
   display: flex;
@@ -3946,7 +4158,8 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
     bottom: auto;
     width: 490px;
     height: calc(100vh - 92px);
-    max-height: 720px; /*edita a altura do painel */
+    max-height: 720px;
+    /*edita a altura do painel */
     border-radius: 22px;
     transform: scale(0.96);
     transform-origin: top right;
@@ -4032,7 +4245,7 @@ body.index-page .profile-panel.open {
 /**/
 .profile-panel.open {
   opacity: 1;
-transform: translateY(0);
+  transform: translateY(0);
 }
 
 .profile-panel.hidden {
@@ -4069,6 +4282,7 @@ transform: translateY(0);
   position: relative;
   flex-shrink: 0;
 }
+
 /*botao x e lapis */
 .profile-cover-actions {
   position: absolute;
@@ -4078,7 +4292,7 @@ transform: translateY(0);
   display: flex;
   align-items: center;
   gap: 10px;
- 
+
 }
 
 
@@ -4130,6 +4344,7 @@ transform: translateY(0);
   padding-top: 0;
   -webkit-overflow-scrolling: touch;
 }
+
 /*cor de fundo do baner tambem tem no main*/
 .profile-cover {
   position: relative;
@@ -4166,6 +4381,7 @@ transform: translateY(0);
   object-fit: cover;
   display: block;
 }
+
 /*edita o nome do usuario no perfil*/
 .profile-user-info {
   padding: 14px 18px 8px;
@@ -4205,37 +4421,34 @@ transform: translateY(0);
   color: #445;
   margin-top: 2px;
   /* Melhores práticas de UX para quebra de texto */
-  white-space: pre-wrap;     /* Mantém as quebras de linha manuais do usuário e quebra automaticamente nas bordas */
-  overflow-wrap: anywhere;   /* Força a quebra de links gigantes ou textos infinitos sem espaços */
-  word-break: normal;        /* Evita que palavras normais sejam cortadas no meio de forma feia */
+  white-space: pre-wrap;
+  /* Mantém as quebras de linha manuais do usuário e quebra automaticamente nas bordas */
+  overflow-wrap: anywhere;
+  /* Força a quebra de links gigantes ou textos infinitos sem espaços */
+  word-break: normal;
+  /* Evita que palavras normais sejam cortadas no meio de forma feia */
   /* Delimitação física do espaço */
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  text-align: center;        /* Mantém o alinhamento estético centralizado */
-  padding: 0 4px;           /* Evita que o texto encoste colado nas laterais do card */
+  text-align: center;
+  /* Mantém o alinhamento estético centralizado */
+  padding: 0 4px;
+  /* Evita que o texto encoste colado nas laterais do card */
 }
+
 /*recado de baixo do nome do perfil*/
 .profile-user-info {
   padding: 14px 18px -8px;
   text-align: center;
-  min-width: 0; /* Isso aqui impede que containers flex do Bootstrap estiquem para os lados com textos compridos */
-  margin: 0 0 -6px; /* Pequeno espaçamento inferior para separar do conteúdo abaixo */
+  min-width: 0;
+  /* Isso aqui impede que containers flex do Bootstrap estiquem para os lados com textos compridos */
+  margin: 0 0 -6px;
+  /* Pequeno espaçamento inferior para separar do conteúdo abaixo */
 }
 
 /*edita a parte da informação, editar perfil e vip*/
-.profile-tabs {
-  display: flex;
-  gap: 10px;
-  padding: 14px 16px 10px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  background: #ffffff;
-  position: sticky;
-  top: 0;
-  z-index: 3;
-  flex-shrink: 0;
- 
-}
+
 
 .profile-tab {
   flex: 1;
@@ -4248,10 +4461,11 @@ transform: translateY(0);
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
-  
+
 }
+
 /*edita os dados da informacao info do painel do usuario*/
-.dados-info{
+.dados-info {
   padding: 3px;
 }
 
@@ -4378,6 +4592,7 @@ transform: translateY(0);
   visibility: visible;
   pointer-events: auto;
 }
+
 /*impede a atualização da pagina quando o painel sheet estiver aberto no modo mobile 13-05-26*/
 html:has(body.profile-open),
 body.profile-open {
@@ -4569,6 +4784,7 @@ body.index-page .profile-panel.open {
   margin-top: 8px;
   min-height: 0;
 }
+
 /*Edita o painel do avatar no modo desktop */
 .profile-editor-avatar-grid {
   height: 200px;
@@ -4760,6 +4976,7 @@ do botao lapis
     flex-shrink: 0;
   }
 }
+
 /*==================================================================================*/
 /* ===== UX APP - CAMPOS DO EDITAR PERFIL =====   29-04-2026 */
 
@@ -4837,16 +5054,21 @@ do botao lapis
 #profileEdit .profile-field textarea {
   height: 44px;
   line-height: 20px;
-  resize: none;                  /* Trava o redimensionamento manual */
-  white-space: pre-wrap;         /* Permite quebras automáticas de palavras */
+  resize: none;
+  /* Trava o redimensionamento manual */
+  white-space: pre-wrap;
+  /* Permite quebras automáticas de palavras */
   word-wrap: break-word;
-  word-break: break-word;        /* Força a descida de linha ao encostar na margem direita */
-  overflow-y: auto;              /* Adiciona scroll sutil se o texto passar de 2 linhas */
+  word-break: break-word;
+  /* Força a descida de linha ao encostar na margem direita */
+  overflow-y: auto;
+  /* Adiciona scroll sutil se o texto passar de 2 linhas */
   font-family: 'Poppins', sans-serif;
 }
 
 #profileEdit .profile-field textarea::-webkit-scrollbar {
-  width: 0px;                    /* Remove a barra de rolagem visual do campo */
+  width: 0px;
+  /* Remove a barra de rolagem visual do campo */
 }
 
 
@@ -4910,7 +5132,7 @@ do botao lapis
   background: #fff;
   border: 1px solid #eee;
   border-radius: 14px;
-  box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
   max-height: 220px;
   overflow-y: auto;
   padding: 6px;
@@ -4951,7 +5173,7 @@ do botao lapis
   background: #fff;
   border: 1px solid #eee;
   border-radius: 14px;
-  box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
   max-height: 180px;
   overflow-y: auto;
   padding: 6px;
@@ -5086,64 +5308,66 @@ do botao lapis
    CONTEUDO DAS SALAS NO INDEX 
 ========================================================= */
 
-.live-community-section{
+.live-community-section {
   padding: 20px 0 10px;
 }
 
-.live-card{
-  background:linear-gradient(180deg,#ffffff,#f8fbff);
-  border-radius:28px;
-  padding:28px;
-  border:1px solid #e8eef6;
+.live-card {
+  background: linear-gradient(180deg, #ffffff, #f8fbff);
+  border-radius: 28px;
+  padding: 28px;
+  border: 1px solid #e8eef6;
   box-shadow:
-    0 10px 30px rgba(15,23,42,.05),
-    0 2px 8px rgba(15,23,42,.03);
-  height:100%;
-  width:100%;
-  position:relative;
-  overflow:hidden;
-}
-.live-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:20px;
+    0 10px 30px rgba(15, 23, 42, .05),
+    0 2px 8px rgba(15, 23, 42, .03);
+  height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
-.live-header h3{
-  font-size:24px;
-  font-weight:700;
-  margin:0;
-  color:#111827;
+.live-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-.live-badge{
-  background:#2563eb;
-  color:#fff;
-  font-size:13px;
-  font-weight:600;
-  padding:6px 12px;
-  border-radius:999px;
+.live-header h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  color: #111827;
 }
 
-.live-room-list{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
+.live-badge {
+  background: #2563eb;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 999px;
 }
+
+.live-room-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
 /*largura dos card das salas */
-.live-room-item{
-  width:72%;
-  display:flex;
-justify-content:space-between;
-  align-items:center;
-  gap:14px;
-  padding:20px;
-  border-radius:22px;
-  background:#ffffff;
-  border:1px solid #edf2f7;
-  text-decoration:none;
+.live-room-item {
+  width: 72%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid #edf2f7;
+  text-decoration: none;
   transition:
     transform .18s ease,
     box-shadow .18s ease,
@@ -5151,150 +5375,152 @@ justify-content:space-between;
     border-color .18s ease;
 }
 
-.live-room-item:hover{
-  transform:translateY(-4px);
-  background:#001aff15;
-  border-color:#dbe7ff;
+.live-room-item:hover {
+  transform: translateY(-4px);
+  background: #001aff15;
+  border-color: #dbe7ff;
   box-shadow:
-    0 12px 30px rgba(37,99,235,.10);
-}
-.live-room-item strong{
-  display:block;
-  color:#111827;
-  font-size:18px;
-  font-weight:700;
-  letter-spacing:-0.2px;
-  margin-bottom:4px;
+    0 12px 30px rgba(37, 99, 235, .10);
 }
 
-.live-room-item p{
-  margin:0;
-  color:#6b7280;
-  font-size:14px;
-  line-height:1.5;
+.live-room-item strong {
+  display: block;
+  color: #111827;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  margin-bottom: 4px;
 }
-.live-room-item::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:22px;
-  pointer-events:none;
+
+.live-room-item p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.live-room-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  pointer-events: none;
 
   background:
-    linear-gradient(
-      135deg,
-      rgba(37,99,235,.03),
-      transparent 40%
-    );
+    linear-gradient(135deg,
+      rgba(37, 99, 235, .03),
+      transparent 40%);
 
-  opacity:0;
-  transition:.2s ease;
+  opacity: 0;
+  transition: .2s ease;
 }
 
-.live-room-item:hover::before{
-  opacity:1;
-}
-.live-room-item span{
-  color:#0a7a31;
-  font-weight:700;
-  font-size:14px;
-
-  background:#ecfdf3;
-
-  padding:8px 14px;
-
-  border-radius:999px;
-
-  white-space:nowrap;
-
-  border:1px solid #d4f5df;
-}
-.online-stats{
-  text-align:center;
-  margin-bottom:24px;
+.live-room-item:hover::before {
+  opacity: 1;
 }
 
-.online-number{
-  font-size:58px;
-  font-weight:800;
-  color:#2563eb;
-  line-height:1;
+.live-room-item span {
+  color: #0a7a31;
+  font-weight: 700;
+  font-size: 14px;
+
+  background: #ecfdf3;
+
+  padding: 8px 14px;
+
+  border-radius: 999px;
+
+  white-space: nowrap;
+
+  border: 1px solid #d4f5df;
 }
 
-.online-stats p{
-  margin-top:10px;
-  color:#6b7280;
+.online-stats {
+  text-align: center;
+  margin-bottom: 24px;
 }
 
-.mini-online-list{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
+.online-number {
+  font-size: 58px;
+  font-weight: 800;
+  color: #2563eb;
+  line-height: 1;
 }
 
-.mini-user{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:15px;
-  color:#374151;
+.online-stats p {
+  margin-top: 10px;
+  color: #6b7280;
 }
 
-.dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:#22c55e;
-  flex-shrink:0;
+.mini-online-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-@media(max-width:768px){
+.mini-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: #374151;
+}
 
-  .live-header h3{
-    font-size:20px;
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #22c55e;
+  flex-shrink: 0;
+}
+
+@media(max-width:768px) {
+
+  .live-header h3 {
+    font-size: 20px;
   }
 
-  .online-number{
-    font-size:42px;
+  .online-number {
+    font-size: 42px;
   }
 
-    .live-card{
-    padding:18px;
-    border-radius:20px;
+  .live-card {
+    padding: 18px;
+    border-radius: 20px;
   }
 
-  .live-room-item{
-    padding:16px;
-    gap:12px;
-    align-items:flex-start;
+  .live-room-item {
+    padding: 16px;
+    gap: 12px;
+    align-items: flex-start;
     width: 100%;
   }
 
-  .live-room-item strong{
-    font-size:16px;
-    line-height:1.25;
+  .live-room-item strong {
+    font-size: 16px;
+    line-height: 1.25;
   }
 
-  .live-room-item p{
-    font-size:13px;
-    line-height:1.45;
-    margin-top:6px;
+  .live-room-item p {
+    font-size: 13px;
+    line-height: 1.45;
+    margin-top: 6px;
   }
 
-  .live-room-item span{
-    font-size:14px;
-    min-width:58px;
-    text-align:right;
-  
-    flex-shrink:0;
+  .live-room-item span {
+    font-size: 14px;
+    min-width: 58px;
+    text-align: right;
+
+    flex-shrink: 0;
   }
 
-  .live-header{
-    margin-bottom:16px;
+  .live-header {
+    margin-bottom: 16px;
   }
 
-  .live-room-list{
-    gap:10px;
+  .live-room-list {
+    gap: 10px;
   }
 
 }
@@ -5303,61 +5529,61 @@ justify-content:space-between;
    TRENDING 16-05-26
 ========================================================= */
 
-.trending-section{
-  padding:10px 0 40px;
+.trending-section {
+  padding: 10px 0 40px;
 }
 
-.trending-wrapper{
-  background:#fff;
-  border-radius:24px;
-  padding:24px;
-  border:1px solid #edf0f5;
-  box-shadow:0 10px 30px rgba(0,0,0,.04);
+.trending-wrapper {
+  background: #fff;
+  border-radius: 24px;
+  padding: 24px;
+  border: 1px solid #edf0f5;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .04);
 }
 
-.trending-header{
-  margin-bottom:20px;
+.trending-header {
+  margin-bottom: 20px;
 }
 
-.trending-header h3{
-  font-size:24px;
-  font-weight:700;
-  color:#111827;
-  margin:0;
+.trending-header h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
 }
 
-.trending-tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:14px;
+.trending-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
 }
 
-.trending-tag{
-  text-decoration:none;
-  background:#f3f6fb;
-  color:#2563eb;
-  padding:14px 22px;
-  border-radius:999px;
-  font-weight:600;
-  transition:.2s ease;
-  border:1px solid #e5edff;
+.trending-tag {
+  text-decoration: none;
+  background: #f3f6fb;
+  color: #2563eb;
+  padding: 14px 22px;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: .2s ease;
+  border: 1px solid #e5edff;
 }
 
-.trending-tag:hover{
-  background:#2563eb;
-  color:#fff;
-  transform:translateY(-2px);
+.trending-tag:hover {
+  background: #2563eb;
+  color: #fff;
+  transform: translateY(-2px);
 }
 
-@media(max-width:768px){
+@media(max-width:768px) {
 
-  .trending-header h3{
-    font-size:20px;
+  .trending-header h3 {
+    font-size: 20px;
   }
 
-  .trending-tag{
-    width:100%;
-    text-align:center;
+  .trending-tag {
+    width: 100%;
+    text-align: center;
   }
 
 }
@@ -5369,19 +5595,19 @@ justify-content:space-between;
 
 /* 1. Esconde o cabeçalho (foto, nome e cidade) nas mensagens agrupadas */
 .message.is-grouped .message-click-area {
-  display: none !important; 
+  display: none !important;
 }
 
 /* 2. Zera todas as margens para as mensagens se fundirem e colarem umas nas outras */
 .message.is-grouped {
-  margin-top: 3px !important; 
+  margin-top: 3px !important;
   margin-bottom: 0px !important;
   padding-top: 0px !important;
   padding-bottom: 0px !important;
 }
 
 /* 3. Zera os espaços internos invisíveis das divs do texto */
-.message.is-grouped > div {
+.message.is-grouped>div {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
@@ -5394,7 +5620,7 @@ justify-content:space-between;
 
 /* 5. Mantém o respiro maior SOMENTE quando for uma mensagem nova de outro usuário */
 .message:not(.is-grouped) {
-  margin-top: 3px; 
+  margin-top: 3px;
 }
 
 
@@ -5404,7 +5630,8 @@ justify-content:space-between;
 
 /* Modifica cirurgicamente o comportamento do balão ativo para abrir espaço na base */
 #replyPreview.reply-preview {
-  padding-bottom: 38px; /* Aumentado de 21px para 28px para desgrudar o texto do botão */
+  padding-bottom: 38px;
+  /* Aumentado de 21px para 28px para desgrudar o texto do botão */
 }
 
 /* Posiciona o botão de denúncia com margens confortáveis em cima e embaixo */
@@ -5412,9 +5639,11 @@ justify-content:space-between;
 .reply-report-action {
   position: absolute;
   left: 14px;
-  bottom: 8px; /* Ajustado para alinhar a base do ícone perfeitamente */
+  bottom: 8px;
+  /* Ajustado para alinhar a base do ícone perfeitamente */
   color: #d93025;
-  font-size: 17px; /* Aumentado levemente para o ícone ter uma boa área de clique */
+  font-size: 17px;
+  /* Aumentado levemente para o ícone ter uma boa área de clique */
   cursor: pointer;
   text-decoration: none;
   z-index: 60;
@@ -5452,9 +5681,11 @@ justify-content:space-between;
   width: 38px;
   height: 38px;
   border: none;
-  background: rgba(0, 0, 0, 0); /* Mesmo fundo cinza transparente do lápis/X nao apagar */
+  background: rgba(0, 0, 0, 0);
+  /* Mesmo fundo cinza transparente do lápis/X nao apagar */
   border-radius: 50%;
-  color: #ffffff; /* Vermelho suave para alerta */
+  color: #ffffff;
+  /* Vermelho suave para alerta */
   font-size: 19px;
   display: grid;
   place-items: center;
@@ -5485,33 +5716,38 @@ justify-content:space-between;
    BOTÃO DE UPLOAD DE FOTO DE PERFIL (CANTINHO DA FOTO - CORRIGIDO FORA)
    ========================================================================= */
 .profile-avatar-wrap {
-  position: relative; /* Garante que o posicionamento absoluto do botão seja em relação a todo o bloco do avatar */
+  position: relative;
+  /* Garante que o posicionamento absoluto do botão seja em relação a todo o bloco do avatar */
 }
 
 .profile-photo-upload-btn {
   position: absolute;
   /* Posiciona o botão ligeiramente mais para baixo e ajustado à curva do círculo */
-  bottom: -9px; /* Mudamos de 4px para -4px para ele descer mais */
-  left: calc(50% - 58px); /* Ajustado sutilmente para acompanhar a descida na curva do círculo */
+  bottom: -9px;
+  /* Mudamos de 4px para -4px para ele descer mais */
+  left: calc(50% - 58px);
+  /* Ajustado sutilmente para acompanhar a descida na curva do círculo */
   width: 36px;
   height: 36px;
   background: #080808;
   border-radius: 50%;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  border: 3px solid #0000008f; /* Borda branca grossa para dar o destaque de app profissional */
+  border: 3px solid #0000008f;
+  /* Borda branca grossa para dar o destaque de app profissional */
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   /* Garante que o botão fique na camada acima de qualquer corte de imagem */
-  z-index: 90; 
+  z-index: 90;
   transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 .profile-photo-upload-btn i {
   font-size: 24px;
-  color: #faf7ff; /* Mantém a identidade de cor dos seus botões */
+  color: #faf7ff;
+  /* Mantém a identidade de cor dos seus botões */
 }
 
 .profile-photo-upload-btn:hover {
@@ -5588,7 +5824,8 @@ body.viewing-other-profile .profile-photo-upload-btn {
   transform-origin: center center;
   cursor: move;
   user-select: none;
-  touch-action: none; /* ESSA LINHA: Libera o arraste com os dedos no celular sem travar */
+  touch-action: none;
+  /* ESSA LINHA: Libera o arraste com os dedos no celular sem travar */
 }
 
 /* Máscara inteligente: cria o círculo transparente com fundo escurecido nas bordas */
@@ -5624,10 +5861,13 @@ body.viewing-other-profile .profile-photo-upload-btn {
 }
 
 #cropZoomSlider {
-  -webkit-appearance: none; /* Mantém para navegadores mais antigos e Safari */
-  appearance: none;         /* Propriedade padrão que remove a linha amarela */
+  -webkit-appearance: none;
+  /* Mantém para navegadores mais antigos e Safari */
+  appearance: none;
+  /* Propriedade padrão que remove a linha amarela */
   flex: 1;
-  height: 6px;}
+  height: 6px;
+}
 
 #cropZoomSlider::-webkit-slider-thumb {
   -webkit-appearance: none;
@@ -5698,8 +5938,15 @@ body.viewing-other-profile .profile-photo-upload-btn {
 }
 
 @keyframes vipGlow {
-  0% { box-shadow: 0 4px 15px rgba(255, 193, 7, 0.1); border-color: rgba(255, 193, 7, 0.2); }
-  100% { box-shadow: 0 4px 22px rgba(255, 193, 7, 0.3); border-color: rgba(255, 193, 7, 0.5); }
+  0% {
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.1);
+    border-color: rgba(255, 193, 7, 0.2);
+  }
+
+  100% {
+    box-shadow: 0 4px 22px rgba(255, 193, 7, 0.3);
+    border-color: rgba(255, 193, 7, 0.5);
+  }
 }
 
 .animate-pulse {
@@ -5707,8 +5954,17 @@ body.viewing-other-profile .profile-photo-upload-btn {
 }
 
 @keyframes pulseIcon {
-  0%, 100% { transform: scale(1); opacity: 0.9; }
-  50% { transform: scale(1.18); opacity: 1; }
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+
+  50% {
+    transform: scale(1.18);
+    opacity: 1;
+  }
 }
 
 /* Lista de Benefícios VIP da interface de Atração */
@@ -5728,12 +5984,14 @@ body.viewing-other-profile .profile-photo-upload-btn {
 /* Box de Preview Real da Mensagem - Fixado e Isolado com Sucesso */
 #profileVip .vip-preview-box {
   border: 1px dashed rgba(111, 66, 193, 0.3);
-  background-color: #fdfbfe; /* Mantém a cor sólida para cobrir os elementos que sobem */
-  
+  background-color: #fdfbfe;
+  /* Mantém a cor sólida para cobrir os elementos que sobem */
+
   position: sticky;
   top: 0;
-  z-index: 20; /* Camada superior para empurrar as cores para trás dele */
-  
+  z-index: 20;
+  /* Camada superior para empurrar as cores para trás dele */
+
   margin-bottom: 16px;
   border-radius: 12px;
 }
@@ -5741,17 +5999,18 @@ body.viewing-other-profile .profile-photo-upload-btn {
 /* Força os elementos que sobem na rolagem a passarem por baixo do Preview */
 #profileVip .vip-control-card {
   position: relative;
-  z-index: 5; /* Camada inferior à do preview fixo */
+  z-index: 5;
+  /* Camada inferior à do preview fixo */
 }
 
 /* CARDS INDIVIDUAIS DE CONFIGURAÇÃO VIP (UX MOBILE) */
 #profileVip .vip-control-card {
   border: 1px solid rgba(111, 66, 193, 0.14);
-  background-color: #ffffff; 
-  border-radius: 16px; 
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03); 
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
   padding: 16px;
-  margin-bottom: 12px; 
+  margin-bottom: 12px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -5762,7 +6021,7 @@ body.viewing-other-profile .profile-photo-upload-btn {
 
 /* Customização Estética dos Dropdowns nativos do Bootstrap */
 #profileVip .vip-control-card .form-select-sm {
-  height: 42px; 
+  height: 42px;
   border-radius: 10px;
   border: 1px solid #cbd5e1;
   font-size: 13.5px;
@@ -5785,20 +6044,20 @@ body.viewing-other-profile .profile-photo-upload-btn {
 
 #profileVip .vip-control-card label {
   font-weight: 600;
-  color: #475569; 
+  color: #475569;
   margin-bottom: 5px;
 }
 
 /* Customização Limpa do Seletor de Cores Sólidas */
 #profileVip .vip-control-card .form-control-color {
-  width: 44px; 
+  width: 44px;
   height: 38px;
   border-radius: 10px;
   border: 1px solid #cbd5e1;
   background-color: #ffffff;
   padding: 3px;
   cursor: pointer;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 /* ========================================================================= 
@@ -5817,42 +6076,182 @@ body.viewing-other-profile .profile-photo-upload-btn {
 }
 
 /* --- DEGRADÊS ESTÁTICOS SÓ NAS LETRAS --- */
-#profileVip #vipPreviewName.nick-gradient-blue-purple { background-image: linear-gradient(135deg, #0d6efd, #a020f0); }
-#profileVip #vipPreviewName.nick-gradient-gold { background-image: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); font-weight: bold; }
-#profileVip #vipPreviewName.nick-gradient-sunset { background-image: linear-gradient(135deg, #ff512f, #dd2476); }
-#profileVip #vipPreviewName.nick-gradient-ocean { background-image: linear-gradient(135deg, #02aab0, #00cdac); }
-#profileVip #vipPreviewName.nick-gradient-forest { background-image: linear-gradient(135deg, #11998e, #38ef7d); }
-#profileVip #vipPreviewName.nick-gradient-ruby { background-image: linear-gradient(135deg, #cb2d3e, #ef473a); }
-#profileVip #vipPreviewName.nick-gradient-cyberpunk { background-image: linear-gradient(135deg, #f12711, #f5af19); }
-#profileVip #vipPreviewName.nick-gradient-cotton { background-image: linear-gradient(135deg, #ff9a9e, #fecfef); }
-#profileVip #vipPreviewName.nick-gradient-lavender { background-image: linear-gradient(135deg, #a18cd1, #fbc2eb); }
-#profileVip #vipPreviewName.nick-gradient-fire { background-image: linear-gradient(135deg, #f12711, #f5af19); }
-#profileVip #vipPreviewName.nick-gradient-platinum { background-image: linear-gradient(135deg, #757f9a, #d7dde8); }
-#profileVip #vipPreviewName.nick-gradient-vintage { background-image: linear-gradient(135deg, #ca7345, #735135); }
-#profileVip #vipPreviewName.nick-gradient-bubblegum { background-image: linear-gradient(135deg, #ff00cc, #333399); }
-#profileVip #vipPreviewName.nick-gradient-galaxy { background-image: linear-gradient(135deg, #654ea3, #eaafc8); }
-#profileVip #vipPreviewName.nick-gradient-mint { background-image: linear-gradient(135deg, #00c6ff, #0072ff); }
+#profileVip #vipPreviewName.nick-gradient-blue-purple {
+  background-image: linear-gradient(135deg, #0d6efd, #a020f0);
+}
+
+#profileVip #vipPreviewName.nick-gradient-gold {
+  background-image: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+  font-weight: bold;
+}
+
+#profileVip #vipPreviewName.nick-gradient-sunset {
+  background-image: linear-gradient(135deg, #ff512f, #dd2476);
+}
+
+#profileVip #vipPreviewName.nick-gradient-ocean {
+  background-image: linear-gradient(135deg, #02aab0, #00cdac);
+}
+
+#profileVip #vipPreviewName.nick-gradient-forest {
+  background-image: linear-gradient(135deg, #11998e, #38ef7d);
+}
+
+#profileVip #vipPreviewName.nick-gradient-ruby {
+  background-image: linear-gradient(135deg, #cb2d3e, #ef473a);
+}
+
+#profileVip #vipPreviewName.nick-gradient-cyberpunk {
+  background-image: linear-gradient(135deg, #f12711, #f5af19);
+}
+
+#profileVip #vipPreviewName.nick-gradient-cotton {
+  background-image: linear-gradient(135deg, #ff9a9e, #fecfef);
+}
+
+#profileVip #vipPreviewName.nick-gradient-lavender {
+  background-image: linear-gradient(135deg, #a18cd1, #fbc2eb);
+}
+
+#profileVip #vipPreviewName.nick-gradient-fire {
+  background-image: linear-gradient(135deg, #f12711, #f5af19);
+}
+
+#profileVip #vipPreviewName.nick-gradient-platinum {
+  background-image: linear-gradient(135deg, #757f9a, #d7dde8);
+}
+
+#profileVip #vipPreviewName.nick-gradient-vintage {
+  background-image: linear-gradient(135deg, #ca7345, #735135);
+}
+
+#profileVip #vipPreviewName.nick-gradient-bubblegum {
+  background-image: linear-gradient(135deg, #ff00cc, #333399);
+}
+
+#profileVip #vipPreviewName.nick-gradient-galaxy {
+  background-image: linear-gradient(135deg, #654ea3, #eaafc8);
+}
+
+#profileVip #vipPreviewName.nick-gradient-mint {
+  background-image: linear-gradient(135deg, #00c6ff, #0072ff);
+}
 
 /* --- RECURSOS ANIMADOS SÓ NAS LETRAS --- */
 /* --- RECURSOS ANIMADOS SÓ NAS LETRAS COM CONTORNO E NEON GLOW --- */
-#profileVip #vipPreviewName.nick-gradient-neon { background-image: linear-gradient(90deg, #ff007f, #39ff14, #00f0ff, #ff007f); background-size: 300% 100%; animation: nameFlowAnim 4s linear infinite; filter: drop-shadow(0px 0px 3px rgba(57, 255, 20, 0.6)); }
-#profileVip #vipPreviewName.nick-anim-rainbow { background-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet, red); background-size: 300% 100%; animation: nameFlowAnim 3s linear infinite; filter: drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.5)); }
-#profileVip #vipPreviewName.nick-anim-aurora { background-image: linear-gradient(90deg, #0575e6, #00f260, #0575e6); background-size: 200% 100%; animation: nameFlowAnim 5s ease infinite; filter: drop-shadow(0px 0px 3px rgba(0, 242, 96, 0.5)); }
-#profileVip #vipPreviewName.nick-anim-magma { background-image: linear-gradient(90deg, #f12711, #f5af19, #f12711); background-size: 200% 100%; animation: nameFlowAnim 2.5s ease infinite; filter: drop-shadow(0px 0px 3px rgba(241, 39, 17, 0.7)); }
-#profileVip #vipPreviewName.nick-anim-matrix { background-image: linear-gradient(90deg, #00FF00, #003300, #00FF00); background-size: 200% 100%; animation: nameFlowAnim 4s linear infinite; -webkit-text-stroke: 0.5px #003300; }
-#profileVip #vipPreviewName.nick-anim-electric { background-image: linear-gradient(90deg, #00ffff, #ffffff, #0072ff, #00ffff); background-size: 300% 100%; animation: nameFlowAnim 1.5s linear infinite; filter: drop-shadow(0px 0px 4px rgba(0, 240, 255, 0.8)); }
-#profileVip #vipPreviewName.nick-anim-gold-flow { background-image: linear-gradient(90deg, #bf953f, #aa771c, #fcf6ba, #bf953f); background-size: 300% 100%; animation: nameFlowAnim 3s linear infinite; font-weight: bold; -webkit-text-stroke: 0.3px #543d0c; }
-#profileVip #vipPreviewName.nick-anim-glitch { background-image: linear-gradient(90deg, #2b2b2b, #ff0000, #00ffff, #2b2b2b); background-size: 300% 100%; animation: nameFlowAnim 1s steps(4) infinite; }
-#profileVip #vipPreviewName.nick-anim-ice { background-image: linear-gradient(90deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa); background-size: 300% 100%; animation: nameFlowAnim 4s ease infinite; filter: drop-shadow(0px 0px 3px rgba(128, 222, 234, 0.6)); }
-#profileVip #vipPreviewName.nick-anim-vampire { background-image: linear-gradient(90deg, #4a0000, #ff0000, #4a0000); background-size: 200% 100%; animation: nameFlowAnim 3s ease-in-out infinite; -webkit-text-stroke: 0.5px #110000; }
-#profileVip #vipPreviewName.nick-anim-candy { background-image: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c); background-size: 200% 100%; animation: nameFlowAnim 3s linear infinite; filter: drop-shadow(0px 0px 3px rgba(255, 126, 179, 0.6)); }
-#profileVip #vipPreviewName.nick-anim-toxic { background-image: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f); background-size: 200% 100%; animation: nameFlowAnim 2s linear infinite; filter: drop-shadow(0px 0px 4px rgba(168, 255, 120, 0.7)); }
-#profileVip #vipPreviewName.nick-anim-shadow { background-image: linear-gradient(90deg, #000000, #434343, #000000); background-size: 200% 100%; animation: nameFlowAnim 5s linear infinite; -webkit-text-stroke: 0.5px #ffffff; }
-#profileVip #vipPreviewName.nick-anim-miami { background-image: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe); background-size: 200% 100%; animation: nameFlowAnim 3s ease-in-out infinite; filter: drop-shadow(0px 0px 3px rgba(0, 242, 254, 0.6)); }
-#profileVip #vipPreviewName.nick-anim-phoenix { background-image: linear-gradient(90deg, #f857a6, #ff5858, #f857a6); background-size: 200% 100%; animation: nameFlowAnim 2.5s ease infinite; filter: drop-shadow(0px 0px 4px rgba(255, 88, 88, 0.6)); }
+#profileVip #vipPreviewName.nick-gradient-neon {
+  background-image: linear-gradient(90deg, #ff007f, #39ff14, #00f0ff, #ff007f);
+  background-size: 300% 100%;
+  animation: nameFlowAnim 4s linear infinite;
+  filter: drop-shadow(0px 0px 3px rgba(57, 255, 20, 0.6));
+}
+
+#profileVip #vipPreviewName.nick-anim-rainbow {
+  background-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet, red);
+  background-size: 300% 100%;
+  animation: nameFlowAnim 3s linear infinite;
+  filter: drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.5));
+}
+
+#profileVip #vipPreviewName.nick-anim-aurora {
+  background-image: linear-gradient(90deg, #0575e6, #00f260, #0575e6);
+  background-size: 200% 100%;
+  animation: nameFlowAnim 5s ease infinite;
+  filter: drop-shadow(0px 0px 3px rgba(0, 242, 96, 0.5));
+}
+
+#profileVip #vipPreviewName.nick-anim-magma {
+  background-image: linear-gradient(90deg, #f12711, #f5af19, #f12711);
+  background-size: 200% 100%;
+  animation: nameFlowAnim 2.5s ease infinite;
+  filter: drop-shadow(0px 0px 3px rgba(241, 39, 17, 0.7));
+}
+
+#profileVip #vipPreviewName.nick-anim-matrix {
+  background-image: linear-gradient(90deg, #00FF00, #003300, #00FF00);
+  background-size: 200% 100%;
+  animation: nameFlowAnim 4s linear infinite;
+  -webkit-text-stroke: 0.5px #003300;
+}
+
+#profileVip #vipPreviewName.nick-anim-electric {
+  background-image: linear-gradient(90deg, #00ffff, #ffffff, #0072ff, #00ffff);
+  background-size: 300% 100%;
+  animation: nameFlowAnim 1.5s linear infinite;
+  filter: drop-shadow(0px 0px 4px rgba(0, 240, 255, 0.8));
+}
+
+#profileVip #vipPreviewName.nick-anim-gold-flow {
+  background-image: linear-gradient(90deg, #bf953f, #aa771c, #fcf6ba, #bf953f);
+  background-size: 300% 100%;
+  animation: nameFlowAnim 3s linear infinite;
+  font-weight: bold;
+  -webkit-text-stroke: 0.3px #543d0c;
+}
+
+#profileVip #vipPreviewName.nick-anim-glitch {
+  background-image: linear-gradient(90deg, #2b2b2b, #ff0000, #00ffff, #2b2b2b);
+  background-size: 300% 100%;
+  animation: nameFlowAnim 1s steps(4) infinite;
+}
+
+#profileVip #vipPreviewName.nick-anim-ice {
+  background-image: linear-gradient(90deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa);
+  background-size: 300% 100%;
+  animation: nameFlowAnim 4s ease infinite;
+  filter: drop-shadow(0px 0px 3px rgba(128, 222, 234, 0.6));
+}
+
+#profileVip #vipPreviewName.nick-anim-vampire {
+  background-image: linear-gradient(90deg, #4a0000, #ff0000, #4a0000);
+  background-size: 200% 100%;
+  animation: nameFlowAnim 3s ease-in-out infinite;
+  -webkit-text-stroke: 0.5px #110000;
+}
+
+#profileVip #vipPreviewName.nick-anim-candy {
+  background-image: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c);
+  background-size: 200% 100%;
+  animation: nameFlowAnim 3s linear infinite;
+  filter: drop-shadow(0px 0px 3px rgba(255, 126, 179, 0.6));
+}
+
+#profileVip #vipPreviewName.nick-anim-toxic {
+  background-image: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f);
+  background-size: 200% 100%;
+  animation: nameFlowAnim 2s linear infinite;
+  filter: drop-shadow(0px 0px 4px rgba(168, 255, 120, 0.7));
+}
+
+#profileVip #vipPreviewName.nick-anim-shadow {
+  background-image: linear-gradient(90deg, #000000, #434343, #000000);
+  background-size: 200% 100%;
+  animation: nameFlowAnim 5s linear infinite;
+  -webkit-text-stroke: 0.5px #ffffff;
+}
+
+#profileVip #vipPreviewName.nick-anim-miami {
+  background-image: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe);
+  background-size: 200% 100%;
+  animation: nameFlowAnim 3s ease-in-out infinite;
+  filter: drop-shadow(0px 0px 3px rgba(0, 242, 254, 0.6));
+}
+
+#profileVip #vipPreviewName.nick-anim-phoenix {
+  background-image: linear-gradient(90deg, #f857a6, #ff5858, #f857a6);
+  background-size: 200% 100%;
+  animation: nameFlowAnim 2.5s ease infinite;
+  filter: drop-shadow(0px 0px 4px rgba(255, 88, 88, 0.6));
+}
+
 @keyframes nameFlowAnim {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 300% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 300% 50%;
+  }
 }
 
 /* Força os estilos de fonte reativos do select inline a dominarem de forma limpa */
@@ -5885,14 +6284,19 @@ body.viewing-other-profile .profile-photo-upload-btn {
 }
 
 @keyframes rainbowSpin {
-  0% { filter: hue-rotate(0deg); }
-  100% { filter: hue-rotate(360deg); }
+  0% {
+    filter: hue-rotate(0deg);
+  }
+
+  100% {
+    filter: hue-rotate(360deg);
+  }
 }
 
 #profileVip .frame-diamond {
   border: 3px solid #00f0ff;
   box-shadow: 0 0 10px rgba(0, 240, 255, 0.5), inset 0 0 5px rgba(0, 240, 255, 0.3);
-  background-image: radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px);
   background-size: 8px 8px;
 }
 
@@ -5925,57 +6329,218 @@ body.viewing-other-profile .profile-photo-upload-btn {
    ========================================================================= */
 
 /* ─── 15 CAPAS COM DEGRADÊS ESTÁTICOS DE ELITE ─── */
-.banner-grad-purple, #profileVip #vipPreviewBanner.banner-grad-purple { background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #1e1b4b 100%); }
-.banner-grad-gold, #profileVip #vipPreviewBanner.banner-grad-gold { background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 50%, #b38728 100%); }
-.banner-grad-sunset, #profileVip #vipPreviewBanner.banner-grad-sunset { background: linear-gradient(135deg, #ff512f 0%, #dd2476 100%); }
-.banner-grad-ocean, #profileVip #vipPreviewBanner.banner-grad-ocean { background: linear-gradient(135deg, #02aab0 0%, #00cdac 100%); }
-.banner-grad-emerald, #profileVip #vipPreviewBanner.banner-grad-emerald { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-.banner-grad-ruby, #profileVip #vipPreviewBanner.banner-grad-ruby { background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%); }
-.banner-grad-cyberpunk, #profileVip #vipPreviewBanner.banner-grad-cyberpunk { background: linear-gradient(135deg, #f12711 0%, #f5af19 100%); }
-.banner-grad-cotton, #profileVip #vipPreviewBanner.banner-grad-cotton { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
-.banner-grad-lavender, #profileVip #vipPreviewBanner.banner-grad-lavender { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
-.banner-grad-fire, #profileVip #vipPreviewBanner.banner-grad-fire { background: linear-gradient(135deg, #ff0000 0%, #ff7300 50%, #ffcc00 100%); }
-.banner-grad-platinum, #profileVip #vipPreviewBanner.banner-grad-platinum { background: linear-gradient(135deg, #757f9a 0%, #d7dde8 100%); }
-.banner-grad-vintage, #profileVip #vipPreviewBanner.banner-grad-vintage { background: linear-gradient(135deg, #ca7345 0%, #735135 100%); }
-.banner-grad-bubblegum, #profileVip #vipPreviewBanner.banner-grad-bubblegum { background: linear-gradient(135deg, #ff00cc 0%, #333399 100%); }
-.banner-grad-galaxy, #profileVip #vipPreviewBanner.banner-grad-galaxy { background: linear-gradient(135deg, #654ea3 0%, #eaafc8 100%); }
-.banner-grad-mint, #profileVip #vipPreviewBanner.banner-grad-mint { background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); }
+.banner-grad-purple,
+#profileVip #vipPreviewBanner.banner-grad-purple {
+  background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #1e1b4b 100%);
+}
+
+.banner-grad-gold,
+#profileVip #vipPreviewBanner.banner-grad-gold {
+  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 50%, #b38728 100%);
+}
+
+.banner-grad-sunset,
+#profileVip #vipPreviewBanner.banner-grad-sunset {
+  background: linear-gradient(135deg, #ff512f 0%, #dd2476 100%);
+}
+
+.banner-grad-ocean,
+#profileVip #vipPreviewBanner.banner-grad-ocean {
+  background: linear-gradient(135deg, #02aab0 0%, #00cdac 100%);
+}
+
+.banner-grad-emerald,
+#profileVip #vipPreviewBanner.banner-grad-emerald {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.banner-grad-ruby,
+#profileVip #vipPreviewBanner.banner-grad-ruby {
+  background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%);
+}
+
+.banner-grad-cyberpunk,
+#profileVip #vipPreviewBanner.banner-grad-cyberpunk {
+  background: linear-gradient(135deg, #f12711 0%, #f5af19 100%);
+}
+
+.banner-grad-cotton,
+#profileVip #vipPreviewBanner.banner-grad-cotton {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+}
+
+.banner-grad-lavender,
+#profileVip #vipPreviewBanner.banner-grad-lavender {
+  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+}
+
+.banner-grad-fire,
+#profileVip #vipPreviewBanner.banner-grad-fire {
+  background: linear-gradient(135deg, #ff0000 0%, #ff7300 50%, #ffcc00 100%);
+}
+
+.banner-grad-platinum,
+#profileVip #vipPreviewBanner.banner-grad-platinum {
+  background: linear-gradient(135deg, #757f9a 0%, #d7dde8 100%);
+}
+
+.banner-grad-vintage,
+#profileVip #vipPreviewBanner.banner-grad-vintage {
+  background: linear-gradient(135deg, #ca7345 0%, #735135 100%);
+}
+
+.banner-grad-bubblegum,
+#profileVip #vipPreviewBanner.banner-grad-bubblegum {
+  background: linear-gradient(135deg, #ff00cc 0%, #333399 100%);
+}
+
+.banner-grad-galaxy,
+#profileVip #vipPreviewBanner.banner-grad-galaxy {
+  background: linear-gradient(135deg, #654ea3 0%, #eaafc8 100%);
+}
+
+.banner-grad-mint,
+#profileVip #vipPreviewBanner.banner-grad-mint {
+  background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+}
 
 /* ─── 15 CAPAS COM DEGRADÊS ANIMADOS PREMIUM ─── */
-.banner-anim-aurora, #profileVip #vipPreviewBanner.banner-anim-aurora { background: linear-gradient(270deg, #0575e6, #00f260, #0575e6); background-size: 400% 400%; animation: bannerMoveEngine 6s ease infinite; }
-.banner-anim-neon, #profileVip #vipPreviewBanner.banner-anim-neon { background: linear-gradient(270deg, #ff007f, #39ff14, #00f0ff, #ff007f); background-size: 400% 400%; animation: bannerMoveEngine 5s linear infinite; }
-.banner-anim-rainbow, #profileVip #vipPreviewBanner.banner-anim-rainbow { background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet, red); background-size: 400% 400%; animation: bannerMoveEngine 8s linear infinite; }
-.banner-anim-magma, #profileVip #vipPreviewBanner.banner-anim-magma { background: linear-gradient(270deg, #f12711, #f5af19, #f12711); background-size: 400% 400%; animation: bannerMoveEngine 4s ease infinite; }
-.banner-anim-matrix, #profileVip #vipPreviewBanner.banner-anim-matrix { background: linear-gradient(180deg, #001100, #00ff00, #001100); background-size: 100% 400%; animation: bannerMoveEngine 3s linear infinite; }
-.banner-anim-electric, #profileVip #vipPreviewBanner.banner-anim-electric { background: linear-gradient(270deg, #00ffff, #ffffff, #0072ff, #00ffff); background-size: 400% 400%; animation: bannerMoveEngine 2s linear infinite; }
-.banner-anim-gold-flow, #profileVip #vipPreviewBanner.banner-anim-gold-flow { background: linear-gradient(270deg, #bf953f, #aa771c, #fcf6ba, #bf953f); background-size: 400% 400%; animation: bannerMoveEngine 5s ease-in-out infinite; }
-.banner-anim-glitch, #profileVip #vipPreviewBanner.banner-anim-glitch { background: linear-gradient(270deg, #2b2b2b, #ff0000, #00ffff, #2b2b2b); background-size: 400% 400%; animation: bannerMoveEngine 1.5s steps(4) infinite; }
-.banner-anim-ice, #profileVip #vipPreviewBanner.banner-anim-ice { background: linear-gradient(270deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa); background-size: 400% 400%; animation: bannerMoveEngine 6s ease infinite; }
-.banner-anim-vampire, #profileVip #vipPreviewBanner.banner-anim-vampire { background: linear-gradient(270deg, #4a0000, #ff0000, #4a0000); background-size: 400% 400%; animation: bannerMoveEngine 4s ease-in-out infinite; }
-.banner-anim-candy, #profileVip #vipPreviewBanner.banner-anim-candy { background: linear-gradient(270deg, #ff758c, #ff7eb3, #ff758c); background-size: 400% 400%; animation: bannerMoveEngine 5s linear infinite; }
-.banner-anim-toxic, #profileVip #vipPreviewBanner.banner-anim-toxic { background: linear-gradient(270deg, #56ab2f, #a8ff78, #56ab2f); background-size: 400% 400%; animation: bannerMoveEngine 3s linear infinite; }
-.banner-anim-shadow, #profileVip #vipPreviewBanner.banner-anim-shadow { background: linear-gradient(270deg, #000000, #434343, #000000); background-size: 400% 400%; animation: bannerMoveEngine 7s linear infinite; }
-.banner-anim-miami, #profileVip #vipPreviewBanner.banner-anim-miami { background: linear-gradient(270deg, #00f2fe, #4facfe, #00f2fe); background-size: 400% 400%; animation: bannerMoveEngine 4s ease infinite; }
-.banner-anim-phoenix, #profileVip #vipPreviewBanner.banner-anim-phoenix { background: linear-gradient(270deg, #f857a6, #ff5858, #f857a6); background-size: 400% 400%; animation: bannerMoveEngine 5s ease infinite; }
+.banner-anim-aurora,
+#profileVip #vipPreviewBanner.banner-anim-aurora {
+  background: linear-gradient(270deg, #0575e6, #00f260, #0575e6);
+  background-size: 400% 400%;
+  animation: bannerMoveEngine 6s ease infinite;
+}
+
+.banner-anim-neon,
+#profileVip #vipPreviewBanner.banner-anim-neon {
+  background: linear-gradient(270deg, #ff007f, #39ff14, #00f0ff, #ff007f);
+  background-size: 400% 400%;
+  animation: bannerMoveEngine 5s linear infinite;
+}
+
+.banner-anim-rainbow,
+#profileVip #vipPreviewBanner.banner-anim-rainbow {
+  background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet, red);
+  background-size: 400% 400%;
+  animation: bannerMoveEngine 8s linear infinite;
+}
+
+.banner-anim-magma,
+#profileVip #vipPreviewBanner.banner-anim-magma {
+  background: linear-gradient(270deg, #f12711, #f5af19, #f12711);
+  background-size: 400% 400%;
+  animation: bannerMoveEngine 4s ease infinite;
+}
+
+.banner-anim-matrix,
+#profileVip #vipPreviewBanner.banner-anim-matrix {
+  background: linear-gradient(180deg, #001100, #00ff00, #001100);
+  background-size: 100% 400%;
+  animation: bannerMoveEngine 3s linear infinite;
+}
+
+.banner-anim-electric,
+#profileVip #vipPreviewBanner.banner-anim-electric {
+  background: linear-gradient(270deg, #00ffff, #ffffff, #0072ff, #00ffff);
+  background-size: 400% 400%;
+  animation: bannerMoveEngine 2s linear infinite;
+}
+
+.banner-anim-gold-flow,
+#profileVip #vipPreviewBanner.banner-anim-gold-flow {
+  background: linear-gradient(270deg, #bf953f, #aa771c, #fcf6ba, #bf953f);
+  background-size: 400% 400%;
+  animation: bannerMoveEngine 5s ease-in-out infinite;
+}
+
+.banner-anim-glitch,
+#profileVip #vipPreviewBanner.banner-anim-glitch {
+  background: linear-gradient(270deg, #2b2b2b, #ff0000, #00ffff, #2b2b2b);
+  background-size: 400% 400%;
+  animation: bannerMoveEngine 1.5s steps(4) infinite;
+}
+
+.banner-anim-ice,
+#profileVip #vipPreviewBanner.banner-anim-ice {
+  background: linear-gradient(270deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa);
+  background-size: 400% 400%;
+  animation: bannerMoveEngine 6s ease infinite;
+}
+
+.banner-anim-vampire,
+#profileVip #vipPreviewBanner.banner-anim-vampire {
+  background: linear-gradient(270deg, #4a0000, #ff0000, #4a0000);
+  background-size: 400% 400%;
+  animation: bannerMoveEngine 4s ease-in-out infinite;
+}
+
+.banner-anim-candy,
+#profileVip #vipPreviewBanner.banner-anim-candy {
+  background: linear-gradient(270deg, #ff758c, #ff7eb3, #ff758c);
+  background-size: 400% 400%;
+  animation: bannerMoveEngine 5s linear infinite;
+}
+
+.banner-anim-toxic,
+#profileVip #vipPreviewBanner.banner-anim-toxic {
+  background: linear-gradient(270deg, #56ab2f, #a8ff78, #56ab2f);
+  background-size: 400% 400%;
+  animation: bannerMoveEngine 3s linear infinite;
+}
+
+.banner-anim-shadow,
+#profileVip #vipPreviewBanner.banner-anim-shadow {
+  background: linear-gradient(270deg, #000000, #434343, #000000);
+  background-size: 400% 400%;
+  animation: bannerMoveEngine 7s linear infinite;
+}
+
+.banner-anim-miami,
+#profileVip #vipPreviewBanner.banner-anim-miami {
+  background: linear-gradient(270deg, #00f2fe, #4facfe, #00f2fe);
+  background-size: 400% 400%;
+  animation: bannerMoveEngine 4s ease infinite;
+}
+
+.banner-anim-phoenix,
+#profileVip #vipPreviewBanner.banner-anim-phoenix {
+  background: linear-gradient(270deg, #f857a6, #ff5858, #f857a6);
+  background-size: 400% 400%;
+  animation: bannerMoveEngine 5s ease infinite;
+}
 
 /* MOTOR DE RENDERIZAÇÃO E MOVIMENTO DOS DEGRADÊS ANIMADOS VIP */
 @keyframes bannerMoveEngine {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 
 
 @keyframes rainbowSpin {
-  0% { filter: hue-rotate(0deg); }
-  100% { filter: hue-rotate(360deg); }
+  0% {
+    filter: hue-rotate(0deg);
+  }
+
+  100% {
+    filter: hue-rotate(360deg);
+  }
 }
 
 #profileVip .frame-diamond {
   border: 3px solid #00f0ff;
   box-shadow: 0 0 10px rgba(0, 240, 255, 0.5), inset 0 0 5px rgba(0, 240, 255, 0.3);
-  background-image: radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px);
   background-size: 8px 8px;
 }
 
@@ -5994,7 +6559,7 @@ body.viewing-other-profile .profile-photo-upload-btn {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  box-shadow: 
+  box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.1) inset,
     0 4px 12px rgba(255, 255, 255, 0.25),
     inset 0 4px 6px rgba(255, 255, 255, 0.3);
@@ -6005,6 +6570,7 @@ body.viewing-other-profile .profile-photo-upload-btn {
   border: 2px dashed #00ffaa;
   box-shadow: 0 0 8px rgba(0, 255, 170, 0.4);
 }
+
 #profileVip .frame-cyber-tech::before {
   content: "";
   position: absolute;
@@ -6012,6 +6578,7 @@ body.viewing-other-profile .profile-photo-upload-btn {
   border-radius: 50%;
   border: 1px solid rgba(0, 255, 170, 0.3);
 }
+
 #profileVip .frame-cyber-tech::after {
   content: "";
   position: absolute;
@@ -6028,7 +6595,7 @@ body.viewing-other-profile .profile-photo-upload-btn {
 /* 3. MOLDURA SOMBRA DE ECLIPSE REAL (GLOW TRIDIMENSIONAL FOSCO) */
 #profileVip .frame-eclipse-shadow {
   border: 1px solid rgba(0, 0, 0, 0.8);
-  box-shadow: 
+  box-shadow:
     0 0 16px 4px rgba(0, 0, 0, 0.65),
     inset 0 0 12px 6px rgba(0, 0, 0, 0.85);
 }
@@ -6036,10 +6603,10 @@ body.viewing-other-profile .profile-photo-upload-btn {
 /* 4. MOLDURA CROMADA METÁLICA REFLEXIVA (METAL LÍQUIDO) */
 #profileVip .frame-liquid-chrome {
   border: 3px solid transparent;
-  background: 
+  background:
     linear-gradient(#fff, #fff) padding-box,
     linear-gradient(135deg, #757f9a 0%, #ffffff 25%, #d7dde8 50%, #757f9a 75%, #ffffff 100%) border-box;
-  box-shadow: 
+  box-shadow:
     0 4px 10px rgba(0, 0, 0, 0.15),
     inset 0 2px 4px rgba(255, 255, 255, 0.6);
 }
@@ -6051,15 +6618,16 @@ body.viewing-other-profile .profile-photo-upload-btn {
 /* 1. FOGO INCANDESCENTE (BRASAS DE PLASMA) */
 #profileVip .frame-plasma-fire {
   border: 2px solid #ff4500;
-  box-shadow: 
+  box-shadow:
     0 0 10px #ff4500,
-    0 -4px 12px rgba(255, 69, 0, 0.65); /* Projeta o calor sutilmente para cima */
+    0 -4px 12px rgba(255, 69, 0, 0.65);
+  /* Projeta o calor sutilmente para cima */
 }
 
 /* 2. NEON FIBRA ÓPTICA (LUZ INFINITA) */
 #profileVip .frame-fiber-neon {
   border: 2px solid #00f0ff;
-  box-shadow: 
+  box-shadow:
     0 0 12px #00f0ff,
     inset 0 0 4px #00f0ff;
 }
@@ -6070,15 +6638,25 @@ body.viewing-other-profile .profile-photo-upload-btn {
   box-shadow: 0 0 8px #ffd700;
   animation: auraPulseEngine 2s infinite ease-in-out;
 }
+
 @keyframes auraPulseEngine {
-  0%, 100% { box-shadow: 0 0 6px rgba(255, 215, 0, 0.4); border-color: rgba(255, 215, 0, 0.7); }
-  50% { box-shadow: 0 0 16px rgba(255, 215, 0, 0.9); border-color: rgba(255, 215, 0, 1); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 6px rgba(255, 215, 0, 0.4);
+    border-color: rgba(255, 215, 0, 0.7);
+  }
+
+  50% {
+    box-shadow: 0 0 16px rgba(255, 215, 0, 0.9);
+    border-color: rgba(255, 215, 0, 1);
+  }
 }
 
 /* 4. FAÍSCAS ELÉTRICAS (ALTA VOLTAGEM) */
 #profileVip .frame-electric-spark {
   border: 2px solid #7000ff;
-  box-shadow: 
+  box-shadow:
     0 0 8px #7000ff,
     0 0 14px rgba(112, 0, 255, 0.5);
 }
@@ -6087,20 +6665,36 @@ body.viewing-other-profile .profile-photo-upload-btn {
 /* ========================================================================= 
    DROPDOWNS E LISTAS INTERNAS MODERNAS DA SEÇÃO VIP
    ========================================================================= */
+/* NOVO ESTILO FLAT / SOFT INPUT (SEM BORDA PADRÃO E ESTILO APP PROFISSIONAL) */
 .vip-custom-select-btn {
   width: 100%;
-  min-height: 44px;
-  background-color: #f8fafc;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  padding: 0 14px;
-  font-size: 13.5px;
-  color: #0f172a;
+  min-height: 46px;
+  background-color: #e6e6e6;
+  /* Fundo cinza suave e moderno */
+  border: none !important;
+  /* Remove completamente a borda em estado normal */
+  border-radius: 12px;
+  /* Cantos suavizados modernos */
+  padding: 0 16px;
+  /* Respiro lateral confortável */
+  font-size: 14px;
+  font-weight: 600;
+  /* Destaque profissional no texto */
+  color: #1e293b;
+  /* Cor de texto com alto contraste */
   text-align: left;
   position: relative;
   cursor: pointer;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+
+/* Estado Ativo / Focado (Efeito sutil e elegante ao clicar) */
+.vip-custom-select-btn:focus {
+  background-color: #ffffff;
+  box-shadow: 0 0 0 2px #6f42c1, 0 4px 12px rgba(111, 66, 193, 0.12);
+  /* Brilho e contorno elegante apenas ao clicar */
 }
 
 .vip-custom-select-btn::after {
@@ -6114,19 +6708,18 @@ body.viewing-other-profile .profile-photo-upload-btn {
   transition: transform 0.2s ease;
 }
 
-.vip-custom-select-btn:focus {
-  border-color: #6f42c1;
-  box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.15);
-}
+
 
 .vip-custom-dropdown {
-  position: relative; /* Mudado de absolute para relative para expandir e empurrar para baixo */
+  position: relative;
+  /* Mudado de absolute para relative para expandir e empurrar para baixo */
   margin-top: 8px;
   width: 100%;
   background: #ffffff;
   border: 1px solid #eee;
   border-radius: 14px;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.03); /* Sombra interna mais sutil para o efeito de expansão */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+  /* Sombra interna mais sutil para o efeito de expansão */
   max-height: 200px;
   overflow-y: auto;
   padding: 6px;
@@ -6135,6 +6728,7 @@ body.viewing-other-profile .profile-photo-upload-btn {
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
+
 .vip-dropdown-option {
   width: 100%;
   padding: 9px 12px;
@@ -6144,7 +6738,7 @@ body.viewing-other-profile .profile-photo-upload-btn {
   color: #333;
   cursor: pointer;
   transition: background 0.15s ease;
-  
+
 }
 
 .vip-dropdown-option:hover {
@@ -6169,9 +6763,11 @@ body.viewing-other-profile .profile-photo-upload-btn {
   gap: 8px;
   margin-top: 10px;
 }
-.icon-vip{
-  color:#737373;
-  font-size: 20px;}
+
+.icon-vip {
+  color: #737373;
+  font-size: 20px;
+}
 
 
 .vip-accordion-item {
@@ -6225,9 +6821,11 @@ body.viewing-other-profile .profile-photo-upload-btn {
 }
 
 .vip-accordion-item.active .vip-accordion-content {
-  max-height: 1000px; /* Expande dinamicamente */
+  max-height: 1000px;
+  /* Expande dinamicamente */
   transition: max-height 0.3s ease-in-out;
 }
+
 /* ========================================================================= 
   18-07-26 VIP CARROSSEL COM DESIGN NATIVO DE APLICATIVO (UX PREMIUM - CHAT-DF)
    ========================================================================= */
@@ -6255,7 +6853,7 @@ body.viewing-other-profile .profile-photo-upload-btn {
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  
+
 }
 
 .vip-carousel-wrapper .color-grid::-webkit-scrollbar {
@@ -6268,7 +6866,8 @@ body.viewing-other-profile .profile-photo-upload-btn {
   flex: 0 0 36px;
   width: 36px;
   height: 36px;
-  border-radius: 8px; /* Cantos levemente arredondados estilo iOS/Android */
+  border-radius: 8px;
+  /* Cantos levemente arredondados estilo iOS/Android */
   scroll-snap-align: start;
 }
 
@@ -6321,4 +6920,203 @@ body.viewing-other-profile .profile-photo-upload-btn {
 
 .vip-carousel-wrapper .carousel-arrow.right {
   margin-left: 6px;
+}
+
+/* ========================================================================= 
+  18-07-26 VIP CARROSSEL COM DESIGN NATIVO DE APLICATIVO (UX PREMIUM - CHAT-DF)
+   ========================================================================= */
+.vip-carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: #ffffff;
+  padding: 6px 0;
+}
+
+.vip-carousel-wrapper .color-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 12px;
+  width: 100%;
+  max-height: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 8px 6px;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.vip-carousel-wrapper .color-grid::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.vip-carousel-wrapper .color-grid .color-box {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  scroll-snap-align: start;
+}
+
+.vip-carousel-wrapper .carousel-arrow {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  background-color: #5553532c;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 50%;
+  color: #1e1b4b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+
+.vip-carousel-wrapper .carousel-arrow i {
+  font-size: 27px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vip-carousel-wrapper .carousel-arrow:hover {
+  background: #f8fafc;
+  color: #6f42c1;
+  box-shadow: 0 4px 12px rgba(111, 66, 193, 0.15);
+}
+
+.vip-carousel-wrapper .carousel-arrow:active {
+  transform: scale(0.9);
+  background: #f1f5f9;
+}
+
+.vip-carousel-wrapper .carousel-arrow.left {
+  margin-right: 6px;
+}
+
+.vip-carousel-wrapper .carousel-arrow.right {
+  margin-left: 6px;
+}
+
+/* RESTAURAR ABAS DO PERFIL NA HORIZONTAL */
+.profile-body .profile-tabs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: #ffffff;
+  width: 100%;
+}
+
+.profile-body .profile-tabs .profile-tab {
+  flex: 1;
+  min-height: 36px;
+  border: none;
+  border-radius: 99px;
+  background: #f0f2f5;
+  color: #565557ce;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.profile-body .profile-tabs .profile-tab.active {
+  background: #adadaf;
+  color: #ffffff;
+}
+
+/* ESTRUTURA DOS 4 BOTÕES VIP (GRADE HORIZONTAL FIXA) */
+#profileVip .vip-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+
+#profileVip .vip-btn-card {
+  width: 100%;
+  min-height: 85px;
+  background: #ffffff;
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.2s ease;
+}
+
+/* Ícone arredondado interno do botão VIP */
+#profileVip .vip-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 20px;
+}
+
+#profileVip .vip-icon-box.bg-geo {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+#profileVip .vip-icon-box.bg-purple {
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+}
+
+#profileVip .vip-icon-box.bg-blue {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+#profileVip .vip-icon-box.bg-orange {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+}
+
+#profileVip .vip-header-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #3b82f6;
+  text-align: center;
+  line-height: 1.2;
+  display: block;
+}
+
+/* GAVETAS DE CONTEÚDO QUE EXPANDE ABAIXO DOS BOTÕES */
+#profileVip .vip-drawer-content {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid rgba(111, 66, 193, 0.2);
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+#profileVip .vip-drawer-content.hidden {
+  display: none;
 }

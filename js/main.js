@@ -1,7 +1,7 @@
 // ============================== IMPORTS ======================================================
 import { avataresEles, avataresElas, avataresUnissex } from "./avatar.js"; // 03-06-26 não apagar, é a lista de avatares para o perfil
 import { initAuth } from "./auth.js";
-import { initMessages, sendMessage } from './messages.js?v=2'; 
+import { initMessages, sendMessage } from './messages.js?v=2';
 import { showToast, openAttachmentSheet, openUIPanel, textColorPalette } from "./ui.js";
 import { initStickerPanel } from "./stickers-panel.js"; // esse codigo e dos sticker 17-02-26
 import { auth, db, rtdb } from "./firebase-config.js";
@@ -19,7 +19,7 @@ import {
   setDoc
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 // ESSE CODIGO E DO PAINEL SOMBRA DO PAINEL   let overlay;    NAO APAGAR  17-03-26 
-let overlay;  
+let overlay;
 document.body.classList.add("chat-loading");
 
 // ================= GERENCIADOR DE PAINÉIS padronizando mobile e desktop ================= 17-03-26
@@ -64,20 +64,20 @@ function closeAllPanels() {
 
 //--------- edita o novo campo de usuario mostra so o perfil de outros usuario 12-04 -------------------
 const attachmentActions = {
-users: () => {
-  openPanel("users");
-},
+  users: () => {
+    openPanel("users");
+  },
 
-profile: async () => {
-  const user = auth.currentUser;
-  if (!user) return;
+  profile: async () => {
+    const user = auth.currentUser;
+    if (!user) return;
 
-  if (typeof window.openMainProfilePanel === "function") {
-    await window.openMainProfilePanel(user.uid);
-  } else {
-    showToast("Painel de perfil ainda não criado.");
-  }
-},
+    if (typeof window.openMainProfilePanel === "function") {
+      await window.openMainProfilePanel(user.uid);
+    } else {
+      showToast("Painel de perfil ainda não criado.");
+    }
+  },
 
 
 
@@ -139,7 +139,7 @@ window.appState = appState;
 async function updateUserRoomPresence() {
   const user = auth.currentUser;
   if (!user) return;
-try {
+  try {
     // Importa o update para não sobrescrever outros campos salvos no nó (como a trava)
     const { update } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js");
     const userStatusRef = ref(rtdb, "status/" + user.uid);
@@ -182,7 +182,7 @@ function atualizarBloqueioCampoMensagem(perfilCompleto) {
   if (aviso) {
     aviso.className = "message-profile-lock-btn";
     aviso.innerHTML = `<i class="bi bi-pencil-square" style="font-size:22px;"></i> Complete o seu perfil para liberar o envio de mensagens`;
-    
+
     // Injeção de estilos inline profissionais para centralização e ganho de área de toque (mobile friendly)
     aviso.style.display = "flex";
     aviso.style.alignItems = "center";
@@ -226,11 +226,11 @@ function mountChatIfNeeded() {
 function handleUserReady(detail = {}) {
   appState.userReady = true;
   appState.currentUser = detail.user || auth.currentUser || null;
-// melhoria 06-05 
-if (detail.userData?.nome) {
-  appState.currentUser.nome = detail.userData.nome;
-  appState.currentUser.displayNameChat = detail.userData.nome;
-}
+  // melhoria 06-05 
+  if (detail.userData?.nome) {
+    appState.currentUser.nome = detail.userData.nome;
+    appState.currentUser.displayNameChat = detail.userData.nome;
+  }
 
 
   appState.userCity = null;
@@ -239,7 +239,7 @@ if (detail.userData?.nome) {
   }
 
   // ------------------------ OUVIR PERFIL E BLOQUEAR ENVIO SE NÃO ESTIVER COMPLETO --------------------------
-// ------------------------ OUVIR PERFIL VIA EVENTOS (Leitura Inteligente sem onSnapshot Duplicado) 21-06-26 --------------------------
+  // ------------------------ OUVIR PERFIL VIA EVENTOS (Leitura Inteligente sem onSnapshot Duplicado) 21-06-26 --------------------------
   if (isChatRoute) {
     // Escuta o perfil atualizado que já é transmitido pelo onSnapshot do auth.js
     if (detail.userData) {
@@ -270,8 +270,8 @@ function handleUserLogout() {
     appState.unsubscribeProfileLock = null;
   }
 
-// ------------------------ LIMPAR BLOQUEIO DO CAMPO AO SAIR 11-05-26 --------------------------
-atualizarBloqueioCampoMensagem(false);
+  // ------------------------ LIMPAR BLOQUEIO DO CAMPO AO SAIR 11-05-26 --------------------------
+  atualizarBloqueioCampoMensagem(false);
 }
 function cleanupChatMessages() {
   if (typeof appState.unsubscribeMessages === "function") {
@@ -320,7 +320,7 @@ document.addEventListener("click", (e) => {
     e.preventDefault();
     const promoSec = document.getElementById("vipPromoSection");
     const settingsSec = document.getElementById("vipSettingsSection");
-    
+
     if (promoSec && settingsSec) {
       promoSec.classList.add("d-none");
       settingsSec.classList.remove("d-none");
@@ -391,127 +391,127 @@ function setupChat() {
   const colorBtn = document.getElementById("colorBtn");
   const attachBtn = document.getElementById("attachBtn");
   const openOnlineUsersBtn = document.getElementById("openOnlineUsers");
- overlay = document.getElementById("onlineOverlay");
- let stickerReady = false;
+  overlay = document.getElementById("onlineOverlay");
+  let stickerReady = false;
   if (!chat || !input || !sendBtn) {
     console.warn("Elementos do chat não encontrados; inicialização cancelada.");
     return;
   }
 
-// FAZ O TECLADO MOBILE FECHAR AO ROLAR A TELA 05-06-20026
-let lastScrollTop = 0;
-let isKeyboardOpen = false;
+  // FAZ O TECLADO MOBILE FECHAR AO ROLAR A TELA 05-06-20026
+  let lastScrollTop = 0;
+  let isKeyboardOpen = false;
 
-input.addEventListener("focus", () => {
-  isKeyboardOpen = true;
-});
+  input.addEventListener("focus", () => {
+    isKeyboardOpen = true;
+  });
 
-input.addEventListener("blur", () => {
-  isKeyboardOpen = false;
-});
+  input.addEventListener("blur", () => {
+    isKeyboardOpen = false;
+  });
 
 
-// 21-06-26 melhoria para evitar que o teclado feche com rolagens pequenas acidentais, só fecha se o usuário rolar mais de 15px
-// CORREÇÃO: Fecha o teclado mobile ao rolar a tela, exigindo uma distância mínima calculada (delta) para evitar blurs acidentais
-let touchStartY = 0;
+  // 21-06-26 melhoria para evitar que o teclado feche com rolagens pequenas acidentais, só fecha se o usuário rolar mais de 15px
+  // CORREÇÃO: Fecha o teclado mobile ao rolar a tela, exigindo uma distância mínima calculada (delta) para evitar blurs acidentais
+  let touchStartY = 0;
 
-chat.addEventListener("touchstart", (e) => {
-  if (window.innerWidth > 768) return;
-  touchStartY = e.touches[0].clientY;
-}, { passive: true });
+  chat.addEventListener("touchstart", (e) => {
+    if (window.innerWidth > 768) return;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
 
-chat.addEventListener("touchmove", (e) => {
-  if (window.innerWidth > 768) return;
+  chat.addEventListener("touchmove", (e) => {
+    if (window.innerWidth > 768) return;
 
-  if (document.activeElement === input) {
-    let touchCurrentY = e.touches[0].clientY;
-    let deltaY = Math.abs(touchCurrentY - touchStartY);
-    
-    // Só fecha se o usuário realmente arrastar o dedo por mais de 25 pixels verticalmente
-    if (deltaY > 25) {
-      input.blur();
+    if (document.activeElement === input) {
+      let touchCurrentY = e.touches[0].clientY;
+      let deltaY = Math.abs(touchCurrentY - touchStartY);
+
+      // Só fecha se o usuário realmente arrastar o dedo por mais de 25 pixels verticalmente
+      if (deltaY > 25) {
+        input.blur();
+      }
     }
+  }, { passive: true });
+
+
+
+  // Emoji
+  emojiBtn?.addEventListener("click", () => {
+
+    closeAllPanels();
+
+    if (window.innerWidth <= 768) {
+      openUIPanel("emoji");
+    }
+
+  });
+
+  // Stickers
+  stickerBtn?.addEventListener("click", () => {
+    if (window.innerWidth <= 768) {
+      openUIPanel("stickers");
+      return;
+    }
+  });
+
+  // Animações
+  animBtn?.addEventListener("click", () => {
+    if (window.innerWidth <= 768) {
+      openUIPanel("animations");
+      return;
+    }
+  });
+  // BOTÃO CLIP — DESKTOP x MOBILE (MESMO PAINEL)
+  attachBtn?.addEventListener("click", (e) => {
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    closeAllPanels();
+
+    if (window.innerWidth <= 768) {
+      openAttachmentSheet();
+      return;
+    }
+
+    openPanel("attachments");
+
+  });
+
+
+
+  openOnlineUsersBtn?.addEventListener("click", (e) => {
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    openPanel("users");
+
+  });
+
+  chatInitialized = true;
+  appState.chatMounted = true;
+  messageInput = input;
+  document.title = `Chat - ${appState.currentRoom || sala}`;
+
+  const roomTitle = document.getElementById("chatRoomName");
+  if (roomTitle) {
+    roomTitle.textContent = appState.currentRoom || sala;
   }
-}, { passive: true });
+
+  cleanupChatMessages();
+  appState.unsubscribeMessages = initMessages(chat, appState.currentRoom || sala);
+  updateUserRoomPresence(); // presença da sala RTDB 18-05-26
+  setTimeout(() => {
+    document.body.classList.remove("chat-loading");
+  }, 500);
 
 
-
-// Emoji
-emojiBtn?.addEventListener("click", () => {
-
-  closeAllPanels();
-
-  if (window.innerWidth <= 768) {
-    openUIPanel("emoji");
-  }
-
-});
-
-// Stickers
-stickerBtn?.addEventListener("click", () => {
-  if (window.innerWidth <= 768) {
-    openUIPanel("stickers");
-    return;
-  }
-});
-
-// Animações
-animBtn?.addEventListener("click", () => {
-  if (window.innerWidth <= 768) {
-    openUIPanel("animations");
-    return;
-  }
-});
-// BOTÃO CLIP — DESKTOP x MOBILE (MESMO PAINEL)
-attachBtn?.addEventListener("click", (e) => {
-
-  e.preventDefault();
-  e.stopImmediatePropagation();
-
-  closeAllPanels();
-
-  if (window.innerWidth <= 768) {
-    openAttachmentSheet();
-    return;
-  }
-
-  openPanel("attachments");
-
-});
-
-
-
-openOnlineUsersBtn?.addEventListener("click", (e) => {
-
-  e.preventDefault();
-  e.stopImmediatePropagation();
-
-  openPanel("users");
-
-});
-
-chatInitialized = true;
-appState.chatMounted = true;
-messageInput = input;
-document.title = `Chat - ${appState.currentRoom || sala}`;
-
-const roomTitle = document.getElementById("chatRoomName");
-if (roomTitle) {
-  roomTitle.textContent = appState.currentRoom || sala;
-}
-
-cleanupChatMessages();
-appState.unsubscribeMessages = initMessages(chat, appState.currentRoom || sala);
-updateUserRoomPresence(); // presença da sala RTDB 18-05-26
-setTimeout(() => {
-  document.body.classList.remove("chat-loading");
-}, 500);
-
-
-//21-05-26 melhoria para evitar que o botão enviar fique "grudado" no dedo em telas touch, causando envios acidentais ao tentar clicar em outros elementos próximos
-sendBtn.addEventListener("mousedown", (e) => {
-  e.preventDefault();
-});
+  //21-05-26 melhoria para evitar que o botão enviar fique "grudado" no dedo em telas touch, causando envios acidentais ao tentar clicar em outros elementos próximos
+  sendBtn.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+  });
   // BOTÃO ENVIAR
   sendBtn.onclick = () => sendMessage(input);
   // ENTER PARA ENVIAR
@@ -550,7 +550,7 @@ sendBtn.addEventListener("mousedown", (e) => {
   messageInput.addEventListener("input", autoResize);
   initStickerPanel(); // esse codigo e dos sticker 17-02-26
   stickerReady = true;
-  
+
 
 
 
@@ -599,7 +599,7 @@ function initNavbarCollapse() {
 attachmentPanel?.addEventListener("click", (e) => {
   const item = e.target.closest(".attachment-item");
   if (!item) return;
-closeAllPanels();
+  closeAllPanels();
   const action = item.dataset.action;
   const handler = attachmentActions[action];
   handler?.();
@@ -628,7 +628,7 @@ document.addEventListener("click", (e) => {
 
 // FECHAR COM ESC
 document.addEventListener("keydown", (e) => {
-if (e.key === "Escape") closeAllPanels();
+  if (e.key === "Escape") closeAllPanels();
 });
 
 
@@ -685,15 +685,15 @@ window.addEventListener("attachmentAction", (e) => {
 const toggleAttachmentPanel = () => {
   if (!attachmentPanel) return;
   if (attachmentPanel.classList.contains("show")) {
-  closeAllPanels();
-} else {
-  openPanel("attachments");
-}
-  
- attachBtn?.setAttribute(
-  "aria-expanded",
-  attachmentPanel.classList.contains("show") ? "true" : "false"
-);
+    closeAllPanels();
+  } else {
+    openPanel("attachments");
+  }
+
+  attachBtn?.setAttribute(
+    "aria-expanded",
+    attachmentPanel.classList.contains("show") ? "true" : "false"
+  );
 };
 
 const closeAttachmentPanel = () => {
@@ -733,7 +733,7 @@ document.getElementById("contextProfileBtn")?.addEventListener("click", async (e
 // ================= DENUNCIAR USUÁRIO PELO MINI MENU DA MENSAGEM (CHAT-DF UX) =================
 // ================= DENUNCIAR USUÁRIO PELO MINI MENU DA MENSAGEM (CHAT-DF UX) =================
 document.getElementById("contextReportBtn")?.addEventListener("click", (e) => {
-  e.preventDefault(); 
+  e.preventDefault();
   // Removido o stopPropagation para permitir que o clique chegue perfeitamente até a validação unificada do users-panel.js
 
   const menu = document.getElementById("messageContextMenu");
@@ -781,34 +781,34 @@ document.getElementById("sendReport")?.addEventListener("click", async () => {
     showToast("Escreva o motivo da denúncia.");
     return;
   }
-// essa parte editar os campos do firebase 06-05-26
+  // essa parte editar os campos do firebase 06-05-26
   try {
-const agora = new Date();
-const pad = (n) => String(n).padStart(2, "0");
-const dataId =
-  agora.getFullYear() + "-" +
-  pad(agora.getMonth() + 1) + "-" +
-  pad(agora.getDate()) + "_" +
-  pad(agora.getHours()) + "-" +
-  pad(agora.getMinutes()) + "-" +
-  pad(agora.getSeconds());
+    const agora = new Date();
+    const pad = (n) => String(n).padStart(2, "0");
+    const dataId =
+      agora.getFullYear() + "-" +
+      pad(agora.getMonth() + 1) + "-" +
+      pad(agora.getDate()) + "_" +
+      pad(agora.getHours()) + "-" +
+      pad(agora.getMinutes()) + "-" +
+      pad(agora.getSeconds());
 
-const reporterSnap = await getDoc(doc(db, "users", user.uid));
-const reporterData = reporterSnap.exists() ? reporterSnap.data() : {};
+    const reporterSnap = await getDoc(doc(db, "users", user.uid));
+    const reporterData = reporterSnap.exists() ? reporterSnap.data() : {};
 
-const reporterChatName =
-  reporterData.nome ||
-  user.displayName ||
-  "Usuario";
+    const reporterChatName =
+      reporterData.nome ||
+      user.displayName ||
+      "Usuario";
 
-const nomeLimpo = reporterChatName
-  .trim()
-  .replace(/\s+/g, "_")
-  .replace(/[^\wÀ-ÿ_-]/g, "");
+    const nomeLimpo = reporterChatName
+      .trim()
+      .replace(/\s+/g, "_")
+      .replace(/[^\wÀ-ÿ_-]/g, "");
 
-const reportId = `${nomeLimpo}_${dataId}`;
+    const reportId = `${nomeLimpo}_${dataId}`;
 
-await setDoc(doc(db, "denuncias", reportId), {
+    await setDoc(doc(db, "denuncias", reportId), {
       sala: currentReportData.sala,
       messageId: currentReportData.messageId,
       reportedUid: currentReportData.reportedUid,
@@ -816,7 +816,7 @@ await setDoc(doc(db, "denuncias", reportId), {
       messageText: currentReportData.messageText,
       reason,
       reporterUid: user.uid,
-reporterName: reporterChatName,
+      reporterName: reporterChatName,
       createdAt: serverTimestamp()
     });
 
@@ -863,11 +863,11 @@ const saveProfileBtn = document.getElementById("saveProfileBtn");
 
 // ================= LISTA PADRÃO DE CIDADES DO DF 01-05-26 DENTRO PAINEL PERFIL=================
 const CIDADES_DF = [
-  "Águas Claras","Arniqueira","Asa Norte","Asa Sul","Brazlândia","Candangolândia","Ceilândia","Cruzeiro","Fercal","Gama",
-  "Guará","Guará II","Itapoã","Jardim Botânico","Lago Norte","Lago Sul","Núcleo Bandeirante","Paranoá","Park Way","Planaltina",
-  "Plano Piloto","Recanto das Emas","Riacho Fundo","Riacho Fundo II","Samambaia N","Samambaia S","Santa Maria","São Sebastião",
-  "Estrutural","SIA","Sobradinho","Sobradinho II","Sol Nascente","Pôr do Sol","Sudoeste","Octogonal","Taguatinga","Taguatinga N",
-  "Taguatinga S","Varjão","Vicente Pires"
+  "Águas Claras", "Arniqueira", "Asa Norte", "Asa Sul", "Brazlândia", "Candangolândia", "Ceilândia", "Cruzeiro", "Fercal", "Gama",
+  "Guará", "Guará II", "Itapoã", "Jardim Botânico", "Lago Norte", "Lago Sul", "Núcleo Bandeirante", "Paranoá", "Park Way", "Planaltina",
+  "Plano Piloto", "Recanto das Emas", "Riacho Fundo", "Riacho Fundo II", "Samambaia N", "Samambaia S", "Santa Maria", "São Sebastião",
+  "Estrutural", "SIA", "Sobradinho", "Sobradinho II", "Sol Nascente", "Pôr do Sol", "Sudoeste", "Octogonal", "Taguatinga", "Taguatinga N",
+  "Taguatinga S", "Varjão", "Vicente Pires"
 ];
 
 function criarListaCidadesPerfil() {
@@ -1196,7 +1196,7 @@ preenche nome, email, cidade, telefone e foto
 
 
 
-*/ 
+*/
 let unsubscribeProfileListener = null; // melhoria 03-05-26 
 window.openMainProfilePanel = async (userId, options = {}) => {
   if (!auth.currentUser) {
@@ -1221,7 +1221,7 @@ window.openMainProfilePanel = async (userId, options = {}) => {
   if (window.appState) {
     window.appState.currentViewedProfileId = userId;
   }
-  
+
   profileRequestToken += 1;
   const requestToken = profileRequestToken;
 
@@ -1269,16 +1269,16 @@ window.openMainProfilePanel = async (userId, options = {}) => {
       const data = snap.data();
 
       //bolinha verde dentro do perfil painel 03-05-26
-const statusRef = ref(rtdb, "status/" + userId);
+      const statusRef = ref(rtdb, "status/" + userId);
 
-onValue(statusRef, (statusSnap) => {
-  const statusData = statusSnap.val();
-  const isOnline = statusData?.online === true;
+      onValue(statusRef, (statusSnap) => {
+        const statusData = statusSnap.val();
+        const isOnline = statusData?.online === true;
 
-  if (profileOnlineDot) {
-    profileOnlineDot.classList.toggle("hidden", !isOnline);
-  }
-});
+        if (profileOnlineDot) {
+          profileOnlineDot.classList.toggle("hidden", !isOnline);
+        }
+      });
 
       window.__currentProfileData = data;
 
@@ -1351,7 +1351,7 @@ se for outro usuário, esconde edição.*/
 // 13-07-26 melhoria para travar edição de perfil quando estiver bloqueado por dias
 function applyProfileMode(isOwner) {
   currentProfileIsOwner = isOwner;
-  
+
   const reportBtn = document.getElementById("reportUserBtn");
   const uploadPhotoBtn = document.getElementById("btnUploadPhoto");
   const vipTabBtn = document.querySelector('.profile-tab[data-tab="vip"]');
@@ -1438,8 +1438,8 @@ tabs.forEach(tab => {
     tabs.forEach(t => {
       t.classList.remove("active");
       if (t.dataset.tab === "edit" || t.dataset.tab === "vip") {
-        t.style.background = "transparent";
-        t.style.color = "#666";
+        t.style.background = "";
+        t.style.color = "";
       }
     });
 
@@ -1522,7 +1522,7 @@ function inicializarPainelVipDinamico() {
 
   const previewName = document.getElementById("vipPreviewName");
   const previewAvatar = document.getElementById("vipPreviewAvatar");
-  
+
   if (previewName) previewName.textContent = editName?.value || "Usuário";
   if (previewAvatar) previewAvatar.src = selectedProfileAvatar || "./img/avatar.png";
 
@@ -1531,31 +1531,32 @@ function inicializarPainelVipDinamico() {
 
 // =========== 18-07-2026  SISTEMA DE ACORDEÃO VIP PROFESSIONAL (UX CHAT-DF) ======================
 
-// ENGINE DO ACORDEÃO VIP (Apenas uma gaveta aberta por vez)
-  const accordionHeaders = document.querySelectorAll(".vip-accordion-header");
-  accordionHeaders.forEach(header => {
-    // Remove listeners antigos para evitar duplicações no onSnapshot
-    header.replaceWith(header.cloneNode(true));
-  });
+// =========== 18-07-2026  SISTEMA DE ACORDEÃO VIP PROFESSIONAL (UX CHAT-DF) ======================
 
-  // Re-seleciona após clonagem para mapear o novo evento limpo
-  document.querySelectorAll(".vip-accordion-header").forEach(header => {
-    header.addEventListener("click", (e) => {
-      e.preventDefault();
-      const currentItem = header.parentElement;
-      const isAlreadyActive = currentItem.classList.contains("active");
+// ENGINE DO ACORDEÃO VIP (BOTÕES FIXOS NA GRADE E CONTEÚDO ABAIXO)
+document.querySelectorAll(".vip-btn-card").forEach(button => {
+  button.addEventListener("click", (e) => {
+    e.preventDefault();
+    const targetId = button.getAttribute("data-target");
 
-      // Fecha todos os blocos abertos
-      document.querySelectorAll(".vip-accordion-item").forEach(item => {
-        item.classList.remove("active");
-      });
-
-      // Se não estava ativo, abre o clicado
-      if (!isAlreadyActive) {
-        currentItem.classList.add("active");
-      }
+    // Oculta todas as gavetas de conteúdo
+    document.querySelectorAll(".vip-drawer-content").forEach(drawer => {
+      drawer.classList.add("hidden");
     });
+
+    // Desativa o estado ativo de todos os botões
+    document.querySelectorAll(".vip-btn-card").forEach(btn => {
+      btn.classList.remove("active");
+    });
+
+    // Exibe a gaveta selecionada e ativa o botão clicado
+    const targetDrawer = document.getElementById(targetId);
+    if (targetDrawer) {
+      targetDrawer.classList.remove("hidden");
+      button.classList.add("active");
+    }
   });
+});
 
 
 window.__vipMENSAGEM_COR_SELECIONADA = "#333333";
@@ -1566,7 +1567,7 @@ function vincularEventosPreviewVip() {
   const fontSelect = document.getElementById("vipNameFont");
   const frameSelect = document.getElementById("vipAvatarFrameSelect");
   const bannerSelect = document.getElementById("vipProfileBannerSelect");
-  
+
   const previewName = document.getElementById("vipPreviewName");
   const previewText = document.getElementById("vipPreviewText");
   const previewFrame = document.getElementById("vipPreviewFrame");
@@ -1578,7 +1579,7 @@ function vincularEventosPreviewVip() {
   const atualizarSimulacao = () => {
     if (!previewName || !previewText || !previewFrame) return;
 
-    previewName.className = "fw-bold"; 
+    previewName.className = "fw-bold";
     previewName.style.background = "";
     previewName.style.webkitBackgroundClip = "";
     previewName.style.webkitTextFillColor = "";
@@ -1602,7 +1603,7 @@ function vincularEventosPreviewVip() {
         previewName.style.fontFamily = `'${fontSelect.value}', ${herancaTipo}`;
       }
     }
-    
+
     previewText.style.color = window.__vipMENSAGEM_COR_SELECIONADA;
 
     previewFrame.className = "position-absolute top-0 start-0 w-100 h-100 rounded-circle";
@@ -1628,11 +1629,11 @@ function vincularEventosPreviewVip() {
     vipNameGrid.querySelectorAll(".color-box").forEach(b => {
       b.classList.remove("selected");
       const c = b.querySelector(".color-check");
-      if(c) c.style.display = "none";
+      if (c) c.style.display = "none";
     });
     box.classList.add("selected");
     const check = box.querySelector(".color-check");
-    if(check) check.style.display = "block";
+    if (check) check.style.display = "block";
     atualizarSimulacao();
   });
 
@@ -1643,11 +1644,11 @@ function vincularEventosPreviewVip() {
     vipMsgGrid.querySelectorAll(".color-box").forEach(b => {
       b.classList.remove("selected");
       const c = b.querySelector(".color-check");
-      if(c) c.style.display = "none";
+      if (c) c.style.display = "none";
     });
     box.classList.add("selected");
     const check = box.querySelector(".color-check");
-    if(check) check.style.display = "block";
+    if (check) check.style.display = "block";
     atualizarSimulacao();
   });
 
@@ -1667,7 +1668,7 @@ document.getElementById("btnSaveVipSettings")?.addEventListener("click", async (
     showToast("Gravando configurações VIP...");
     const refUser = doc(db, "users", user.uid);
 
-await updateDoc(refUser, {
+    await updateDoc(refUser, {
       vipNameColorType: document.getElementById("vipNameColorType").value,
       vipNameColorSolid: document.getElementById("vipNameColorPicker").value,
       vipNameFont: document.getElementById("vipNameFont").value,
@@ -1694,14 +1695,14 @@ document.getElementById("btnSaveVipSettings")?.addEventListener("click", async (
     showToast("Gravando configurações VIP...");
     const refUser = doc(db, "users", user.uid);
 
- await updateDoc(refUser, {
-  vipNameColorType: document.getElementById("vipNameColorType").value,
-  vipNameColorSolid: window.__vipNOME_COR_SELECIONADA || "#6f42c1", // Salva a cor do quadradinho do nome
-  vipNameFont: document.getElementById("vipNameFont").value,
-  vipMsgColor: window.__vipMENSAGEM_COR_SELECIONADA || "#333333", // Salva a cor do quadradinho do texto
-  vipAvatarFrame: document.getElementById("vipAvatarFrameSelect").value,
-  vipProfileBanner: document.getElementById("vipProfileBannerSelect").value
-});
+    await updateDoc(refUser, {
+      vipNameColorType: document.getElementById("vipNameColorType").value,
+      vipNameColorSolid: window.__vipNOME_COR_SELECIONADA || "#6f42c1", // Salva a cor do quadradinho do nome
+      vipNameFont: document.getElementById("vipNameFont").value,
+      vipMsgColor: window.__vipMENSAGEM_COR_SELECIONADA || "#333333", // Salva a cor do quadradinho do texto
+      vipAvatarFrame: document.getElementById("vipAvatarFrameSelect").value,
+      vipProfileBanner: document.getElementById("vipProfileBannerSelect").value
+    });
 
     showToast("Vantagens VIP salvas e aplicadas com sucesso!");
     inicializarPainelVipDinamico();
@@ -1735,29 +1736,29 @@ function closeProfilePanel(force = false) {
   profilePanel.classList.remove("dragging");
   profilePanel.style.transform = "";
   profileOverlay?.classList.remove("show");
-if (force) {
-  profilePanel.classList.add("hidden");
-  profileOverlay?.classList.add("hidden");
-//adicionado  11-05-26
-  document.body.classList.remove("profile-open");
-  document.body.style.top = "";
-  document.body.style.position = "";
-  document.body.style.overflow = "";
-  document.body.style.height = "";
-  document.body.style.width = "";
+  if (force) {
+    profilePanel.classList.add("hidden");
+    profileOverlay?.classList.add("hidden");
+    //adicionado  11-05-26
+    document.body.classList.remove("profile-open");
+    document.body.style.top = "";
+    document.body.style.position = "";
+    document.body.style.overflow = "";
+    document.body.style.height = "";
+    document.body.style.width = "";
 
-  window.scrollTo(0, window.__profileScrollY || 0);
+    window.scrollTo(0, window.__profileScrollY || 0);
 
-  if (typeof unlockProfileBackground === "function") {
-    unlockProfileBackground();
+    if (typeof unlockProfileBackground === "function") {
+      unlockProfileBackground();
+    }
+
+    document.body.classList.remove("viewing-other-profile");
+    currentViewedProfileId = null;
+    currentProfileIsOwner = false;
+
+    return;
   }
-
-  document.body.classList.remove("viewing-other-profile");
-  currentViewedProfileId = null;
-  currentProfileIsOwner = false;
-
-  return;
-}
 
   let closed = false;
 
@@ -1765,26 +1766,26 @@ if (force) {
     if (closed) return;
     closed = true;
     profilePanel.removeEventListener("transitionend", handleTransitionEnd);
-if (!profilePanel.classList.contains("open")) {
-  profilePanel.classList.add("hidden");
-  profileOverlay?.classList.add("hidden");
-  //adicionado  11-05-26
-  document.body.classList.remove("profile-open");
-  document.body.style.top = "";
-  document.body.style.position = "";
-  document.body.style.overflow = "";
-  document.body.style.height = "";
-  document.body.style.width = "";
+    if (!profilePanel.classList.contains("open")) {
+      profilePanel.classList.add("hidden");
+      profileOverlay?.classList.add("hidden");
+      //adicionado  11-05-26
+      document.body.classList.remove("profile-open");
+      document.body.style.top = "";
+      document.body.style.position = "";
+      document.body.style.overflow = "";
+      document.body.style.height = "";
+      document.body.style.width = "";
 
-window.scrollTo(0, window.__profileScrollY || 0);//11-05-26
-  if (typeof unlockProfileBackground === "function") {
-    unlockProfileBackground();
-  }
+      window.scrollTo(0, window.__profileScrollY || 0);//11-05-26
+      if (typeof unlockProfileBackground === "function") {
+        unlockProfileBackground();
+      }
 
-  document.body.classList.remove("viewing-other-profile");
-  currentViewedProfileId = null;
-currentProfileIsOwner = false;
-}
+      document.body.classList.remove("viewing-other-profile");
+      currentViewedProfileId = null;
+      currentProfileIsOwner = false;
+    }
 
   };
 
@@ -1818,12 +1819,12 @@ editProfileCoverBtn?.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
 
-if (!currentProfileIsOwner) return;
+  if (!currentProfileIsOwner) return;
 
-if (isProfileEditLocked) {
-  showToast(`Você poderá editar novamente em ${profileEditRemainingDays} dia(s).`);
-  return;
-}
+  if (isProfileEditLocked) {
+    showToast(`Você poderá editar novamente em ${profileEditRemainingDays} dia(s).`);
+    return;
+  }
 
   openProfileEditor();
 });
@@ -1902,107 +1903,107 @@ let partesDna = {
 
 // ENGINES DE RESOLUÇÃO SEPARADAS (CONFORME A DOCUMENTAÇÃO OFICIAL)
 function gerarAvatarDnaUri(dna12Digitos) {
-    // O parâmetro 'true' desliga a criptografia e lê as coordenadas das peças de 00 a 47
-    const svgCode = multiavatar(dna12Digitos, true);
-    return "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgCode)));
+  // O parâmetro 'true' desliga a criptografia e lê as coordenadas das peças de 00 a 47
+  const svgCode = multiavatar(dna12Digitos, true);
+  return "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgCode)));
 }
 
 function gerarAvatarUri(texto) {
-    // Modo clássico por semente (usado para renderizar os lotes fixos do avatar.js)
-    const svgCode = multiavatar(texto);
-    return "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgCode)));
+  // Modo clássico por semente (usado para renderizar os lotes fixos do avatar.js)
+  const svgCode = multiavatar(texto);
+  return "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgCode)));
 }
 
 function renderizarLote() {
-    if (!profileEditorAvatarGrid) return;
-    
-    let html = "";
-    let limite = avataresRenderizados + LOTE_TAMANHO;
-    
-    for (let i = avataresRenderizados; i < limite; i++) {
-        let codigo;
-        if (categoriaAtual === "aleatorios") {
-            codigo = Math.random().toString(36).substring(7);
-        } else {
-            if (i >= listaAtual.length) break;
-            codigo = listaAtual[i];
-        }
-        
-        let imagemUri = gerarAvatarUri(codigo);
-        html += `<img src="${imagemUri}" class="avatar-option" data-uri="${imagemUri}" style="width: 65px; height: 65px; cursor: pointer; border-radius: 50%; border: 3px solid transparent;" />`;
+  if (!profileEditorAvatarGrid) return;
+
+  let html = "";
+  let limite = avataresRenderizados + LOTE_TAMANHO;
+
+  for (let i = avataresRenderizados; i < limite; i++) {
+    let codigo;
+    if (categoriaAtual === "aleatorios") {
+      codigo = Math.random().toString(36).substring(7);
+    } else {
+      if (i >= listaAtual.length) break;
+      codigo = listaAtual[i];
     }
 
-    profileEditorAvatarGrid.insertAdjacentHTML("beforeend", html);
-    avataresRenderizados += LOTE_TAMANHO;
+    let imagemUri = gerarAvatarUri(codigo);
+    html += `<img src="${imagemUri}" class="avatar-option" data-uri="${imagemUri}" style="width: 65px; height: 65px; cursor: pointer; border-radius: 50%; border: 3px solid transparent;" />`;
+  }
+
+  profileEditorAvatarGrid.insertAdjacentHTML("beforeend", html);
+  avataresRenderizados += LOTE_TAMANHO;
 }
 
 // Controla a troca de abas ocultando ou exibindo o Construtor Dinâmico
 function carregarCategoria(categoria) {
-    categoriaAtual = categoria;
-    avataresRenderizados = 0;
-    
-    const construtorContainer = document.getElementById("avatarConstructorContainer");
-    if (profileEditorAvatarGrid) profileEditorAvatarGrid.innerHTML = "";
-    
-    if (categoria === "criar") {
-        profileEditorAvatarGrid?.classList.add("hidden");
-        construtorContainer?.classList.remove("hidden");
-        atualizarPreviewConstrutor();
-        return;
-    }
-    
-    construtorContainer?.classList.add("hidden");
-    profileEditorAvatarGrid?.classList.remove("hidden");
-    
-    if (categoria === "eles") listaAtual = avataresEles;
-    else if (categoria === "elas") listaAtual = avataresElas;
-    else if (categoria === "unissex") listaAtual = avataresUnissex;
-    else if (categoria === "aleatorios") listaAtual = [];
-    
-    renderizarLote();
+  categoriaAtual = categoria;
+  avataresRenderizados = 0;
+
+  const construtorContainer = document.getElementById("avatarConstructorContainer");
+  if (profileEditorAvatarGrid) profileEditorAvatarGrid.innerHTML = "";
+
+  if (categoria === "criar") {
+    profileEditorAvatarGrid?.classList.add("hidden");
+    construtorContainer?.classList.remove("hidden");
+    atualizarPreviewConstrutor();
+    return;
+  }
+
+  construtorContainer?.classList.add("hidden");
+  profileEditorAvatarGrid?.classList.remove("hidden");
+
+  if (categoria === "eles") listaAtual = avataresEles;
+  else if (categoria === "elas") listaAtual = avataresElas;
+  else if (categoria === "unissex") listaAtual = avataresUnissex;
+  else if (categoria === "aleatorios") listaAtual = [];
+
+  renderizarLote();
 }
 
 function padDoisDigitos(val) {
-    return String(val).padStart(2, "0");
+  return String(val).padStart(2, "0");
 }
 
 // Junta as 6 variáveis em Direct DNA e reconecta na visualização profissional
 function atualizarPreviewConstrutor() {
-    if(document.getElementById("valAmbiente")) document.getElementById("valAmbiente").textContent = padDoisDigitos(partesDna.ambiente);
-    if(document.getElementById("valRoupas")) document.getElementById("valRoupas").textContent = padDoisDigitos(partesDna.roupas);
-    if(document.getElementById("valCabeca")) document.getElementById("valCabeca").textContent = padDoisDigitos(partesDna.cabeca);
-    if(document.getElementById("valBoca")) document.getElementById("valBoca").textContent = padDoisDigitos(partesDna.boca);
-    if(document.getElementById("valOlhos")) document.getElementById("valOlhos").textContent = padDoisDigitos(partesDna.olhos);
-    if(document.getElementById("valCabelo")) document.getElementById("valCabelo").textContent = padDoisDigitos(partesDna.cabelo);
+  if (document.getElementById("valAmbiente")) document.getElementById("valAmbiente").textContent = padDoisDigitos(partesDna.ambiente);
+  if (document.getElementById("valRoupas")) document.getElementById("valRoupas").textContent = padDoisDigitos(partesDna.roupas);
+  if (document.getElementById("valCabeca")) document.getElementById("valCabeca").textContent = padDoisDigitos(partesDna.cabeca);
+  if (document.getElementById("valBoca")) document.getElementById("valBoca").textContent = padDoisDigitos(partesDna.boca);
+  if (document.getElementById("valOlhos")) document.getElementById("valOlhos").textContent = padDoisDigitos(partesDna.olhos);
+  if (document.getElementById("valCabelo")) document.getElementById("valCabelo").textContent = padDoisDigitos(partesDna.cabelo);
 
-    // Amarra os 6 blocos sequenciais da esquerda para a direita
-    const dnaFinal = padDoisDigitos(partesDna.ambiente) + 
-                     padDoisDigitos(partesDna.roupas) + 
-                     padDoisDigitos(partesDna.cabeca) + 
-                     padDoisDigitos(partesDna.boca) + 
-                     padDoisDigitos(partesDna.olhos) + 
-                     padDoisDigitos(partesDna.cabelo);
-                     
-    // CORREÇÃO: Puxa o renderizador direto de peças sem embaralhar o boneco
-    const novaUri = gerarAvatarDnaUri(dnaFinal);
-    const previewImg = document.getElementById("constructorPreview");
-    if (previewImg) previewImg.src = novaUri;
-    
-    selectedProfileAvatar = novaUri; 
+  // Amarra os 6 blocos sequenciais da esquerda para a direita
+  const dnaFinal = padDoisDigitos(partesDna.ambiente) +
+    padDoisDigitos(partesDna.roupas) +
+    padDoisDigitos(partesDna.cabeca) +
+    padDoisDigitos(partesDna.boca) +
+    padDoisDigitos(partesDna.olhos) +
+    padDoisDigitos(partesDna.cabelo);
+
+  // CORREÇÃO: Puxa o renderizador direto de peças sem embaralhar o boneco
+  const novaUri = gerarAvatarDnaUri(dnaFinal);
+  const previewImg = document.getElementById("constructorPreview");
+  if (previewImg) previewImg.src = novaUri;
+
+  selectedProfileAvatar = novaUri;
 }
 
 // Configura as ações de avanço e recuo das setas (Limite de 00 a 47)
 function VincularAcaoParte(idPrev, idNext, chaveParte) {
-    document.getElementById(idPrev)?.addEventListener("click", (e) => {
-        e.preventDefault();
-        partesDna[chaveParte] = partesDna[chaveParte] <= 0 ? 47 : partesDna[chaveParte] - 1;
-        atualizarPreviewConstrutor();
-    });
-    document.getElementById(idNext)?.addEventListener("click", (e) => {
-        e.preventDefault();
-        partesDna[chaveParte] = partesDna[chaveParte] >= 47 ? 0 : partesDna[chaveParte] + 1;
-        atualizarPreviewConstrutor();
-    });
+  document.getElementById(idPrev)?.addEventListener("click", (e) => {
+    e.preventDefault();
+    partesDna[chaveParte] = partesDna[chaveParte] <= 0 ? 47 : partesDna[chaveParte] - 1;
+    atualizarPreviewConstrutor();
+  });
+  document.getElementById(idNext)?.addEventListener("click", (e) => {
+    e.preventDefault();
+    partesDna[chaveParte] = partesDna[chaveParte] >= 47 ? 0 : partesDna[chaveParte] + 1;
+    atualizarPreviewConstrutor();
+  });
 }
 
 // Vincula as ações individuais das setas do Bootstrap
@@ -2013,36 +2014,36 @@ VincularAcaoParte("prevBoca", "nextBoca", "boca");
 VincularAcaoParte("prevOlhos", "nextOlhos", "olhos");
 VincularAcaoParte("prevCabelo", "nextCabelo", "cabelo");
 
-profileEditorAvatarGrid?.addEventListener("scroll", function() {
-    if (categoriaAtual !== "criar" && this.scrollTop + this.clientHeight >= this.scrollHeight - 15) {
-        renderizarLote();
-    }
+profileEditorAvatarGrid?.addEventListener("scroll", function () {
+  if (categoriaAtual !== "criar" && this.scrollTop + this.clientHeight >= this.scrollHeight - 15) {
+    renderizarLote();
+  }
 });
 
 profileEditorAvatarGrid?.addEventListener("click", (e) => {
-    if (e.target.tagName === "IMG" && e.target.classList.contains("avatar-option")) {
-        profileEditorAvatarGrid.querySelectorAll("img").forEach(img => {
-            img.style.border = "3px solid transparent";
-            img.classList.remove("selected");
-        });
-        e.target.style.border = "3px solid #ff6b6b";
-        e.target.classList.add("selected");
-        selectedProfileAvatar = e.target.getAttribute("data-uri"); 
-    }
+  if (e.target.tagName === "IMG" && e.target.classList.contains("avatar-option")) {
+    profileEditorAvatarGrid.querySelectorAll("img").forEach(img => {
+      img.style.border = "3px solid transparent";
+      img.classList.remove("selected");
+    });
+    e.target.style.border = "3px solid #ff6b6b";
+    e.target.classList.add("selected");
+    selectedProfileAvatar = e.target.getAttribute("data-uri");
+  }
 });
 
 document.querySelectorAll(".profile-avatar-cat").forEach(botao => {
-    botao.addEventListener("click", (e) => {
-        e.preventDefault();
-        document.querySelectorAll(".profile-avatar-cat").forEach(b => b.classList.remove("active"));
-        botao.classList.add("active");
-        const cat = botao.getAttribute("data-cat");
-        carregarCategoria(cat);
-    });
+  botao.addEventListener("click", (e) => {
+    e.preventDefault();
+    document.querySelectorAll(".profile-avatar-cat").forEach(b => b.classList.remove("active"));
+    botao.classList.add("active");
+    const cat = botao.getAttribute("data-cat");
+    carregarCategoria(cat);
+  });
 });
 
-window.renderProfileAvatarGrid = function() {
-    carregarCategoria("eles");
+window.renderProfileAvatarGrid = function () {
+  carregarCategoria("eles");
 };
 //========================================================== DAQUI PRA CIMA ===================================
 
@@ -2193,11 +2194,11 @@ saveProfileBtn?.addEventListener("click", async () => {
 
   try {
     showToast("Salvando alterações...");
-    
+
     let linkFotoFinal = selectedProfileAvatar;
 
     // SE HOUVER UMA FOTO DE PRÉVIA NA MEMÓRIA, FAZEMOS O UPLOAD AGORA!
-// SE HOUVER UMA FOTO DE PRÉVIA NA MEMÓRIA, FAZEMOS O UPLOAD AGORA!
+    // SE HOUVER UMA FOTO DE PRÉVIA NA MEMÓRIA, FAZEMOS O UPLOAD AGORA!
     if (window.blobFotoTemporaria) {
       showToast("Enviando foto ao servidor...");
       const storage = getStorage();
@@ -2218,7 +2219,7 @@ saveProfileBtn?.addEventListener("click", async () => {
       idade: editAge.value.trim(),
       genero: generoSelecionado,
       foto: linkFotoFinal,
-      bannerColor: selectedBannerColor, 
+      bannerColor: selectedBannerColor,
       perfilCompleto: true,
       lastProfileEditAt: Date.now()
     });
@@ -2268,8 +2269,8 @@ function getTranslateY(element) {
 }
 
 function onProfileDragStart(e) {
-if (document.body.classList.contains("index-page")) return;//10-05-26
-    // 01-05-26  impede o painel de tentar fechar quando o usuário estiver rolando o conteúdo/formulário
+  if (document.body.classList.contains("index-page")) return;//10-05-26
+  // 01-05-26  impede o painel de tentar fechar quando o usuário estiver rolando o conteúdo/formulário
   if (
     e.target.closest(".profile-content") ||
     e.target.closest("#profileEdit") ||
@@ -2281,13 +2282,13 @@ if (document.body.classList.contains("index-page")) return;//10-05-26
     return;
   }
 
-// 01-05-26 edita o toque do mobile dentro da lista de cidade
+  // 01-05-26 edita o toque do mobile dentro da lista de cidade
   if (
     e.target.closest(".city-dropdown-profile") ||
     e.target.closest(".gender-dropdown-profile")
   ) {
     return;
-  }  
+  }
 
 
   if (window.innerWidth > 768) return;
@@ -2309,7 +2310,7 @@ function onProfileDragMove(e) {
   let nextTranslate = profileStartTranslate + diff;
 
   if (nextTranslate < 0) {
-   nextTranslate = 0;
+    nextTranslate = 0;
   }
 
   profilePanel.style.transform = `translateY(${nextTranslate}px)`;
@@ -2356,8 +2357,8 @@ profileOverlay?.addEventListener("click", () => {
 // ================== ANIMAÇÃO DAS FOTOS 28-04-2026  ==================
 const heroAnimation = document.getElementById("heroAnimation");
 
-  const images = [
-    "img/1.png",
+const images = [
+  "img/1.png",
   "img/2.png",
   "img/3.png",
   "img/4.png",
@@ -2369,8 +2370,8 @@ const heroAnimation = document.getElementById("heroAnimation");
   "img/10.png",
   "img/11.png",
   "img/12.png",
- 
-  ];
+
+];
 
 
 let imageIndex = 0;
@@ -2387,35 +2388,35 @@ function createImg() {
 
   img.alt = "";
   img.loading = "eager";
-img.decoding = "async";
+  img.decoding = "async";
   return img;
 }
-  function createPhotoGrid() {
-    const wall = document.createElement("div");
-    wall.classList.add("photo-wall");
+function createPhotoGrid() {
+  const wall = document.createElement("div");
+  wall.classList.add("photo-wall");
 
-    const gridOne = document.createElement("div");
-    const gridTwo = document.createElement("div");
+  const gridOne = document.createElement("div");
+  const gridTwo = document.createElement("div");
 
-    gridOne.classList.add("photo-grid");
-    gridTwo.classList.add("photo-grid");
+  gridOne.classList.add("photo-grid");
+  gridTwo.classList.add("photo-grid");
 
- for (let i = 0; i < 70; i++) {
-  const img1 = createImg();
-  const img2 = img1.cloneNode(true);
+  for (let i = 0; i < 70; i++) {
+    const img1 = createImg();
+    const img2 = img1.cloneNode(true);
 
-  gridOne.appendChild(img1);
-  gridTwo.appendChild(img2);
-}
-
-    wall.appendChild(gridOne);
-    wall.appendChild(gridTwo);
-    heroAnimation.appendChild(wall);
-
-    setTimeout(() => {
-      wall.classList.add("ready");
-    }, 100);
+    gridOne.appendChild(img1);
+    gridTwo.appendChild(img2);
   }
+
+  wall.appendChild(gridOne);
+  wall.appendChild(gridTwo);
+  heroAnimation.appendChild(wall);
+
+  setTimeout(() => {
+    wall.classList.add("ready");
+  }, 100);
+}
 
 window.addEventListener("load", () => {
   if (heroAnimation) {
@@ -2424,12 +2425,12 @@ window.addEventListener("load", () => {
 });
 
 // ================= RENDERIZADOR DE EMOJIS LOTTIE (CHAT-DF UX) =================
-window.renderizarEmojiLottie = function(containerId, caminhoJson) {
+window.renderizarEmojiLottie = function (containerId, caminhoJson) {
   if (typeof lottie === "undefined") {
     console.warn("Biblioteca Lottie não carregada no HTML.");
     return;
   }
-  
+
   lottie.loadAnimation({
     container: document.getElementById(containerId),
     renderer: 'svg', // Mantém o vetor nítido em qualquer tela mobile/desktop
@@ -2445,7 +2446,7 @@ window.renderizarEmojiLottie = function(containerId, caminhoJson) {
 
 // ========================== 14-07-26 ENGINE DE CORTE E ZOOM DO ZERO NATIVO (CORRIGIDO) ==========================
 // DEIXE APENAS ESTA NO ESCOPO GLOBAL DO ARQUIVO (FORA DE QUALQUER FUNCTION OU DOMCONTENTLOADED)
-window.blobFotoTemporaria = null; 
+window.blobFotoTemporaria = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   const cameraBtnLabel = document.getElementById("btnUploadPhoto");
@@ -2468,16 +2469,16 @@ document.addEventListener("DOMContentLoaded", () => {
   let imgAlturaOriginal = 0;
 
 
-   // 15-07-2026 Sincroniza cirurgicamente com a trava global de tempo do perfil
-cameraBtnLabel?.addEventListener("click", (e) => {
+  // 15-07-2026 Sincroniza cirurgicamente com a trava global de tempo do perfil
+  cameraBtnLabel?.addEventListener("click", (e) => {
     e.preventDefault();
-    
-   
+
+
     if (isProfileEditLocked) {
       showToast(`Você poderá editar novamente em ${profileEditRemainingDays} dia(s).`);
       return;
     }
-    
+
     cropModal?.classList.remove("hidden");
   });
 
@@ -2522,7 +2523,7 @@ cameraBtnLabel?.addEventListener("click", (e) => {
       if (cropPreviewImg) {
         cropPreviewImg.src = event.target.result;
         cropPreviewImg.style.display = "block";
-        
+
         zoomAtual = 0.5;
         imgX = 0;
         imgY = 0;
@@ -2530,8 +2531,8 @@ cameraBtnLabel?.addEventListener("click", (e) => {
           cropZoomSlider.min = "0.2";
           cropZoomSlider.value = "0.5";
         }
-        
-        cropPreviewImg.onload = function() {
+
+        cropPreviewImg.onload = function () {
           const proporcao = cropPreviewImg.naturalWidth / cropPreviewImg.naturalHeight;
           if (proporcao > 1) {
             cropPreviewImg.style.height = "280px";
@@ -2555,7 +2556,7 @@ cameraBtnLabel?.addEventListener("click", (e) => {
   }
 
 
-// Variáveis extras para o cálculo matemático de dois dedos (Zoom por Toque)
+  // Variáveis extras para o cálculo matemático de dois dedos (Zoom por Toque)
   let distanciaPinchInicial = 0;
   let zoomPinchInicial = 1;
 
@@ -2566,9 +2567,9 @@ cameraBtnLabel?.addEventListener("click", (e) => {
     if (e.touches && e.touches.length === 2) {
       const dx = e.touches[0].clientX - e.touches[1].clientX;
       const dy = e.touches[0].clientY - e.touches[1].clientY;
-      distanciaPinchInicial = Math.sqrt(dx * dx + dy * dy); 
+      distanciaPinchInicial = Math.sqrt(dx * dx + dy * dy);
       zoomPinchInicial = zoomAtual;
-      return; 
+      return;
     }
 
     // FLUXO DE 1 DEDO / MOUSE: Arraste normal de posicionamento
@@ -2595,7 +2596,7 @@ cameraBtnLabel?.addEventListener("click", (e) => {
 
         // Limita o zoom entre o mínimo (0.2) e o máximo (3)
         zoomAtual = Math.max(0.2, Math.min(3, novoZoom));
-        
+
         if (cropZoomSlider) {
           cropZoomSlider.value = zoomAtual;
         }
@@ -2606,7 +2607,7 @@ cameraBtnLabel?.addEventListener("click", (e) => {
     }
 
     // SE ESTIVER COM 1 DEDO OU MOUSE: Arraste normal de posicionamento
-    if (e.touches && e.touches.length > 1) return; 
+    if (e.touches && e.touches.length > 1) return;
     const clienteX = e.touches ? e.touches[0].clientX : e.clientX;
     const clienteY = e.touches ? e.touches[0].clientY : e.clientY;
     imgX = clienteX - startX;
@@ -2614,8 +2615,8 @@ cameraBtnLabel?.addEventListener("click", (e) => {
     atualizarTransformacaoImagem();
   };
 
-  const finalizarArrasto = (e) => { 
-    estaArrastando = false; 
+  const finalizarArrasto = (e) => {
+    estaArrastando = false;
     distanciaPinchInicial = 0;
   };
 
@@ -2682,7 +2683,7 @@ cameraBtnLabel?.addEventListener("click", (e) => {
       0, 0, 150, 150
     );
 
-canvas.toBlob((blob) => {
+    canvas.toBlob((blob) => {
       if (!blob) return;
 
       // Vincula diretamente à propriedade global visível por todo o arquivo main.js
@@ -2712,48 +2713,55 @@ canvas.toBlob((blob) => {
 
 //=============== 18-07-26  NOVO SELETOR DE CIDADE E GÊNERO ESTILIZADO  DENTRO DO BOTAO VIP =====================
 // CORREÇÃO DOS DROPDOWNS VIP (EXPANDIR PARA BAIXO E PEGAR TODOS OS BOTÕES)
+//=============== SELETOR VIP: MANTÉM LISTA ABERTA PARA TESTAR EFEITOS =====================
 document.querySelectorAll('.vip-custom-dropdown').forEach(dropdown => {
   const wrapper = dropdown.parentElement;
   const btn = wrapper.querySelector('.vip-custom-select-btn');
   const selectNativo = wrapper.querySelector('select');
 
   if (btn && selectNativo) {
-    // Clique para abrir/fechar expandindo para baixo
+    // Clique no botão marcado de vermelho: ABRE E FECHA a lista
     btn.addEventListener('click', (e) => {
+      e.preventDefault();
       e.stopPropagation();
-      
-      // Fecha outros dropdowns VIP que estejam abertos
+
+      // Fecha outros dropdowns se houver mais de um
       document.querySelectorAll('.vip-custom-dropdown').forEach(d => {
         if (d !== dropdown) d.classList.add('hidden');
       });
-      
+
+      // Alterna abrir/fechar ao clicar no botão
       dropdown.classList.toggle('hidden');
     });
 
-    // Mapeia cliques nas opções da lista
+    // Clique na opção de degradê/efeito: APLICA O EFEITO E MANTÉM A LISTA ABERTA
     dropdown.querySelectorAll('.vip-dropdown-option').forEach(option => {
-      option.addEventListener('click', () => {
+      option.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation(); // Impede o clique de fechar a lista
+
         const val = option.getAttribute('data-value');
-        
-        // Atualiza o select nativo oculto
+
+        // Atualiza o select nativo oculto e dispara o preview em tempo real
         selectNativo.value = val;
         selectNativo.dispatchEvent(new Event('change'));
 
         // Atualiza o texto do botão
         btn.textContent = option.textContent;
 
-        // Alterna a classe ativa visualmente
+        // Marca a opção selecionada como ativa
         dropdown.querySelectorAll('.vip-dropdown-option').forEach(o => o.classList.remove('active'));
         option.classList.add('active');
-        
-        // Fecha a lista após selecionar
-        dropdown.classList.add('hidden');
+
+        // A lista NÃO é fechada aqui, permitindo testar múltiplos efeitos continuamente!
       });
     });
   }
 });
 
-// Fecha as listas se clicar em qualquer outra parte da tela
-document.addEventListener('click', () => {
-  document.querySelectorAll('.vip-custom-dropdown').forEach(d => d.classList.add('hidden'));
+// Ao clicar nos botões do topo (Troca de aba VIP), fecha as listas de efeitos
+document.querySelectorAll('.vip-btn-card').forEach(button => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('.vip-custom-dropdown').forEach(d => d.classList.add('hidden'));
+  });
 });

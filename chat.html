@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -13,469 +14,462 @@
   <link rel="shortcut icon" href="./img/imgicon2.png" />
   <!-- Carga de Fontes de Elite para Customização VIP do Chat-DF -->
   <!-- Importação de Fontes VIP Corrigida e Mapeada para o Chat-DF -->
- 
+
 
 </head>
-<body class="chat-page">
-<nav class="chat-navbar  navbar-dark bg-dark ">
 
-  <!-- CENTRO --  aparece os nomes das salas 
+<body class="chat-page">
+  <nav class="chat-navbar  navbar-dark bg-dark ">
+
+    <!-- CENTRO --  aparece os nomes das salas 
 <div class="chat-center">
   <span id="chatRoomName" class="chat-title"></span>
 </div>  ---->
 
-<!-- ESQUERDA -->
-<div class="chat-left">
-  <a href="./index.html" class="nav-btn" id="txlogot">
-    <img src="./img/inicio1.png" alt="Home">
-  </a>
-</div>
-
-<!-- DIREITA -->
-<div class="chat-right">
-
-  <div id="userArea" class="user-area-shell" aria-live="polite">
-    <div class="user-area-loading">
-      <img
-        src="./img/avatar.png"
-        alt="Avatar"
-        class="user-area-avatar"
-        onerror="this.src='./img/avatar.png'"
-      >
-
-      <span class="user-area-name"></span>
-    </div>
-  </div>
-
-</div>
-</nav>
-
-<!--  ESTRUTURA REAL DO CHAT  -->
-<div id="chat-layout">
-  <div id="chat-main-column">
-
-    <!-- Mensagens -->
-    <div id="chat-container" class="container-fluid">
-      <div id="chat-messages"></div>
+    <!-- ESQUERDA -->
+    <div class="chat-left">
+      <a href="./index.html" class="nav-btn" id="txlogot">
+        <img src="./img/inicio1.png" alt="Home">
+      </a>
     </div>
 
-    <!-- BOTÃO DE MOSTRAR MENSAGENS NOVAS -->
-    <button id="newMessagesBtn" class="hidden whatsapp-scroll-btn">
-      <div class="scroll-icon">
-        <svg class="arrow1" viewBox="0 0 24 24">
-          <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-        </svg>
-        <svg class="arrow2" viewBox="0 0 24 24">
-          <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-        </svg>
+    <!-- DIREITA -->
+    <div class="chat-right">
+
+      <div id="userArea" class="user-area-shell" aria-live="polite">
+        <div class="user-area-loading">
+          <img src="./img/avatar.png" alt="Avatar" class="user-area-avatar" onerror="this.src='./img/avatar.png'">
+
+          <span class="user-area-name"></span>
+        </div>
       </div>
-      <span class="msg-badge"></span>
-    </button>
 
-    <!-- CAMPO DE ENVIO -->
-    <!-- CAMPO DE ENVIO -->
-<div id="message-input-wrapper">
-  <div id="messageProfileLock" class="message-profile-lock hidden">
-    Entre, complete seu perfil para conversar.
-  </div>
+    </div>
+  </nav>
 
-  <div id="message-input-area">
-        <div class="attachment-wrapper">
-          <button id="attachBtn" title="Anexar" class="btn-attach" aria-expanded="false">
-            <i class="bi bi-paperclip"></i>
-          </button>
+  <!--  ESTRUTURA REAL DO CHAT  -->
+  <div id="chat-layout">
+    <div id="chat-main-column">
 
-          <!-- Painel de Anexos -->
-          <div id="attachmentOverlay" class="online-overlay"></div>
+      <!-- Mensagens -->
+      <div id="chat-container" class="container-fluid">
+        <div id="chat-messages"></div>
+      </div>
 
-          <div id="attachmentPanel" class="attachment-panel floating-panel">
-            <div class="attachment-grid">
-             <button class="attachment-item" data-action="profile">
-           <span class="attachment-icon icon-event">
-             <i class="bi bi-person-plus-fill"></i>
-            </span>
-            <span class="attachment-label">Meu perfil</span>
+      <!-- BOTÃO DE MOSTRAR MENSAGENS NOVAS -->
+      <button id="newMessagesBtn" class="hidden whatsapp-scroll-btn">
+        <div class="scroll-icon">
+          <svg class="arrow1" viewBox="0 0 24 24">
+            <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" />
+          </svg>
+          <svg class="arrow2" viewBox="0 0 24 24">
+            <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" />
+          </svg>
+        </div>
+        <span class="msg-badge"></span>
+      </button>
+
+      <!-- CAMPO DE ENVIO -->
+      <!-- CAMPO DE ENVIO -->
+      <div id="message-input-wrapper">
+        <div id="messageProfileLock" class="message-profile-lock hidden">
+          Entre, complete seu perfil para conversar.
+        </div>
+
+        <div id="message-input-area">
+          <div class="attachment-wrapper">
+            <button id="attachBtn" title="Anexar" class="btn-attach" aria-expanded="false">
+              <i class="bi bi-paperclip"></i>
             </button>
-              <button class="attachment-item" data-action="users">
-                <span class="attachment-icon icon-gallery">
-              <i class="bi bi-people-fill"></i>
-                </span>
-                <span class="attachment-label">Usuarios on-line</span>
-              </button>
 
-              <!----- NAO APAGR E AS CORES DO TEXTO 
+            <!-- Painel de Anexos -->
+            <div id="attachmentOverlay" class="online-overlay"></div>
+
+            <div id="attachmentPanel" class="attachment-panel floating-panel">
+              <div class="attachment-grid">
+                <button class="attachment-item" data-action="profile">
+                  <span class="attachment-icon icon-event">
+                    <i class="bi bi-person-plus-fill"></i>
+                  </span>
+                  <span class="attachment-label">Meu perfil</span>
+                </button>
+                <button class="attachment-item" data-action="users">
+                  <span class="attachment-icon icon-gallery">
+                    <i class="bi bi-people-fill"></i>
+                  </span>
+                  <span class="attachment-label">Usuarios on-line</span>
+                </button>
+
+                <!----- NAO APAGR E AS CORES DO TEXTO 
               <button class="attachment-item" id="colorBtn" data-action="color">
                 <span class="attachment-icon icon-color"><i class="bi bi-palette-fill"></i></span>
                 <span class="attachment-label">Cor do texto</span>
               </button> --->
 
-              <button class="attachment-item" data-action="ai">
-                <span class="attachment-icon icon-ai"><i class="bi bi-stars"></i></span>
-                <span class="attachment-label">FeedBack</span>
-              </button>
+                <button class="attachment-item" data-action="ai">
+                  <span class="attachment-icon icon-ai"><i class="bi bi-stars"></i></span>
+                  <span class="attachment-label">FeedBack</span>
+                </button>
 
-              <button class="attachment-item" data-action="camera">
-                <span class="attachment-icon icon-camera"><i class="bi bi-camera-fill"></i></span>
-                <span class="attachment-label">rascunho</span>
-              </button>
+                <button class="attachment-item" data-action="camera">
+                  <span class="attachment-icon icon-camera"><i class="bi bi-camera-fill"></i></span>
+                  <span class="attachment-label">rascunho</span>
+                </button>
 
-              <button class="attachment-item" data-action="location">
-                <span class="attachment-icon icon-location"><i class="bi bi-geo-alt-fill"></i></span>
-                <span class="attachment-label">rascunho</span>
-              </button>
+                <button class="attachment-item" data-action="location">
+                  <span class="attachment-icon icon-location"><i class="bi bi-geo-alt-fill"></i></span>
+                  <span class="attachment-label">rascunho</span>
+                </button>
 
-              <button class="attachment-item" data-action="contact">
-                <span class="attachment-icon icon-contact"><i class="bi bi-person-badge-fill"></i></span>
-                <span class="attachment-label">rascunho</span>
-              </button>
+                <button class="attachment-item" data-action="contact">
+                  <span class="attachment-icon icon-contact"><i class="bi bi-person-badge-fill"></i></span>
+                  <span class="attachment-label">rascunho</span>
+                </button>
 
-              <button class="attachment-item" data-action="documento">
-                <span class="attachment-icon icon-document"><i class="bi bi-file-earmark-text"></i></span>
-                <span class="attachment-label">rascunho</span>
-              </button>
+                <button class="attachment-item" data-action="documento">
+                  <span class="attachment-icon icon-document"><i class="bi bi-file-earmark-text"></i></span>
+                  <span class="attachment-label">rascunho</span>
+                </button>
 
-              <button class="attachment-item" data-action="audio">
-                <span class="attachment-icon icon-audio"><i class="bi bi-headphones"></i></span>
-                <span class="attachment-label">rascunho</span>
-              </button>
+                <button class="attachment-item" data-action="audio">
+                  <span class="attachment-icon icon-audio"><i class="bi bi-headphones"></i></span>
+                  <span class="attachment-label">rascunho</span>
+                </button>
 
-              <button class="attachment-item" data-action="poll">
-                <span class="attachment-icon icon-poll"><i class="bi bi-bar-chart-line-fill"></i></span>
-                <span class="attachment-label">rascunho</span>
-              </button>
+                <button class="attachment-item" data-action="poll">
+                  <span class="attachment-icon icon-poll"><i class="bi bi-bar-chart-line-fill"></i></span>
+                  <span class="attachment-label">rascunho</span>
+                </button>
 
-            </div>
-          </div>
-        </div>
-
-        <button id="emojiBtn" title="Adicionar emoji">
-          <i class="bi bi-emoji-smile"></i>
-        </button>
-
-        <div id="replyPreview" class="reply-preview" style="display:none;">
-  <div class="reply-preview-content"></div>
-  
-  <span id="replyReportBtn" class="reply-report-action">Denuncia</span>
-</div>
-
-        <textarea id="messageInput" class="message-input"
-          placeholder="Digite sua mensagem..." rows="1"></textarea>
-
-        <button id="sendBtn" title="Enviar">
-          <i class="bi bi-send-fill"></i>
-        </button>
-      </div>
-
-<!-- Painel de Cores -->
-<div id="colorPanel" class="floating-panel color-panel">
-  <div class="color-panel-header">
-    <span class="color-title">Escolha uma cor</span>
-    <button id="closeColorPanel" class="color-close-btn">✕</button>
-  </div>
-  <div class="color-grid" id="dynamicColors"></div>
-</div>
-
-<!-- Painel de Figurinhas / Emoji -->
-<div id="stickerPanel" class="sticker-panel floating-panel">
-  <div class="sticker-header">
-    <div class="sticker-tabs">
-      <button class="expr-tab active" data-mode="emoji">Emojis</button>
-      <button class="expr-tab" data-mode="sticker">Stickers</button>
-      <button class="expr-tab" data-mode="anim">Animações</button>
-    </div>
-    <button id="stickerClose">✕</button>
-  </div>
-
-  <div id="expressionContent">
-    <div id="emojiList" class="expr-list"></div>
-    <div id="stickerList" class="expr-list"></div>
-    <div id="animList" class="expr-list"></div>
-  </div>
-
-  <div class="sticker-categories">
-    <button class="sticker-cat active" data-cat="all">Todos</button>
-    <button class="sticker-cat" data-cat="Teste1">Teste1</button>
-    <button class="sticker-cat" data-cat="Teste2">Teste2</button>
-    <button class="sticker-cat" data-cat="Teste3">Teste3</button>
-    <button class="sticker-cat" data-cat="Teste4">Teste4</button>
-    <button class="sticker-cat" data-cat="Teste5">Teste5</button>
-    <button class="sticker-cat" data-cat="Teste5">Teste6</button>
-    <button class="sticker-cat" data-cat="Teste5">Teste7</button>
-    <button class="sticker-cat" data-cat="Teste5">Teste8</button>
-  </div>
-
-  <div class="sticker-categories anim-categories">
-    <button class="anim-cat active" data-cat="all">Todas</button>
-    <button class="anim-cat" data-cat="Emoji">Emoji</button>
-    <button class="anim-cat" data-cat="Amor">Amor</button>
-    <button class="anim-cat" data-cat="Reacoes">Reações</button>
-    <button class="anim-cat" data-cat="Meme">Memes</button>
-    <button class="anim-cat" data-cat="Meme">TESTE</button>
-    <button class="anim-cat" data-cat="Meme">TESTE2</button>
-  </div>
-</div>
-</div>
-</div>
-
-  <!-- PAINEL ONLINE AGORA COMO COLUNA REAL -->
-  <div id="onlineUsersPanel" class="online-users-panel">
-    <div class="online-header">
-      <span>🟢 Online <span id="onlineCount">0</span></span>
-      <button id="closeOnlinePanel" type="button">✕</button>
-    </div>
-
-    <div id="onlineUsersList" class="online-users-list">
-      <!-- usuários online aparecem aqui -->
-    </div>
-  </div>
-
-
-  
-</div>
-
-<div id="onlineOverlay" class="online-overlay"></div>
-
-<!-- ================= SHOW TOAST  ================= -->
-<div id="toast"></div>
-
-
-
-
-<!-- ================= PERFIL DO USUÁRIO ================= -->
-
-<div id="profileOverlay" class="hidden"></div>
-
-<div id="profilePanel" class="profile-panel hidden">
-<div class="profile-body">
-  <div class="profile-cover">
-      <button id="reportUserBtn" type="button" aria-label="Denunciar usuário" style="display: none;">
-        <i class="bi bi-flag-fill"></i>
-      </button>
-      <div class="profile-header-actions profile-cover-actions">
-        <button id="editProfileCoverBtn" type="button" aria-label="Editar cor da capa">
-          <i class="bi bi-pencil-square"></i>
-        </button>
-        <button id="closeProfilePanel" type="button" aria-label="Fechar painel">✕</button>
-      </div>
-    </div>
-    <!-- 13-07-2026 mudança de posição do avatar para dentro do painel do usuário -->
-<div class="profile-avatar-wrap">
-  <div class="profile-avatar">
-    <img id="profileAvatar" src="img/avatar.png" alt="Avatar do usuário">
-  </div>
-
-  <!-- Botão de Upload agora fica do lado de fora da máscara de corte -->
-  <label id="btnUploadPhoto" class="profile-photo-upload-btn hidden" title="Adicionar foto de perfil">
-   <i class="bi bi-camera"></i>
-    <input type="file" id="uploadProfilePic" accept="image/jpeg, image/png, image/webp" style="display: none;">
-  </label>
-
-  <span id="profileOnlineDot" class="profile-online-dot hidden"></span>
-</div>
-
-
-    <div class="profile-user-info">
-      <h3 id="profileName">Usuário</h3>
-      
-      <p id="profileMood">Sem recado no momento.</p>
-    </div>
-<!---====================== 16-07-26 ADICIONANDO NOVO PAINEL VIP ===================---->
-<div class="profile-tabs ">
-      <button class="profile-tab" data-tab="info" type="button">Info</button>
-      <button class="profile-tab" data-tab="edit" type="button">Editar perfil</button>
-      <button class="profile-tab" data-tab="vip" type="button"><i class="bi bi-gem"></i> VIP</button>
-    </div>
-    
-    <div class="profile-content px-3">
-      <!-- INFORMAÇÃO -->
-      <!-- INFO -->
-      <div class="profile-section active" id="profileInfo">
-        <div class=" dados-info row align-items-center border-bottom w-100 mx-0">
-          <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
-            <i class="bi bi-geo-alt text-secondary fs-5"></i>
-            <strong>Cidade</strong>
-          </span>
-          <span id="profileCity" class="col-7 px-0 text-dark">-</span>
-        </div>
-        
-        <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
-          <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
-            <i class="bi bi-calendar-heart text-secondary fs-5"></i>
-            <strong>Idade</strong>
-          </span>
-          <span id="profileAge" class="col-7 px-0 text-dark">-</span>
-        </div>
-        
-        <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
-          <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
-            <i class="bi bi-gender-ambiguous text-secondary fs-5"></i>
-            <strong>Gênero</strong>
-          </span>
-          <span id="profileGender" class="col-7 px-0 text-dark">-</span>
-        </div>
-        
-        <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
-          <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
-            <i class="bi bi-person-check text-secondary fs-5"></i>
-            <strong>Membro desde</strong>
-          </span>
-          <span id="profileMemberSince" class="col-7 px-0 text-dark">-</span>
-        </div>
-      </div>
-     
-            <!-- EDITAR -->
-<div class="profile-section" id="profileEdit">
-  <label class="profile-field">
-    <i class="bi bi-person profile-field-icon"></i>
-    <span class="profile-field-body">
-      <span class="profile-field-label">Nome</span>
-      <input type="text" id="editName" placeholder="Nome de Usuário" maxlength="10">
-    </span>
-  </label>
-  <label class="profile-field">
-    <i class="bi bi-calendar-heart profile-field-icon"></i>
-    <span class="profile-field-body">
-      <span class="profile-field-label">Idade</span>
-      <input type="text" id="editAge" placeholder="Somente números" inputmode="numeric" pattern="[0-9]*">
-    </span>
-  </label>
-  <label class="profile-field">
-    <i class="bi bi-gender-ambiguous profile-field-icon"></i>
-    <span class="profile-field-body">
-      <span class="profile-field-label">Gênero</span>
-      <input type="text" id="editGender" placeholder="Digite seu gênero" maxlength="15">
-    </span>
-  </label>
-  <label class="profile-field">
-    <i class="bi bi-geo-alt profile-field-icon"></i>
-    <span class="profile-field-body">
-      <span class="profile-field-label">Cidade</span>
-      <input type="text" id="editCity" placeholder="Digite sua cidade"maxlength="22">
-    </span>
-  </label>
-<label class="profile-field" style="align-items: flex-start; padding-top: 8px;">
-  <i class="bi bi-chat-square-text profile-field-icon"></i>
-  <span class="profile-field-body">
-    <span class="profile-field-label">Recado</span>
-    <textarea id="editMood" placeholder="Frase Favorita " maxlength="100" rows="3"></textarea>
-  </span>
-</label>
-  <div id="editTrackingState" data-capa-alterada="false" data-avatar-alterado="false" class="d-none"></div>
-  <button id="saveProfileBtn" type="button" disabled style="opacity: 0.5; cursor: not-allowed;">Salvar</button>
-</div>
-
-
-
-
-
-
-<!-- ================ SEÇÃO VIP TOTALMENTE MANTIDA E INTEGRADA AO ACORDEÃO ===============================-->
- <!-- ===================================================================================================================================-->
-      <div class="profile-section d-none" id="profileVip">
-        
-        <!-- CARD DO STATUS VIP & EXPIRAÇÃO -->
-        <div class="vip-card-status mb-3 p-3 text-center" style="border-radius: 12px; border: 1px solid rgba(255, 193, 7, 0.3); background: linear-gradient(145deg, #1e1b4b, #0f0c20); color: #fff;">
-          <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
-            <i class="bi bi-gem text-warning animate-pulse" style="filter: drop-shadow(0 0 5px #ffc107);"></i>
-            <h5 class="m-0 fw-bold text-white">Area exclusiva</h5>
-          </div>
-          
-          <!-- Contador de Tempo / Renovação -->
-          <div id="vipExpiryRow" class="mt-2 d-none">
-            <p class="small m-0 text-white-50">Seu plano VIP expira em: <span id="vipExpiryDays" class="text-warning fw-bold">X dias</span></p>
-            <button id="btnRenewVip" class="btn btn-sm btn-outline-warning py-0.5 px-2 mt-1" style="font-size: 11px; border-radius: 20px;">Renovar assinatura</button>
-          </div>
-        </div>
-
-        <!-- SEÇÃO 1: APENAS PARA QUEM NÃO É VIP 
-         
-        
-        <div id="vipPromoSection" class="vip-sub-section">
-          <p class="text-center small text-muted mb-3">Ative o VIP e ganhe destaque com recursos visuais incríveis!</p>
-          
-          <div class="vip-preview-benefits d-flex flex-column gap-2 mb-3">
-            <div class="d-flex align-items-center gap-2.5 p-2 rounded-3 bg-light text-start">
-              <i class="bi bi-palette-fill text-primary"></i>
-              <span class="small" style="font-size: 12.5px;">Nome Colorido & Gradientes Animados</span>
-            </div>
-            <div class="d-flex align-items-center gap-2.5 p-2 rounded-3 bg-light text-start">
-              <i class="bi bi-type-strikethrough text-success"></i>
-              <span class="small" style="font-size: 12.5px;">Fontes e Cores exclusivas para suas mensagens</span>
-            </div>
-            <div class="d-flex align-items-center gap-2.5 p-2 rounded-3 bg-light text-start">
-              <i class="bi bi-person-bounding-box text-warning"></i>
-              <span class="small" style="font-size: 12.5px;">Molduras de Avatar (Frames) Neon e Led Animadas</span>
-            </div>
-            <div class="d-flex align-items-center gap-2.5 p-2 rounded-3 bg-light text-start">
-              <i class="bi bi-image-fill text-danger"></i>
-              <span class="small" style="font-size: 12.5px;">Capa de Perfil Personalizada (Degradês Animados)</span>
+              </div>
             </div>
           </div>
 
-          <button id="btnBuyVip" class="btn w-100 py-2.5 fw-bold text-white shadow-sm" style="background: linear-gradient(135deg, #ff9f0a, #ff375f); border: none; border-radius: 10px;">
-            <i class="bi bi-unlock-fill"></i> Quero ser VIP agora!
+          <button id="emojiBtn" title="Adicionar emoji">
+            <i class="bi bi-emoji-smile"></i>
+          </button>
+
+          <div id="replyPreview" class="reply-preview" style="display:none;">
+            <div class="reply-preview-content"></div>
+
+            <span id="replyReportBtn" class="reply-report-action">Denuncia</span>
+          </div>
+
+          <textarea id="messageInput" class="message-input" placeholder="Digite sua mensagem..." rows="1"></textarea>
+
+          <button id="sendBtn" title="Enviar">
+            <i class="bi bi-send-fill"></i>
           </button>
         </div>
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        -->
-        
 
-        <!-- SEÇÃO 2: PARA QUEM JÁ É VIP -->
-        <div id="vipSettingsSection" class="vip-sub-section d-none">
-          
-          <!-- PREVIEW EM TEMPO REAL -->
-          <div class="vip-preview-box text-start mb-3 border rounded-3 bg-light">
-            <span class="text-muted d-block mb-2" style="font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 12px 0 12px;">Preview em Tempo Real</span>
-            
-            <div id="vipPreviewBanner" class="mb-3" style="height: 85px; border-radius: 8px; background: #8b898963; margin: 0 12px; transition: background 0.2s ease;">
-              <span style="font-size: 9px; color: rgba(255,255,255,0.8); font-weight: bold; padding: 4px 8px; display: inline-block; text-transform: uppercase;">Sua Capa VIP</span>
+        <!-- Painel de Cores -->
+        <div id="colorPanel" class="floating-panel color-panel">
+          <div class="color-panel-header">
+            <span class="color-title">Escolha uma cor</span>
+            <button id="closeColorPanel" class="color-close-btn">✕</button>
+          </div>
+          <div class="color-grid" id="dynamicColors"></div>
+        </div>
+
+        <!-- Painel de Figurinhas / Emoji -->
+        <div id="stickerPanel" class="sticker-panel floating-panel">
+          <div class="sticker-header">
+            <div class="sticker-tabs">
+              <button class="expr-tab active" data-mode="emoji">Emojis</button>
+              <button class="expr-tab" data-mode="sticker">Stickers</button>
+              <button class="expr-tab" data-mode="anim">Animações</button>
+            </div>
+            <button id="stickerClose">✕</button>
+          </div>
+
+          <div id="expressionContent">
+            <div id="emojiList" class="expr-list"></div>
+            <div id="stickerList" class="expr-list"></div>
+            <div id="animList" class="expr-list"></div>
+          </div>
+
+          <div class="sticker-categories">
+            <button class="sticker-cat active" data-cat="all">Todos</button>
+            <button class="sticker-cat" data-cat="Teste1">Teste1</button>
+            <button class="sticker-cat" data-cat="Teste2">Teste2</button>
+            <button class="sticker-cat" data-cat="Teste3">Teste3</button>
+            <button class="sticker-cat" data-cat="Teste4">Teste4</button>
+            <button class="sticker-cat" data-cat="Teste5">Teste5</button>
+            <button class="sticker-cat" data-cat="Teste5">Teste6</button>
+            <button class="sticker-cat" data-cat="Teste5">Teste7</button>
+            <button class="sticker-cat" data-cat="Teste5">Teste8</button>
+          </div>
+
+          <div class="sticker-categories anim-categories">
+            <button class="anim-cat active" data-cat="all">Todas</button>
+            <button class="anim-cat" data-cat="Emoji">Emoji</button>
+            <button class="anim-cat" data-cat="Amor">Amor</button>
+            <button class="anim-cat" data-cat="Reacoes">Reações</button>
+            <button class="anim-cat" data-cat="Meme">Memes</button>
+            <button class="anim-cat" data-cat="Meme">TESTE</button>
+            <button class="anim-cat" data-cat="Meme">TESTE2</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAINEL ONLINE AGORA COMO COLUNA REAL -->
+    <div id="onlineUsersPanel" class="online-users-panel">
+      <div class="online-header">
+        <span>🟢 Online <span id="onlineCount">0</span></span>
+        <button id="closeOnlinePanel" type="button">✕</button>
+      </div>
+
+      <div id="onlineUsersList" class="online-users-list">
+        <!-- usuários online aparecem aqui -->
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <div id="onlineOverlay" class="online-overlay"></div>
+
+  <!-- ================= SHOW TOAST  ================= -->
+  <div id="toast"></div>
+
+
+
+
+  <!-- ================= PERFIL DO USUÁRIO ================= -->
+
+  <div id="profileOverlay" class="hidden"></div>
+
+  <div id="profilePanel" class="profile-panel hidden">
+    <div class="profile-body">
+      <div class="profile-cover">
+        <button id="reportUserBtn" type="button" aria-label="Denunciar usuário" style="display: none;">
+          <i class="bi bi-flag-fill"></i>
+        </button>
+        <div class="profile-header-actions profile-cover-actions">
+          <button id="editProfileCoverBtn" type="button" aria-label="Editar cor da capa">
+            <i class="bi bi-pencil-square"></i>
+          </button>
+          <button id="closeProfilePanel" type="button" aria-label="Fechar painel">✕</button>
+        </div>
+      </div>
+      <!-- 13-07-2026 mudança de posição do avatar para dentro do painel do usuário -->
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar">
+          <img id="profileAvatar" src="img/avatar.png" alt="Avatar do usuário">
+        </div>
+
+        <!-- Botão de Upload agora fica do lado de fora da máscara de corte -->
+        <label id="btnUploadPhoto" class="profile-photo-upload-btn hidden" title="Adicionar foto de perfil">
+          <i class="bi bi-camera"></i>
+          <input type="file" id="uploadProfilePic" accept="image/jpeg, image/png, image/webp" style="display: none;">
+        </label>
+
+        <span id="profileOnlineDot" class="profile-online-dot hidden"></span>
+      </div>
+
+
+      <div class="profile-user-info">
+        <h3 id="profileName">Usuário</h3>
+
+        <p id="profileMood">Sem recado no momento.</p>
+      </div>
+      <!---====================== 16-07-26 ADICIONANDO NOVO PAINEL VIP ===================---->
+      <div class="profile-tabs ">
+        <button class="profile-tab" data-tab="info" type="button">Info</button>
+        <button class="profile-tab" data-tab="edit" type="button">Editar perfil</button>
+        <button class="profile-tab" data-tab="vip" type="button"><i class="bi bi-gem"></i> VIP</button>
+      </div>
+
+      <div class="profile-content px-3">
+        <!-- INFORMAÇÃO -->
+        <!-- INFO -->
+        <div class="profile-section active" id="profileInfo">
+          <div class=" dados-info row align-items-center border-bottom w-100 mx-0">
+            <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
+              <i class="bi bi-geo-alt text-secondary fs-5"></i>
+              <strong>Cidade</strong>
+            </span>
+            <span id="profileCity" class="col-7 px-0 text-dark">-</span>
+          </div>
+
+          <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+            <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
+              <i class="bi bi-calendar-heart text-secondary fs-5"></i>
+              <strong>Idade</strong>
+            </span>
+            <span id="profileAge" class="col-7 px-0 text-dark">-</span>
+          </div>
+
+          <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+            <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
+              <i class="bi bi-gender-ambiguous text-secondary fs-5"></i>
+              <strong>Gênero</strong>
+            </span>
+            <span id="profileGender" class="col-7 px-0 text-dark">-</span>
+          </div>
+
+          <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+            <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
+              <i class="bi bi-person-check text-secondary fs-5"></i>
+              <strong>Membro desde</strong>
+            </span>
+            <span id="profileMemberSince" class="col-7 px-0 text-dark">-</span>
+          </div>
+        </div>
+
+        <!-- EDITAR -->
+        <div class="profile-section" id="profileEdit">
+          <label class="profile-field">
+            <i class="bi bi-person profile-field-icon"></i>
+            <span class="profile-field-body">
+              <span class="profile-field-label">Nome</span>
+              <input type="text" id="editName" placeholder="Nome de Usuário" maxlength="10">
+            </span>
+          </label>
+          <label class="profile-field">
+            <i class="bi bi-calendar-heart profile-field-icon"></i>
+            <span class="profile-field-body">
+              <span class="profile-field-label">Idade</span>
+              <input type="text" id="editAge" placeholder="Somente números" inputmode="numeric" pattern="[0-9]*">
+            </span>
+          </label>
+          <label class="profile-field">
+            <i class="bi bi-gender-ambiguous profile-field-icon"></i>
+            <span class="profile-field-body">
+              <span class="profile-field-label">Gênero</span>
+              <input type="text" id="editGender" placeholder="Digite seu gênero" maxlength="15">
+            </span>
+          </label>
+          <label class="profile-field">
+            <i class="bi bi-geo-alt profile-field-icon"></i>
+            <span class="profile-field-body">
+              <span class="profile-field-label">Cidade</span>
+              <input type="text" id="editCity" placeholder="Digite sua cidade" maxlength="22">
+            </span>
+          </label>
+          <label class="profile-field" style="align-items: flex-start; padding-top: 8px;">
+            <i class="bi bi-chat-square-text profile-field-icon"></i>
+            <span class="profile-field-body">
+              <span class="profile-field-label">Recado</span>
+              <textarea id="editMood" placeholder="Frase Favorita " maxlength="100" rows="3"></textarea>
+            </span>
+          </label>
+          <div id="editTrackingState" data-capa-alterada="false" data-avatar-alterado="false" class="d-none"></div>
+          <button id="saveProfileBtn" type="button" disabled style="opacity: 0.5; cursor: not-allowed;">Salvar</button>
+        </div>
+
+
+
+
+
+
+        <!-- ================ SEÇÃO VIP TOTALMENTE MANTIDA E INTEGRADA AO ACORDEÃO ===============================-->
+        <!-- ===================================================================================================================================-->
+        <div class="profile-section d-none" id="profileVip">
+
+          <!-- CARD DO STATUS VIP & EXPIRAÇÃO -->
+          <div class="vip-card-status mb-3 p-3 text-center"
+            style="border-radius: 12px; border: 1px solid rgba(255, 193, 7, 0.3); background: linear-gradient(145deg, #1e1b4b, #0f0c20); color: #fff;">
+            <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+              <i class="bi bi-gem text-warning animate-pulse" style="filter: drop-shadow(0 0 5px #ffc107);"></i>
+              <h5 class="m-0 fw-bold text-white">Area exclusiva</h5>
             </div>
 
-            <div class="d-flex gap-2.5 align-items-start" style="padding: 0 12px 12px 12px;">
-              <div class="position-relative" style="width: 40px; height: 40px; flex-shrink: 0;">
-                <img id="vipPreviewAvatar" src="img/avatar.png" class="rounded-circle w-100 h-100 object-fit-cover" alt="Preview Avatar">
-                <div id="vipPreviewFrame" class="position-absolute top-0 start-0 w-100 h-100 rounded-circle" style="pointer-events: none; box-sizing: border-box;"></div>
-              </div>
-
-              <div class="bg-white p-2.5 rounded-3 shadow-sm border flex-grow-1" style="max-width: 80%;">
-                <div class="d-flex align-items-center gap-1.5 mb-0.5">
-                  <span id="vipPreviewName" class="fw-bold" style="font-size: 13.5px; font-family: inherit;">Saga</span>
-                  <span id="vipPreviewTag" style="font-size:9px; padding: 2px 4px;"><img src="img/diamante.png" alt="VIP" class="img-fluid" width="19" height="19"></span>
-                </div>
-                <p id="vipPreviewText" class="m-0" style="font-size: 13px; color: #333; line-height: 1.3;">Olá! Olha como fica bonita a minha mensagem!</p>
-              </div>
+            <!-- Contador de Tempo / Renovação -->
+            <div id="vipExpiryRow" class="mt-2 d-none">
+              <p class="small m-0 ">Seu plano VIP expira em: <span id="vipExpiryDays"
+                  class="text-warning fw-bold">X dias</span></p>
+              <button id="btnRenewVip" class="btn btn-sm btn-outline-warning py-0.5 px-2 mt-1"
+                style="font-size: 11px; border-radius: 20px;">Renovar assinatura</button>
             </div>
           </div>
 
-          <!-- CONTAINER DO ACORDEÃO (ABRE E FECHA AS GAVETAS) -->
-          <div class="vip-accordion">
+          
 
-            <!-- GAVETA 1: ESTILO DO SEU NOME -->
-            <div class="vip-accordion-item">
-              <button type="button" class="vip-accordion-header"><i class="bi bi-person-fill icon-vip"></i> Estilo do seu Nome</button>
-              <div class="vip-accordion-content">
+
+          <!-- SEÇÃO 2: PARA QUEM JÁ É VIP -->
+          <div id="vipSettingsSection" class="vip-sub-section d-none">
+
+            <!-- PREVIEW EM TEMPO REAL -->
+            <div class="vip-preview-box text-start mb-3 border rounded-3 bg-light">
+              <span class="text-muted d-block mb-2"
+                style="font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 12px 0 12px;">Preview
+                em Tempo Real</span>
+
+              <div id="vipPreviewBanner" class="mb-3"
+                style="height: 85px; border-radius: 8px; background: #8b898963; margin: 0 12px; transition: background 0.2s ease;">
+                <span
+                  style="font-size: 9px; color: rgba(255,255,255,0.8); font-weight: bold; padding: 4px 8px; display: inline-block; text-transform: uppercase;">Sua
+                  Capa VIP</span>
+              </div>
+
+              <div class="d-flex gap-2.5 align-items-start" style="padding: 0 12px 12px 12px;">
+                <div class="position-relative" style="width: 40px; height: 40px; flex-shrink: 0;">
+                  <img id="vipPreviewAvatar" src="img/avatar.png" class="rounded-circle w-100 h-100 object-fit-cover"
+                    alt="Preview Avatar">
+                  <div id="vipPreviewFrame" class="position-absolute top-0 start-0 w-100 h-100 rounded-circle"
+                    style="pointer-events: none; box-sizing: border-box;"></div>
+                </div>
+
+                <div class="bg-white p-2.5 rounded-3 shadow-sm border flex-grow-1" style="max-width: 80%;">
+                  <div class="d-flex align-items-center gap-1.5 mb-0.5">
+                    <span id="vipPreviewName" class="fw-bold"
+                      style="font-size: 13.5px; font-family: inherit;">Saga</span>
+                    <span id="vipPreviewTag" style="font-size:9px; padding: 2px 4px;"><img src="img/diamante.png"
+                        alt="VIP" class="img-fluid" width="19" height="19"></span>
+                  </div>
+                  <p id="vipPreviewText" class="m-0" style="font-size: 13px; color: #333; line-height: 1.3;">Olá! Olha
+                    como fica bonita a minha mensagem!</p>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+
+
+
+
+<!-- OS 4 BOTÕES LADO A LADO EM GRADE -->
+            <div class="vip-buttons-grid">
+              <button type="button" class="vip-btn-card active" data-target="gaveta-nome">
+                <span class="vip-icon-box bg-purple">
+                  <i class="bi bi-person-fill"></i>
+                </span>
+                <span class="vip-header-title">estilo do seu nome</span>
+              </button>
+
+              <button type="button" class="vip-btn-card" data-target="gaveta-texto">
+                <span class="vip-icon-box bg-blue">
+                  <i class="bi bi-chat-left-text-fill"></i>
+                </span>
+                <span class="vip-header-title">cor do texto</span>
+              </button>
+
+              <button type="button" class="vip-btn-card" data-target="gaveta-avatar">
+                <span class="vip-icon-box bg-geo">
+                  <i class="bi bi-person-bounding-box"></i>
+                </span>
+                <span class="vip-header-title">moldura de avatar</span>
+              </button>
+
+              <button type="button" class="vip-btn-card" data-target="gaveta-capa">
+                <span class="vip-icon-box bg-orange">
+                  <i class="bi bi-image"></i>
+                </span>
+                <span class="vip-header-title">capa de perfil</span>
+              </button>
+            </div>
+
+            <!-- PAINÉIS DE CONTEÚDO (EXPANDEM ABAIXO DOS BOTÕES) -->
+            <div class="vip-content-panels">
+
+              <!-- GAVETA 1: ESTILO DO SEU NOME -->
+              <div id="gaveta-nome" class="vip-drawer-content">
                 <div class="vip-control-card text-start border-0 rounded-0 m-0 bg-white">
                   <div class="mb-2 position-relative">
                     <label class="small mb-1" style="font-size: 11px; font-weight: 600; color: #475569;">Tipo de efeito</label>
@@ -549,20 +543,18 @@
                   </div>
 
                   <div id="vipSolidColorWrapper" class="mb-2">
-  <label class="small mb-1" style="font-size: 11px; font-weight: 600; color: #475569;">Escolha cor Solida</label>
-  <!-- CONTAINER DO CARROSSEL COM APARÊNCIA NATIVA DE APP -->
-  <div class="vip-carousel-wrapper">
-    <button type="button" class="carousel-arrow left" onclick="document.getElementById('vipNameColorGrid').scrollBy({left: -120, behavior: 'smooth'})">
-      <i class="bi bi-chevron-left"></i>
-    </button>
-    <div class="color-grid" id="vipNameColorGrid"></div>
-    <button type="button" class="carousel-arrow right" onclick="document.getElementById('vipNameColorGrid').scrollBy({left: 120, behavior: 'smooth'})">
-      <i class="bi bi-chevron-right"></i>
-    </button>
-  </div>
-</div>
+                    <label class="small mb-1" style="font-size: 11px; font-weight: 600; color: #475569;">Escolha cor Solida</label>
+                    <div class="vip-carousel-wrapper">
+                      <button type="button" class="carousel-arrow left" onclick="document.getElementById('vipNameColorGrid').scrollBy({left: -120, behavior: 'smooth'})">
+                        <i class="bi bi-chevron-left"></i>
+                      </button>
+                      <div class="color-grid" id="vipNameColorGrid"></div>
+                      <button type="button" class="carousel-arrow right" onclick="document.getElementById('vipNameColorGrid').scrollBy({left: 120, behavior: 'smooth'})">
+                        <i class="bi bi-chevron-right"></i>
+                      </button>
+                    </div>
+                  </div>
 
-                  <!-- Fontes dos Nomes -->
                   <div class="mb-0 position-relative">
                     <label class="small mb-1" style="font-size: 11px; font-weight: 600; color: #475569;">Estilo da Fonte</label>
                     <button type="button" id="btnVipNameFont" class="vip-custom-select-btn">Padrão do Chat</button>
@@ -624,7 +616,7 @@
                       <option value="ManufacturingConsent">Manufacturing Consent</option>
                       <option value="Matangi">Matangi</option>
                       <option value="Matemasie">Matemasie</option>
-                      <option value="MeaCulpa">Mea Culpa</option>
+                      <option value="MeaCulpa">Mea Cupa</option>
                       <option value="PlaywriteBEVLG">Playwrite BE VL G</option>
                       <option value="Praise">Praise</option>
                       <option value="Pridi">Pridi</option>
@@ -639,36 +631,28 @@
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- GAVETA 2: COR DO TEXTO -->
-           <!-- GAVETA 2: COR DO TEXTO -->
-<div class="vip-accordion-item">
-  <button type="button" class="vip-accordion-header"><i class="bi bi-chat-left-text-fill icon-vip"></i> Cor do Texto do Chat</button>
-  <div class="vip-accordion-content">
-    <div class="vip-control-card text-start border-0 rounded-0 m-0 bg-white">
-      <div class="mb-2">
-        <span class="small text-dark fw-semibold d-block mb-1" style="font-size: 12px;">Sua Mensagem Exclusiva</span>
-        <span class="small text-muted d-block mb-2" style="font-size: 10.5px; line-height: 1.2;">Escolha uma das cores exclusivas abaixo para o envio das suas mensagens.</span>
-      </div>
-      <!-- APLICAÇÃO DO MESMO CARROSSEL DE APP AQUI -->
-      <div class="vip-carousel-wrapper">
-        <button type="button" class="carousel-arrow left" onclick="document.getElementById('vipMsgColorGrid').scrollBy({left: -120, behavior: 'smooth'})">
-          <i class="bi bi-chevron-left"></i>
-        </button>
-        <div class="color-grid" id="vipMsgColorGrid"></div>
-        <button type="button" class="carousel-arrow right" onclick="document.getElementById('vipMsgColorGrid').scrollBy({left: 120, behavior: 'smooth'})">
-          <i class="bi bi-chevron-right"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+              <!-- GAVETA 2: COR DO TEXTO DA MENSAGEM -->
+              <div id="gaveta-texto" class="vip-drawer-content hidden">
+                <div class="vip-control-card text-start border-0 rounded-0 m-0 bg-white">
+                  <div class="mb-2">
+                    <span class="small text-dark fw-semibold d-block mb-1" style="font-size: 12px;">Sua Mensagem Exclusiva</span>
+                    <span class="small text-muted d-block mb-2" style="font-size: 10.5px; line-height: 1.2;">Escolha uma das cores exclusivas abaixo para o envio das suas mensagens.</span>
+                  </div>
+                  <div class="vip-carousel-wrapper">
+                    <button type="button" class="carousel-arrow left" onclick="document.getElementById('vipMsgColorGrid').scrollBy({left: -120, behavior: 'smooth'})">
+                      <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <div class="color-grid" id="vipMsgColorGrid"></div>
+                    <button type="button" class="carousel-arrow right" onclick="document.getElementById('vipMsgColorGrid').scrollBy({left: 120, behavior: 'smooth'})">
+                      <i class="bi bi-chevron-right"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
 
-            <!-- GAVETA 3: MOLDURAS -->
-            <div class="vip-accordion-item">
-              <button type="button" class="vip-accordion-header"><i class="bi bi-person-bounding-box icon-vip"></i> Moldura de Avatar</button>
-              <div class="vip-accordion-content">
+              <!-- GAVETA 3: MOLDURA DE AVATAR -->
+              <div id="gaveta-avatar" class="vip-drawer-content hidden">
                 <div class="vip-control-card text-start border-0 rounded-0 m-0 bg-white">
                   <div class="position-relative">
                     <button type="button" id="btnVipAvatarFrameSelect" class="vip-custom-select-btn">Nenhuma Moldura</button>
@@ -690,18 +674,14 @@
                   <span class="small text-muted d-block mt-1.5" style="font-size: 10.5px; line-height: 1.2;">A moldura é exibida ao redor da sua foto no chat e no seu painel.</span>
                 </div>
               </div>
-            </div>
 
-            <!-- GAVETA 4: CAPA DE PERFIL -->
-            <div class="vip-accordion-item">
-              <button type="button" class="vip-accordion-header"><i class="bi bi-image icon-vip"></i> Capa de Perfil</button>
-              <div class="vip-accordion-content">
+              <!-- GAVETA 4: CAPA DE PERFIL -->
+              <div id="gaveta-capa" class="vip-drawer-content hidden">
                 <div class="vip-control-card text-start border-0 rounded-0 m-0 bg-white">
                   <div class="position-relative">
                     <button type="button" id="btnVipProfileBannerSelect" class="vip-custom-select-btn">Padrão do Systema</button>
                     <div id="listVipProfileBannerSelect" class="vip-custom-dropdown hidden">
                       <div class="vip-dropdown-option active" data-value="default">Padrão do Sistema</div>
-                      <!-- DEGRADÊS ESTÁTICOS DE ELITE -->
                       <div class="vip-dropdown-option" data-value="banner-grad-purple">Degradê Roxo Espacial</div>
                       <div class="vip-dropdown-option" data-value="banner-grad-gold">Degradê Ouro de Elite</div>
                       <div class="vip-dropdown-option" data-value="banner-grad-sunset">Degradê Pôr do Sol no DF</div>
@@ -717,7 +697,6 @@
                       <div class="vip-dropdown-option" data-value="banner-grad-bubblegum">Degradê Chiclete Pop</div>
                       <div class="vip-dropdown-option" data-value="banner-grad-galaxy">Degradê Nebulosa Espacial</div>
                       <div class="vip-dropdown-option" data-value="banner-grad-mint">Degradê Hortelã Refrescante</div>
-                      <!-- DEGRADÊS ANIMADOS PREMIUM -->
                       <div class="vip-dropdown-option" data-value="banner-anim-aurora">Aurora Boreal Cósmica (Animado)</div>
                       <div class="vip-dropdown-option" data-value="banner-anim-neon">Neon Psicodélico (Animado)</div>
                       <div class="vip-dropdown-option" data-value="banner-anim-rainbow">Arco-Íris Infinito (Animado)</div>
@@ -770,218 +749,162 @@
                   </div>
                 </div>
               </div>
+
             </div>
 
-          </div> <!-- FIM DO CONTAINER DO ACORDEÃO -->
 
-          <button id="btnSaveVipSettings" class="btn btn-dark w-100 py-2.5 fw-bold mt-3" style="border-radius: 10px; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-            Salvar Minhas Vantagens VIP
-          </button>
+
+
+
+
+            <button id="btnSaveVipSettings" class="btn btn-dark w-100 py-2.5 fw-bold mt-3"
+              style="border-radius: 10px; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+              Salvar Minhas Vantagens VIP
+            </button>
+          </div>
         </div>
-
       </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </div>
     </div>
 
   </div>
-</div>
-<div id="profileEditorModal" class="profile-editor-modal hidden">
-  <div class="profile-editor-card">
-<div class="profile-editor-header">
-  <button id="showBannerEditorBtn" type="button" class="profile-editor-tab active">
-    Editar capa
-  </button>
-  <button id="openAvatarPickerBtn" type="button" class="profile-editor-tab">
-    Escolher avatar
-  </button>
-  <button id="closeProfileEditorBtn" type="button" aria-label="Fechar editor de perfil">✕</button>
-</div>
-    <div id="profileEditorBannerPreview" class="profile-editor-banner-preview"></div>
-    <div id="profileEditorBannerColors" class="profile-editor-banner-colors"></div>
-
-
-<!-- 03-06-26 =================== ÁREA DE AVATARES ==========================================-->
-
-<div id="profileEditorAvatarArea" class="profile-editor-avatar-area hidden">
-      <div class="profile-editor-avatar-cats">
-        <button class="profile-avatar-cat active" data-cat="eles" type="button">Eles</button>
-        <button class="profile-avatar-cat" data-cat="elas" type="button">Elas</button>
-        <button class="profile-avatar-cat" data-cat="unissex" type="button">Unissex</button>
-        <button class="profile-avatar-cat" data-cat="aleatorios" type="button">Aleatórios</button>
+  </div>
+  <div id="profileEditorModal" class="profile-editor-modal hidden">
+    <div class="profile-editor-card">
+      <div class="profile-editor-header">
+        <button id="showBannerEditorBtn" type="button" class="profile-editor-tab active">
+          Editar capa
+        </button>
+        <button id="openAvatarPickerBtn" type="button" class="profile-editor-tab">
+          Escolher avatar
+        </button>
+        <button id="closeProfileEditorBtn" type="button" aria-label="Fechar editor de perfil">✕</button>
       </div>
-      <div id="profileEditorAvatarGrid" class="profile-editor-avatar-grid" style="overflow-y: auto; max-height: 280px; display: grid; gap: 10px;">
+      <div id="profileEditorBannerPreview" class="profile-editor-banner-preview"></div>
+      <div id="profileEditorBannerColors" class="profile-editor-banner-colors"></div>
+
+
+      <!-- 03-06-26 =================== ÁREA DE AVATARES ==========================================-->
+
+      <div id="profileEditorAvatarArea" class="profile-editor-avatar-area hidden">
+        <div class="profile-editor-avatar-cats">
+          <button class="profile-avatar-cat active" data-cat="eles" type="button">Eles</button>
+          <button class="profile-avatar-cat" data-cat="elas" type="button">Elas</button>
+          <button class="profile-avatar-cat" data-cat="unissex" type="button">Unissex</button>
+          <button class="profile-avatar-cat" data-cat="aleatorios" type="button">Aleatórios</button>
+        </div>
+        <div id="profileEditorAvatarGrid" class="profile-editor-avatar-grid"
+          style="overflow-y: auto; max-height: 280px; display: grid; gap: 10px;">
+        </div>
       </div>
+      <button id="saveProfileEditorBtn" type="button">Confirmar</button>
+
+
     </div>
-   <button id="saveProfileEditorBtn" type="button">Confirmar</button>
-
-
   </div>
-</div>
 
-<!-- ================= MENU CONTEXTUAL DA MENSAGEM ================= 06-05-26 -->
-<div id="messageContextMenu" class="message-context-menu hidden">
+  <!-- ================= MENU CONTEXTUAL DA MENSAGEM ================= 06-05-26 -->
+  <div id="messageContextMenu" class="message-context-menu hidden">
 
-  <div class="context-menu-header">
-    <button id="closeContextMenu" type="button">✕</button>
-  </div>
-  <button type="button" id="contextProfileBtn">
-    <i class="bi bi-person-circle"></i>
-    Ver perfil
-  </button>
-  <!----------
+    <div class="context-menu-header">
+      <button id="closeContextMenu" type="button">✕</button>
+    </div>
+    <button type="button" id="contextProfileBtn">
+      <i class="bi bi-person-circle"></i>
+      Ver perfil
+    </button>
+    <!----------
   <button type="button" id="contextReplyBtn">
     <i class="bi bi-reply-fill"></i>
     Responder
   </button>----->
 
-  <button type="button" id="contextReportBtn">
-    <i class="bi bi-flag-fill"></i>
-    Denunciar usuario
-  </button>
-</div>
+    <button type="button" id="contextReportBtn">
+      <i class="bi bi-flag-fill"></i>
+      Denunciar usuario
+    </button>
+  </div>
 
-<div id="feedbackModal" class="feedback-modal hidden">
-  <div class="feedback-box">
-    <h4>FeedBack</h4>
-    <textarea id="feedbackText" placeholder="Escreva sua sugestão..."></textarea><br><br><br><br>
-    <div class="feedback-actions">
-      <button id="cancelFeedback">Cancelar</button>
-      <button id="sendFeedback">Enviar</button>
+  <div id="feedbackModal" class="feedback-modal hidden">
+    <div class="feedback-box">
+      <h4>FeedBack</h4>
+      <textarea id="feedbackText" placeholder="Escreva sua sugestão..."></textarea><br><br><br><br>
+      <div class="feedback-actions">
+        <button id="cancelFeedback">Cancelar</button>
+        <button id="sendFeedback">Enviar</button>
+      </div>
     </div>
   </div>
-</div>
 
 
 
 
-<!-- 01-07-26 MODAL DE DENÚNCIA dentro do painel do Usuário  Estrutura do Modal dentro do painel do Usuario de Denúncia (CHAT-DF UX) -->
-<!-- 01-07-26 MODAL DE DENÚNCIA dentro do painel do Usuário  Estrutura do Modal dentro do painel do Usuario de Denúncia (CHAT-DF UX) -->
-<div id="reportUserModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 10005;">
-  <div style="background: #ffffff; width: 90%; max-width: 450px; padding: 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; font-family: sans-serif;">
-    <button id="closeReportModalX" type="button" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 18px; cursor: pointer; color: #666;">✕</button>
-    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; color: #d32f2f;">
-      <i class="bi bi-exclamation-triangle-fill" style="font-size: 24px;"></i>
-      <h3 style="margin: 0; font-size: 20px; font-weight: 700; color: #1a1a1a;">Reporta uma Denúncia</h3>
-    </div>
-    <p style="font-size: 14px; color: #555; line-height: 1.4; margin-bottom: 20px;">
-      Por favor, envie apenas denúncias de infrações passíveis de ação. Abusos ou denúncias falsas podem resultar em medidas contra a sua própria conta. Selecione o motivo para denunciar este Usuário.
-    </p>
-    <label style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Motivo para a denúncia</label>
-    <select id="reportReasonSelect" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; background: #f9f9f9; outline: none; margin-bottom: 24px;">
-      <option value="">Selecione um motivo</option>
-      <option value="perfil inapropriado">perfil inapropriado</option>
-      <option value="Assédio / Ofensas">Assédio / Ofensas</option>
-      <option value="Mensagem preconceituosa">Mensagem preconceituosa</option>
-      <option value="Discurso de ódio">Discurso de ódio</option>
-      <option value="Conteudo sexual">Conteudo sexual</option>
-    </select>
-    <div style="display: flex; gap: 12px; justify-content: flex-end;">
-      <button id="cancelReportBtn" type="button" style="padding: 12px 24px; border: none; background: #212121; color: #fff; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancela</button>
-      <button id="submitReportBtn" type="button" style="padding: 12px 24px; border: none; background: #00a2d3; color: #fff; border-radius: 8px; font-weight: 600; cursor: pointer;">Reporta</button>
+  <!-- 01-07-26 MODAL DE DENÚNCIA dentro do painel do Usuário  Estrutura do Modal dentro do painel do Usuario de Denúncia (CHAT-DF UX) -->
+  <!-- 01-07-26 MODAL DE DENÚNCIA dentro do painel do Usuário  Estrutura do Modal dentro do painel do Usuario de Denúncia (CHAT-DF UX) -->
+  <div id="reportUserModal"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 10005;">
+    <div
+      style="background: #ffffff; width: 90%; max-width: 450px; padding: 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; font-family: sans-serif;">
+      <button id="closeReportModalX" type="button"
+        style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 18px; cursor: pointer; color: #666;">✕</button>
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; color: #d32f2f;">
+        <i class="bi bi-exclamation-triangle-fill" style="font-size: 24px;"></i>
+        <h3 style="margin: 0; font-size: 20px; font-weight: 700; color: #1a1a1a;">Reporta uma Denúncia</h3>
+      </div>
+      <p style="font-size: 14px; color: #555; line-height: 1.4; margin-bottom: 20px;">
+        Por favor, envie apenas denúncias de infrações passíveis de ação. Abusos ou denúncias falsas podem resultar em
+        medidas contra a sua própria conta. Selecione o motivo para denunciar este Usuário.
+      </p>
+      <label style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Motivo para a
+        denúncia</label>
+      <select id="reportReasonSelect"
+        style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; background: #f9f9f9; outline: none; margin-bottom: 24px;">
+        <option value="">Selecione um motivo</option>
+        <option value="perfil inapropriado">perfil inapropriado</option>
+        <option value="Assédio / Ofensas">Assédio / Ofensas</option>
+        <option value="Mensagem preconceituosa">Mensagem preconceituosa</option>
+        <option value="Discurso de ódio">Discurso de ódio</option>
+        <option value="Conteudo sexual">Conteudo sexual</option>
+      </select>
+      <div style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button id="cancelReportBtn" type="button"
+          style="padding: 12px 24px; border: none; background: #212121; color: #fff; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancela</button>
+        <button id="submitReportBtn" type="button"
+          style="padding: 12px 24px; border: none; background: #00a2d3; color: #fff; border-radius: 8px; font-weight: 600; cursor: pointer;">Reporta</button>
+      </div>
     </div>
   </div>
-</div>
 
 
 
-<!-------============================= 14-07-2026 =========================================--->
-<!-- 14-07-26 Modal de Corte de Imagem Nativo (Feito do Zero) -->
-<div id="cropModal" class="crop-modal hidden">
-  <div class="crop-modal-content">
-    <span id="closeCropModal" class="crop-close">&times;</span>
-    
-    <!-- Recipiente onde a imagem carregada vai se mover -->
-    <div class="crop-container-box">
-      <div class="crop-mask-circle"></div>
-      <img id="cropPreviewImg" src="" alt="Prévia" style="display: none;" />
+  <!-------============================= 14-07-2026 =========================================--->
+  <!-- 14-07-26 Modal de Corte de Imagem Nativo (Feito do Zero) -->
+  <div id="cropModal" class="crop-modal hidden">
+    <div class="crop-modal-content">
+      <span id="closeCropModal" class="crop-close">&times;</span>
+
+      <!-- Recipiente onde a imagem carregada vai se mover -->
+      <div class="crop-container-box">
+        <div class="crop-mask-circle"></div>
+        <img id="cropPreviewImg" src="" alt="Prévia" style="display: none;" />
+      </div>
+
+      <!-- Controle de Zoom Nativo com - e + -->
+      <div class="crop-zoom-wrapper">
+        <button id="btnZoomOut" class="zoom-btn" type="button">—</button>
+        <input type="range" id="cropZoomSlider" min="1" max="3" step="0.01" value="1" />
+        <button id="btnZoomIn" class="zoom-btn" type="button">+</button>
+      </div>
+
+      <!-- Botões de Comando Inferiores -->
+      <div class="crop-buttons-container">
+        <button id="btnSelectCropFile" class="btn-crop-select" type="button">Seleciona</button>
+        <button id="btnSaveCropPhoto" class="btn-crop-save" type="button">Salvar</button>
+      </div>
+
+      <!-- Input oculto que abre o gerenciador de arquivos do celular/PC -->
+      <input type="file" id="cropInputFile" accept="image/jpeg, image/png, image/webp" style="display: none;" />
     </div>
-    
-    <!-- Controle de Zoom Nativo com - e + -->
-    <div class="crop-zoom-wrapper">
-      <button id="btnZoomOut" class="zoom-btn" type="button">—</button>
-      <input type="range" id="cropZoomSlider" min="1" max="3" step="0.01" value="1" />
-      <button id="btnZoomIn" class="zoom-btn" type="button">+</button>
-    </div>
-    
-    <!-- Botões de Comando Inferiores -->
-    <div class="crop-buttons-container">
-      <button id="btnSelectCropFile" class="btn-crop-select" type="button">Seleciona</button>
-      <button id="btnSaveCropPhoto" class="btn-crop-save" type="button">Salvar</button>
-    </div>
-    
-    <!-- Input oculto que abre o gerenciador de arquivos do celular/PC -->
-    <input type="file" id="cropInputFile" accept="image/jpeg, image/png, image/webp" style="display: none;" />
   </div>
-</div>
 
 
 
@@ -989,13 +912,14 @@
 
 
 
-<!-- 🔹 Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@multiavatar/multiavatar/multiavatar.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
-<script type="module" src="./js/main.js?v=2"></script>
-<script type="module" src="./js/stickers.js"></script>
+  <!-- 🔹 Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@multiavatar/multiavatar/multiavatar.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+  <script type="module" src="./js/main.js?v=2"></script>
+  <script type="module" src="./js/stickers.js"></script>
 
 
 </body>
+
 </html>
