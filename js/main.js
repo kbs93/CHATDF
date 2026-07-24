@@ -1294,6 +1294,7 @@ window.openMainProfilePanel = async (userId, options = {}) => {
       const genero = data.genero || "-";
       const membroDesde = data.membroDesde || data.createdAt || null;
       const bannerColor = data.bannerColor || "#00000063";
+      const instagram = data.instagram || ""; // 21-07-26 
 
       selectedBannerColor = bannerColor;
       selectedProfileAvatar = foto;
@@ -1327,6 +1328,77 @@ window.openMainProfilePanel = async (userId, options = {}) => {
       if (editAge) editAge.value = data.idade || "";
       if (editGender) editGender.value = data.genero || "";
 
+// 21-07-26 PREENCHE O CAMPO DE EDIÇÃO E EXIBE/OCULTA O BOTAO SOCIAL
+     // ================= EXIBIÇÃO DE INSTAGRAM E TELEGRAM EM TEXTO NO PAINEL =================
+      const editInstagram = document.getElementById("editInstagram");
+      const editTelegram = document.getElementById("editTelegram");
+      const profileInstagramText = document.getElementById("profileInstagramText");
+      const profileTelegramText = document.getElementById("profileTelegramText");
+
+      const telegram = data.telegram || "";
+
+      // 1. Tratamento do Instagram
+      let username = instagram ? String(instagram).trim() : "";
+      if (username.includes("instagram.com/")) {
+        username = username.split("instagram.com/")[1];
+      }
+      username = username.split("?")[0].split("#")[0].split("/")[0];
+      if (username.startsWith("@")) {
+        username = username.substring(1);
+      }
+      username = username.replace(/[^a-zA-Z0-9_.]/g, "").toLowerCase();
+
+      if (editInstagram) {
+        editInstagram.value = username ? `@${username}` : "";
+      }
+
+      if (profileInstagramText) {
+        if (username !== "") {
+          const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+     if (isMobile) {
+            profileInstagramText.innerHTML = `<a id="instaClickBtn" href="instagram://user?username=${username}" style="color: #000000 !important; font-weight: 600; text-decoration: none;">@${username}</a>`;
+            const btn = document.getElementById("instaClickBtn");
+            btn?.addEventListener("click", (e) => {
+              e.stopPropagation();
+              setTimeout(() => {
+                window.location.href = `https://www.instagram.com/${username}/`;
+              }, 800);
+            });
+          } else {
+            profileInstagramText.innerHTML = `<span id="instaDesktopBtn" style="color: #161616dc; font-weight: 600; cursor: pointer;" title="Acesse pelo celular para abrir o perfil">@${username}</span>`;
+            const deskBtn = document.getElementById("instaDesktopBtn");
+            deskBtn?.addEventListener("click", (e) => {
+              e.stopPropagation();
+              if (typeof showToast === "function") {
+                showToast("O link do Instagram está disponível apenas no acesso pelo celular.");
+              }
+            });
+          }
+        } else {
+          profileInstagramText.textContent = "-";
+        }
+      }
+
+      // 2. Tratamento do Telegram
+      let teleUser = telegram ? String(telegram).trim() : "";
+      if (teleUser.includes("t.me/")) teleUser = teleUser.split("t.me/")[1];
+      if (teleUser.includes("telegram.me/")) teleUser = teleUser.split("telegram.me/")[1];
+      teleUser = teleUser.split("?")[0].split("#")[0].split("/")[0];
+      if (teleUser.startsWith("@")) teleUser = teleUser.substring(1);
+      teleUser = teleUser.replace(/[^a-zA-Z0-9_.]/g, "").toLowerCase();
+
+      if (editTelegram) {
+        editTelegram.value = teleUser ? `@${teleUser}` : "";
+      }
+
+      if (profileTelegramText) {
+        if (teleUser !== "") {
+          profileTelegramText.innerHTML = `<a href="https://t.me/${teleUser}" target="_blank" rel="noopener noreferrer" style="color: #161616dc; font-weight: 600; text-decoration: none;">@${teleUser}</a>`;
+        } else {
+          profileTelegramText.textContent = "-";
+        }
+      }
       criarListaCidadesPerfil();
       criarListaGeneroPerfil();
       setTimeout(perfilEstaCompleto, 200);//04-06-26 melhoria para verificar se o perfil está completo após carregar os dados, 
@@ -1364,9 +1436,13 @@ function applyProfileMode(isOwner) {
     isLocked = remainingDays > 0;
   }
 
-  // Removido o loop cego que limpava e forçava a aba info toda vez que o Firebase atualizava dados
+// Removido o loop cego que limpava e forçava a aba info toda vez que o Firebase atualizava dados
   if (isOwner) {
     if (reportBtn) reportBtn.style.display = "none";
+
+    if (editProfileCoverBtn) {
+      editProfileCoverBtn.style.display = "grid";
+    }
 
     if (vipTabBtn) {
       vipTabBtn.hidden = false;
@@ -1380,6 +1456,10 @@ function applyProfileMode(isOwner) {
         uploadPhotoBtn.style.opacity = "1";
         uploadPhotoBtn.style.cursor = "pointer";
       }
+      if (editProfileCoverBtn) {
+        editProfileCoverBtn.style.opacity = "1";
+        editProfileCoverBtn.style.cursor = "pointer";
+      }
       if (profileEditTab) {
         profileEditTab.hidden = false;
         profileEditTab.style.display = "block";
@@ -1390,8 +1470,12 @@ function applyProfileMode(isOwner) {
       editMood?.removeAttribute("disabled");
     } else {
       if (uploadPhotoBtn) {
-        uploadPhotoBtn.style.opacity = "0.45";
+        uploadPhotoBtn.style.opacity = "0.01"; // edita a opaci do botao camera 23-07-26
         uploadPhotoBtn.style.cursor = "not-allowed";
+      }
+      if (editProfileCoverBtn) {
+        editProfileCoverBtn.style.opacity = "0.01"; // edita a opaci do botao lapis 23-07-26
+        editProfileCoverBtn.style.cursor = "not-allowed";
       }
       if (profileEditTab) {
         profileEditTab.style.opacity = "0.45";
@@ -1400,28 +1484,16 @@ function applyProfileMode(isOwner) {
   } else {
     if (reportBtn) reportBtn.style.display = "flex";
     if (uploadPhotoBtn) uploadPhotoBtn.classList.add("hidden");
+    if (editProfileCoverBtn) editProfileCoverBtn.style.display = "none";
 
     if (vipTabBtn) vipTabBtn.style.display = "none";
-    if (profileEditTab) profileEditTab.style.display = "none";
+    if (profileEditTab) profileEditTab.style.display = "none"; //Esconde completamente o botão do lápis (display = "none") ao visualizar o perfil de terceiros. 23-07-26
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 // ABAS
 const tabs = document.querySelectorAll(".profile-tab");
 const sections = document.querySelectorAll(".profile-section");
-
 // ----------------- ABAS ------------------
 // ----------------- ABAS REESTRUTURADAS (INCLUINDO VIP COM PREVIEW) ------------------
 // ----------------- ABAS REESTRUTURADAS (TOTALMENTE INDEPENDENTES) ------------------
@@ -1659,7 +1731,7 @@ function vincularEventosPreviewVip() {
   atualizarSimulacao();
 }
 
-// Vincula a gravação dos dados VIP ao botão de Salvar exclusivo
+/*Vincula a gravação dos dados VIP ao botão de Salvar exclusivo
 document.getElementById("btnSaveVipSettings")?.addEventListener("click", async () => {
   const user = auth.currentUser;
   if (!user) return;
@@ -1684,7 +1756,7 @@ document.getElementById("btnSaveVipSettings")?.addEventListener("click", async (
     showToast("Erro ao salvar configurações.");
   }
 });
-
+*/
 
 // Vincula a gravação dos dados VIP ao botão de Salvar exclusivo
 document.getElementById("btnSaveVipSettings")?.addEventListener("click", async () => {
@@ -1711,25 +1783,19 @@ document.getElementById("btnSaveVipSettings")?.addEventListener("click", async (
     showToast("Erro ao salvar configurações.");
   }
 });
-
 // --------------- ABRIR / FECHAR ------------------
 function openProfilePanel() {
   if (!profilePanel) return;
-
   window.__profileScrollY = window.scrollY || 0;
-
   profilePanel.classList.remove("hidden");
   profileOverlay?.classList.remove("hidden");
-
   document.body.classList.add("profile-open");
   document.body.style.top = `-${window.__profileScrollY}px`;
-
   requestAnimationFrame(() => {
     profilePanel.classList.add("open");
     profileOverlay?.classList.add("show");
   });
 }
-
 function closeProfilePanel(force = false) {
   if (!profilePanel) return;
   profilePanel.classList.remove("open");
@@ -1746,22 +1812,17 @@ function closeProfilePanel(force = false) {
     document.body.style.overflow = "";
     document.body.style.height = "";
     document.body.style.width = "";
-
     window.scrollTo(0, window.__profileScrollY || 0);
 
     if (typeof unlockProfileBackground === "function") {
       unlockProfileBackground();
     }
-
     document.body.classList.remove("viewing-other-profile");
     currentViewedProfileId = null;
     currentProfileIsOwner = false;
-
     return;
   }
-
   let closed = false;
-
   const finalizeClose = () => {
     if (closed) return;
     closed = true;
@@ -1788,21 +1849,17 @@ function closeProfilePanel(force = false) {
     }
 
   };
-
   const handleTransitionEnd = (e) => {
     if (e.target !== profilePanel) return;
     if (e.propertyName !== "transform") return;
     finalizeClose();
   };
-
   profilePanel.addEventListener("transitionend", handleTransitionEnd);
-
   requestAnimationFrame(() => {
     const duration = getComputedStyle(profilePanel).transitionDuration || "0s";
     const first = duration.split(",")[0].trim();
     const time =
       first.endsWith("ms") ? parseFloat(first) : parseFloat(first) * 1000;
-
     setTimeout(finalizeClose, isNaN(time) ? 300 : time + 40);
   });
 }
@@ -1814,7 +1871,6 @@ closeProfileBtn?.addEventListener("click", (e) => {
 });
 
 //15-04-2026
-
 editProfileCoverBtn?.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
@@ -1825,28 +1881,18 @@ editProfileCoverBtn?.addEventListener("click", (e) => {
     showToast(`Você poderá editar novamente em ${profileEditRemainingDays} dia(s).`);
     return;
   }
-
   openProfileEditor();
 });
-
 closeProfileEditorBtn?.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
   closeProfileEditor();
 });
-
 profileEditorModal?.addEventListener("click", (e) => {
   if (e.target === profileEditorModal) {
     closeProfileEditor();
   }
 });
-
-
-
-
-
-
-
 showBannerEditorBtn?.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
@@ -1860,10 +1906,6 @@ showBannerEditorBtn?.addEventListener("click", (e) => {
 
   renderProfileEditorBannerPalette();
 });
-
-
-
-
 //========================================= novo avatar picker 03-06-26 =========================================
 // 03-06-26  EVENTO UNIFICADO PARA ABRIR O SELETOR DE AVATAR JÁ CARREGANDO "ELES"
 openAvatarPickerBtn?.addEventListener("click", (e) => {
@@ -1879,11 +1921,7 @@ openAvatarPickerBtn?.addEventListener("click", (e) => {
 
   carregarCategoria("eles"); // Aciona o lote inicial masculino do avatar.js
 });
-
-
-
 // ====================== 03-06-26 NOVO MOTOR MULTIAVATAR ======================
-
 // ====================== MOTOR MULTIAVATAR CORRIGIDO COM BOTÕES BOOTSTRAP ======================
 
 let listaAtual = [];
@@ -2212,12 +2250,33 @@ saveProfileBtn?.addEventListener("click", async () => {
     }
 
     // Grava todas as alterações juntas de uma vez só no Firestore
+// Higieniza a entrada do usuário caso tenha digitado o '@'
+// 21-07-26  Tratamento do usuário do Instagram (remover espaços, @ e caracteres inválidos)
+
+// ================= DECLARAÇÃO E TRATAMENTO DO INSTAGRAM =================
+// ================= TRATAMENTO DO INSTAGRAM E TELEGRAM AO SALVAR =================
+    let rawInsta = document.getElementById("editInstagram")?.value.trim() || "";
+    if (rawInsta.includes("instagram.com/")) rawInsta = rawInsta.split("instagram.com/")[1];
+    rawInsta = rawInsta.split("?")[0].split("#")[0].split("/")[0];
+    if (rawInsta.startsWith("@")) rawInsta = rawInsta.substring(1);
+    const instaUser = rawInsta.replace(/[^a-zA-Z0-9_.]/g, "").toLowerCase();
+
+    let rawTele = document.getElementById("editTelegram")?.value.trim() || "";
+    if (rawTele.includes("t.me/")) rawTele = rawTele.split("t.me/")[1];
+    if (rawTele.includes("telegram.me/")) rawTele = rawTele.split("telegram.me/")[1];
+    rawTele = rawTele.split("?")[0].split("#")[0].split("/")[0];
+    if (rawTele.startsWith("@")) rawTele = rawTele.substring(1);
+    const teleUser = rawTele.replace(/[^a-zA-Z0-9_.]/g, "").toLowerCase();
+
+    // Grava todas as alterações juntas de uma vez só no Firestore
     await updateDoc(refUser, {
       nome: editName.value.trim(),
       cidade: cidadeSelecionada,
       mood: editMood.value.trim(),
       idade: editAge.value.trim(),
       genero: generoSelecionado,
+      instagram: instaUser,
+      telegram: teleUser,
       foto: linkFotoFinal,
       bannerColor: selectedBannerColor,
       perfilCompleto: true,
@@ -2765,3 +2824,6 @@ document.querySelectorAll('.vip-btn-card').forEach(button => {
     document.querySelectorAll('.vip-custom-dropdown').forEach(d => d.classList.add('hidden'));
   });
 });
+
+
+

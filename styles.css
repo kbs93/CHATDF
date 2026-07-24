@@ -417,7 +417,7 @@ body.chat-loading .message {
 .navbar-brand {
   font-size: 17px;
   letter-spacing: 0.9px;
-  font-family: "Courgette", cursive;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   margin-right: 10px;
   min-width: 0;
   display: inline-flex;
@@ -2590,7 +2590,7 @@ emoji-picker {
   background: #6b44c757;
 }
 
-/* ANIMAÇÕES */
+/* ANIMACAO */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -2779,7 +2779,7 @@ emoji-picker {
   border-radius: 6px;
 }
 
-/*EDITA AS CORES DOS AVISO EXIBIDO NO CHAT*/
+/*EDITA AS CORES DOS AVISO EXIBIDO NO CHAT show toast */
 .custom-toast {
   position: fixed;
   bottom: calc(70px + env(safe-area-inset-bottom));
@@ -3894,11 +3894,11 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
   border-radius: 6px;
 }
 
-/* ================================= PAINEL LATERAL 15-03 ================================== */
+/* ================================= PAINEL LATERAL dentro do Botao usuari on line 15-03 ================================== */
 .online-users-panel {
   width: 380px;
-  min-width: 280px;
-  max-width: 380px;
+  min-width: 80px;
+  max-width: 260px;
   background: #ffffff;
   display: flex;
   flex-direction: column;
@@ -3931,7 +3931,7 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
 .online-overlay {
   display: none;
 }
-
+/*edita a parte que ofusca no painel lateral*/
 @media (max-width: 750px) {
   .online-overlay.open {
     display: block;
@@ -3939,8 +3939,8 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
     pointer-events: auto;
     background: rgba(0, 0, 0, 0.178);
     backdrop-filter: blur(2px);
-    top: 60px;
-    height: calc(100vh - 60px);
+    top: 56px;
+    height: calc(100vh - 56px);
   }
 }
 
@@ -4026,7 +4026,7 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
     top: 0;
     right: 0;
     height: 100%;
-    width: min(83%, 380px);
+    width: min(83%, 280px);
     z-index: 1500;
     transform: translateX(100%);
     transition: transform 0.35s ease;
@@ -4210,25 +4210,20 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
 }
 
 
-/* ================== PERFIL do usuario NO INDEX (MODAL NORMAL) 10-05-2026  =================== */
+/* ================== PERFIL do usuario NO desktop INDEX (MODAL NORMAL) 10-05-2026  =================== */
 body.index-page .profile-panel {
   top: 76px;
   right: clamp(14px, 3vw, 40px);
   left: auto;
   bottom: auto;
-
   width: min(420px, calc(100vw - 24px));
   max-height: min(88dvh, 720px);
   height: auto;
-
   border-radius: 22px;
-
   opacity: 0;
   pointer-events: none;
-
   transform-origin: top right;
   transform: scale(0.96);
-
   transition:
     opacity 0.22s ease,
     transform 0.22s ease;
@@ -4295,14 +4290,13 @@ body.index-page .profile-panel.open {
 
 }
 
-
-
+/*botao lapis e o X   23-07-26*/
 #editProfileCoverBtn,
 #closeProfilePanel {
   width: 38px;
   height: 38px;
   border: none;
-  background: rgba(2, 2, 2, 0.26);
+  background: rgba(0, 0, 0, 0.26);
   border-radius: 50%;
   color: #fff;
   font-size: 20px;
@@ -4310,7 +4304,7 @@ body.index-page .profile-panel.open {
   cursor: pointer;
   display: grid;
   place-items: center;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
 }
 
 #editProfileCoverBtn:hover,
@@ -4384,7 +4378,7 @@ body.index-page .profile-panel.open {
 
 /*edita o nome do usuario no perfil*/
 .profile-user-info {
-  padding: 14px 18px 8px;
+  padding: 27px 18px 8px;
   text-align: center;
 }
 
@@ -4448,8 +4442,6 @@ body.index-page .profile-panel.open {
 }
 
 /*edita a parte da informação, editar perfil e vip*/
-
-
 .profile-tab {
   flex: 1;
   min-height: 32px;
@@ -4463,39 +4455,43 @@ body.index-page .profile-panel.open {
   transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 
 }
-
+/*edita os dados da informacao info do painel do usuario*/
 /*edita os dados da informacao info do painel do usuario*/
 .dados-info {
-  padding: 3px;
+  padding: 2px;
+  font-weight: 400;
+  color: #00000096;
 }
+
+/* Ajusta a cor e o peso do texto em negrito (Cidade, Idade, Instagram, etc) */
+.dados-info strong {
+  color: #555555;      /* Clareia a cor de preto/escuro para cinza médio */
+  font-weight: 500;    /* Diminui a espessura do negrito para ficar mais suave */
+}
+
+
 
 
 .profile-tab:hover {
   background: #e9ebee;
 }
-
 .profile-tab:active {
   transform: scale(0.98);
 }
-
 .profile-tab.active {
   background: #adadaf;
   color: #fff;
 }
-
 .profile-content {
   padding: 16px;
 }
-
 .profile-section {
   display: none;
   animation: profileFade 0.2s ease;
 }
-
 .profile-section.active {
   display: block;
 }
-
 .profile-section p {
   margin: 0 0 1px;
   padding: 10px 6px;
@@ -5004,14 +5000,14 @@ do botao lapis
 }
 
 .profile-field-icon {
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   border-radius: 12px;
   display: grid;
   place-items: center;
   background: rgba(40, 6, 94, 0.06);
   color: #28065e;
-  font-size: 17px;
+  font-size: 22px;
   flex-shrink: 0;
 }
 
@@ -5023,14 +5019,14 @@ do botao lapis
   justify-content: center;
   transform: translateY(-1px);
 }
-
+/*edita os nomes dentro editar perfil*/
 .profile-field-label {
   display: block;
   margin: 0 0 3px 0;
   padding: 0;
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1;
-  font-weight: 800;
+  font-weight: 500;
   color: #28065e;
 }
 
@@ -5214,10 +5210,10 @@ do botao lapis
 
 .profile-online-dot {
   position: absolute;
-  top: 88px;
-  right: calc(50% - 43px);
-  width: 18px;
-  height: 18px;
+  top: 8px;
+  right: calc(50% - 52px);
+  width: 20px;
+  height: 20px;
   background: #22c55e;
   border: 3px solid #fff;
   border-radius: 50%;
@@ -5710,11 +5706,9 @@ do botao lapis
 
 
 /* ============================== 13-07-26 =========================================== 
-   BOTÃO DE UPLOAD DE FOTO DE PERFIL (CANTINHO DA FOTO)
+   BOTÃO DE CAMERA UPLOAD DE FOTO DE PERFIL (CANTINHO DA FOTO)
    ========================================================================= */
-/* ========================================================================= 
-   BOTÃO DE UPLOAD DE FOTO DE PERFIL (CANTINHO DA FOTO - CORRIGIDO FORA)
-   ========================================================================= */
+
 .profile-avatar-wrap {
   position: relative;
   /* Garante que o posicionamento absoluto do botão seja em relação a todo o bloco do avatar */
@@ -5723,16 +5717,16 @@ do botao lapis
 .profile-photo-upload-btn {
   position: absolute;
   /* Posiciona o botão ligeiramente mais para baixo e ajustado à curva do círculo */
-  bottom: -9px;
+  bottom: -20px;
   /* Mudamos de 4px para -4px para ele descer mais */
-  left: calc(50% - 58px);
+  left: calc(50% - 18px);
   /* Ajustado sutilmente para acompanhar a descida na curva do círculo */
   width: 36px;
   height: 36px;
-  background: #080808;
+  background: #0808089a;
   border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  border: 3px solid #0000008f;
+
+  
   /* Borda branca grossa para dar o destaque de app profissional */
   display: flex;
   align-items: center;
@@ -7119,4 +7113,77 @@ body.viewing-other-profile .profile-photo-upload-btn {
 
 #profileVip .vip-drawer-content.hidden {
   display: none;
+}
+
+
+/* ========================================================================= 
+   BOTÕES DE REDES SOCIAIS NO PERFIL (INSTAGRAM UX)
+   ========================================================================= */
+.profile-social-links {
+  padding-left: 4px;
+}
+
+.social-icon-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+ 
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.social-icon-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* GRADIENTE OFICIAL DO INSTAGRAM */
+.social-icon-btn.instagram {
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+}
+
+
+
+
+/* ==========================================================================
+   ESTILIZAÇÃO DO BOTAO DO INSTAGRAM NO PERFIL (CHAT-DF UX)
+   ========================================================================== */
+
+.profile-social-links {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding-top: 12px;
+}
+
+.social-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 1.2rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+/* Cores e Degradê Oficial do Instagram */
+.social-icon-btn.instagram {
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aebe6 90%);
+  color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(214, 36, 159, 0.3);
+}
+
+.social-icon-btn.instagram:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 14px rgba(214, 36, 159, 0.45);
+  color: #ffffff !important;
+}
+
+.social-icon-btn.instagram:active {
+  transform: translateY(0) scale(0.95);
 }

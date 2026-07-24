@@ -286,8 +286,8 @@
         <!-- INFORMAÇÃO -->
         <!-- INFO -->
         <div class="profile-section active" id="profileInfo">
-          <div class=" dados-info row align-items-center border-bottom w-100 mx-0">
-            <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
+          <div class=" dados-info row align-items-center border-bottom w-10 mx-0">
+            <span class="col-5 d-flex align-items-center gap-2 px-0 ">
               <i class="bi bi-geo-alt text-secondary fs-5"></i>
               <strong>Cidade</strong>
             </span>
@@ -295,7 +295,7 @@
           </div>
 
           <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
-            <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
+            <span class="col-5 d-flex align-items-center gap-2 px-0">
               <i class="bi bi-calendar-heart text-secondary fs-5"></i>
               <strong>Idade</strong>
             </span>
@@ -303,7 +303,7 @@
           </div>
 
           <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
-            <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
+            <span class="col-5 d-flex align-items-center gap-2 px-0">
               <i class="bi bi-gender-ambiguous text-secondary fs-5"></i>
               <strong>Gênero</strong>
             </span>
@@ -311,11 +311,29 @@
           </div>
 
           <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
-            <span class="col-5 d-flex align-items-center gap-2 px-0 text-dark">
+            <span class="col-5 d-flex align-items-center gap-2 px-0">
               <i class="bi bi-person-check text-secondary fs-5"></i>
               <strong>Membro desde</strong>
             </span>
             <span id="profileMemberSince" class="col-7 px-0 text-dark">-</span>
+          </div>
+ 
+       <!-- LINHA DO INSTAGRAM NO PAINEL DE INFO -->
+          <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+            <span class="col-5 d-flex align-items-center gap-2 px-0">
+              <i class="bi bi-instagram text-danger fs-5"></i>
+              <strong>Instagram</strong>
+            </span>
+            <span id="profileInstagramText" class="col-7 px-0 text-dark">-</span>
+          </div>
+
+          <!-- LINHA DO TELEGRAM NO PAINEL DE INFO -->
+          <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+            <span class="col-5 d-flex align-items-center gap-2 px-0">
+              <i class="bi bi-telegram text-primary fs-5"></i>
+              <strong>Telegram</strong>
+            </span>
+            <span id="profileTelegramText" class="col-7 px-0 text-dark">-</span>
           </div>
         </div>
 
@@ -354,6 +372,22 @@
             <span class="profile-field-body">
               <span class="profile-field-label">Recado</span>
               <textarea id="editMood" placeholder="Frase Favorita " maxlength="100" rows="3"></textarea>
+            </span>
+          </label>
+          <!-- CAMPO DO INSTAGRAM -->
+       <label class="profile-field">
+            <i class="bi bi-instagram profile-field-icon"></i>
+            <span class="profile-field-body">
+              <span class="profile-field-label py-2">Instagram</span>
+              <input type="text" id="editInstagram" placeholder="Digite seu @usuario (Opcional)" maxlength="30">
+            </span>
+          </label>
+          <!-- CAMPO DO TELEGRAM -->
+          <label class="profile-field">
+            <i class="bi bi-telegram profile-field-icon"></i>
+            <span class="profile-field-body">
+              <span class="profile-field-label py-2">Telegram</span>
+              <input type="text" id="editTelegram" placeholder=" Digite seu @usuario(Opcional)" maxlength="30">
             </span>
           </label>
           <div id="editTrackingState" data-capa-alterada="false" data-avatar-alterado="false" class="d-none"></div>
@@ -543,7 +577,6 @@
                   </div>
 
                   <div id="vipSolidColorWrapper" class="mb-2">
-                    <label class="small mb-1" style="font-size: 11px; font-weight: 600; color: #475569;">Escolha cor Solida</label>
                     <div class="vip-carousel-wrapper">
                       <button type="button" class="carousel-arrow left" onclick="document.getElementById('vipNameColorGrid').scrollBy({left: -120, behavior: 'smooth'})">
                         <i class="bi bi-chevron-left"></i>
@@ -891,7 +924,7 @@
       <!-- Controle de Zoom Nativo com - e + -->
       <div class="crop-zoom-wrapper">
         <button id="btnZoomOut" class="zoom-btn" type="button">—</button>
-        <input type="range" id="cropZoomSlider" min="1" max="3" step="0.01" value="1" />
+        <input type="range" id="cropZoomSlider" min="0.2" max="3" step="0.01" value="0.5" />
         <button id="btnZoomIn" class="zoom-btn" type="button">+</button>
       </div>
 

@@ -63,10 +63,8 @@ aria-expanded="false">
 <div id="userArea" class="d-flex align-items-center me-3">
 <a class="open-login btn-sair" id="btnLogin" href="#"></a>
 </div>
-
 </div>
 </nav>
-
   <div id="toast" class="toast-container"></div>
   <!-- 🔹 HERO (100% ORIGINAL - NÃO MEXIDO) -->
 <header class="hero ">
@@ -323,7 +321,7 @@ aria-expanded="false">
           <form class="col-md-11 mx-auto bg-white p-4 rounded-4 shadow-sm">
             <div class="mb-3"><input type="text" class="form-control" placeholder="Nome"></div>
             <div class="mb-3"><input type="email" class="form-control" placeholder="E-mail "></div>
-            <div class="mb-3"><input type="tel" id="telefone"class="form-control"placeholder="( ) Telefone opcional"
+            <div class="mb-3"><input type="tel" id="telefone"class="form-control"placeholder="( ) Telefone (Opcional)"
               inputmode="numeric"autocomplete="tel"></div>
             <div class="mb-3"><textarea class="form-control" rows="4" placeholder="Escreva sua mensagem..."></textarea>
             </div>
@@ -335,10 +333,6 @@ aria-expanded="false">
       </div>
     </div>
   </section>
-
-
-
-
 
   <!-- ===========================================================================
                               MODAL LOGIN
@@ -521,49 +515,64 @@ aria-expanded="false">
     <div class="profile-content px-3">
       <!-- INFO -->
   <!-- INFO -->
- <!-- INFO -->
+
 <div class="profile-section active" id="profileInfo">
-  <!-- Linha 1: Cidade -->
-  <div class="m-0 py-1 d-flex align-items-center border-bottom row g-0 text-dark">
-    <div class="col-6 d-flex align-items-center gap-2">
+  <!-- Cidade -->
+  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+    <span class="col-6 d-flex align-items-center gap-2 px-0">
       <i class="bi bi-geo-alt text-secondary fs-5"></i>
-      <strong>Cidade:</strong>
-    </div>
-    <div class="col-6 text-start">
-      <span id="profileCity">-</span>
-    </div>
+      <span class="text-secondary fw-medium">Cidade</span>
+    </span>
+    <span id="profileCity" class="col-6 ps-3 text-start text-secondary">-</span>
   </div>
-  <!-- Linha 2: Idade -->
-  <div class="m-0 py-1 d-flex align-items-center border-bottom row g-0 text-dark">
-    <div class="col-6 d-flex align-items-center gap-2">
+
+  <!-- Idade -->
+  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+    <span class="col-6 d-flex align-items-center gap-2 px-0">
       <i class="bi bi-calendar-heart text-secondary fs-5"></i>
-      <strong>Idade:</strong>
-    </div>
-    <div class="col-6 text-start">
-      <span id="profileAge">-</span>
-    </div>
+      <span class="text-secondary fw-medium">Idade</span>
+    </span>
+    <span id="profileAge" class="col-6 ps-3 text-start text-secondary">-</span>
   </div>
-  <!-- Linha 3: Gênero -->
-  <div class="m-0 py-1 d-flex align-items-center border-bottom row g-0 text-dark">
-    <div class="col-6 d-flex align-items-center gap-2">
+
+  <!-- Gênero -->
+  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+    <span class="col-6 d-flex align-items-center gap-2 px-0">
       <i class="bi bi-gender-ambiguous text-secondary fs-5"></i>
-      <strong>Gênero:</strong>
-    </div>
-    <div class="col-6 text-start">
-      <span id="profileGender">-</span>
-    </div>
+      <span class="text-secondary fw-medium">Gênero</span>
+    </span>
+    <span id="profileGender" class="col-6 ps-3 text-start text-secondary">-</span>
   </div>
-  <!-- Linha 4: Membro desde -->
-  <div class="m-0 py-1 d-flex align-items-center border-bottom row g-0 text-dark">
-    <div class="col-6 d-flex align-items-center gap-2">
+
+  <!-- Membro desde -->
+  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+    <span class="col-6 d-flex align-items-center gap-2 px-0">
       <i class="bi bi-person-check text-secondary fs-5"></i>
-      <strong>Membro desde:</strong>
-    </div>
-    <div class="col-6 text-start">
-      <span id="profileMemberSince">-</span>
-    </div>
+      <span class="text-secondary fw-medium">Membro desde</span>
+    </span>
+    <span id="profileMemberSince" class="col-6 ps-3 text-start text-secondary">-</span>
+  </div>
+
+  <!-- Instagram -->
+  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+    <span class="col-6 d-flex align-items-center gap-2 px-0">
+      <i class="bi bi-instagram text-danger fs-5"></i>
+      <span class="text-secondary fw-medium">Instagram</span>
+    </span>
+    <span id="profileInstagramText" class="col-6 ps-3 text-start text-secondary">-</span>
+  </div>
+
+  <!-- Telegram -->
+  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0 ">
+    <span class="col-6 d-flex align-items-center gap-2 px-0">
+      <i class="bi bi-telegram text-primary fs-5"></i>
+      <span class="text-secondary fw-medium">Telegram</span>
+    </span>
+    <span id="profileTelegramText" class="col-6 ps-3 text-start text-secondary">-</span>
   </div>
 </div>
+</div>
+
       <!-- EDITAR -->
 <div class="profile-section" id="profileEdit">
   <label class="profile-field">
@@ -601,6 +610,22 @@ aria-expanded="false">
     <textarea id="editMood" placeholder="Frase Favorita " maxlength="100" rows="3"></textarea>
   </span>
 </label>
+ <!-- CAMPO DO INSTAGRAM -->
+       <label class="profile-field">
+            <i class="bi bi-instagram profile-field-icon"></i>
+            <span class="profile-field-body">
+              <span class="profile-field-label">Instagram</span>
+              <input type="text" id="editInstagram" placeholder="Digite seu @usuario(Opcional)" maxlength="30">
+            </span>
+          </label>
+          <!-- CAMPO DO TELEGRAM -->
+          <label class="profile-field">
+            <i class="bi bi-telegram profile-field-icon"></i>
+            <span class="profile-field-body">
+              <span class="profile-field-label">Telegram</span>
+              <input type="text" id="editTelegram" placeholder="Digite seu @usuario(Opcional)" maxlength="30">
+            </span>
+          </label>
   <div id="editTrackingState" data-capa-alterada="false" data-avatar-alterado="false" class="d-none"></div>
   <button id="saveProfileBtn" type="button" disabled style="opacity: 0.5; cursor: not-allowed;">Salvar</button>
 </div>

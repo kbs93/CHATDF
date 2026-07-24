@@ -236,7 +236,7 @@ function createMessageElement(msgId, msg, timestamp = "") {
     // EVOLUÇÃO PARA LOTTIE (.JSON): Gera a div vazia com o ID único dinâmico
     // edita o tamanho largura do  emoji para 38px 10-06-26
     if (msg.text.trim().endsWith(".json")) {
-      content = `<div id="${idUnicoLottie}" class="sticker-img" style="width: 38px; height: 38px; display: inline-block;" draggable="false"></div>`;
+      content = `<div id="${idUnicoLottie}" class="sticker-img" style="width: 30px; height: 30px; display: inline-block;" draggable="false"></div>`;
     } else {
       content = renderSticker(msg.text);
     }

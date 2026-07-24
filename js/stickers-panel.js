@@ -330,8 +330,11 @@ panel.classList.remove("show");
 // =============================
 // aAnimação dentro do painel sticke 23-06-25 JSON LOTTIE EMOJI
 // =============================
+let animacaoAtivaMobile = null; // Guardador global da animação em prévia no mobile
+
 function renderAnimCategory(cat, target = animList) {
     target.innerHTML = "";
+    animacaoAtivaMobile = null; // Limpa a prévia ao trocar de categoria
 
     let listAnims = [];
     if (cat === "all" || cat === "Todas") {
@@ -351,6 +354,8 @@ listAnims.forEach(src => {
       containerAnim.style.width = "35px";
       containerAnim.style.height = "35px";
 
+      let instanceLottie = null; // Guarda o player do Lottie
+
       // Se for um arquivo JSON (Lottie), cria um ID único e inicializa o player nele
       if (typeof src === "string" && src.trim().endsWith(".json")) {
         const idUnicoPainel = "lottie-panel-" + Math.random().toString(36).substring(2, 11);
@@ -361,7 +366,7 @@ listAnims.forEach(src => {
 requestAnimationFrame(() => {
           if (typeof lottie !== "undefined") {
             // Guardamos a instância da animação na variável 'anim' para poder controlá-la
-            const anim = lottie.loadAnimation({
+            instanceLottie = lottie.loadAnimation({
               container: document.getElementById(idUnicoPainel),
               renderer: 'svg',
               loop: true,
@@ -369,14 +374,18 @@ requestAnimationFrame(() => {
               path: src.trim()
             });
 
-            // Dá play na animação específica quando o mouse entra no botão
+            // Dá play na animação específica quando o mouse entra no botão (Desktop)
             containerAnim.addEventListener("mouseenter", () => {
-              anim.play();
+              if (window.innerWidth > 768) {
+                instanceLottie.play();
+              }
             });
 
-            // Pausa a animação específica quando o mouse sai do botão
+            // Pausa a animação específica quando o mouse sai do botão (Desktop)
             containerAnim.addEventListener("mouseleave", () => {
-              anim.pause();
+              if (window.innerWidth > 768) {
+                instanceLottie.pause();
+              }
             });
           }
         });
@@ -384,9 +393,37 @@ requestAnimationFrame(() => {
         // Fallback caso você tenha misturado algum GIF ou imagem na lista
         containerAnim.innerHTML = `<img src="${src}" style="width:100%; height:100%; object-fit:contain;">`;
       }
-      // Ao clicar na div, envia o arquivo .json original para o chat
-      containerAnim.addEventListener("click", async () => {
+
+      // Ao clicar na div (1º Toque = Prévia no Mobile | 2º Toque / Clique Desktop = Envia para o chat)
+      containerAnim.addEventListener("click", async (e) => {
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+          // Se não for o mesmo emoji que já está tocando no mobile, ativa a prévia e não envia ainda
+          if (animacaoAtivaMobile !== containerAnim) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Se tinha outro emoji tocando antes no mobile, pausa ele
+            if (animacaoAtivaMobile && animacaoAtivaMobile._lottiePlayer) {
+              animacaoAtivaMobile._lottiePlayer.pause();
+            }
+
+            // Ativa o novo emoji
+            animacaoAtivaMobile = containerAnim;
+            containerAnim._lottiePlayer = instanceLottie;
+
+            if (instanceLottie) {
+              instanceLottie.play();
+            }
+            return; // Interrompe o envio para aguardar o 2º toque!
+          }
+        }
+
+        // Se for Desktop OU se for o SEGUNDO toque no mesmo emoji no Mobile: realiza o envio!
         await sendMessage({ value: src });
+        animacaoAtivaMobile = null;
+
         if (typeof closeBtn !== "undefined" && closeBtn) {
           closeBtn.click();
         }
