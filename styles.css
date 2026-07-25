@@ -1499,7 +1499,7 @@ footer a {
     font-size: 15px;
     max-width: 54vw;
   }
-
+/*EDITAR o espacamento das lateral dentro do chat */
   #chat-container {
     padding-left: 6px;
     padding-right: 4px;
@@ -1529,6 +1529,10 @@ footer a {
   .nav-btn img {
     width: 25px;
   }
+    #chat-container {
+    padding-left: 16px;
+    padding-right: 4px;
+  }
 }
 
 /*======================== EDITA O CAMPO DE RESPONDER OS USUARIOS MENCIONADOS ==================================*/
@@ -1543,13 +1547,12 @@ footer a {
   flex-direction: row;
   align-items: flex-start;
   gap: 12px;
-
   width: auto;
   max-width: min(80vw, 680px);
 
-  background-color: var(--reply-bg-color, #e7e7e7);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.75),
-      rgba(255, 255, 255, 0.75));
+  background-color: var(--reply-bg-color, #000000);
+  background-image: linear-gradient(rgb(231, 231, 231),
+      rgb(218, 216, 216));
 
   color: #ffffff;
   border-left: 4px solid var(--reply-border-color, #353434);
@@ -1557,7 +1560,7 @@ footer a {
   border-radius: 12px;
 
   padding: 8px 9px 21px;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+  
   animation: slideUp 0.2s ease;
   width: fit-content;
   min-width: unset;
@@ -1664,12 +1667,9 @@ footer a {
 @media (max-width: 915px) {
   .reply-preview {
     left: 8px;
-
     right: auto;
-
     width: fit-content;
     max-width: min(78vw, 320px);
-
     gap: 8px;
   }
 
@@ -1681,7 +1681,7 @@ footer a {
   .reply-preview .close-reply {
     width: 32px;
     height: 44px;
-    font-size: 24px;
+    font-size: 20px;
     line-height: 1;
     display: flex;
     align-items: center;
@@ -1692,29 +1692,38 @@ footer a {
   }
 
   .reply-preview .close-reply:active {
-    background: rgba(248, 10, 10, 0.15);
+    background: rgba(7, 0, 0, 0.15);
   }
 }
 
 @media (max-width: 480px) {
   .reply-preview {
-    padding: 7px 8px 20px;
+    padding: 1px 5px 20px;
     border-radius: 10px;
   }
-
+/*STICKER */
   .reply-preview img {
-    width: 46px;
-    height: 46px;
+    width: 56px;
+    height: 56px;
   }
 
   .reply-preview .reply-author {
-    font-size: 13px;
+    font-size: 1.1rem;
     padding: 4px 8px;
   }
 
   .reply-preview .reply-text {
     font-size: 0.88rem;
   }
+
+  .reply-preview .close-reply {
+    width:auto;
+    height: 44px;
+    font-size: 24px;
+   
+
+  }
+
 }
 
 /* animação */
@@ -1722,7 +1731,7 @@ footer a {
   from {
     transform: translateY(12px);
     opacity: 0;
-  }
+  } 
 
   to {
     transform: translateY(0);
@@ -1730,22 +1739,23 @@ footer a {
   }
 }
 
-/* Wrapper geral para deixar o preview alinhado SEM invadir o input */
+/* Wrapper geral para deixar o preview alinhado SEM invadir o input reply */
 .input-wrapper {
   position: relative;
 }
 
 .quoted-reply-box {
-  background-color: #b1adad3d;
+  background-color: #6969691c;
   padding: 6px 10px;
   border-radius: 6px;
   margin-bottom: 6px;
-  font-size: 0.92rem;
+  font-size: 1rem;
   display: inline-block;
   max-width: 90%;
   overflow-wrap: anywhere;
   word-break: break-word;
 }
+
 
 .quoted-text {
   color: #353232;
@@ -1818,7 +1828,7 @@ footer a {
 
 /*EDITA A COR DE FUNDO DAS mensagens*/
 .message {
-  background: #fdfdff;
+  background: #fffdfd;
   border-radius: 18px;
   max-width: 98%;
   margin-top: 1px;
@@ -1961,10 +1971,9 @@ footer a {
   }
 
 
-  .message span {
-    font-size: 1.1em;
-
-  }
+ .message span {
+  font-size: 1.1rem;
+}
 }
 
 .message-more-btn {
@@ -5269,7 +5278,7 @@ do botao lapis
 
 .profile-edit-tooltip p {
   margin: 0;
-  font-size: 0.88rem;
+  font-size: .88rem;
   line-height: 1.35;
 }
 

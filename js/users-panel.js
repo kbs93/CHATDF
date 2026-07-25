@@ -159,48 +159,50 @@ if (cachedUsers.length) {
   renderOnlineUsers(onlineUsersList, onlineCount, cachedUsers);
 }
   
-onValue(statusRef, (snapshot) => {
-  if (!onlineUsersList) return;
+// Tolerância para quedas rápidas de conexão (evita piscar a bolinha verde)
+  const TOLERANCIA_OFFLINE_MS = 10000; // 10 segundos de margem
 
-  const data = snapshot.val();
+  onValue(statusRef, (snapshot) => {
+    if (!onlineUsersList) return;
 
-  // Proteção UX Premium: Se o snapshot vier vazio ou indefinido devido a uma oscilação,
-  // mantemos o cache anterior em exibição na tela para evitar o efeito de sumiço repentino.
-  if (!data || typeof data !== "object") {
-    const fallbackUsers = loadOnlineUsersCache();
-    if (!fallbackUsers.length) {
-      onlineCount.textContent = "0";
-      onlineUsersList.replaceChildren();
+    const data = snapshot.val();
+    const agora = Date.now();
+
+    if (!data || typeof data !== "object") {
+      const fallbackUsers = loadOnlineUsersCache();
+      if (fallbackUsers.length) {
+        renderOnlineUsers(onlineUsersList, onlineCount, fallbackUsers);
+      } else {
+        if (onlineCount) onlineCount.textContent = "0";
+        onlineUsersList.replaceChildren();
+      }
+      return;
     }
-    
+
+    // Mantém o usuário visualmente online se ele esteve ativo nos últimos segundos,
+    // evitando que uma queda momentânea remova a bolinha verde da tela de imediato.
+    const users = Object.entries(data)
+      .map(([uid, user]) => {
+        if (!user || typeof user !== "object") return null;
+        return { uid, ...user };
+      })
+      .filter(user => {
+        if (!user || !user.uid) return false;
+        
+        const isOnline = user.online === true || user.online === "true";
+        const recente = user.lastChanged && (agora - user.lastChanged < TOLERANCIA_OFFLINE_MS);
+
+        return isOnline || recente;
+      });
+
+    renderOnlineUsers(onlineUsersList, onlineCount, users);
+    saveOnlineUsersCache(users);
+
     if (!window.__onlineFirstPaintDone) {
       window.dispatchEvent(new CustomEvent("chatdf:first-online-render"));
       window.__onlineFirstPaintDone = true;
     }
-    return;
-  }
-
-  // Mapeia e filtra blindando contra propriedades indefinidas ou alterações parciais de nós
-  const users = Object.entries(data)
-    .map(([uid, user]) => {
-      if (!user || typeof user !== "object") return null;
-      return {
-        uid,
-        ...user
-      };
-    })
-    .filter(user => user && user.uid && (user.online === true || user.online === "true"));
-
-  renderOnlineUsers(onlineUsersList, onlineCount, users);
-  saveOnlineUsersCache(users);
-
-  if (!window.__onlineFirstPaintDone) {
-    window.dispatchEvent(new CustomEvent("chatdf:first-online-render"));
-    window.__onlineFirstPaintDone = true;
-  }
-});
-
-
+  });
 }
 
 

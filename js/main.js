@@ -134,30 +134,48 @@ const appState = {
 };
 // 01-05-26
 window.appState = appState;
-// ================= PRESENÇA DA SALA RTDB ================= 18-05-26 E 07-07-26 ADICIONADO: Contador de denúncias por sessão/login
+// ================= PRESENÇA DA SALA RTDB realtime================= 18-05-26 E 07-07-26 ADICIONADO: Contador de denúncias por sessão/login
+// ================= PRESENÇA DA SALA RTDB COM RECONEXÃO GARANTIDA =================
 
 async function updateUserRoomPresence() {
   const user = auth.currentUser;
   if (!user) return;
   try {
-    // Importa o update para não sobrescrever outros campos salvos no nó (como a trava)
-    const { update } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js");
+    const { update, onValue, onDisconnect } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js");
+    
     const userStatusRef = ref(rtdb, "status/" + user.uid);
+    const connectedRef = ref(rtdb, ".info/connected");
 
-    // Altera de set para update para blindar o campo bloqueioDenuncia após o F5
-    await update(userStatusRef, {
-      uid: user.uid,
-      name: appState.currentUser?.nome || appState.currentUser?.displayNameChat || user.displayName || "Usuário",
-      avatar: appState.currentUser?.photoURL || "./img/avatar.png",
-      online: true,
-      sala: appState.currentRoom || null,
-      lastChanged: Date.now()
+    // 1. Escuta o estado do Socket do Firebase
+    onValue(connectedRef, async (snap) => {
+      if (snap.val() === true) {
+        await onDisconnect(userStatusRef).update({
+          online: false,
+          lastChanged: Date.now()
+        });
+
+        await update(userStatusRef, {
+          uid: user.uid,
+          name: appState.currentUser?.nome || appState.currentUser?.displayNameChat || user.displayName || "Usuário",
+          avatar: appState.currentUser?.photoURL || "./img/avatar.png",
+          online: true,
+          sala: appState.currentRoom || null,
+          lastChanged: Date.now()
+        });
+      }
     });
 
   } catch (err) {
     console.error("Erro ao atualizar presença da sala:", err);
   }
 }
+
+// 2. ESCUTA NATIVA DO NAVEGADOR (Força o envio assim que a rede/Wi-Fi voltar)
+window.addEventListener("online", () => {
+  if (auth.currentUser) {
+    updateUserRoomPresence();
+  }
+});
 
 
 

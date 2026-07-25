@@ -221,7 +221,8 @@ if (!window.replyingTo) {
 
 
 function createMessageElement(msgId, msg, timestamp = "") {
-  const userColor = getColorFromName(msg.user);
+  // Se tiver cor VIP definida no objeto da mensagem, usa ela; caso contrário, padroniza como preto
+  const userColor = msg.vipNameColorSolid || msg.vipNameColor || "#1E293B";
   const ytId = extractYouTubeId(msg.text);
   const avatar = sanitizeMessageAvatar(msg.photo || msg.avatar);
   const cidade = msg.replyTo ? "" : (msg.cidade || msg.city || ""); // 01-05-26
@@ -571,14 +572,14 @@ function formatTimestamp(ts) {
 ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")} `;
 }
 
-// 10-06-26 edita o Botao de denuncia dentro do reply Se a mensagem atingir 4 ou mais denúncias, oculta o conteúdo cirurgicamente no DOM
+// 10-06-26 edita o Botao de denuncia dentro do reply Se a mensagem atingir 4 ou mais denuncias, oculta o conteúdo cirurgicamente no DOM
 function renderPlainMessage(msg) {
   if (msg.denunciasContador && msg.denunciasContador >= 3) {
     return `<span class="msg-hidden">[Mensagem removida pelos usuarios..]</span>`;
   }
   const highlighted = highlightMentions(msg.text);
   const long = msg.text.length > 200;
-  const color = msg.color || "#000000";
+  const color = msg.color || "#1E293B";
   if (long) {
     return `
       <span class="msg-text" style="color:${color};">${highlighted}</span>
@@ -650,7 +651,7 @@ async function renderReply(msg) {
   if (isSticker(d.text)) {
     if (d.text.trim().endsWith(".json")) {
       // EDITA O tamanho do emoji dentro do reply para 35px 10-06-26
-      content = `<div id="${idUnicoReplyLottie}" class="sticker-img" style="width: 35px; height: 35px; display: inline-block;"></div>`;
+      content = `<div id="${idUnicoReplyLottie}" class="sticker-img" style="width: 30px; height: 30px; display: inline-block;"></div>`;
       requestAnimationFrame(() => {
         if (typeof window.renderizarEmojiLottie === "function") {
           window.renderizarEmojiLottie(idUnicoReplyLottie, d.text.trim());
@@ -677,14 +678,13 @@ async function renderReply(msg) {
       content = `<div class="quoted-text reply-text">${short}</div>`;
     }
   }
-  // 04-07-26  EDITAR Sanitização da foto do usuário respondido 
+  // 04-07-26  EDITAR  usuário respondido NO CAMPO DO CHAT REPLY e a foto 
 const bg = toRGBA(color, 0.17);
   const safeRepliedAvatar = d.photo || d.avatar || "./img/avatar.png";
 return `
     <div class="quoted-reply-box"
          style="
            border-left: 4px solid ${color};
-           background: ${bg};
            display: inline-flex;
            flex-direction: row;
            align-items: flex-start;
@@ -697,7 +697,7 @@ return `
          ">
       <img src="${safeRepliedAvatar}" class="reply-user-avatar" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 2px;" onerror="this.src='./img/avatar.png'">
       <div style="display: flex; flex-direction: column; overflow: hidden; flex-grow: 1; text-align: left;">
-        <div class="quoted-header" style="color:${color}; font-weight: 700; font-size: 0.88rem; text-align: left; width: 100%; margin-bottom: 2px;">
+        <div class="quoted-header" style="color:${color}; font-weight: 600; font-size: .97rem; text-align: left; width: 100%; margin-bottom: 2px;">
           ${d.user}
         </div>
         <div style="display: flex; text-align: left; width: 100%;">
@@ -1138,8 +1138,8 @@ if (bloqueiaTelefone(text)) {
   }
 
   try {
-    const userColorChoice =
-      window.getSelectedColor ? window.getSelectedColor() : "#000000";
+   // Se o usuário tiver cor VIP salva usa ela, senão padroniza como o grafite suave #1E293B
+    const userColorChoice = userProfile?.vipMsgColor || "#1E293B";
 
     const idOrganizado = gerarIdISO();
 

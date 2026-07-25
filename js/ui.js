@@ -5,7 +5,7 @@
 // ------ STORAGE CONTROLADO -------
 const USER_COLOR_KEY = "chatdf_user_color";
 // ----------- COR INTERNA PROTEGIDA ----------
-let selectedColor = "#000000";
+let selectedColor = "#1E293B";
 let colorLocked = false;
 let _secureColor = selectedColor;
 // ELEMENTOS
@@ -21,9 +21,8 @@ if (messageInput) {
 // PALETA de CORES 
 // na paleta de cores nao pode usar a cor preta pois ela e padrao do meu chat 
 export const textColorPalette = [
-  "#0D1B2A","#1B263B","#274060","#2C3E50","#34495E",
-  "#003049","#1F3A5F","#0A2540","#102A43","#1E3A8A",
-  "#0F766E","#065F46","#064E3B","#e3eaa7","#86af49",
+  "#0D1B2A","#1E3A8A",
+  "#0F766E","#065F46","#e3eaa7","#86af49",
   "#134E4A","#0F3D3E","#1C4532","#2F4F4F","#004D40",
   "#3B0764","#4C1D95","#5B21B6","#6D28D9","#312E81",
   "#7F1D1D","#991B1B","#7C2D12","#78350F","#4E342E",
@@ -36,9 +35,47 @@ export const textColorPalette = [
   "#5c5c7a","#555532","#82ffab","#b2ad7f","#a2b9bc",
   "#6b5b95","#c1946a","#c4b7a6","#f7786b","#50394c",
   "#b2b2b2","#618685","#625750","#bd9441","#7e4a35",
-  "#d4ac6e","#FFBB00",
+  "#d4ac6e","#FFBB00",  "#1E88E5", 
+  "#D32F2F", 
+  "#388E3C", 
+  "#F57C00", 
+  "#0097A7", 
+  "#C2185B",
+  "#00796B", 
+  "#E53935", 
+  "#43A047", 
+  "#FB8C00", 
+  "#00ACC1", 
+  "#D81B60", 
+  "#2E7D32", 
+  "#6A1B9A", 
+  "#EF6C00", 
+  "#1976D2",
+  "#1565C0",
+  "#0D47A1",
+  "#3949AB",
+  "#1A237E", 
+  "#C62828", 
+  "#8E24AA",
+  "#7B1FA2",  
+  "#4A148C", 
+  "#512DA8", 
+  "#E65100", 
+  "#AD1457",  
+  "#880E4F", 
+  "#00897B", 
+  "#00838F", 
+  "#006064",
+  "#00695C",
+  "#1B5E20", 
+  "#004D40", 
+  "#6D4C41", 
+  "#3E2723", 
   "<br>"
 ];
+
+
+
 const palette = textColorPalette;
 window.textColorPalette = textColorPalette;
 // RENDERIZA PALETA
@@ -77,10 +114,16 @@ function renderizarPaletaNoContainer(targetGridElement, salvarNoLocalStorage = f
 
 // SELECIONAR COR
 // ================= SELECIONAR COR =================
+// SELECIONAR COR (Apenas do chat comum - Ignora a Área VIP)
 // ================= SELECIONAR COR =================
 document.addEventListener("click", (e) => {
   const box = e.target.closest(".color-box");
   if (!box) return;
+
+  // BLINDAGEM VIP: Se o clique for em qualquer paleta do painel VIP, ignora totalmente
+  if (box.closest("#profileVip") || box.closest("#vipNameColorGrid") || box.closest("#vipMsgColorGrid")) {
+    return;
+  }
 
   if (colorLocked) return;
 
@@ -90,10 +133,11 @@ document.addEventListener("click", (e) => {
 
   if (messageInput) messageInput.style.color = color;
 
-localStorage.setItem(USER_COLOR_KEY, color);
+  localStorage.setItem(USER_COLOR_KEY, color);
 
-  // Mantém todas as cores com opacidade normal (Sem ofuscar nada)
-  document.querySelectorAll(".color-box").forEach(b => {
+  // Remove a seleção apenas das caixas do painel comum
+  const containerComum = document.getElementById("colorPanel") || document.getElementById("dynamicColors");
+  containerComum?.querySelectorAll(".color-box").forEach(b => {
     b.classList.remove("selected");
   });
 
@@ -182,22 +226,16 @@ colorBtn?.addEventListener("click", (e) => {
 });
 
 // RESTAURA COR SALVA
+// RESTAURA COR SALVA (Se não houver cor válida no storage, assume o grafite suave)
 const storedColor = localStorage.getItem(USER_COLOR_KEY);
 if (storedColor) {
   selectedColor = storedColor;
   _secureColor = storedColor;
-  colorLocked = true;
-
   if (messageInput) messageInput.style.color = storedColor;
-
-  document.querySelectorAll(".color-box").forEach(b => {
-    if (b.dataset.color === storedColor) {
-      b.classList.add("selected");
-      b.style.opacity = "1";
-    } else {
-      b.style.opacity = "0.5";
-    }
-  });
+} else {
+  selectedColor = "#1E293B";
+  _secureColor = "#1E293B";
+  if (messageInput) messageInput.style.color = "#1E293B";
 }
 
 // USADO PELO messages.js
@@ -237,64 +275,10 @@ export function highlightMentions(text) {
 }
 
 // ================================================= Gera cor consistente com base no nome ============================
+// ================================================= Retorna preto por padrão (Cores reservadas para VIP) ============================
 export function getColorFromName(name) {
-  // BLINDAGEM OBRIGATÓRIA
-  if (!name || typeof name !== "string") {
-    return "#000000"; // cor padrão segura
-  }
-
-  // cores do nome do usuario ao fazer login 
-  const palette = [
-  "#1E88E5", // azul forte
-  "#D32F2F", // vermelho
-  "#388E3C", // verde
-  "#7B1FA2", // roxo
-  "#F57C00", // laranja
-  "#0097A7", // ciano
-  "#C2185B", // rosa escuro
-  "#512DA8", // roxo azulado
-  "#00796B", // verde petróleo
-  "#5D4037", // marrom
-
-  "#1976D2", // azul clássico
-  "#E53935", // vermelho vivo
-  "#43A047", // verde médio
-  "#8E24AA", // violeta
-  "#FB8C00", // laranja claro
-  "#00ACC1", // azul piscina
-  "#D81B60", // pink
-  "#3949AB", // azul índigo
-  "#00897B", // verde água
-  "#6D4C41", // marrom claro
-
-  "#1565C0", // azul escuro
-  "#B71C1C", // vinho
-  "#2E7D32", // verde escuro
-  "#6A1B9A", // roxo fechado
-  "#EF6C00", // laranja queimado
-  "#00838F", // teal escuro
-  "#AD1457", // rosa vinho
-  "#283593", // azul noturno
-  "#00695C", // verde fechado
-  "#4E342E", // marrom escuro
-
-  "#0D47A1", // azul profundo
-  "#C62828", // vermelho fechado
-  "#1B5E20", // verde floresta
-  "#4A148C", // roxo profundo
-  "#E65100", // laranja escuro
-  "#006064", // ciano profundo
-  "#880E4F", // magenta escuro
-  "#1A237E", // azul petróleo
-  "#004D40", // verde petróleo escuro
-  "#3E2723"  // marrom profundo
-  
-];
-
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  } return palette[Math.abs(hash) % palette.length];
+  // Retorna a cor preta padrão para todos os usuários comuns
+  return "#1E293B";
 }
 // Faz scroll automático, só se estiver no fim
 export function scrollToBottom(container) {
@@ -369,7 +353,7 @@ preview.innerHTML = `
     <div style="display: flex; flex-direction: column; flex-grow: 1; overflow: hidden;">
       <div class="reply-author">${author}</div>
       ${mediaHTML}
-      <div class="reply-text" style="font-size: 0.88rem; color: #444a54;">${shortText}</div>
+      <div class="reply-text" style="font-size: 1rem; color: #444a54;">${shortText}</div>
     </div>
   </div>
 
