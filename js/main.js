@@ -1455,11 +1455,13 @@ function applyProfileMode(isOwner) {
   }
 
 // Removido o loop cego que limpava e forçava a aba info toda vez que o Firebase atualizava dados
-  if (isOwner) {
+ if (isOwner) {
     if (reportBtn) reportBtn.style.display = "none";
 
+    // Oculta o lápis se estiver na aba VIP para não conflitar com o botão padrão
+    const activeTab = document.querySelector('.profile-tab.active')?.dataset.tab;
     if (editProfileCoverBtn) {
-      editProfileCoverBtn.style.display = "grid";
+      editProfileCoverBtn.style.display = (activeTab === "vip") ? "none" : "grid";
     }
 
     if (vipTabBtn) {
@@ -1516,6 +1518,10 @@ const sections = document.querySelectorAll(".profile-section");
 // ----------------- ABAS REESTRUTURADAS (INCLUINDO VIP COM PREVIEW) ------------------
 // ----------------- ABAS REESTRUTURADAS (TOTALMENTE INDEPENDENTES) ------------------
 // =================================== REESTRUTURAÇÃO DAS ABAS E MOTOR VIP DEFINITIVO ===================================
+
+
+
+
 tabs.forEach(tab => {
   tab.addEventListener("click", () => {
     const target = tab.dataset.tab;
@@ -1536,7 +1542,7 @@ tabs.forEach(tab => {
     sections.forEach(s => {
       s.classList.remove("active");
       s.classList.add("hidden");
-      s.style.setProperty("display", "none", "important"); // Destrói heranças invisíveis do Bootstrap
+      s.style.setProperty("display", "none", "important");
     });
 
     tab.classList.add("active");
@@ -1549,7 +1555,42 @@ tabs.forEach(tab => {
     if (targetSection) {
       targetSection.classList.remove("hidden");
       targetSection.classList.add("active");
-      targetSection.style.setProperty("display", "block", "important"); // Força a renderização
+      targetSection.style.setProperty("display", "block", "important");
+    }
+
+    // CONTROLE VISUAL: Exibe/Oculta elementos VIP no topo principal existente
+    // CONTROLE VISUAL: Exibe/Oculta elementos VIP no topo principal existente
+// CONTROLE VISUAL: Exibe/Oculta elementos VIP no topo principal existente
+    const isVip = target === "vip";
+
+    // Troca o botão Lápis pelo Botão VIP exclusivo no topo
+    const editBtn = document.getElementById("editProfileCoverBtn");
+    const vipBtn = document.getElementById("vipHeaderActionBtn");
+
+    if (currentProfileIsOwner) {
+      if (editBtn) editBtn.style.display = isVip ? "none" : "grid";
+      if (vipBtn) {
+        vipBtn.style.display = isVip ? "grid" : "none";
+        vipBtn.classList.toggle("d-none", !isVip);
+      }
+    }
+
+    const topExpiry = document.getElementById("vipTopExpiryRow");
+    if (topExpiry) {
+      topExpiry.classList.toggle("d-flex", isVip);
+      topExpiry.classList.toggle("d-none", !isVip);
+    }
+
+    const topTag = document.getElementById("vipTopPreviewTag");
+    if (topTag) {
+      topTag.classList.toggle("d-inline-block", isVip);
+      topTag.classList.toggle("d-none", !isVip);
+    }
+
+    const topMsgBox = document.getElementById("vipTopMsgPreviewBox");
+    if (topMsgBox) {
+      topMsgBox.classList.toggle("d-block", isVip);
+      topMsgBox.classList.toggle("d-none", !isVip);
     }
 
     if (target === "vip") {
@@ -1557,6 +1598,10 @@ tabs.forEach(tab => {
     }
   });
 });
+
+
+
+
 
 function inicializarPainelVipDinamico() {
   const promoSec = document.getElementById("vipPromoSection");
@@ -1652,102 +1697,158 @@ document.querySelectorAll(".vip-btn-card").forEach(button => {
 window.__vipMENSAGEM_COR_SELECIONADA = "#333333";
 window.__vipNOME_COR_SELECIONADA = "#6f42c1";
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function vincularEventosPreviewVip() {
+  const topName = document.getElementById("profileName");
+  const topText = document.getElementById("vipTopPreviewText");
+  const topFrame = document.getElementById("vipTopPreviewFrame");
+  const topBanner = document.querySelector(".profile-cover");
+  const solidWrapper = document.getElementById("vipSolidColorWrapper");
+
   const typeSelect = document.getElementById("vipNameColorType");
   const fontSelect = document.getElementById("vipNameFont");
   const frameSelect = document.getElementById("vipAvatarFrameSelect");
   const bannerSelect = document.getElementById("vipProfileBannerSelect");
 
-  const previewName = document.getElementById("vipPreviewName");
-  const previewText = document.getElementById("vipPreviewText");
-  const previewFrame = document.getElementById("vipPreviewFrame");
-  const previewBanner = document.getElementById("vipPreviewBanner");
-  const solidWrapper = document.getElementById("vipSolidColorWrapper");
-  const vipMsgGrid = document.getElementById("vipMsgColorGrid");
-  const vipNameGrid = document.getElementById("vipNameColorGrid");
+  const atualizarSimulacaoTopo = () => {
+    if (!topName || !topText || !topFrame || !topBanner) return;
 
-  const atualizarSimulacao = () => {
-    if (!previewName || !previewText || !previewFrame) return;
+    // Reset limpo do Nome
+    topName.className = "fw-bold";
+    topName.style.background = "";
+    topName.style.webkitBackgroundClip = "";
+    topName.style.webkitTextFillColor = "";
+    topName.style.color = "";// Limpa a cor fixa inline para o CSS poder aplicar a cor do Glow
 
-    previewName.className = "fw-bold";
-    previewName.style.background = "";
-    previewName.style.webkitBackgroundClip = "";
-    previewName.style.webkitTextFillColor = "";
+    const valorEfeito = typeSelect ? typeSelect.value : "solid";
 
-    if (typeSelect && typeSelect.value === "solid") {
+    // 1. CORREÇÃO DO EFEITO NO NOME (Aplica a classe no formato nick-...)
+    if (valorEfeito === "solid") {
       if (solidWrapper) solidWrapper.style.setProperty("display", "block", "important");
-      previewName.style.color = window.__vipNOME_COR_SELECIONADA;
-    } else if (typeSelect) {
+      topName.style.color = window.__vipNOME_COR_SELECIONADA || "#6f42c1";
+    } else {
       if (solidWrapper) solidWrapper.style.setProperty("display", "none", "important");
-      previewName.classList.add(`nick-${typeSelect.value}`);
+      
+      // Garante o formato correto da classe do CSS (nick-gradient-xxx ou nick-anim-xxx)
+   // Remove qualquer classe de efeito antiga antes de colocar a nova
+topName.className = topName.className.replace(/nick-\S+/g, "").trim();
+
+if (valorEfeito !== "solid") {
+  topName.classList.add(`nick-${valorEfeito}`);
+}
     }
 
-    if (fontSelect) {
-      if (fontSelect.value === "default") {
-        previewName.style.fontFamily = "inherit";
+    // Estilo de Fonte
+    if (fontSelect && fontSelect.value !== "default") {
+      let herancaTipo = "sans-serif";
+      if (["Courgette", "Lobster", "Bangers", "Pacifico", "Satisfy"].includes(fontSelect.value)) {
+        herancaTipo = "cursive";
+      }
+      topName.style.fontFamily = `'${fontSelect.value}', ${herancaTipo}`;
+    }
+
+    if (topText) {
+      topText.style.color = window.__vipMENSAGEM_COR_SELECIONADA || "#333333";
+    }
+
+    // 2. CORREÇÃO DA MOLDURA DO AVATAR (Remove d-none e aplica a classe)
+    if (topFrame) {
+      topFrame.className = "position-absolute top-0 start-0 w-100 h-100 rounded-circle";
+      const valorMoldura = frameSelect ? frameSelect.value : "none";
+      
+      if (valorMoldura !== "none") {
+        topFrame.classList.remove("d-none"); // Remove a trava do Bootstrap
+        topFrame.classList.add(valorMoldura); // Aplica o efeito de borda/luz
       } else {
-        let herancaTipo = "sans-serif";
-        if (["Courgette", "Lobster", "Bangers", "Pacifico", "Satisfy"].includes(fontSelect.value)) {
-          herancaTipo = "cursive";
-        }
-        previewName.style.fontFamily = `'${fontSelect.value}', ${herancaTipo}`;
+        topFrame.classList.add("d-none");
       }
     }
 
-    previewText.style.color = window.__vipMENSAGEM_COR_SELECIONADA;
-
-    previewFrame.className = "position-absolute top-0 start-0 w-100 h-100 rounded-circle";
-    if (frameSelect && frameSelect.value !== "none") {
-      previewFrame.classList.add(frameSelect.value);
-    }
-
-    if (previewBanner && bannerSelect) {
-      previewBanner.className = "mb-3";
+    // Capa de Perfil
+    if (topBanner && bannerSelect) {
+      topBanner.className = "profile-cover position-relative";
       if (bannerSelect.value === "default") {
-        previewBanner.style.background = "#8b898963";
+        topBanner.style.background = selectedBannerColor || "#00000063";
       } else {
-        previewBanner.style.background = "";
-        previewBanner.classList.add(bannerSelect.value);
+        topBanner.style.background = "";
+        topBanner.classList.add(bannerSelect.value);
       }
     }
   };
 
-  vipNameGrid?.addEventListener("click", (e) => {
-    const box = e.target.closest(".color-box");
-    if (!box) return;
-    window.__vipNOME_COR_SELECIONADA = box.dataset.color;
-    vipNameGrid.querySelectorAll(".color-box").forEach(b => {
-      b.classList.remove("selected");
-      const c = b.querySelector(".color-check");
-      if (c) c.style.display = "none";
-    });
-    box.classList.add("selected");
-    const check = box.querySelector(".color-check");
-    if (check) check.style.display = "block";
-    atualizarSimulacao();
+  // Conecta as alterações dos selects com a função de atualização
+  [typeSelect, fontSelect, frameSelect, bannerSelect].forEach(selectEl => {
+    selectEl?.addEventListener("change", atualizarSimulacaoTopo);
   });
 
-  vipMsgGrid?.addEventListener("click", (e) => {
-    const box = e.target.closest(".color-box");
-    if (!box) return;
-    window.__vipMENSAGEM_COR_SELECIONADA = box.dataset.color;
-    vipMsgGrid.querySelectorAll(".color-box").forEach(b => {
-      b.classList.remove("selected");
-      const c = b.querySelector(".color-check");
-      if (c) c.style.display = "none";
-    });
-    box.classList.add("selected");
-    const check = box.querySelector(".color-check");
-    if (check) check.style.display = "block";
-    atualizarSimulacao();
-  });
+  window.atualizarSimulacaoTopoVip = atualizarSimulacaoTopo;
 
-  [typeSelect, fontSelect, frameSelect, bannerSelect].forEach(element => {
-    element?.addEventListener("change", atualizarSimulacao);
-  });
+  // Paleta de Cores do Nome
+  const vipNameGrid = document.getElementById("vipNameColorGrid");
+  if (vipNameGrid) {
+    vipNameGrid.onclick = (e) => {
+      const box = e.target.closest(".color-box");
+      if (!box) return;
+      window.__vipNOME_COR_SELECIONADA = box.dataset.color;
+      vipNameGrid.querySelectorAll(".color-box").forEach(b => b.classList.remove("selected"));
+      box.classList.add("selected");
+      atualizarSimulacaoTopo();
+    };
+  }
 
-  atualizarSimulacao();
+  // Paleta de Cores do Texto
+  const vipMsgGrid = document.getElementById("vipMsgColorGrid");
+  if (vipMsgGrid) {
+    vipMsgGrid.onclick = (e) => {
+      const box = e.target.closest(".color-box");
+      if (!box) return;
+      window.__vipMENSAGEM_COR_SELECIONADA = box.dataset.color;
+      vipMsgGrid.querySelectorAll(".color-box").forEach(b => b.classList.remove("selected"));
+      box.classList.add("selected");
+      atualizarSimulacaoTopo();
+    };
+  }
+
+  atualizarSimulacaoTopo();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*Vincula a gravação dos dados VIP ao botão de Salvar exclusivo
 document.getElementById("btnSaveVipSettings")?.addEventListener("click", async () => {
@@ -2820,9 +2921,12 @@ document.querySelectorAll('.vip-custom-dropdown').forEach(dropdown => {
         const val = option.getAttribute('data-value');
 
         // Atualiza o select nativo oculto e dispara o preview em tempo real
+       // Atualiza o select nativo oculto e dispara o preview em tempo real
         selectNativo.value = val;
         selectNativo.dispatchEvent(new Event('change'));
-
+        if (typeof window.atualizarSimulacaoTopoVip === "function") {
+          window.atualizarSimulacaoTopoVip();
+        }
         // Atualiza o texto do botão
         btn.textContent = option.textContent;
 

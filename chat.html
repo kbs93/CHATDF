@@ -224,43 +224,57 @@
         <!-- usuários online aparecem aqui -->
       </div>
     </div>
-
-
-
   </div>
-
   <div id="onlineOverlay" class="online-overlay"></div>
-
   <!-- ================= SHOW TOAST  ================= -->
   <div id="toast"></div>
-
-
-
-
   <!-- ================= PERFIL DO USUÁRIO ================= -->
 
   <div id="profileOverlay" class="hidden"></div>
 
   <div id="profilePanel" class="profile-panel hidden">
     <div class="profile-body">
-      <div class="profile-cover">
+
+
+
+
+
+
+
+<!-- CAPA E TOPO PRINCIPAL UNIFICADO -->
+      <div class="profile-cover position-relative">
+        
+        <!-- TAG VIP DE EXPIRAÇÃO (EXIBIDA NO CANTO SUPERIOR ESQUERDO QUANDO VIP ATIVO) -->
+        <div id="vipTopExpiryRow" class="position-absolute top-0 start-0 m-2 d-none align-items-center gap-1.5 px-2.5 py-1 rounded-pill" style="background: rgba(15, 12, 32, 0.85); backdrop-filter: blur(4px); border: 1px solid rgba(255, 193, 7, 0.5); z-index: 15;">
+          <i class="bi bi-gem text-warning" style="font-size: 11px;"></i>
+          <span class="small m-0 text-white" style="font-size: 10px; font-weight: 600;">Expira em: <strong id="vipExpiryDays" class="text-warning">X dias</strong></span>
+          <button id="btnRenewVip" class="btn btn-sm btn-link text-warning p-0 ms-1 text-decoration-none fw-bold" style="font-size: 10px;">(Renovar)</button>
+        </div>
+
         <button id="reportUserBtn" type="button" aria-label="Denunciar usuário" style="display: none;">
           <i class="bi bi-flag-fill"></i>
         </button>
-        <div class="profile-header-actions profile-cover-actions">
+
+   <div class="profile-header-actions profile-cover-actions">
           <button id="editProfileCoverBtn" type="button" aria-label="Editar cor da capa">
             <i class="bi bi-pencil-square"></i>
+          </button>
+          <!-- BOTÃO EXCLUSIVO DA ABA VIP (Aparece somente quando a aba VIP estiver ativa) -->
+          <button id="vipHeaderActionBtn" type="button" class="d-none" aria-label="Ação VIP" style="width: 38px; height: 38px; border: none; background: rgba(0, 0, 0, 0.26); border-radius: 50%; color: #fff; font-size: 18px; cursor: pointer; display: none; place-items: center;">
+            <i class="bi bi-star-fill" style="color: #ffc107;"></i>
           </button>
           <button id="closeProfilePanel" type="button" aria-label="Fechar painel">✕</button>
         </div>
       </div>
-      <!-- 13-07-2026 mudança de posição do avatar para dentro do painel do usuário -->
+
+      <!-- AVATAR COM CAMADA DE MOLDURA VIP -->
       <div class="profile-avatar-wrap">
-        <div class="profile-avatar">
+        <div class="profile-avatar position-relative">
           <img id="profileAvatar" src="img/avatar.png" alt="Avatar do usuário">
+          <div id="vipTopPreviewFrame" class="position-absolute top-0 start-0 w-100 h-100 rounded-circle d-none" style="pointer-events: none; box-sizing: border-box;"></div>
         </div>
 
-        <!-- Botão de Upload agora fica do lado de fora da máscara de corte -->
+        <!-- Botão de Upload -->
         <label id="btnUploadPhoto" class="profile-photo-upload-btn hidden" title="Adicionar foto de perfil">
           <i class="bi bi-camera"></i>
           <input type="file" id="uploadProfilePic" accept="image/jpeg, image/png, image/webp" style="display: none;">
@@ -269,11 +283,18 @@
         <span id="profileOnlineDot" class="profile-online-dot hidden"></span>
       </div>
 
-
+      <!-- INFORMAÇÕES DO USUÁRIO + PRÉVIA DA MENSAGEM -->
       <div class="profile-user-info">
-        <h3 id="profileName">Usuário</h3>
-
+        <div class="d-flex align-items-center justify-content-center gap-1">
+          <h3 id="profileName">Usuário</h3>
+          <span id="vipTopPreviewTag" class="d-none"><img src="img/diamante.png" alt="VIP" width="19" height="19"></span>
+        </div>
         <p id="profileMood">Sem recado no momento.</p>
+        <!-- BALÃO DA FRASINHA DE EXEMPLO DAS MENSAGENS (SÓ APARECE QUANDO NA ABA VIP) -->
+        <div id="vipTopMsgPreviewBox" class="d-none mt-2 px-3 py-2 rounded-3 border bg-light mx-auto" style="max-width: 90%;">
+          <span class="text-muted d-block mb-1 fw-bold" style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: left;">Previa da Mensagem no Chat </span>
+          <p id="vipTopPreviewText" class="m-0 fw-semibold" style="font-size: 13px; color: #333; line-height: 1.3; text-align: left;">Olá! mundo, Olha como fica bonita a minha mensagem, enviada no chat!</p>
+        </div>
       </div>
       <!---====================== 16-07-26 ADICIONANDO NOVO PAINEL VIP ===================---->
       <div class="profile-tabs ">
@@ -404,61 +425,7 @@
         <div class="profile-section d-none" id="profileVip">
 
           <!-- CARD DO STATUS VIP & EXPIRAÇÃO -->
-          <div class="vip-card-status mb-3 p-3 text-center"
-            style="border-radius: 12px; border: 1px solid rgba(255, 193, 7, 0.3); background: linear-gradient(145deg, #1e1b4b, #0f0c20); color: #fff;">
-            <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
-              <i class="bi bi-gem text-warning animate-pulse" style="filter: drop-shadow(0 0 5px #ffc107);"></i>
-              <h5 class="m-0 fw-bold text-white">Area exclusiva</h5>
-            </div>
-
-            <!-- Contador de Tempo / Renovação -->
-            <div id="vipExpiryRow" class="mt-2 d-none">
-              <p class="small m-0 ">Seu plano VIP expira em: <span id="vipExpiryDays"
-                  class="text-warning fw-bold">X dias</span></p>
-              <button id="btnRenewVip" class="btn btn-sm btn-outline-warning py-0.5 px-2 mt-1"
-                style="font-size: 11px; border-radius: 20px;">Renovar assinatura</button>
-            </div>
-          </div>
-
-          
-
-
-          <!-- SEÇÃO 2: PARA QUEM JÁ É VIP -->
-          <div id="vipSettingsSection" class="vip-sub-section d-none">
-
-            <!-- PREVIEW EM TEMPO REAL -->
-            <div class="vip-preview-box text-start mb-3 border rounded-3 bg-light">
-              <span class="text-muted d-block mb-2"
-                style="font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 12px 0 12px;">Preview
-                em Tempo Real</span>
-
-              <div id="vipPreviewBanner" class="mb-3"
-                style="height: 85px; border-radius: 8px; background: #8b898963; margin: 0 12px; transition: background 0.2s ease;">
-                <span
-                  style="font-size: 9px; color: rgba(255,255,255,0.8); font-weight: bold; padding: 4px 8px; display: inline-block; text-transform: uppercase;">Sua
-                  Capa VIP</span>
-              </div>
-
-              <div class="d-flex gap-2.5 align-items-start" style="padding: 0 12px 12px 12px;">
-                <div class="position-relative" style="width: 40px; height: 40px; flex-shrink: 0;">
-                  <img id="vipPreviewAvatar" src="img/avatar.png" class="rounded-circle w-100 h-100 object-fit-cover"
-                    alt="Preview Avatar">
-                  <div id="vipPreviewFrame" class="position-absolute top-0 start-0 w-100 h-100 rounded-circle"
-                    style="pointer-events: none; box-sizing: border-box;"></div>
-                </div>
-
-                <div class="bg-white p-2.5 rounded-3 shadow-sm border flex-grow-1" style="max-width: 80%;">
-                  <div class="d-flex align-items-center gap-1.5 mb-0.5">
-                    <span id="vipPreviewName" class="fw-bold"
-                      style="font-size: 13.5px; font-family: inherit;">Saga</span>
-                    <span id="vipPreviewTag" style="font-size:9px; padding: 2px 4px;"><img src="img/diamante.png"
-                        alt="VIP" class="img-fluid" width="19" height="19"></span>
-                  </div>
-                  <p id="vipPreviewText" class="m-0" style="font-size: 13px; color: #333; line-height: 1.3;">Olá! Olha
-                    como fica bonita a minha mensagem!</p>
-                </div>
-              </div>
-            </div>
+     
 
 
 
@@ -501,80 +468,163 @@
 
             <!-- PAINÉIS DE CONTEÚDO (EXPANDEM ABAIXO DOS BOTÕES) -->
             <div class="vip-content-panels">
-
               <!-- GAVETA 1: ESTILO DO SEU NOME -->
               <div id="gaveta-nome" class="vip-drawer-content">
                 <div class="vip-control-card text-start border-0 rounded-0 m-0 bg-white">
-                  <div class="mb-2 position-relative">
-                    <label class="small mb-1" style="font-size: 11px; font-weight: 600; color: #475569;">Tipo de efeito</label>
-                    <button type="button" id="btnVipNameColorType" class="vip-custom-select-btn">Cor Sólida Comum</button>
-                    <div id="listVipNameColorType" class="vip-custom-dropdown hidden">
-                      <div class="vip-dropdown-option active" data-value="solid">Cor Sólida Comum</div>
-                      <div class="vip-dropdown-option" data-value="gradient-blue-purple">Degradê Azul & Roxo</div>
-                      <div class="vip-dropdown-option" data-value="gradient-gold">Degradê Dourado de Elite</div>
-                      <div class="vip-dropdown-option" data-value="gradient-sunset">Degradê Pôr do Sol</div>
-                      <div class="vip-dropdown-option" data-value="gradient-ocean">Degradê Oceano Profundo</div>
-                      <div class="vip-dropdown-option" data-value="gradient-forest">Degradê Esmeralda Imperial</div>
-                      <div class="vip-dropdown-option" data-value="gradient-ruby">Degradê Rubi Real</div>
-                      <div class="vip-dropdown-option" data-value="gradient-cyberpunk">Degradê Cyberpunk 2077</div>
-                      <div class="vip-dropdown-option" data-value="gradient-cotton">Degradê Algodão Doce</div>
-                      <div class="vip-dropdown-option" data-value="gradient-lavender">Degradê Lavanda Suave</div>
-                      <div class="vip-dropdown-option" data-value="gradient-fire">Degradê Labareda de Fogo</div>
-                      <div class="vip-dropdown-option" data-value="gradient-platinum">Degradê Platina Cromada</div>
-                      <div class="vip-dropdown-option" data-value="gradient-vintage">Degradê Vintage Retrô</div>
-                      <div class="vip-dropdown-option" data-value="gradient-bubblegum">Degradê Chiclete Pop</div>
-                      <div class="vip-dropdown-option" data-value="gradient-galaxy">Degradê Nebulosa Espacial</div>
-                      <div class="vip-dropdown-option" data-value="gradient-mint">Degradê Hortelã Refrescante</div>
-                      <div class="vip-dropdown-option" data-value="gradient-neon">Degradê Neon Psicodélico (Animado)</div>
-                      <div class="vip-dropdown-option" data-value="anim-rainbow">Degradê Arco-Íris Infinito (Animado)</div>
-                      <div class="vip-dropdown-option" data-value="anim-aurora">Degradê Aurora Cósmica (Animado)</div>
-                      <div class="vip-dropdown-option" data-value="anim-magma">Degradê Magma Vulcânico (Animado)</div>
-                      <div class="vip-dropdown-option" data-value="anim-matrix">Degradê Linhas da Matrix (Animado)</div>
-                      <div class="vip-dropdown-option" data-value="anim-electric">Degradê Choque Elétrico (Animado)</div>
-                      <div class="vip-dropdown-option" data-value="anim-gold-flow">Degradê Ouro Líquido (Animado)</div>
-                      <div class="vip-dropdown-option" data-value="anim-glitch">Degradê Glitch Hacker (Animado)</div>
-                      <div class="vip-dropdown-option" data-value="anim-ice">Degradê Gelo Glacial (Animado)</div>
-                      <div class="vip-dropdown-option" data-value="anim-vampire">Degradê Sangue de Vampiro (Animado)</div>
-                      <div class="vip-dropdown-option" data-value="anim-candy">Degradê Doce Mágico (Animado)</div>
-                      <div class="vip-dropdown-option" data-value="anim-toxic">Degradê Ácido Tóxico (Animado)</div>
-                      <div class="vip-dropdown-option" data-value="anim-shadow">Degradê Sombra Sombria (Animado)</div>
-                      <div class="vip-dropdown-option" data-value="anim-miami">Degradê Miami Vice Wave (Animado)</div>
-                      <div class="vip-dropdown-option" data-value="anim-phoenix">Degradê Fênix Renascida (Animado)</div>
-                    </div>
-                    <select id="vipNameColorType" class="d-none">
-                      <option value="solid" selected>Cor Sólida Comum</option>
-                      <option value="gradient-blue-purple">Degradê Azul & Roxo</option>
-                      <option value="gradient-gold">Degradê Dourado de Elite</option>
-                      <option value="gradient-sunset">Degradê Pôr do Sol</option>
-                      <option value="gradient-ocean">Degradê Oceano Profundo</option>
-                      <option value="gradient-forest">Degradê Esmeralda Imperial</option>
-                      <option value="gradient-ruby">Degradê Rubi Real</option>
-                      <option value="gradient-cyberpunk">Degradê Cyberpunk 2077</option>
-                      <option value="gradient-cotton">Degradê Algodão Doce</option>
-                      <option value="gradient-lavender">Degradê Lavanda Suave</option>
-                      <option value="gradient-fire">Degradê Labareda de Fogo</option>
-                      <option value="gradient-platinum">Degradê Platina Cromada</option>
-                      <option value="gradient-vintage">Degradê Vintage Retrô</option>
-                      <option value="gradient-bubblegum">Degradê Chiclete Pop</option>
-                      <option value="gradient-galaxy">Degradê Nebulosa Espacial</option>
-                      <option value="gradient-mint">Degradê Hortelã Refrescante</option>
-                      <option value="gradient-neon">Degradê Neon Psicodélico (Animado)</option>
-                      <option value="anim-rainbow">Degradê Arco-Íris Infinito (Animado)</option>
-                      <option value="anim-aurora">Degradê Aurora Cósmica (Animado)</option>
-                      <option value="anim-magma">Degradê Magma Vulcânico (Animado)</option>
-                      <option value="anim-matrix">Degradê Linhas da Matrix (Animado)</option>
-                      <option value="anim-electric">Degradê Choque Elétrico (Animado)</option>
-                      <option value="anim-gold-flow">Degradê Ouro Líquido (Animado)</option>
-                      <option value="anim-glitch">Degradê Glitch Hacker (Animado)</option>
-                      <option value="anim-ice">Degradê Gelo Glacial (Animado)</option>
-                      <option value="anim-vampire">Degradê Sangue de Vampiro (Animado)</option>
-                      <option value="anim-candy">Degradê Doce Mágico (Animado)</option>
-                      <option value="anim-toxic">Degradê Ácido Tóxico (Animado)</option>
-                      <option value="anim-shadow">Degradê Sombra Sombria (Animado)</option>
-                      <option value="anim-miami">Degradê Miami Vice Wave (Animado)</option>
-                      <option value="anim-phoenix">Degradê Fênix Renascida (Animado)</option>
-                    </select>
-                  </div>
+                 <div class="mb-2 position-relative">
+  <label class="small mb-1" style="font-size: 11px; font-weight: 600; color: #475569;">Tipo de efeito</label>
+  <button type="button" id="btnVipNameColorType" class="vip-custom-select-btn">Cor Sólida Comum</button>
+  <div id="listVipNameColorType" class="vip-custom-dropdown hidden">
+    <div class="vip-dropdown-option active" data-value="solid">Cor Sólida Comum</div>
+    <div class="vip-dropdown-option" data-value="gradient-blue-purple">Degradê Azul & Roxo</div>
+    <div class="vip-dropdown-option" data-value="gradient-gold">Degradê Dourado de Elite</div>
+    <div class="vip-dropdown-option" data-value="gradient-sunset">Degradê Pôr do Sol</div>
+    <div class="vip-dropdown-option" data-value="gradient-ocean">Degradê Oceano Profundo</div>
+    <div class="vip-dropdown-option" data-value="gradient-forest">Degradê Esmeralda Imperial</div>
+    <div class="vip-dropdown-option" data-value="gradient-ruby">Degradê Rubi Real</div>
+    <div class="vip-dropdown-option" data-value="gradient-cyberpunk">Degradê Cyberpunk 2077</div>
+    <div class="vip-dropdown-option" data-value="gradient-cotton">Degradê Algodão Doce</div>
+    <div class="vip-dropdown-option" data-value="gradient-lavender">Degradê Lavanda Suave</div>
+    <div class="vip-dropdown-option" data-value="gradient-fire">Degradê Labareda de Fogo</div>
+    <div class="vip-dropdown-option" data-value="gradient-platinum">Degradê Platina Cromada</div>
+    <div class="vip-dropdown-option" data-value="gradient-vintage">Degradê Vintage Retrô</div>
+    <div class="vip-dropdown-option" data-value="gradient-bubblegum">Degradê Chiclete Pop</div>
+    <div class="vip-dropdown-option" data-value="gradient-galaxy">Degradê Nebulosa Espacial</div>
+    <div class="vip-dropdown-option" data-value="gradient-mint">Degradê Hortelã Refrescante</div>
+    
+<!-- EFEITOS DE BRILHO GLOW (NEON) -->
+<div class="vip-dropdown-option" data-value="glow-green">Brilho Neon Verde</div>
+<div class="vip-dropdown-option" data-value="glow-purple">Brilho Neon Roxo</div>
+<div class="vip-dropdown-option" data-value="glow-red">Brilho Neon Vermelho</div>
+<div class="vip-dropdown-option" data-value="glow-gold">Brilho Neon Dourado</div>
+<div class="vip-dropdown-option" data-value="glow-cyan">Brilho Neon Ciano</div>
+<div class="vip-dropdown-option" data-value="glow-pink">Brilho Neon Rosa</div>
+<div class="vip-dropdown-option" data-value="glow-blue">Brilho Neon Azul Cobalto</div>
+<div class="vip-dropdown-option" data-value="glow-orange">Brilho Neon Laranja Fogo</div>
+<div class="vip-dropdown-option" data-value="glow-emerald">Brilho Neon Verde Esmeralda</div>
+<div class="vip-dropdown-option" data-value="glow-wine">Brilho Neon Vinho Tinto</div>
+<div class="vip-dropdown-option" data-value="glow-amber">Brilho Neon Âmbar Nobre</div>
+<div class="vip-dropdown-option" data-value="glow-teal">Brilho Neon Turquesa Fechado</div>
+<div class="vip-dropdown-option" data-value="glow-indigo">Brilho Neon Índigo Profundo</div>
+<div class="vip-dropdown-option" data-value="glow-coral">Brilho Neon Coral Intenso</div>
+<div class="vip-dropdown-option" data-value="glow-silver">Brilho Neon Grafite Prata</div>
+<div class="vip-dropdown-option" data-value="glow-lime">Brilho Neon Verde Lima</div>
+
+    <!-- NOVOS DEGRADÊS ESCUROS E VIVOS -->
+    <div class="vip-dropdown-option" data-value="gradient-royal-purple">Degradê Roxo Imperial</div>
+    <div class="vip-dropdown-option" data-value="gradient-midnight-cyan">Degradê Meia-Noite Ciano</div>
+    <div class="vip-dropdown-option" data-value="gradient-deep-ruby">Degradê Rubi Profundo</div>
+    <div class="vip-dropdown-option" data-value="gradient-dark-emerald">Degradê Esmeralda Escuro</div>
+    <div class="vip-dropdown-option" data-value="gradient-cosmic-violet">Degradê Violeta Cósmico</div>
+    <div class="vip-dropdown-option" data-value="gradient-inferno-fire">Degradê Fogo Inferno</div>
+    <div class="vip-dropdown-option" data-value="gradient-deep-sapphire">Degradê Safira Profunda</div>
+    <div class="vip-dropdown-option" data-value="gradient-electric-magenta">Degradê Magenta Elétrico</div>
+    <div class="vip-dropdown-option" data-value="gradient-poison-green">Degradê Verde Veneno</div>
+    <div class="vip-dropdown-option" data-value="gradient-bronze-gold">Degradê Ouro Bronze</div>
+    <div class="vip-dropdown-option" data-value="gradient-black-ocean">Degradê Oceano Negro</div>
+    <div class="vip-dropdown-option" data-value="gradient-dark-magma">Degradê Magma Escuro</div>
+    <div class="vip-dropdown-option" data-value="gradient-plum-berry">Degradê Ameixa & Framboesa</div>
+    <div class="vip-dropdown-option" data-value="gradient-electric-petroleum">Degradê Petróleo Elétrico</div>
+    <div class="vip-dropdown-option" data-value="gradient-carmine-pink">Degradê Carmim & Rosa Choque</div>
+    <div class="vip-dropdown-option" data-value="gradient-deep-indigo">Degradê Índigo Profundo</div>
+    <div class="vip-dropdown-option" data-value="gradient-coffee-amber">Degradê Café Âmbar</div>
+    <div class="vip-dropdown-option" data-value="gradient-night-teal">Degradê Turquesa Noturno</div>
+    <div class="vip-dropdown-option" data-value="gradient-cyber-red">Degradê Cyber Vermelho</div>
+    <div class="vip-dropdown-option" data-value="gradient-dark-chrome">Degradê Platina Escura</div>
+
+    <!-- DEGRADÊS ANIMADOS -->
+    <div class="vip-dropdown-option" data-value="gradient-neon">Degradê Neon Psicodélico (Animado)</div>
+    <div class="vip-dropdown-option" data-value="anim-rainbow">Degradê Arco-Íris Infinito (Animado)</div>
+    <div class="vip-dropdown-option" data-value="anim-aurora">Degradê Aurora Cósmica (Animado)</div>
+    <div class="vip-dropdown-option" data-value="anim-magma">Degradê Magma Vulcânico (Animado)</div>
+    <div class="vip-dropdown-option" data-value="anim-matrix">Degradê Linhas da Matrix (Animado)</div>
+    <div class="vip-dropdown-option" data-value="anim-electric">Degradê Choque Elétrico (Animado)</div>
+    <div class="vip-dropdown-option" data-value="anim-gold-flow">Degradê Ouro Líquido (Animado)</div>
+    <div class="vip-dropdown-option" data-value="anim-ice">Degradê Gelo Glacial (Animado)</div>
+    <div class="vip-dropdown-option" data-value="anim-vampire">Degradê Sangue de Vampiro (Animado)</div>
+    <div class="vip-dropdown-option" data-value="anim-candy">Degradê Doce Mágico (Animado)</div>
+    <div class="vip-dropdown-option" data-value="anim-toxic">Degradê Ácido Tóxico (Animado)</div>
+    <div class="vip-dropdown-option" data-value="anim-shadow">Degradê Sombra Sombria (Animado)</div>
+    <div class="vip-dropdown-option" data-value="anim-miami">Degradê Miami Vice Wave (Animado)</div>
+    <div class="vip-dropdown-option" data-value="anim-phoenix">Degradê Fênix Renascida (Animado)</div>
+  </div>
+
+  <select id="vipNameColorType" class="d-none">
+    <option value="solid" selected>Cor Sólida Comum</option>
+    <option value="gradient-blue-purple">Degradê Azul & Roxo</option>
+    <option value="gradient-gold">Degradê Dourado de Elite</option>
+    <option value="gradient-sunset">Degradê Pôr do Sol</option>
+    <option value="gradient-ocean">Degradê Oceano Profundo</option>
+    <option value="gradient-forest">Degradê Esmeralda Imperial</option>
+    <option value="gradient-ruby">Degradê Rubi Real</option>
+    <option value="gradient-cyberpunk">Degradê Cyberpunk 2077</option>
+    <option value="gradient-cotton">Degradê Algodão Doce</option>
+    <option value="gradient-lavender">Degradê Lavanda Suave</option>
+    <option value="gradient-fire">Degradê Labareda de Fogo</option>
+    <option value="gradient-platinum">Degradê Platina Cromada</option>
+    <option value="gradient-vintage">Degradê Vintage Retrô</option>
+    <option value="gradient-bubblegum">Degradê Chiclete Pop</option>
+    <option value="gradient-galaxy">Degradê Nebulosa Espacial</option>
+    <option value="gradient-mint">Degradê Hortelã Refrescante</option>
+<!-- EFEITOS DE BRILHO GLOW (NEON) -->
+<option value="glow-green">Brilho Neon Verde</option>
+<option value="glow-purple">Brilho Neon Roxo</option>
+<option value="glow-red">Brilho Neon Vermelho</option>
+<option value="glow-gold">Brilho Neon Dourado</option>
+<option value="glow-cyan">Brilho Neon Ciano</option>
+<option value="glow-pink">Brilho Neon Rosa</option>
+<option value="glow-blue">Brilho Neon Azul Cobalto</option>
+<option value="glow-orange">Brilho Neon Laranja Fogo</option>
+<option value="glow-emerald">Brilho Neon Verde Esmeralda</option>
+<option value="glow-wine">Brilho Neon Vinho Tinto</option>
+<option value="glow-amber">Brilho Neon Âmbar Nobre</option>
+<option value="glow-teal">Brilho Neon Turquesa Fechado</option>
+<option value="glow-indigo">Brilho Neon Índigo Profundo</option>
+<option value="glow-coral">Brilho Neon Coral Intenso</option>
+<option value="glow-silver">Brilho Neon Grafite Prata</option>
+<option value="glow-lime">Brilho Neon Verde Lima</option>
+    <!-- NOVOS DEGRADÊS ESCUROS E VIVOS -->
+    <option value="gradient-royal-purple">Degradê Roxo Imperial</option>
+    <option value="gradient-midnight-cyan">Degradê Meia-Noite Ciano</option>
+    <option value="gradient-deep-ruby">Degradê Rubi Profundo</option>
+    <option value="gradient-dark-emerald">Degradê Esmeralda Escuro</option>
+    <option value="gradient-cosmic-violet">Degradê Violeta Cósmico</option>
+    <option value="gradient-inferno-fire">Degradê Fogo Inferno</option>
+    <option value="gradient-deep-sapphire">Degradê Safira Profunda</option>
+    <option value="gradient-electric-magenta">Degradê Magenta Elétrico</option>
+    <option value="gradient-poison-green">Degradê Verde Veneno</option>
+    <option value="gradient-bronze-gold">Degradê Ouro Bronze</option>
+    <option value="gradient-black-ocean">Degradê Oceano Negro</option>
+    <option value="gradient-dark-magma">Degradê Magma Escuro</option>
+    <option value="gradient-plum-berry">Degradê Ameixa & Framboesa</option>
+    <option value="gradient-electric-petroleum">Degradê Petróleo Elétrico</option>
+    <option value="gradient-carmine-pink">Degradê Carmim & Rosa Choque</option>
+    <option value="gradient-deep-indigo">Degradê Índigo Profundo</option>
+    <option value="gradient-coffee-amber">Degradê Café Âmbar</option>
+    <option value="gradient-night-teal">Degradê Turquesa Noturno</option>
+    <option value="gradient-cyber-red">Degradê Cyber Vermelho</option>
+    <option value="gradient-dark-chrome">Degradê Platina Escura</option>
+
+    <!-- DEGRADÊS ANIMADOS -->
+    <option value="gradient-neon">Degradê Neon Psicodélico (Animado)</option>
+    <option value="anim-rainbow">Degradê Arco-Íris Infinito (Animado)</option>
+    <option value="anim-aurora">Degradê Aurora Cósmica (Animado)</option>
+    <option value="anim-magma">Degradê Magma Vulcânico (Animado)</option>
+    <option value="anim-matrix">Degradê Linhas da Matrix (Animado)</option>
+    <option value="anim-electric">Degradê Choque Elétrico (Animado)</option>
+    <option value="anim-gold-flow">Degradê Ouro Líquido (Animado)</option>
+    <option value="anim-ice">Degradê Gelo Glacial (Animado)</option>
+    <option value="anim-vampire">Degradê Sangue de Vampiro (Animado)</option>
+    <option value="anim-candy">Degradê Doce Mágico (Animado)</option>
+    <option value="anim-toxic">Degradê Ácido Tóxico (Animado)</option>
+    <option value="anim-shadow">Degradê Sombra Sombria (Animado)</option>
+    <option value="anim-miami">Degradê Miami Vice Wave (Animado)</option>
+    <option value="anim-phoenix">Degradê Fênix Renascida (Animado)</option>
+  </select>
+</div>
+
+
+
 
                   <div id="vipSolidColorWrapper" class="mb-2">
                     <div class="vip-carousel-wrapper">
@@ -737,7 +787,6 @@
                       <div class="vip-dropdown-option" data-value="banner-anim-matrix">Fluxo da Matrix (Animado)</div>
                       <div class="vip-dropdown-option" data-value="banner-anim-electric">Choque Elétrico (Animado)</div>
                       <div class="vip-dropdown-option" data-value="banner-anim-gold-flow">Ouro Líquido Premium (Animado)</div>
-                      <div class="vip-dropdown-option" data-value="banner-anim-glitch">Glitch Hacker Cyber (Animado)</div>
                       <div class="vip-dropdown-option" data-value="banner-anim-ice">Gelo Glacial Cristal (Animado)</div>
                       <div class="vip-dropdown-option" data-value="banner-anim-vampire">Sangue de Vampiro (Animado)</div>
                       <div class="vip-dropdown-option" data-value="banner-anim-candy">Doce Mágico Encantado (Animado)</div>
@@ -770,7 +819,6 @@
                       <option value="banner-anim-matrix">Fluxo da Matrix (Animado)</option>
                       <option value="banner-anim-electric">Choque Elétrico (Animado)</option>
                       <option value="banner-anim-gold-flow">Ouro Líquido Premium (Animado)</option>
-                      <option value="banner-anim-glitch">Glitch Hacker Cyber (Animado)</option>
                       <option value="banner-anim-ice">Gelo Glacial Cristal (Animado)</option>
                       <option value="banner-anim-vampire">Sangue de Vampiro (Animado)</option>
                       <option value="banner-anim-candy">Doce Mágico Encantado (Animado)</option>
@@ -782,14 +830,7 @@
                   </div>
                 </div>
               </div>
-
             </div>
-
-
-
-
-
-
             <button id="btnSaveVipSettings" class="btn btn-dark w-100 py-2.5 fw-bold mt-3"
               style="border-radius: 10px; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
               Salvar Minhas Vantagens VIP
@@ -850,7 +891,6 @@
     <i class="bi bi-reply-fill"></i>
     Responder
   </button>----->
-
     <button type="button" id="contextReportBtn">
       <i class="bi bi-flag-fill"></i>
       Denunciar usuario
@@ -867,10 +907,6 @@
       </div>
     </div>
   </div>
-
-
-
-
   <!-- 01-07-26 MODAL DE DENÚNCIA dentro do painel do Usuário  Estrutura do Modal dentro do painel do Usuario de Denúncia (CHAT-DF UX) -->
   <!-- 01-07-26 MODAL DE DENÚNCIA dentro do painel do Usuário  Estrutura do Modal dentro do painel do Usuario de Denúncia (CHAT-DF UX) -->
   <div id="reportUserModal"
@@ -906,28 +942,22 @@
       </div>
     </div>
   </div>
-
-
-
   <!-------============================= 14-07-2026 =========================================--->
   <!-- 14-07-26 Modal de Corte de Imagem Nativo (Feito do Zero) -->
   <div id="cropModal" class="crop-modal hidden">
     <div class="crop-modal-content">
       <span id="closeCropModal" class="crop-close">&times;</span>
-
       <!-- Recipiente onde a imagem carregada vai se mover -->
       <div class="crop-container-box">
         <div class="crop-mask-circle"></div>
         <img id="cropPreviewImg" src="" alt="Prévia" style="display: none;" />
       </div>
-
       <!-- Controle de Zoom Nativo com - e + -->
       <div class="crop-zoom-wrapper">
         <button id="btnZoomOut" class="zoom-btn" type="button">—</button>
         <input type="range" id="cropZoomSlider" min="0.2" max="3" step="0.01" value="0.5" />
         <button id="btnZoomIn" class="zoom-btn" type="button">+</button>
       </div>
-
       <!-- Botões de Comando Inferiores -->
       <div class="crop-buttons-container">
         <button id="btnSelectCropFile" class="btn-crop-select" type="button">Seleciona</button>
@@ -940,19 +970,12 @@
   </div>
 
 
-
-
-
-
-
   <!-- 🔹 Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@multiavatar/multiavatar/multiavatar.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
   <script type="module" src="./js/main.js?v=2"></script>
   <script type="module" src="./js/stickers.js"></script>
-
-
 </body>
 
 </html>
