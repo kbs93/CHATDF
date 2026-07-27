@@ -242,7 +242,7 @@
         <div class="profile-user-info">
           <div class="d-flex align-items-center justify-content-center gap-1">
             <h3 id="profileName">Usuário</h3>
-            <span id="vipTopPreviewTag" class="d-none"><img src="img/diamante.png" alt="VIP" width="19" height="19"></span>
+            <span id="vipTopPreviewTag" class="d-none"><i class="bi bi-gem" style="font-size:18px;color: #01b1f7;"></i></span>
           </div>
           <p id="profileMood">Sem recado no momento.</p>
           <div id="vipTopMsgPreviewBox" class="d-none mt-2 px-3 py-2 rounded-3 border bg-light mx-auto" style="max-width: 90%;">
@@ -399,9 +399,9 @@
             <div class="vip-content-panels">
               <!-- GAVETA 1: ESTILO DO SEU NOME -->
               <div id="gaveta-nome" class="vip-drawer-content">
-                <div class="vip-control-card text-start border-0 rounded-0 m-0 bg-white">
+                <div class="vip-control-card text-start border-0 rounded-0 m-0">
                  <div class="mb-2 position-relative">
-  <label class="small mb-1" style="font-size: 11px; font-weight: 600; color: #475569;">Tipo de efeito</label>
+  <label class="small mb-1" style="font-size: 13px; font-weight: 600; color: #475569;">Tipo de efeito</label>
   <button type="button" id="btnVipNameColorType" class="vip-custom-select-btn">Cor Sólida Comum</button>
   <div id="listVipNameColorType" class="vip-custom-dropdown hidden">
     <div class="vip-dropdown-option active" data-value="solid">Cor Sólida Comum</div>
@@ -565,7 +565,7 @@
                   </div>
 
                   <div class="mb-0 position-relative">
-                    <label class="small mb-1" style="font-size: 11px; font-weight: 600; color: #475569;">Estilo da Fonte</label>
+                    <label class="small mb-1" style="font-size: 13px; font-weight: 600; color: #475569;">Estilo da Fonte</label>
                     <button type="button" id="btnVipNameFont" class="vip-custom-select-btn">Padrão do Chat</button>
                     <div id="listVipNameFont" class="vip-custom-dropdown hidden">
                       <div class="vip-dropdown-option active" data-value="default">Padrão do Chat</div>
@@ -643,10 +643,10 @@
 
               <!-- GAVETA 2: COR DO TEXTO DA MENSAGEM -->
               <div id="gaveta-texto" class="vip-drawer-content hidden">
-                <div class="vip-control-card text-start border-0 rounded-0 m-0 bg-white">
+                <div class="vip-control-card text-start border-0 rounded-0 m-0 ">
                   <div class="mb-2">
-                    <span class="small text-dark fw-semibold d-block mb-1" style="font-size: 12px;">Sua Mensagem Exclusiva</span>
-                    <span class="small text-muted d-block mb-2" style="font-size: 10.5px; line-height: 1.2;">Escolha uma das cores exclusivas abaixo para o envio das suas mensagens.</span>
+                    <span class="small text-dark fw-semibold d-block mb-1" style="font-size: 14px;">Cor da Mensagem </span>
+                    <span class="small text-muted d-block mb-2" style="font-size: 12.5px; line-height: 1.2;">Escolha uma das cores abaixo para o envio das suas mensagens.</span>
                   </div>
                   <div class="vip-carousel-wrapper">
                     <button type="button" class="carousel-arrow left" onclick="document.getElementById('vipMsgColorGrid').scrollBy({left: -120, behavior: 'smooth'})">
@@ -662,7 +662,7 @@
 
               <!-- GAVETA 3: MOLDURA DE AVATAR -->
               <div id="gaveta-avatar" class="vip-drawer-content hidden">
-                <div class="vip-control-card text-start border-0 rounded-0 m-0 bg-white">
+                <div class="vip-control-card text-start border-0 rounded-0 m-0 ">
                   <div class="position-relative">
                     <button type="button" id="btnVipAvatarFrameSelect" class="vip-custom-select-btn">Nenhuma Moldura</button>
                     <div id="listVipAvatarFrameSelect" class="vip-custom-dropdown hidden">
@@ -680,13 +680,13 @@
                       <option value="frame-electric-spark">Faíscas Elétricas (Alta Voltagem)</option>
                     </select>
                   </div>
-                  <span class="small text-muted d-block mt-1.5" style="font-size: 10.5px; line-height: 1.2;">A moldura é exibida ao redor da sua foto no chat e no seu painel.</span>
+                  <span class="small text-muted d-block mt-1.5" style="font-size: 1.5px; line-height: 1.2;">A moldura é exibida ao redor da sua foto no chat e no seu painel.</span>
                 </div>
               </div>
 
               <!-- GAVETA 4: CAPA DE PERFIL -->
               <div id="gaveta-capa" class="vip-drawer-content hidden">
-                <div class="vip-control-card text-start border-0 rounded-0 m-0 bg-white">
+                <div class="vip-control-card text-start border-0 rounded-0 m-0">
                   <div class="position-relative">
                     <button type="button" id="btnVipProfileBannerSelect" class="vip-custom-select-btn">Padrão do Systema</button>
                     <div id="listVipProfileBannerSelect" class="vip-custom-dropdown hidden">
@@ -757,10 +757,12 @@
                 </div>
               </div>
             </div>
-            <button id="btnSaveVipSettings" class="btn btn-dark w-100 py-2.5 fw-bold mt-3"
-              style="border-radius: 10px; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-              Salvar Minhas Vantagens VIP
-            </button>
+              <div class="d-flex justify-content-center">
+          <button id="btnSaveVip" class="btn w-100 py-2.5 fw-bold mt-3"
+          style="border-radius: 10px; font-size: 16px; background: #020641; color: #f9f9f9; max-width: 180px; padding: 8px;">
+        Salvar alteração VIP
+          </button>
+            </div>
           </div>
         </div>
       </div>

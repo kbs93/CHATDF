@@ -1234,7 +1234,7 @@ window.openMainProfilePanel = async (userId, options = {}) => {
   const isOwner = !!loggedUser && loggedUser.uid === userId;
   const isPanelOpen = profilePanel?.classList.contains("open");
 
-  // 07-07-26Alimenta a variável local e a do estado global para o users-panel.js ter acesso
+  // 07-07-26 Alimenta a variável local e a do estado global para o users-panel.js ter acesso
   currentViewedProfileId = userId;
   if (window.appState) {
     window.appState.currentViewedProfileId = userId;
@@ -1243,8 +1243,14 @@ window.openMainProfilePanel = async (userId, options = {}) => {
   profileRequestToken += 1;
   const requestToken = profileRequestToken;
 
-  if (!isPanelOpen) {
+ 
+if (!isPanelOpen) {
     openProfilePanel();
+  }
+
+  // LIMPEZA IMEDIATA DA FOTO ANTIGA PARA EVITAR O BUG VISUAL
+  if (profileAvatar) {
+    profileAvatar.src = DEFAULT_PROFILE_AVATAR;
   }
 
   renderProfileBannerPalette();
@@ -1253,6 +1259,8 @@ window.openMainProfilePanel = async (userId, options = {}) => {
   applyProfileMode(isOwner);
 
   await new Promise(resolve => requestAnimationFrame(resolve));
+
+
 
   try {
     const refUser = doc(db, "users", userId);
@@ -1432,13 +1440,14 @@ window.openMainProfilePanel = async (userId, options = {}) => {
 
 
 
-/* EDITA ESSA FUNÇÃO function applyProfileMode  Ela         15-04-26
+
+/*=========================================================================================
+// 13-07-26 melhoria para travar edição de perfil quando estiver bloqueado por dias
+EDITA ESSA FUNÇÃO function applyProfileMode  Ela         15-04-26
 configura o painel de perfil:
 se for dono, mostra edição
-se for outro usuário, esconde edição.*/
-
-// 13-07-26 melhoria para travar edição de perfil quando estiver bloqueado por dias
-// 13-07-26 melhoria para travar edição de perfil quando estiver bloqueado por dias
+se for outro usuário, esconde edição.
+===========================================================================================*/
 function applyProfileMode(isOwner) {
   currentProfileIsOwner = isOwner;
 
@@ -1506,8 +1515,15 @@ function applyProfileMode(isOwner) {
     if (uploadPhotoBtn) uploadPhotoBtn.classList.add("hidden");
     if (editProfileCoverBtn) editProfileCoverBtn.style.display = "none";
 
+    // Oculta o botão da imagem no topo e a aba VIP ao visualizar perfil de terceiros
+    const vipHeaderBtn = document.getElementById("vipHeaderActionBtn");
+    if (vipHeaderBtn) vipHeaderBtn.style.display = "none";
+
     if (vipTabBtn) vipTabBtn.style.display = "none";
-    if (profileEditTab) profileEditTab.style.display = "none"; //Esconde completamente o botão do lápis (display = "none") ao visualizar o perfil de terceiros. 23-07-26
+    if (profileEditTab) profileEditTab.style.display = "none";
+
+    // Força o retorno para a aba Info e oculta elementos VIP ao visualizar perfil de terceiros
+    document.querySelector('.profile-tab[data-tab="info"]')?.click();
   }
 }
 
@@ -1589,17 +1605,23 @@ tabs.forEach(tab => {
    
 
     //  ============================
-  
+
 const isVip = target === "vip";
     // Liga/desliga o modo travado do topo AZUL exclusivamente para a aba VIP
     if (profilePanel) {
       profilePanel.classList.toggle("vip-mode-active", isVip);
     }
+
+    // Oculta o recado apenas quando estiver na aba VIP
+    const topMood = document.getElementById("profileMood");
+    if (topMood) {
+      topMood.style.display = isVip ? "none" : "block";
+    }
+
     // ISOLAMENTO VIP: Se você clicou em "Info" ou "Editar perfil", restaura o topo original
     if (!isVip) {
       restaurarVisualPadraoPerfil();
     }
-
 
 
 

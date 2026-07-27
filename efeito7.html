@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Efeitos de Banner VIP</title>
+  <style>
+    /* RESET E ESTILOS BASE */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0b0c10;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .vip-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .vip-card {
+      width: 220px;
+      height: 130px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      user-select: none;
+    }
+
+    .vip-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .vip-tag {
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      opacity: 0.8;
+      margin-bottom: 6px;
+    }
+
+    /* 1. EFEITO NEON (Glow Pulsante) */
+    .vip-neon {
+      background: #1f2833;
+      border: 2px solid #00f3ff;
+      box-shadow: 0 0 10px #00f3ff, inset 0 0 10px #00f3ff;
+      animation: pulse-neon 1.5s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulse-neon {
+      0% {
+        box-shadow: 0 0 5px #00f3ff, inset 0 0 5px #00f3ff;
+        filter: brightness(1);
+      }
+      100% {
+        box-shadow: 0 0 20px #00f3ff, 0 0 35px #00f3ff, inset 0 0 15px #00f3ff;
+        filter: brightness(1.3);
+      }
+    }
+
+    /* 2. EFEITO BRILHO DOURADO (Shimmer/Varredura de Luz) */
+    .vip-dourado {
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #ffd700;
+      background: linear-gradient(135deg, #2b2100, #574300);
+    }
+
+    .vip-dourado::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -150%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 215, 0, 0.5),
+        transparent
+      );
+      transform: skewX(-25deg);
+      animation: varredura-dourada 3s infinite;
+    }
+
+    @keyframes varredura-dourada {
+      0% { left: -150%; }
+      50%, 100% { left: 150%; }
+    }
+
+    /* 3. EFEITO BORDA DE FOGO (Gradiente Cônico Rotativo) */
+    .vip-fogo {
+      position: relative;
+      z-index: 1;
+      background: transparent;
+      padding: 3px;
+      overflow: hidden;
+    }
+
+    .vip-fogo-content {
+      background: #111111;
+      width: 100%;
+      height: 100%;
+      border-radius: 7px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .vip-fogo::after {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      inset: -50%;
+      background: conic-gradient(
+        #ff0000, 
+        #ff7300, 
+        #fffb00, 
+        #ff7300, 
+        #ff0000
+      );
+      filter: blur(6px);
+      animation: girar-fogo 2s linear infinite;
+    }
+
+    @keyframes girar-fogo {
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="vip-container">
+    <!-- Card Neon -->
+    <div class="vip-card vip-neon" id="card-neon">
+      <span class="vip-tag">VIP PLATINUM</span>
+      <h3>Efeito Neon</h3>
+    </div>
+
+    <!-- Card Dourado -->
+    <div class="vip-card vip-dourado" id="card-dourado">
+      <span class="vip-tag">VIP GOLD</span>
+      <h3>Brilho Dourado</h3>
+    </div>
+
+    <!-- Card Fogo -->
+    <div class="vip-card vip-fogo" id="card-fogo">
+      <div class="vip-fogo-content">
+        <span class="vip-tag">VIP FIRE</span>
+        <h3>Borda de Fogo</h3>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Seleciona todos os cards VIP para adicionar interatividade via JS
+    const vipCards = document.querySelectorAll('.vip-card');
+
+    vipCards.forEach(card => {
+      card.addEventListener('click', () => {
+        // Exemplo de ação ao clicar no banner
+        alert(`Você selecionou o banner: ${card.querySelector('h3').innerText}`);
+      });
+    });
+  </script>
+
+</body>
+</html>
