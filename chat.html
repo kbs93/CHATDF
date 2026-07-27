@@ -12,41 +12,29 @@
   <!-- Estilos personalizados -->
   <link href="styles.css?v=2" rel="stylesheet">
   <link rel="shortcut icon" href="./img/imgicon2.png" />
-  <!-- Carga de Fontes de Elite para Customização VIP do Chat-DF -->
-  <!-- Importação de Fontes VIP Corrigida e Mapeada para o Chat-DF -->
-
-
 </head>
-
 <body class="chat-page">
   <nav class="chat-navbar  navbar-dark bg-dark ">
-
-    <!-- CENTRO --  aparece os nomes das salas 
+    <!-- CENTRO --  aparece os nomes das salas ---->
 <div class="chat-center">
   <span id="chatRoomName" class="chat-title"></span>
-</div>  ---->
-
+</div>  
     <!-- ESQUERDA -->
     <div class="chat-left">
       <a href="./index.html" class="nav-btn" id="txlogot">
         <img src="./img/inicio1.png" alt="Home">
       </a>
     </div>
-
     <!-- DIREITA -->
     <div class="chat-right">
-
       <div id="userArea" class="user-area-shell" aria-live="polite">
         <div class="user-area-loading">
           <img src="./img/avatar.png" alt="Avatar" class="user-area-avatar" onerror="this.src='./img/avatar.png'">
-
           <span class="user-area-name"></span>
         </div>
       </div>
-
     </div>
   </nav>
-
   <!--  ESTRUTURA REAL DO CHAT  -->
   <div id="chat-layout">
     <div id="chat-main-column">
@@ -75,7 +63,6 @@
         <div id="messageProfileLock" class="message-profile-lock hidden">
           Entre, complete seu perfil para conversar.
         </div>
-
         <div id="message-input-area">
           <div class="attachment-wrapper">
             <button id="attachBtn" title="Anexar" class="btn-attach" aria-expanded="false">
@@ -84,7 +71,6 @@
 
             <!-- Painel de Anexos -->
             <div id="attachmentOverlay" class="online-overlay"></div>
-
             <div id="attachmentPanel" class="attachment-panel floating-panel">
               <div class="attachment-grid">
                 <button class="attachment-item" data-action="profile">
@@ -110,53 +96,41 @@
                   <span class="attachment-icon icon-ai"><i class="bi bi-stars"></i></span>
                   <span class="attachment-label">FeedBack</span>
                 </button>
-
                 <button class="attachment-item" data-action="camera">
                   <span class="attachment-icon icon-camera"><i class="bi bi-camera-fill"></i></span>
                   <span class="attachment-label">rascunho</span>
                 </button>
-
                 <button class="attachment-item" data-action="location">
                   <span class="attachment-icon icon-location"><i class="bi bi-geo-alt-fill"></i></span>
                   <span class="attachment-label">rascunho</span>
                 </button>
-
                 <button class="attachment-item" data-action="contact">
                   <span class="attachment-icon icon-contact"><i class="bi bi-person-badge-fill"></i></span>
                   <span class="attachment-label">rascunho</span>
                 </button>
-
                 <button class="attachment-item" data-action="documento">
                   <span class="attachment-icon icon-document"><i class="bi bi-file-earmark-text"></i></span>
                   <span class="attachment-label">rascunho</span>
                 </button>
-
                 <button class="attachment-item" data-action="audio">
                   <span class="attachment-icon icon-audio"><i class="bi bi-headphones"></i></span>
                   <span class="attachment-label">rascunho</span>
                 </button>
-
                 <button class="attachment-item" data-action="poll">
                   <span class="attachment-icon icon-poll"><i class="bi bi-bar-chart-line-fill"></i></span>
                   <span class="attachment-label">rascunho</span>
                 </button>
-
               </div>
             </div>
           </div>
-
           <button id="emojiBtn" title="Adicionar emoji">
             <i class="bi bi-emoji-smile"></i>
           </button>
-
           <div id="replyPreview" class="reply-preview" style="display:none;">
             <div class="reply-preview-content"></div>
-
             <span id="replyReportBtn" class="reply-report-action">Denuncia</span>
           </div>
-
           <textarea id="messageInput" class="message-input" placeholder="Digite sua mensagem..." rows="1"></textarea>
-
           <button id="sendBtn" title="Enviar">
             <i class="bi bi-send-fill"></i>
           </button>
@@ -199,7 +173,6 @@
             <button class="sticker-cat" data-cat="Teste5">Teste7</button>
             <button class="sticker-cat" data-cat="Teste5">Teste8</button>
           </div>
-
           <div class="sticker-categories anim-categories">
             <button class="anim-cat active" data-cat="all">Todas</button>
             <button class="anim-cat" data-cat="Emoji">Emoji</button>
@@ -212,14 +185,12 @@
         </div>
       </div>
     </div>
-
     <!-- PAINEL ONLINE AGORA COMO COLUNA REAL -->
     <div id="onlineUsersPanel" class="online-users-panel">
       <div class="online-header">
         <span>🟢 Online <span id="onlineCount">0</span></span>
         <button id="closeOnlinePanel" type="button">✕</button>
       </div>
-
       <div id="onlineUsersList" class="online-users-list">
         <!-- usuários online aparecem aqui -->
       </div>
@@ -229,80 +200,65 @@
   <!-- ================= SHOW TOAST  ================= -->
   <div id="toast"></div>
   <!-- ================= PERFIL DO USUÁRIO ================= -->
-
   <div id="profileOverlay" class="hidden"></div>
-
   <div id="profilePanel" class="profile-panel hidden">
     <div class="profile-body">
-
-
-
-
-
-
-
 <!-- CAPA E TOPO PRINCIPAL UNIFICADO -->
-      <div class="profile-cover position-relative">
-        
-        <!-- TAG VIP DE EXPIRAÇÃO (EXIBIDA NO CANTO SUPERIOR ESQUERDO QUANDO VIP ATIVO) -->
-        <div id="vipTopExpiryRow" class="position-absolute top-0 start-0 m-2 d-none align-items-center gap-1.5 px-2.5 py-1 rounded-pill" style="background: rgba(15, 12, 32, 0.85); backdrop-filter: blur(4px); border: 1px solid rgba(255, 193, 7, 0.5); z-index: 15;">
-          <i class="bi bi-gem text-warning" style="font-size: 11px;"></i>
-          <span class="small m-0 text-white" style="font-size: 10px; font-weight: 600;">Expira em: <strong id="vipExpiryDays" class="text-warning">X dias</strong></span>
-          <button id="btnRenewVip" class="btn btn-sm btn-link text-warning p-0 ms-1 text-decoration-none fw-bold" style="font-size: 10px;">(Renovar)</button>
-        </div>
-
-        <button id="reportUserBtn" type="button" aria-label="Denunciar usuário" style="display: none;">
-          <i class="bi bi-flag-fill"></i>
-        </button>
-
-   <div class="profile-header-actions profile-cover-actions">
-          <button id="editProfileCoverBtn" type="button" aria-label="Editar cor da capa">
-            <i class="bi bi-pencil-square"></i>
+<!-- TOPO AZUL ENVOLVIDO PARA TRAVAMENTO VIP -->
+      <div class="profile-top-header">
+        <!-- CAPA E TOPO PRINCIPAL UNIFICADO -->
+        <div class="profile-cover position-relative">
+          <div id="vipTopExpiryRow" class="position-absolute top-0 start-0 m-2 d-none align-items-center gap-1.5 px-2.5 py-1 rounded-pill" style="background: rgba(15, 12, 32, 0.85); backdrop-filter: blur(4px); border: 1px solid rgba(255, 193, 7, 0.5); z-index: 15;">
+            <i class="bi bi-gem text-warning" style="font-size: 11px;"></i>
+            <span class="small m-0 text-white" style="font-size: 10px; font-weight: 600;">Expira em: <strong id="vipExpiryDays" class="text-warning">X dias</strong></span>
+            <button id="btnRenewVip" class="btn btn-sm btn-link text-warning p-0 ms-1 text-decoration-none fw-bold" style="font-size: 10px;">(Renovar)</button>
+          </div>
+          <button id="reportUserBtn" type="button" aria-label="Denunciar usuário" style="display: none;">
+            <i class="bi bi-flag-fill"></i>
           </button>
-          <!-- BOTÃO EXCLUSIVO DA ABA VIP (Aparece somente quando a aba VIP estiver ativa) -->
-          <button id="vipHeaderActionBtn" type="button" class="d-none" aria-label="Ação VIP" style="width: 38px; height: 38px; border: none; background: rgba(0, 0, 0, 0.26); border-radius: 50%; color: #fff; font-size: 18px; cursor: pointer; display: none; place-items: center;">
-            <i class="bi bi-star-fill" style="color: #ffc107;"></i>
-          </button>
-          <button id="closeProfilePanel" type="button" aria-label="Fechar painel">✕</button>
+          <div class="profile-header-actions profile-cover-actions">
+            <button id="editProfileCoverBtn" type="button" aria-label="Editar cor da capa">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button id="vipHeaderActionBtn" type="button" class="d-none" aria-label="Ação VIP" style="width: 38px; height: 38px; border: none; background: rgba(0, 0, 0, 0.26); border-radius: 50%; color: #fff; font-size: 18px; cursor: pointer; display: none; place-items: center;">
+              <i class="bi bi-image-fill" style="color: #fffefc;"></i>
+            </button>
+            <button id="closeProfilePanel" type="button" aria-label="Fechar painel">✕</button>
+          </div>
+        </div>
+        <!-- AVATAR COM CAMADA DE MOLDURA VIP -->
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar position-relative">
+            <img id="profileAvatar" src="img/avatar.png" alt="Avatar do usuário">
+            <div id="vipTopPreviewFrame" class="position-absolute top-0 start-0 w-100 h-100 rounded-circle d-none" style="pointer-events: none; box-sizing: border-box;"></div>
+          </div>
+          <label id="btnUploadPhoto" class="profile-photo-upload-btn hidden" title="Adicionar foto de perfil">
+            <i class="bi bi-camera"></i>
+            <input type="file" id="uploadProfilePic" accept="image/jpeg, image/png, image/webp" style="display: none;">
+          </label>
+          <span id="profileOnlineDot" class="profile-online-dot hidden"></span>
+        </div>
+        <!-- INFORMAÇÕES DO USUÁRIO + PRÉVIA DA MENSAGEM -->
+        <div class="profile-user-info">
+          <div class="d-flex align-items-center justify-content-center gap-1">
+            <h3 id="profileName">Usuário</h3>
+            <span id="vipTopPreviewTag" class="d-none"><img src="img/diamante.png" alt="VIP" width="19" height="19"></span>
+          </div>
+          <p id="profileMood">Sem recado no momento.</p>
+          <div id="vipTopMsgPreviewBox" class="d-none mt-2 px-3 py-2 rounded-3 border bg-light mx-auto" style="max-width: 90%;">
+            <span class="text-muted d-block mb-1 fw-bold" style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: left;">Previa da Mensagem no Chat </span>
+            <p id="vipTopPreviewText" class="m-0 fw-semibold" style="font-size: 13px; color: #333; line-height: 1.3; text-align: left;">Olá! mundo, Olha como fica bonita a minha mensagem, enviada no chat!</p>
+          </div>
         </div>
       </div>
 
-      <!-- AVATAR COM CAMADA DE MOLDURA VIP -->
-      <div class="profile-avatar-wrap">
-        <div class="profile-avatar position-relative">
-          <img id="profileAvatar" src="img/avatar.png" alt="Avatar do usuário">
-          <div id="vipTopPreviewFrame" class="position-absolute top-0 start-0 w-100 h-100 rounded-circle d-none" style="pointer-events: none; box-sizing: border-box;"></div>
-        </div>
 
-        <!-- Botão de Upload -->
-        <label id="btnUploadPhoto" class="profile-photo-upload-btn hidden" title="Adicionar foto de perfil">
-          <i class="bi bi-camera"></i>
-          <input type="file" id="uploadProfilePic" accept="image/jpeg, image/png, image/webp" style="display: none;">
-        </label>
-
-        <span id="profileOnlineDot" class="profile-online-dot hidden"></span>
-      </div>
-
-      <!-- INFORMAÇÕES DO USUÁRIO + PRÉVIA DA MENSAGEM -->
-      <div class="profile-user-info">
-        <div class="d-flex align-items-center justify-content-center gap-1">
-          <h3 id="profileName">Usuário</h3>
-          <span id="vipTopPreviewTag" class="d-none"><img src="img/diamante.png" alt="VIP" width="19" height="19"></span>
-        </div>
-        <p id="profileMood">Sem recado no momento.</p>
-        <!-- BALÃO DA FRASINHA DE EXEMPLO DAS MENSAGENS (SÓ APARECE QUANDO NA ABA VIP) -->
-        <div id="vipTopMsgPreviewBox" class="d-none mt-2 px-3 py-2 rounded-3 border bg-light mx-auto" style="max-width: 90%;">
-          <span class="text-muted d-block mb-1 fw-bold" style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: left;">Previa da Mensagem no Chat </span>
-          <p id="vipTopPreviewText" class="m-0 fw-semibold" style="font-size: 13px; color: #333; line-height: 1.3; text-align: left;">Olá! mundo, Olha como fica bonita a minha mensagem, enviada no chat!</p>
-        </div>
-      </div>
       <!---====================== 16-07-26 ADICIONANDO NOVO PAINEL VIP ===================---->
       <div class="profile-tabs ">
         <button class="profile-tab" data-tab="info" type="button">Info</button>
         <button class="profile-tab" data-tab="edit" type="button">Editar perfil</button>
-        <button class="profile-tab" data-tab="vip" type="button"><i class="bi bi-gem"></i> VIP</button>
+        <button class="profile-tab" data-tab="vip" type="button"><i class="bi bi-gem" style="color: #33aeff; font-size: 22px;"></i> VIP</button>
       </div>
-
       <div class="profile-content px-3">
         <!-- INFORMAÇÃO -->
         <!-- INFO -->
@@ -314,7 +270,6 @@
             </span>
             <span id="profileCity" class="col-7 px-0 text-dark">-</span>
           </div>
-
           <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
             <span class="col-5 d-flex align-items-center gap-2 px-0">
               <i class="bi bi-calendar-heart text-secondary fs-5"></i>
@@ -322,7 +277,6 @@
             </span>
             <span id="profileAge" class="col-7 px-0 text-dark">-</span>
           </div>
-
           <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
             <span class="col-5 d-flex align-items-center gap-2 px-0">
               <i class="bi bi-gender-ambiguous text-secondary fs-5"></i>
@@ -330,7 +284,6 @@
             </span>
             <span id="profileGender" class="col-7 px-0 text-dark">-</span>
           </div>
-
           <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
             <span class="col-5 d-flex align-items-center gap-2 px-0">
               <i class="bi bi-person-check text-secondary fs-5"></i>
@@ -338,7 +291,6 @@
             </span>
             <span id="profileMemberSince" class="col-7 px-0 text-dark">-</span>
           </div>
- 
        <!-- LINHA DO INSTAGRAM NO PAINEL DE INFO -->
           <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
             <span class="col-5 d-flex align-items-center gap-2 px-0">
@@ -347,7 +299,6 @@
             </span>
             <span id="profileInstagramText" class="col-7 px-0 text-dark">-</span>
           </div>
-
           <!-- LINHA DO TELEGRAM NO PAINEL DE INFO -->
           <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
             <span class="col-5 d-flex align-items-center gap-2 px-0">
@@ -357,7 +308,6 @@
             <span id="profileTelegramText" class="col-7 px-0 text-dark">-</span>
           </div>
         </div>
-
         <!-- EDITAR -->
         <div class="profile-section" id="profileEdit">
           <label class="profile-field">
@@ -414,27 +364,10 @@
           <div id="editTrackingState" data-capa-alterada="false" data-avatar-alterado="false" class="d-none"></div>
           <button id="saveProfileBtn" type="button" disabled style="opacity: 0.5; cursor: not-allowed;">Salvar</button>
         </div>
-
-
-
-
-
-
         <!-- ================ SEÇÃO VIP TOTALMENTE MANTIDA E INTEGRADA AO ACORDEÃO ===============================-->
         <!-- ===================================================================================================================================-->
         <div class="profile-section d-none" id="profileVip">
-
           <!-- CARD DO STATUS VIP & EXPIRAÇÃO -->
-     
-
-
-
-
-
-
-
-
-
 <!-- OS 4 BOTÕES LADO A LADO EM GRADE -->
             <div class="vip-buttons-grid">
               <button type="button" class="vip-btn-card active" data-target="gaveta-nome">
@@ -443,21 +376,18 @@
                 </span>
                 <span class="vip-header-title">estilo do seu nome</span>
               </button>
-
               <button type="button" class="vip-btn-card" data-target="gaveta-texto">
                 <span class="vip-icon-box bg-blue">
                   <i class="bi bi-chat-left-text-fill"></i>
                 </span>
                 <span class="vip-header-title">cor do texto</span>
               </button>
-
               <button type="button" class="vip-btn-card" data-target="gaveta-avatar">
                 <span class="vip-icon-box bg-geo">
                   <i class="bi bi-person-bounding-box"></i>
                 </span>
                 <span class="vip-header-title">moldura de avatar</span>
               </button>
-
               <button type="button" class="vip-btn-card" data-target="gaveta-capa">
                 <span class="vip-icon-box bg-orange">
                   <i class="bi bi-image"></i>
@@ -465,7 +395,6 @@
                 <span class="vip-header-title">capa de perfil</span>
               </button>
             </div>
-
             <!-- PAINÉIS DE CONTEÚDO (EXPANDEM ABAIXO DOS BOTÕES) -->
             <div class="vip-content-panels">
               <!-- GAVETA 1: ESTILO DO SEU NOME -->
@@ -622,9 +551,6 @@
     <option value="anim-phoenix">Degradê Fênix Renascida (Animado)</option>
   </select>
 </div>
-
-
-
 
                   <div id="vipSolidColorWrapper" class="mb-2">
                     <div class="vip-carousel-wrapper">

@@ -1464,7 +1464,7 @@ footer a {
   min-width: 0;
 }
 
-/* centro */
+/* nome das salas aparece do lado do nome do usuario no chat dentro do nav centro */
 .chat-center {
   position: absolute;
   left: 50%;
@@ -1472,7 +1472,7 @@ footer a {
   font-weight: 600;
   font-size: 16px;
   letter-spacing: 0.9px;
-  font-family: "Courgette", cursive;
+  font-family:Arial, Helvetica, sans-serif;
   max-width: 48vw;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -4408,20 +4408,6 @@ body.index-page .profile-panel.open {
 }
 
 /*04-06-26 TEXTO / RECADO / FRASE em baixo do nome  Correção cirúrgica para quebra de linha de recados muito longos ou grudados 
-
-#profileMood {
-  display: block;
-  font-size: 15px;
-  color: #445;
-  margin-top: 6px;
-  white-space: normal;      
-  word-wrap: break-word;     
-  word-break: break-all;     
-  overflow-wrap: break-word; 
-  text-align: center;        
-  padding: 0 16px;           
-}
-
 */
 /*04-06-26 TEXTO / RECADO / FRASE em baixo do nome - Ajuste Fino para UX Premium */
 #profileMood {
@@ -7397,3 +7383,13 @@ background-size: 200% 100%;animation: nameFlowAnim 4s linear infinite;
 
 
 
+/* ========================================================================= 
+   TRAVAMENTO EXCLUSIVO DO TOPO AZUL APENAS NA ABA VIP (SEM BAGUNÇAR)
+   ========================================================================= */
+
+#profilePanel.vip-mode-active .profile-top-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background-color: #ffffff;
+}

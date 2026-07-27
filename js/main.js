@@ -1511,17 +1511,45 @@ function applyProfileMode(isOwner) {
   }
 }
 
-// ABAS
+/* ========================================================================
+Função que ZERA 100% qualquer efeito VIP no painel padrão (Info e Editar perfil)
+=====================================================================*/
+function restaurarVisualPadraoPerfil() {
+  const topName = document.getElementById("profileName");
+  const topFrame = document.getElementById("vipTopPreviewFrame");
+  const topBanner = document.querySelector(".profile-cover");
+  const data = window.__currentProfileData || {};
+
+  // 1. Reseta o Nome para o texto limpo e comum
+  if (topName) {
+    topName.className = "fw-bold";
+    topName.style.background = "";
+    topName.style.webkitBackgroundClip = "";
+    topName.style.webkitTextFillColor = "";
+    topName.style.fontFamily = "";
+    topName.style.color = "";
+    topName.textContent = data.nome || "Usuário";
+  }
+
+  // 2. Esconde e limpa 100% a Moldura do Avatar (sem carregar nenhuma moldura VIP)
+  if (topFrame) {
+    topFrame.className = "position-absolute top-0 start-0 w-100 h-100 rounded-circle d-none";
+  }
+
+  // 3. Reseta a Capa do Perfil apenas para a cor de fundo padrão
+  if (topBanner) {
+    topBanner.className = "profile-cover position-relative";
+    topBanner.style.background = data.bannerColor || selectedBannerColor || "#00000063";
+  }
+}
+
+
+/* ================================================================================
+REESTRUTURAÇÃO DAS ABAS E MOTOR VIP DEFINITIVO  ABAS REESTRUTURADAS (TOTALMENTE INDEPENDENTES
+====================================================================================*/
+
 const tabs = document.querySelectorAll(".profile-tab");
 const sections = document.querySelectorAll(".profile-section");
-// ----------------- ABAS ------------------
-// ----------------- ABAS REESTRUTURADAS (INCLUINDO VIP COM PREVIEW) ------------------
-// ----------------- ABAS REESTRUTURADAS (TOTALMENTE INDEPENDENTES) ------------------
-// =================================== REESTRUTURAÇÃO DAS ABAS E MOTOR VIP DEFINITIVO ===================================
-
-
-
-
 tabs.forEach(tab => {
   tab.addEventListener("click", () => {
     const target = tab.dataset.tab;
@@ -1558,10 +1586,24 @@ tabs.forEach(tab => {
       targetSection.style.setProperty("display", "block", "important");
     }
 
-    // CONTROLE VISUAL: Exibe/Oculta elementos VIP no topo principal existente
-    // CONTROLE VISUAL: Exibe/Oculta elementos VIP no topo principal existente
-// CONTROLE VISUAL: Exibe/Oculta elementos VIP no topo principal existente
-    const isVip = target === "vip";
+   
+
+    //  ============================
+  
+const isVip = target === "vip";
+    // Liga/desliga o modo travado do topo AZUL exclusivamente para a aba VIP
+    if (profilePanel) {
+      profilePanel.classList.toggle("vip-mode-active", isVip);
+    }
+    // ISOLAMENTO VIP: Se você clicou em "Info" ou "Editar perfil", restaura o topo original
+    if (!isVip) {
+      restaurarVisualPadraoPerfil();
+    }
+
+
+
+
+
 
     // Troca o botão Lápis pelo Botão VIP exclusivo no topo
     const editBtn = document.getElementById("editProfileCoverBtn");
@@ -1598,7 +1640,6 @@ tabs.forEach(tab => {
     }
   });
 });
-
 
 
 
@@ -1663,11 +1704,7 @@ function inicializarPainelVipDinamico() {
 
   vincularEventosPreviewVip();
 }
-
 // =========== 18-07-2026  SISTEMA DE ACORDEÃO VIP PROFESSIONAL (UX CHAT-DF) ======================
-
-// =========== 18-07-2026  SISTEMA DE ACORDEÃO VIP PROFESSIONAL (UX CHAT-DF) ======================
-
 // ENGINE DO ACORDEÃO VIP (BOTÕES FIXOS NA GRADE E CONTEÚDO ABAIXO)
 document.querySelectorAll(".vip-btn-card").forEach(button => {
   button.addEventListener("click", (e) => {
@@ -1692,39 +1729,18 @@ document.querySelectorAll(".vip-btn-card").forEach(button => {
     }
   });
 });
-
-
 window.__vipMENSAGEM_COR_SELECIONADA = "#333333";
 window.__vipNOME_COR_SELECIONADA = "#6f42c1";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function vincularEventosPreviewVip() {
   const topName = document.getElementById("profileName");
   const topText = document.getElementById("vipTopPreviewText");
   const topFrame = document.getElementById("vipTopPreviewFrame");
   const topBanner = document.querySelector(".profile-cover");
   const solidWrapper = document.getElementById("vipSolidColorWrapper");
-
   const typeSelect = document.getElementById("vipNameColorType");
   const fontSelect = document.getElementById("vipNameFont");
   const frameSelect = document.getElementById("vipAvatarFrameSelect");
   const bannerSelect = document.getElementById("vipProfileBannerSelect");
-
   const atualizarSimulacaoTopo = () => {
     if (!topName || !topText || !topFrame || !topBanner) return;
 
@@ -1827,56 +1843,6 @@ if (valorEfeito !== "solid") {
   atualizarSimulacaoTopo();
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*Vincula a gravação dos dados VIP ao botão de Salvar exclusivo
-document.getElementById("btnSaveVipSettings")?.addEventListener("click", async () => {
-  const user = auth.currentUser;
-  if (!user) return;
-
-  try {
-    showToast("Gravando configurações VIP...");
-    const refUser = doc(db, "users", user.uid);
-
-    await updateDoc(refUser, {
-      vipNameColorType: document.getElementById("vipNameColorType").value,
-      vipNameColorSolid: document.getElementById("vipNameColorPicker").value,
-      vipNameFont: document.getElementById("vipNameFont").value,
-      vipMsgColor: window.__vipMENSAGEM_COR_SELECIONADA, // Salva o valor da paleta nativa mobile friendly!
-      vipAvatarFrame: document.getElementById("vipAvatarFrameSelect").value,
-      vipProfileBanner: document.getElementById("vipProfileBannerSelect").value
-    });
-
-    showToast("Vantagens VIP salvas e aplicadas com sucesso!");
-    inicializarPainelVipDinamico();
-  } catch (err) {
-    console.error("Erro ao salvar dados VIP:", err);
-    showToast("Erro ao salvar configurações.");
-  }
-});
-*/
-
 // Vincula a gravação dos dados VIP ao botão de Salvar exclusivo
 document.getElementById("btnSaveVipSettings")?.addEventListener("click", async () => {
   const user = auth.currentUser;
@@ -1894,7 +1860,6 @@ document.getElementById("btnSaveVipSettings")?.addEventListener("click", async (
       vipAvatarFrame: document.getElementById("vipAvatarFrameSelect").value,
       vipProfileBanner: document.getElementById("vipProfileBannerSelect").value
     });
-
     showToast("Vantagens VIP salvas e aplicadas com sucesso!");
     inicializarPainelVipDinamico();
   } catch (err) {
@@ -2015,14 +1980,11 @@ profileEditorModal?.addEventListener("click", (e) => {
 showBannerEditorBtn?.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
-
   showBannerEditorBtn.classList.add("active");
   openAvatarPickerBtn?.classList.remove("active");
-
   profileEditorBannerPreview?.classList.remove("hidden");
   profileEditorBannerColors?.classList.remove("hidden");
   profileEditorAvatarArea?.classList.add("hidden");
-
   renderProfileEditorBannerPalette();
 });
 //========================================= novo avatar picker 03-06-26 =========================================
@@ -2030,24 +1992,19 @@ showBannerEditorBtn?.addEventListener("click", (e) => {
 openAvatarPickerBtn?.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
-
   openAvatarPickerBtn.classList.add("active");
   showBannerEditorBtn?.classList.remove("active");
-
   profileEditorBannerPreview?.classList.add("hidden");
   profileEditorBannerColors?.classList.add("hidden");
   profileEditorAvatarArea?.classList.remove("hidden");
-
   carregarCategoria("eles"); // Aciona o lote inicial masculino do avatar.js
 });
 // ====================== 03-06-26 NOVO MOTOR MULTIAVATAR ======================
 // ====================== MOTOR MULTIAVATAR CORRIGIDO COM BOTÕES BOOTSTRAP ======================
-
 let listaAtual = [];
 let avataresRenderizados = 0;
 const LOTE_TAMANHO = 15;
 let categoriaAtual = "eles";
-
 // Índices numéricos isolados para a linha de montagem genética
 let partesDna = {
   ambiente: 0,
@@ -2057,7 +2014,6 @@ let partesDna = {
   olhos: 0,
   cabelo: 0
 };
-
 // ENGINES DE RESOLUÇÃO SEPARADAS (CONFORME A DOCUMENTAÇÃO OFICIAL)
 function gerarAvatarDnaUri(dna12Digitos) {
   // O parâmetro 'true' desliga a criptografia e lê as coordenadas das peças de 00 a 47
