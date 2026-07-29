@@ -897,6 +897,56 @@
     </div>
   </div>
 
+<!---========================== 27-07-26 ========================================================
+MODAL DO BANNER VIP
+================================================================================-->
+<!-- Modal de Banner VIP (Buscador Multi-Plataforma: GIPHY / Pexels / Pixabay) -->
+  <div id="vipBannerModal" class="gif-banner-modal hidden">
+    <div class="gif-banner-modal-content">
+      <span id="closeVipBannerModal" class="gif-banner-close">&times;</span>
+      <h4 style="font-size: 18px; font-weight: 700; color: #1e1b4b; margin-bottom: 10px; text-align: center;">Banner VIP (GIF / Imagem)</h4>
+      
+      <!-- Área do Banner (Container Visual de Prévia) -->
+      <div id="vipBannerPreviewBox" class="gif-banner-preview-box"></div>
+
+      <!-- Buscador de Mídias Integrado -->
+      <div class="w-100 mb-2">
+        <!-- Abas de Seleção da Fonte da Mídia -->
+        <div class="media-tabs-wrapper mb-2">
+          <button type="button" class="media-tab-btn active" data-source="giphy">GIF</button>
+          <button type="button" class="media-tab-btn" data-source="pexels">imagem </button>
+          <button type="button" class="media-tab-btn" data-source="pixabay">imagembay</button>
+        </div>
+
+    <!-- Campo de Busca botao de buscar Giphy -->
+<div class="chat-input-group">
+  <input type="text" id="giphySearchInput" class="chat-input" placeholder="Pesquisar imagem ou GIF...">
+  <button id="btnSearchGiphy" class="chat-btn-search" type="button">
+    <i class="bi bi-search" style="font-size: 18px;"></i>
+  </button>
+</div>
+
+<!-- Grade de resultados -->
+<div id="giphyResultsGrid" class="giphy-results-grid hidden"></div>
+
+<!-- Selo de Crédito Obrigatório -->
+<div class="chat-attribution">
+  <span id="mediaAttributionLabel">GIPHY</span>
+</div>
+
+<!-- Campo de Entrada (Input de Link Direto) -->
+<div class="chat-field-container">
+  <label class="chat-label" for="vipBannerUrlInput">Ou cole o link direto da imagem/GIF:</label>
+  <input type="text" id="vipBannerUrlInput" class="chat-input" placeholder="https://exemplo.com/imagem.gif">
+</div>
+
+      <!-- Botão de Ação -->
+      <button id="btnSaveVipBannerUrl" type="button" class="btn btn-dark w-100 fw-bold" style="border-radius: 10px; font-size: 15px; background: #020641;">Salvar Banner</button>
+    </div>
+  </div>
+
+
+
 
   <!-- 🔹 Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

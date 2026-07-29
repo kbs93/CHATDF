@@ -1336,8 +1336,12 @@ if (!isPanelOpen) {
         profileMemberSince.textContent = formatProfileDate(membroDesde);
       }
 
-      if (profileCover) {
-        profileCover.style.background = bannerColor;
+    if (profileCover) {
+        if (data.vipBannerUrl) {
+          profileCover.style.background = `url("${data.vipBannerUrl}") center/cover no-repeat`;
+        } else {
+          profileCover.style.background = bannerColor;
+        }
       }
 
       if (profileEditorBannerPreview) {
@@ -2925,5 +2929,266 @@ document.querySelectorAll('.vip-btn-card').forEach(button => {
   });
 });
 
+// ================================================================  27-07-26
+// CONTROLE DO MODAL DE BANNER VIP + BUSCADOR MULTI-PLATAFORMA (GIPHY / PEXELS / PIXABAY)
+// =========================================================================
+document.addEventListener("DOMContentLoaded", () => {
+  const vipHeaderBtn = document.getElementById("vipHeaderActionBtn");
+  const bannerModal = document.getElementById("vipBannerModal");
+  const closeBannerModal = document.getElementById("closeVipBannerModal");
+  const urlInput = document.getElementById("vipBannerUrlInput");
+  const previewBox = document.getElementById("vipBannerPreviewBox");
+  const saveBannerBtn = document.getElementById("btnSaveVipBannerUrl");
 
+  // Elementos do Buscador
+  const mediaInput = document.getElementById("giphySearchInput");
+  const btnSearchMedia = document.getElementById("btnSearchGiphy");
+  const mediaGrid = document.getElementById("giphyResultsGrid");
+  const attributionLabel = document.getElementById("mediaAttributionLabel");
+  const mediaTabBtns = document.querySelectorAll(".media-tab-btn");
 
+  // CHAVES DE API
+  const GIPHY_API_KEY = "bmd1luYYvD3dGiycldIl3W1bUovionrR"; 
+  const PIXABAY_API_KEY = "56897614-e2f814aca2c37034dcc515af2"; // Chave Pixabay
+  const PEXELS_API_KEY = "4MoHwhHC16imBbdA7sGO13i5HDbAQtfNDcQGNsNZ3LWuHpB1sExnbNHH"; // Chave Pexels
+
+  // Variáveis de Estado
+  let currentSource = "giphy"; // giphy, pexels, pixabay
+  let currentQuery = "";
+  let currentPage = 1;
+  let currentOffset = 0;
+  const LIMIT_PER_PAGE = 18;// quantidade de gif e imagem aparece primeiro 
+  let isLoadingMedia = false;
+  let hasMoreMedia = true;
+
+  // Troca de Plataforma
+  mediaTabBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      mediaTabBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentSource = btn.dataset.source;
+
+      if (attributionLabel) {
+        if (currentSource === "giphy") attributionLabel.textContent = "GIPHY";
+        if (currentSource === "pexels") attributionLabel.textContent = "Pexels";
+        if (currentSource === "pixabay") attributionLabel.textContent = "Pixabay";
+      }
+
+      if (currentQuery) {
+        fetchMedia(true);
+      }
+    });
+  });
+
+  // Função para buscar no GIPHY
+  const fetchGiphy = async (isNewSearch) => {
+    const response = await fetch(`https://api.giphy.com/v1/gifs/search?q=${encodeURIComponent(currentQuery)}&limit=${LIMIT_PER_PAGE}&offset=${currentOffset}&api_key=${GIPHY_API_KEY}`);
+    const data = await response.json();
+
+    if (!data.data || data.data.length === 0) {
+      if (isNewSearch && mediaGrid) mediaGrid.innerHTML = `<span class="small text-muted p-2 w-100 text-center d-block">Nenhum GIF encontrado.</span>`;
+      hasMoreMedia = false;
+      return;
+    }
+
+    data.data.forEach(item => {
+      const fullUrl = item.images.original.url;
+      const thumbUrl = item.images.fixed_height_small.url;
+      renderImageItem(thumbUrl, fullUrl);
+    });
+
+    currentOffset += data.data.length;
+    if (data.data.length < LIMIT_PER_PAGE) hasMoreMedia = false;
+  };
+
+  // Função para buscar no Pexels
+  const fetchPexels = async (isNewSearch) => {
+    const response = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(currentQuery)}&per_page=${LIMIT_PER_PAGE}&page=${currentPage}`, {
+      headers: { Authorization: PEXELS_API_KEY }
+    });
+    const data = await response.json();
+
+    if (!data.photos || data.photos.length === 0) {
+      if (isNewSearch && mediaGrid) mediaGrid.innerHTML = `<span class="small text-muted p-2 w-100 text-center d-block">Nenhuma foto encontrada.</span>`;
+      hasMoreMedia = false;
+      return;
+    }
+
+    data.photos.forEach(photo => {
+      const fullUrl = photo.src.large;
+      const thumbUrl = photo.src.tiny;
+      renderImageItem(thumbUrl, fullUrl);
+    });
+
+    currentPage++;
+    if (data.photos.length < LIMIT_PER_PAGE) hasMoreMedia = false;
+  };
+
+  // Função para buscar no Pixabay
+  const fetchPixabay = async (isNewSearch) => {
+    const response = await fetch(`https://pixabay.com/api/?key=${PIXABAY_API_KEY}&q=${encodeURIComponent(currentQuery)}&image_type=photo&per_page=${LIMIT_PER_PAGE}&page=${currentPage}`);
+    const data = await response.json();
+
+    if (!data.hits || data.hits.length === 0) {
+      if (isNewSearch && mediaGrid) mediaGrid.innerHTML = `<span class="small text-muted p-2 w-100 text-center d-block">Nenhuma foto encontrada.</span>`;
+      hasMoreMedia = false;
+      return;
+    }
+
+    data.hits.forEach(hit => {
+      const fullUrl = hit.largeImageURL;
+      const thumbUrl = hit.previewURL;
+      renderImageItem(thumbUrl, fullUrl);
+    });
+
+    currentPage++;
+    if (data.hits.length < LIMIT_PER_PAGE) hasMoreMedia = false;
+  };
+
+  // Renderiza a foto/GIF na grade com evento de clique
+  const renderImageItem = (thumbUrl, fullUrl) => {
+    const img = document.createElement("img");
+    img.src = thumbUrl;
+    img.alt = "Mídia";
+    img.addEventListener("click", () => {
+      if (urlInput) urlInput.value = fullUrl;
+      if (previewBox) previewBox.style.backgroundImage = `url("${fullUrl}")`;
+      showToast("Imagem selecionada!");
+    });
+    mediaGrid?.appendChild(img);
+  };
+
+  // Motor Central de Busca
+  const fetchMedia = async (isNewSearch = false) => {
+    if (isLoadingMedia) return;
+    if (!currentQuery) return;
+
+    if (isNewSearch) {
+      currentOffset = 0;
+      currentPage = 1;
+      hasMoreMedia = true;
+      if (mediaGrid) {
+        mediaGrid.innerHTML = `<span class="small text-muted p-2 w-100 text-center d-block">Carregando...</span>`;
+        mediaGrid.classList.remove("hidden");
+      }
+    }
+
+    if (!hasMoreMedia) return;
+    isLoadingMedia = true;
+
+    try {
+      if (isNewSearch && mediaGrid) mediaGrid.innerHTML = "";
+
+      if (currentSource === "giphy") await fetchGiphy(isNewSearch);
+      else if (currentSource === "pexels") await fetchPexels(isNewSearch);
+      else if (currentSource === "pixabay") await fetchPixabay(isNewSearch);
+
+    } catch (err) {
+      console.error("Erro na busca de mídias:", err);
+      if (isNewSearch && mediaGrid) {
+        mediaGrid.innerHTML = `<span class="small text-danger p-2 w-100 text-center d-block">Erro ao carregar resultados.</span>`;
+      }
+    } finally {
+      isLoadingMedia = false;
+    }
+  };
+
+  // Dispara Busca
+  const dispararNovaBusca = () => {
+    const termo = mediaInput?.value.trim() || "";
+    if (!termo) return;
+    currentQuery = termo;
+    fetchMedia(true);
+  };
+
+  btnSearchMedia?.addEventListener("click", dispararNovaBusca);
+
+  mediaInput?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      dispararNovaBusca();
+    }
+  });
+
+  // Rolagem Infinita para carregar mais itens
+  mediaGrid?.addEventListener("scroll", () => {
+    if (!mediaGrid || isLoadingMedia || !hasMoreMedia) return;
+    if (mediaGrid.scrollTop + mediaGrid.clientHeight >= mediaGrid.scrollHeight - 30) {
+      fetchMedia(false);
+    }
+  });
+
+  // ABRIR O MODAL AO CLICAR NO BOTÃO DA FOTO NO TOPO DA ABA VIP
+  vipHeaderBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!currentProfileIsOwner) return;
+
+    const data = window.__currentProfileData || {};
+    const linkAtual = data.vipBannerUrl || "";
+
+    if (urlInput) urlInput.value = linkAtual;
+    if (previewBox) {
+      previewBox.style.backgroundImage = linkAtual ? `url("${linkAtual}")` : "none";
+    }
+
+    if (mediaGrid) {
+      mediaGrid.innerHTML = "";
+      mediaGrid.classList.add("hidden");
+    }
+    if (mediaInput) mediaInput.value = "";
+
+    currentQuery = "";
+    currentOffset = 0;
+    currentPage = 1;
+    hasMoreMedia = true;
+
+    bannerModal?.classList.remove("hidden");
+  });
+
+  // FECHAR O MODAL NO X
+  closeBannerModal?.addEventListener("click", () => {
+    bannerModal?.classList.add("hidden");
+  });
+
+  // PRÉVIA EM TEMPO REAL AO DIGITAR/COLAR LINK MANUAMENTE
+  urlInput?.addEventListener("input", () => {
+    const val = urlInput.value.trim();
+    if (previewBox) {
+      previewBox.style.backgroundImage = val ? `url("${val}")` : "none";
+    }
+  });
+
+  // SALVAR NO FIRESTORE
+  saveBannerBtn?.addEventListener("click", async () => {
+    const user = auth.currentUser;
+    if (!user || !currentProfileIsOwner) return;
+
+    const newUrl = urlInput?.value.trim() || "";
+
+    try {
+      showToast("Gravando Banner VIP...");
+      const refUser = doc(db, "users", user.uid);
+
+      await updateDoc(refUser, {
+        vipBannerUrl: newUrl
+      });
+
+      const profileCoverEl = document.querySelector(".profile-cover");
+      if (profileCoverEl) {
+        if (newUrl) {
+          profileCoverEl.style.background = `url("${newUrl}") center/cover no-repeat`;
+        } else {
+          profileCoverEl.style.background = selectedBannerColor || "#00000063";
+        }
+      }
+
+      bannerModal?.classList.add("hidden");
+      showToast("Banner VIP atualizado com sucesso!");
+    } catch (err) {
+      console.error("Erro ao salvar Banner VIP:", err);
+      showToast("Erro ao salvar o Banner VIP.");
+    }
+  });
+});
