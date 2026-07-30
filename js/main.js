@@ -1326,7 +1326,7 @@ if (!isPanelOpen) {
       selectedProfileAvatar = foto;
 
       profileName.textContent = nome;
-      profileMood.textContent = mood;
+      if (profileMood) profileMood.textContent = mood;
       profileCity.textContent = cidade;
       profileAvatar.src = foto;
 
@@ -1349,12 +1349,26 @@ if (!isPanelOpen) {
       renderProfileBannerPalette();
       renderProfileEditorBannerPalette();
 
-      editName.value = nome;
-      editCity.value = data.cidade || "";
-      editMood.value = data.mood || "";
+    if (editName) editName.value = nome;
+      if (editCity) editCity.value = data.cidade || "";
+      if (editMood) editMood.value = data.mood || "";
 
       if (editAge) editAge.value = data.idade || "";
       if (editGender) editGender.value = data.genero || "";
+      // Garante acesso seguro mesmo que algum campo de edição não esteja no HTML atual
+const setInputValue = (el, val) => {
+  if (el && 'value' in el) {
+    el.value = val ?? "";
+  }
+};
+
+setInputValue(editName, nome);
+setInputValue(editCity, data.cidade);
+setInputValue(editMood, data.mood);
+setInputValue(editAge, data.idade);
+setInputValue(editGender, data.genero);
+
+
 
 // 21-07-26 PREENCHE O CAMPO DE EDIÇÃO E EXIBE/OCULTA O BOTAO SOCIAL
      // ================= EXIBIÇÃO DE INSTAGRAM E TELEGRAM EM TEXTO NO PAINEL =================

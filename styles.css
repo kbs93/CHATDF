@@ -4387,7 +4387,7 @@ body.index-page .profile-panel.open {
 
 /*edita o nome do usuario no perfil*/
 .profile-user-info {
-  padding: 27px 18px 8px;
+  padding: 23px 18px 18px;
   text-align: center;
 }
 
@@ -4401,30 +4401,6 @@ body.index-page .profile-panel.open {
   word-break: break-word;
 }
 
-/*04-06-26 TEXTO / RECADO / FRASE em baixo do nome  Correção cirúrgica para quebra de linha de recados muito longos ou grudados 
-*/
-/*04-06-26 TEXTO / RECADO / FRASE em baixo do nome - Ajuste Fino para UX Premium */
-#profileMood {
-  display: block;
-  font-size: 17px;
-  color: #445;
-  margin-top: 2px;
-  /* Melhores práticas de UX para quebra de texto */
-  white-space: pre-wrap;
-  /* Mantém as quebras de linha manuais do usuário e quebra automaticamente nas bordas */
-  overflow-wrap: anywhere;
-  /* Força a quebra de links gigantes ou textos infinitos sem espaços */
-  word-break: normal;
-  /* Evita que palavras normais sejam cortadas no meio de forma feia */
-  /* Delimitação física do espaço */
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  text-align: center;
-  /* Mantém o alinhamento estético centralizado */
-  padding: 0 4px;
-  /* Evita que o texto encoste colado nas laterais do card */
-}
 
 /*recado de baixo do nome do perfil*/
 .profile-user-info {
