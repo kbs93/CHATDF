@@ -4365,7 +4365,7 @@ body.index-page .profile-panel.open {
   z-index: 2;
   padding: 0 16px;
 }
-
+/*edita a foto do usuario no painel*/
 .profile-avatar {
   width: 116px;
   height: 116px;
@@ -4373,7 +4373,7 @@ body.index-page .profile-panel.open {
   overflow: hidden;
   background: #fff;
   border: 5px solid #fff;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+
   flex-shrink: 0;
 }
 

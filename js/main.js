@@ -1336,12 +1336,10 @@ if (!isPanelOpen) {
         profileMemberSince.textContent = formatProfileDate(membroDesde);
       }
 
-    if (profileCover) {
-        if (data.vipBannerUrl) {
-          profileCover.style.background = `url("${data.vipBannerUrl}") center/cover no-repeat`;
-        } else {
-          profileCover.style.background = bannerColor;
-        }
+  if (profileCover) {
+        // Ao abrir o perfil (que inicia na aba Info), exibe sempre a cor sólida original
+        profileCover.style.backgroundImage = "none";
+        profileCover.style.background = bannerColor;
       }
 
       if (profileEditorBannerPreview) {
@@ -1458,7 +1456,6 @@ function applyProfileMode(isOwner) {
   const reportBtn = document.getElementById("reportUserBtn");
   const uploadPhotoBtn = document.getElementById("btnUploadPhoto");
   const vipTabBtn = document.querySelector('.profile-tab[data-tab="vip"]');
-  const lockDaysText = `${PROFILE_EDIT_COOLDOWN_DAYS} dia(s)`;
   let isLocked = false;
 
   if (isOwner && auth.currentUser) {
@@ -1467,20 +1464,28 @@ function applyProfileMode(isOwner) {
     isLocked = remainingDays > 0;
   }
 
-// Removido o loop cego que limpava e forçava a aba info toda vez que o Firebase atualizava dados
- if (isOwner) {
+  if (isOwner) {
+    document.body.classList.remove("viewing-other-profile");
+
     if (reportBtn) reportBtn.style.display = "none";
 
-    // Oculta o lápis se estiver na aba VIP para não conflitar com o botão padrão
-    const activeTab = document.querySelector('.profile-tab.active')?.dataset.tab;
+    const activeTab = document.querySelector('.profile-tab.active')?.dataset.tab || "info";
     if (editProfileCoverBtn) {
       editProfileCoverBtn.style.display = (activeTab === "vip") ? "none" : "grid";
     }
 
+    // GARANTE QUE AS 3 ABAS (INFO, EDITAR PERFIL, VIP) FIQUEM VISÍVEIS NO PAINEL DO DONO
     if (vipTabBtn) {
       vipTabBtn.hidden = false;
-      vipTabBtn.style.display = "block";
+      vipTabBtn.style.setProperty("display", "inline-block", "important");
       vipTabBtn.classList.remove("hidden");
+    }
+
+    if (profileEditTab) {
+      profileEditTab.hidden = false;
+      profileEditTab.style.setProperty("display", "inline-block", "important");
+      profileEditTab.classList.remove("hidden");
+      profileEditTab.style.opacity = isLocked ? "0.45" : "1";
     }
 
     if (!isLocked) {
@@ -1493,40 +1498,32 @@ function applyProfileMode(isOwner) {
         editProfileCoverBtn.style.opacity = "1";
         editProfileCoverBtn.style.cursor = "pointer";
       }
-      if (profileEditTab) {
-        profileEditTab.hidden = false;
-        profileEditTab.style.display = "block";
-        profileEditTab.classList.remove("hidden");
-      }
       editName?.removeAttribute("disabled");
       editCity?.removeAttribute("disabled");
       editMood?.removeAttribute("disabled");
     } else {
       if (uploadPhotoBtn) {
-        uploadPhotoBtn.style.opacity = "0.01"; // edita a opaci do botao camera 23-07-26
+        uploadPhotoBtn.style.opacity = "0.01";
         uploadPhotoBtn.style.cursor = "not-allowed";
       }
       if (editProfileCoverBtn) {
-        editProfileCoverBtn.style.opacity = "0.01"; // edita a opaci do botao lapis 23-07-26
+        editProfileCoverBtn.style.opacity = "0.01";
         editProfileCoverBtn.style.cursor = "not-allowed";
-      }
-      if (profileEditTab) {
-        profileEditTab.style.opacity = "0.45";
       }
     }
   } else {
+    document.body.classList.add("viewing-other-profile");
+
     if (reportBtn) reportBtn.style.display = "flex";
     if (uploadPhotoBtn) uploadPhotoBtn.classList.add("hidden");
     if (editProfileCoverBtn) editProfileCoverBtn.style.display = "none";
 
-    // Oculta o botão da imagem no topo e a aba VIP ao visualizar perfil de terceiros
     const vipHeaderBtn = document.getElementById("vipHeaderActionBtn");
     if (vipHeaderBtn) vipHeaderBtn.style.display = "none";
 
-    if (vipTabBtn) vipTabBtn.style.display = "none";
-    if (profileEditTab) profileEditTab.style.display = "none";
+    if (vipTabBtn) vipTabBtn.style.setProperty("display", "none", "important");
+    if (profileEditTab) profileEditTab.style.setProperty("display", "none", "important");
 
-    // Força o retorno para a aba Info e oculta elementos VIP ao visualizar perfil de terceiros
     document.querySelector('.profile-tab[data-tab="info"]')?.click();
   }
 }
@@ -1557,8 +1554,11 @@ function restaurarVisualPadraoPerfil() {
   }
 
   // 3. Reseta a Capa do Perfil apenas para a cor de fundo padrão
+// 3. Mantém a Capa do Perfil Oficial (Banner VIP se existir, ou Cor Padrão)
+// 3. Força a capa a voltar estritamente para a COR PADRÃO (remove qualquer imagem/GIF VIP)
   if (topBanner) {
     topBanner.className = "profile-cover position-relative";
+    topBanner.style.backgroundImage = "none";
     topBanner.style.background = data.bannerColor || selectedBannerColor || "#00000063";
   }
 }
@@ -1632,11 +1632,15 @@ const isVip = target === "vip";
 
 
     // Troca o botão Lápis pelo Botão VIP exclusivo no topo
+// Troca os botões de ação do topo de acordo com a aba ativa
     const editBtn = document.getElementById("editProfileCoverBtn");
     const vipBtn = document.getElementById("vipHeaderActionBtn");
 
     if (currentProfileIsOwner) {
-      if (editBtn) editBtn.style.display = isVip ? "none" : "grid";
+      if (editBtn) {
+        // Se estiver travado pelo tempo de edição, respeita a opacidade e visibilidade do perfil
+        editBtn.style.display = isVip ? "none" : "grid";
+      }
       if (vipBtn) {
         vipBtn.style.display = isVip ? "grid" : "none";
         vipBtn.classList.toggle("d-none", !isVip);
@@ -1661,7 +1665,14 @@ const isVip = target === "vip";
       topMsgBox.classList.toggle("d-none", !isVip);
     }
 
-    if (target === "vip") {
+if (target === "vip") {
+      // Puxa o elemento real da capa de forma segura, corrigindo o erro 'topBanner is not defined'
+      const profileCoverEl = document.querySelector(".profile-cover");
+      const data = window.__currentProfileData || {};
+      
+      if (profileCoverEl && data.vipBannerUrl) {
+        profileCoverEl.style.background = `url("${data.vipBannerUrl}") center/cover no-repeat`;
+      }
       inicializarPainelVipDinamico();
     }
   });
@@ -1927,9 +1938,18 @@ function closeProfilePanel(force = false) {
     if (typeof unlockProfileBackground === "function") {
       unlockProfileBackground();
     }
-    document.body.classList.remove("viewing-other-profile");
-    currentViewedProfileId = null;
-    currentProfileIsOwner = false;
+  document.body.classList.remove("viewing-other-profile");
+      currentViewedProfileId = null;
+      currentProfileIsOwner = false;
+
+      // Reseta as propriedades inline para garantir que as 3 abas fiquem visíveis na abertura
+      if (profileEditTab) {
+        profileEditTab.style.removeProperty("display");
+      }
+      const vipTabBtnReset2 = document.querySelector('.profile-tab[data-tab="vip"]');
+      if (vipTabBtnReset2) {
+        vipTabBtnReset2.style.removeProperty("display");
+      }
     return;
   }
   let closed = false;
@@ -1953,9 +1973,18 @@ function closeProfilePanel(force = false) {
         unlockProfileBackground();
       }
 
-      document.body.classList.remove("viewing-other-profile");
+     document.body.classList.remove("viewing-other-profile");
       currentViewedProfileId = null;
       currentProfileIsOwner = false;
+
+      // Reseta as propriedades inline para garantir que as 3 abas fiquem visíveis na abertura
+      if (profileEditTab) {
+        profileEditTab.style.removeProperty("display");
+      }
+      const vipTabBtnReset2 = document.querySelector('.profile-tab[data-tab="vip"]');
+      if (vipTabBtnReset2) {
+        vipTabBtnReset2.style.removeProperty("display");
+      }
     }
 
   };
@@ -3045,15 +3074,18 @@ document.addEventListener("DOMContentLoaded", () => {
     if (data.hits.length < LIMIT_PER_PAGE) hasMoreMedia = false;
   };
 
-  // Renderiza a foto/GIF na grade com evento de clique
-  const renderImageItem = (thumbUrl, fullUrl) => {
+
+// Renderiza a foto/GIF na grade com evento de clique banner
+const renderImageItem = (thumbUrl, fullUrl) => {
     const img = document.createElement("img");
     img.src = thumbUrl;
     img.alt = "Mídia";
     img.addEventListener("click", () => {
       if (urlInput) urlInput.value = fullUrl;
-      if (previewBox) previewBox.style.backgroundImage = `url("${fullUrl}")`;
-      showToast("Imagem selecionada!");
+      // Atualiza a prévia do quadro no topo do modal VIP
+      if (previewBox) {
+        previewBox.style.backgroundImage = `url("${fullUrl}")`;
+      }
     });
     mediaGrid?.appendChild(img);
   };
@@ -3153,6 +3185,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // PRÉVIA EM TEMPO REAL AO DIGITAR/COLAR LINK MANUAMENTE
+// PRÉVIA EM TEMPO REAL APENAS NO QUADRO INTERNO DO MODAL
+  // PRÉVIA EM TEMPO REAL NO QUADRO SUPERIOR DO MODAL VIP
   urlInput?.addEventListener("input", () => {
     const val = urlInput.value.trim();
     if (previewBox) {
@@ -3161,6 +3195,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // SALVAR NO FIRESTORE
+// SALVAR NO FIRESTORE E APLICAR APENAS APÓS A CONFIRMAÇÃO
   saveBannerBtn?.addEventListener("click", async () => {
     const user = auth.currentUser;
     if (!user || !currentProfileIsOwner) return;
@@ -3168,13 +3203,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const newUrl = urlInput?.value.trim() || "";
 
     try {
-      showToast("Gravando Banner VIP...");
+      
       const refUser = doc(db, "users", user.uid);
 
       await updateDoc(refUser, {
         vipBannerUrl: newUrl
       });
 
+      // Aplica a alteração no perfil visível somente após a gravação confirmada
       const profileCoverEl = document.querySelector(".profile-cover");
       if (profileCoverEl) {
         if (newUrl) {
@@ -3185,7 +3221,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       bannerModal?.classList.add("hidden");
-      showToast("Banner VIP atualizado com sucesso!");
+      showToast("atualizado com sucesso!");
     } catch (err) {
       console.error("Erro ao salvar Banner VIP:", err);
       showToast("Erro ao salvar o Banner VIP.");
