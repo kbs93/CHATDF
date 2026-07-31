@@ -4341,7 +4341,7 @@ body.index-page .profile-panel.open {
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  background: #fff;
+  background: transparent;
   display: flex;
   flex-direction: column;
   padding-top: 0;
@@ -7262,6 +7262,8 @@ background-size: 200% 100%;animation: nameFlowAnim 4s linear infinite;
 }
 
 /* RESTAURAR ABAS DO PERFIL NA HORIZONTAL */
+/* RESTAURAR ABAS DO PERFIL NA HORIZONTAL */
+/* RESTAURAR ABAS DO PERFIL NA HORIZONTAL */
 .profile-body .profile-tabs {
   display: flex;
   flex-direction: row;
@@ -7272,6 +7274,38 @@ background-size: 200% 100%;animation: nameFlowAnim 4s linear infinite;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   background: #ffffff;
   width: 100%;
+}
+
+/* O tema na faixa das abas SÓ é ativado se o painel estiver com .vip-mode-active */
+.profile-panel.vip-mode-active[class*="banner-grad-"] .profile-body .profile-tabs,
+.profile-panel.vip-mode-active[class*="banner-anim-"] .profile-body .profile-tabs {
+  background: transparent;
+}
+
+/* Conteúdo inferior sempre branco em todas as abas */
+.profile-content {
+  background: #ffffff;
+  border-radius: 18px 18px 0 0;
+  padding-top: 16px;
+}
+
+/* Estilos dos botões inativos apenas quando a aba VIP estiver ativa */
+.profile-panel.vip-mode-active[class*="banner-grad-"] .profile-tab,
+.profile-panel.vip-mode-active[class*="banner-anim-"] .profile-tab {
+  background: rgba(255, 255, 255, 0.85);
+  color: #1e1b4b;
+}
+
+.profile-panel.vip-mode-active[class*="banner-grad-"] .profile-tab.active,
+.profile-panel.vip-mode-active[class*="banner-anim-"] .profile-tab.active {
+  background: #020641;
+  color: #ffffff;
+}
+
+/* Remove a borda/tema do container inteiro se NÃO estiver na aba VIP */
+.profile-panel:not(.vip-mode-active) {
+  padding: 0;
+  background: #ffffff;
 }
 
 .profile-body .profile-tabs .profile-tab {
@@ -7680,4 +7714,48 @@ background-size: 200% 100%;animation: nameFlowAnim 4s linear infinite;
   font-weight: 600;
   color: #4a5568;
   margin-bottom: 6px;
+}
+
+
+
+/* ===========================================================================
+BORDA DO MODAL DO USUARIO VIP Aplica o Tema/Gradiente na borda externa do Modal inteiro 
+BORDA E TEMA DO MODAL DO USUARIO VIP (EXCLUSIVO DA ABA VIP)
+========================================================================*/
+/* A borda e o padding só existem quando o painel possui a classe .vip-mode-active */
+.profile-panel.vip-mode-active[class*="banner-grad-"],
+.profile-panel.vip-mode-active[class*="banner-anim-"] {
+  padding: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Nas abas padrão (Info e Editar), força remoção de borda, padding e gradientes do painel */
+.profile-panel:not(.vip-mode-active) {
+  padding: 0;
+  background: #ffffff;
+}
+
+/* Transparência das abas exclusiva para quando a aba VIP estiver ativa */
+.profile-panel.vip-mode-active[class*="banner-grad-"] .profile-body .profile-tabs,
+.profile-panel.vip-mode-active[class*="banner-anim-"] .profile-body .profile-tabs {
+  background: transparent;
+}
+
+/* Conteúdo inferior opaco com fundo branco em qualquer aba */
+.profile-content {
+  background: #ffffff;
+  border-radius: 18px 18px 0 0;
+}
+
+/* Ajustes dos botões inativos exclusivamente dentro do modo VIP */
+.profile-panel.vip-mode-active[class*="banner-grad-"] .profile-tab,
+.profile-panel.vip-mode-active[class*="banner-anim-"] .profile-tab {
+  background: rgba(255, 255, 255, 0.85);
+  color: #1e1b4b;
+}
+
+.profile-panel.vip-mode-active[class*="banner-grad-"] .profile-tab.active,
+.profile-panel.vip-mode-active[class*="banner-anim-"] .profile-tab.active {
+  background: #020641;
+  color: #ffffff;
 }

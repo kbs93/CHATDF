@@ -68,7 +68,7 @@ function loadOnlineUsersCache() {
     return [];
   }
 }
-
+// edita os usuarios no painel da lateral
 function buildOnlineUserItem(user) {
   const item = document.createElement("div");
   item.className = "online-user";
@@ -81,7 +81,7 @@ const avatar = sanitizeAvatar(user.avatar);
       <img src="${avatar}" alt="" onerror="this.src='./img/avatar.png'">
       <span class="status-dot"></span>
     </div>
-    <span style="font-weight: 600; color: #000000; font-size: 15px; line-height: 1.2;">${name}</span>
+    <span style="font-weight: 600; color: #000000; font-size: 16px; line-height: 1.5;">${name}</span>
   `;
   // 01-07-26  Adicionando evento de clique para abrir o painel de perfil do usuário
 item.addEventListener("click", () => {

@@ -870,7 +870,7 @@ const profileName = document.getElementById("profileName");
 const profileMood = document.getElementById("profileMood");
 const profileCity = document.getElementById("profileCity");
 const profileAvatar = document.getElementById("profileAvatar");
-const profileOnlineDot = document.getElementById("profileOnlineDot"); // bplinha verde 03-05-26
+const profileOnlineDot = document.getElementById("profileOnlineDot"); // bolinha verde 03-05-26
 
 const editName = document.getElementById("editName");
 const editCity = document.getElementById("editCity");
@@ -1542,6 +1542,10 @@ function applyProfileMode(isOwner) {
   }
 }
 
+
+/* ========================================================================
+Função que ZERA 100% qualquer efeito VIP no painel padrão (Info e Editar perfil)
+=====================================================================*/
 /* ========================================================================
 Função que ZERA 100% qualquer efeito VIP no painel padrão (Info e Editar perfil)
 =====================================================================*/
@@ -1562,19 +1566,31 @@ function restaurarVisualPadraoPerfil() {
     topName.textContent = data.nome || "Usuário";
   }
 
-  // 2. Esconde e limpa 100% a Moldura do Avatar (sem carregar nenhuma moldura VIP)
+  // 2. Esconde e limpa 100% a Moldura do Avatar
   if (topFrame) {
     topFrame.className = "position-absolute top-0 start-0 w-100 h-100 rounded-circle d-none";
   }
 
-  // 3. Reseta a Capa do Perfil apenas para a cor de fundo padrão
-// 3. Mantém a Capa do Perfil Oficial (Banner VIP se existir, ou Cor Padrão)
-// 3. Força a capa a voltar estritamente para a COR PADRÃO (remove qualquer imagem/GIF VIP)
+  // 3. Força a capa a voltar estritamente para a cor padrão
   if (topBanner) {
     topBanner.className = "profile-cover position-relative";
     topBanner.style.backgroundImage = "none";
     topBanner.style.background = data.bannerColor || selectedBannerColor || "#00000063";
   }
+
+  // 4. Remove o modo VIP e raspa todas as classes de temas do container do painel
+  if (profilePanel) {
+    profilePanel.classList.remove("vip-mode-active");
+    profilePanel.className = profilePanel.className.replace(/banner-\S+/g, "").trim();
+    profilePanel.style.padding = "";
+    profilePanel.style.background = "";
+  }
+
+  // 5. Reseta a opção do select do Tema de volta para o "Padrão do Sistema"
+  const bannerSelect = document.getElementById("vipProfileBannerSelect");
+  const btnBannerSelect = document.getElementById("btnVipProfileBannerSelect");
+  if (bannerSelect) bannerSelect.value = "default";
+  if (btnBannerSelect) btnBannerSelect.textContent = "Padrão do Sistema";
 }
 
 
@@ -1624,8 +1640,8 @@ tabs.forEach(tab => {
 
     //  ============================
 
-const isVip = target === "vip";
-    // Liga/desliga o modo travado do topo AZUL exclusivamente para a aba VIP
+// Alterna a classe VIP para ativar tema e bordas apenas na aba VIP
+    const isVip = target === "vip";
     if (profilePanel) {
       profilePanel.classList.toggle("vip-mode-active", isVip);
     }
@@ -1847,15 +1863,32 @@ if (valorEfeito !== "solid") {
     }
 
     // Capa de Perfil
-    if (topBanner && bannerSelect) {
-      topBanner.className = "profile-cover position-relative";
+// Tema BORDA em torno do Modal Inteiro
+
+
+// Tema em torno do Modal Inteiro com limpeza da Capa
+    if (profilePanel && bannerSelect) {
+      // Remove qualquer classe antiga de tema do painel
+      profilePanel.className = profilePanel.className.replace(/banner-\S+/g, "").trim();
+      
       if (bannerSelect.value === "default") {
-        topBanner.style.background = selectedBannerColor || "#00000063";
+        profilePanel.style.border = "";
+        profilePanel.style.background = "";
+        // Restaura a cor padrão da capa quando não houver tema ativo
+        if (topBanner) {
+          topBanner.style.backgroundImage = "none";
+          topBanner.style.background = selectedBannerColor || "#00000063";
+        }
       } else {
-        topBanner.style.background = "";
-        topBanner.classList.add(bannerSelect.value);
+        profilePanel.classList.add(bannerSelect.value);
+        // Limpa o fundo inline da capa para o tema do painel/capa sobressair
+        if (topBanner) {
+          topBanner.style.background = "";
+        }
       }
     }
+
+
   };
 
   // Conecta as alterações dos selects com a função de atualização
@@ -1921,6 +1954,8 @@ document.getElementById("btnSaveVipSettings")?.addEventListener("click", async (
 // --------------- ABRIR / FECHAR ------------------
 function openProfilePanel() {
   if (!profilePanel) return;
+  // Zera qualquer tema temporário antigo antes de exibir o painel
+  restaurarVisualPadraoPerfil();
   window.__profileScrollY = window.scrollY || 0;
   profilePanel.classList.remove("hidden");
   profileOverlay?.classList.remove("hidden");

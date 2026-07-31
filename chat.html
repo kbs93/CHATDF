@@ -337,14 +337,24 @@
               <input type="text" id="editCity" placeholder="Digite sua cidade" maxlength="22">
             </span>
           </label>
-          <!----------------
-          <label class="profile-field" style="align-items: flex-start; padding-top: 8px;">
+          
+
+          <!--------------- NAO APAGAR 30-07-26 
+              <label class="profile-field" style="align-items: flex-start; padding-top: 8px;">
             <i class="bi bi-chat-square-text profile-field-icon"></i>
             <span class="profile-field-body">
               <span class="profile-field-label">Recado</span>
               <textarea id="editMood" placeholder="Frase Favorita " maxlength="100" rows="3"></textarea>
             </span>
-          </label>----->
+          </label-->
+<!----------=========================================================
+ESSA PARTE DO   textarea E IMPORTANTE NAO APAGAR 
+ ======================================================================= ------->
+<!-- Campo Recado oculto mantido invisível para garantir o funcionamento do JS de salvar -->
+          <textarea id="editMood" style="display: none;">Sem recado no momento.</textarea>
+
+
+
           <!-- CAMPO DO INSTAGRAM -->
        <label class="profile-field">
             <i class="bi bi-instagram profile-field-icon"></i>
