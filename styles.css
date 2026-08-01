@@ -4370,11 +4370,20 @@ body.index-page .profile-panel.open {
   width: 116px;
   height: 116px;
   border-radius: 50%;
-  overflow: hidden;
-  background: #fff;
-  border: 5px solid #fff;
-
+  border: 5px solid #ffffff; /* BORDA BRANCA TRADICIONAL NATIVA */
   flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+
+}
+/* Força a imagem interna a ser cortada em círculo sem estourar o fundo */
+.profile-avatar img,
+#profileAvatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
 }
 
 .profile-avatar img,
@@ -6330,9 +6339,9 @@ body.viewing-other-profile .profile-photo-upload-btn {
 }
 
 
-/* ========================================================================= 
+/* =================NAO APAGAR MOLDURAS EM TORNO DA FOTO ======================================================== 
    MOLDURAS EXCLUSIVAS (AVATAR FRAMES - APLICAÇÃO EM TEMPO REAL)
-   ========================================================================= */
+   ========================================================================= 
 #profileVip .frame-gold {
   border: 3px solid #ffd700;
   box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
@@ -6378,14 +6387,14 @@ body.viewing-other-profile .profile-photo-upload-btn {
 }
 
 
-/* Correção do contêiner para exibição das molduras no topo */
+
 .profile-avatar #vipTopPreviewFrame {
   z-index: 10;
   pointer-events: none;
   box-sizing: border-box;
 }
 
-/* Garante o brilho das molduras no topo principal */
+
 #vipTopPreviewFrame.frame-plasma-fire {
   border: 3px solid #ff4500;
   box-shadow: 0 0 12px #ff4500, inset 0 0 6px #ff4500;
@@ -6406,6 +6415,7 @@ body.viewing-other-profile .profile-photo-upload-btn {
   border: 3px solid #7000ff;
   box-shadow: 0 0 10px #7000ff, 0 0 16px rgba(112, 0, 255, 0.6);
 }
+*/
 
 
 
@@ -6803,80 +6813,372 @@ background-size: 200% 100%;animation: nameFlowAnim 4s linear infinite;
 }
 /* ======================================================================== 
    PROJETO VIP PREMIUM - 4 MOLDURAS EXCLUSIVAS COM EFEITOS FÍSICOS TÁTEIS
+   EFEITOS VIP: TRANSFORMANDO A PRÓPRIA BORDA DO AVATAR EM NEON GLOW
    ========================================================================= */
-
-/* 1. MOLDURA DE VIDRO LAPIDADO (GLASSMORPHISM 3D) */
-#profileVip .frame-glass-3d {
-  border: 2px solid rgba(255, 255, 255, 0.45);
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset,
-    0 4px 12px rgba(255, 255, 255, 0.25),
-    inset 0 4px 6px rgba(255, 255, 255, 0.3);
-}
-
-/* 2. ESTILO "CYBER" COM COMPONENTES TECNOLÓGICOS INDICADORES */
-#profileVip .frame-cyber-tech {
-  border: 2px dashed #00ffaa;
-  box-shadow: 0 0 8px rgba(0, 255, 170, 0.4);
-}
-
-#profileVip .frame-cyber-tech::before {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 255, 170, 0.3);
-}
-
-#profileVip .frame-cyber-tech::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 4px;
-  height: 4px;
-  background: #ffffff;
-  border-radius: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 0 6px #00ffaa;
-}
-
-/* 3. MOLDURA SOMBRA DE ECLIPSE REAL (GLOW TRIDIMENSIONAL FOSCO) */
-#profileVip .frame-eclipse-shadow {
-  border: 1px solid rgba(0, 0, 0, 0.8);
-  box-shadow:
-    0 0 16px 4px rgba(0, 0, 0, 0.65),
-    inset 0 0 12px 6px rgba(0, 0, 0, 0.85);
-}
-
-/* 4. MOLDURA CROMADA METÁLICA REFLEXIVA (METAL LÍQUIDO) */
-#profileVip .frame-liquid-chrome {
-  border: 3px solid transparent;
-  background:
-    linear-gradient(#fff, #fff) padding-box,
-    linear-gradient(135deg, #757f9a 0%, #ffffff 25%, #d7dde8 50%, #757f9a 75%, #ffffff 100%) border-box;
-  box-shadow:
-    0 4px 10px rgba(0, 0, 0, 0.15),
-    inset 0 2px 4px rgba(255, 255, 255, 0.6);
-}
-
-/* ========================================================================= 
-   PROJETO VIP PREMIUM - 4 CONTORNOS DE LUZ E ENERGIA EM TORNO DO AVATAR
-   ========================================================================= */
-
 /* 1. FOGO INCANDESCENTE (BRASAS DE PLASMA) */
+.profile-avatar.frame-plasma-fire,
+#vipTopPreviewFrame.frame-plasma-fire {
+  border: 3px solid #ff4500;
+  box-shadow: 
+    0 0 8px 2px #ff4500,
+    0 0 18px 5px #ff7300,
+    0 0 28px 6px rgba(255, 69, 0, 0.85);
+}
+
+/* 2. NEON FIBRA ÓPTICA (LUZ INFINITA) */
+.profile-avatar.frame-fiber-neon,
+#vipTopPreviewFrame.frame-fiber-neon {
+  border: 3px solid #00f0ff;
+  box-shadow: 
+    0 0 8px 2px #00f0ff,
+    0 0 18px 5px #0072ff,
+    0 0 30px 6px rgba(0, 240, 255, 0.85);
+}
+
+/* 3. AURA PULSANTE (LUZ VITAL) */
+.profile-avatar.frame-aura-pulse,
+#vipTopPreviewFrame.frame-aura-pulse {
+  border: 1px solid #ffd700;
+  box-shadow: 
+    0 0 8px 2px #ffd700,
+    0 0 20px 5px #ffae00,
+    0 0 32px 6px rgba(255, 215, 0, 0.85);
+}
+
+/* 4. FAÍSCAS ELÉTRICAS (ALTA VOLTAGEM) */
+.profile-avatar.frame-electric-spark,
+#vipTopPreviewFrame.frame-electric-spark {
+  border: 3px solid #b026ff;
+  box-shadow: 
+    0 0 8px 2px #b026ff,
+    0 0 18px 5px #7000ff,
+    0 0 10px 4px rgba(176, 38, 255, 0.9);
+}
+/* 5. VERDE VENENO (TÓXICO RADIOATIVO) */
+.profile-avatar.frame-toxic-green,
+#vipTopPreviewFrame.frame-toxic-green {
+  border: 3px solid #10b981;
+  box-shadow: 
+    0 0 8px 2px #10b981,
+    0 0 18px 5px #059669,
+    0 0 30px 10px rgba(16, 185, 129, 0.85);
+}
+
+/* 6. VERMELHO RUBI (SANGUE DE VAMPIRO) */
+.profile-avatar.frame-ruby-red,
+#vipTopPreviewFrame.frame-ruby-red {
+  border: 3px solid #dc2626;
+  box-shadow: 
+    0 0 8px 2px #dc2626,
+    0 0 18px 5px #991b1b,
+    0 0 30px 10px rgba(220, 38, 38, 0.85);
+}
+
+/* 7. AZUL COBALTO (TEMPESTADE MAGNÉTICA) */
+.profile-avatar.frame-cobalt-blue,
+#vipTopPreviewFrame.frame-cobalt-blue {
+  border: 3px solid #1d4ed8;
+  box-shadow: 
+    0 0 8px 2px #1d4ed8,
+    0 0 18px 5px #1e40af,
+    0 0 30px 10px rgba(29, 78, 216, 0.85);
+}
+
+/* 8. ROSA CHOQUE (CYBERPUNK MAGENTA) */
+.profile-avatar.frame-magenta-shock,
+#vipTopPreviewFrame.frame-magenta-shock {
+  border: 3px solid #db2777;
+  box-shadow: 
+    0 0 8px 2px #db2777,
+    0 0 18px 5px #be185d,
+    0 0 30px 10px rgba(219, 39, 119, 0.85);
+}
+
+/* 9. LARANJA INFERNO (MAGMA VULCÂNICO) */
+.profile-avatar.frame-inferno-orange,
+#vipTopPreviewFrame.frame-inferno-orange {
+  border: 3px solid #ea580c;
+  box-shadow: 
+    0 0 8px 2px #ea580c,
+    0 0 18px 5px #c2410c,
+    0 0 30px 10px rgba(234, 88, 12, 0.85);
+}
+
+/* 10. TURQUESA FECHADO (OCEANO PROFUNDO) */
+.profile-avatar.frame-deep-teal,
+#vipTopPreviewFrame.frame-deep-teal {
+  border: 3px solid #0d9488;
+  box-shadow: 
+    0 0 8px 2px #0d9488,
+    0 0 18px 5px #0f766e,
+    0 0 30px 10px rgba(13, 148, 136, 0.85);
+}
+
+/* 11. ROXO IMPERIAL (REINO SOMBRIO) */
+.profile-avatar.frame-royal-purple,
+#vipTopPreviewFrame.frame-royal-purple {
+  border: 3px solid #7e22ce;
+  box-shadow: 
+    0 0 8px 2px #7e22ce,
+    0 0 18px 5px #6b21a8,
+    0 0 30px 10px rgba(126, 34, 206, 0.85);
+}
+
+/* 12. VERDE LIMA (MICROCHIP VITAL) */
+.profile-avatar.frame-lime-charge,
+#vipTopPreviewFrame.frame-lime-charge {
+  border: 3px solid #65a30d;
+  box-shadow: 
+    0 0 8px 2px #65a30d,
+    0 0 18px 5px #4d7c0f,
+    0 0 30px 10px rgba(101, 163, 13, 0.85);
+}
+
+/* 13. VINHO NOBRE (SANGUE DE RUBI) */
+.profile-avatar.frame-noble-wine,
+#vipTopPreviewFrame.frame-noble-wine {
+  border: 3px solid #9f1239;
+  box-shadow: 
+    0 0 8px 2px #9f1239,
+    0 0 18px 5px #881337,
+    0 0 30px 10px rgba(159, 18, 57, 0.85);
+}
+
+/* 14. ÂMBAR DOURADO (OURO NEGRO) */
+.profile-avatar.frame-amber-gold,
+#vipTopPreviewFrame.frame-amber-gold {
+  border: 3px solid #d97706;
+  box-shadow: 
+    0 0 8px 2px #d97706,
+    0 0 18px 5px #b45309,
+    0 0 30px 10px rgba(217, 119, 6, 0.85);
+}
+
+
+
+/* 16. AZUL SAFIRA (CRISTAL CONGELADO) */
+.profile-avatar.frame-sapphire-blue,
+#vipTopPreviewFrame.frame-sapphire-blue {
+  border: 3px solid #0284c7;
+  box-shadow: 
+    0 0 8px 2px #0284c7,
+    0 0 18px 5px #0369a1,
+    0 0 30px 10px rgba(2, 132, 199, 0.85);
+}
+
+/* 17. CORAL VIVO (ENERGIA SOLAR) */
+.profile-avatar.frame-vibrant-coral,
+#vipTopPreviewFrame.frame-vibrant-coral {
+  border: 3px solid #f43f5e;
+  box-shadow: 
+    0 0 8px 2px #f43f5e,
+    0 0 18px 5px #e11d48,
+    0 0 30px 10px rgba(244, 63, 94, 0.85);
+}
+
+/* 18. ESMRALDA ESCURA (FLORESTA ENCANTADA) */
+.profile-avatar.frame-dark-emerald,
+#vipTopPreviewFrame.frame-dark-emerald {
+  border: 3px solid #047857;
+  box-shadow: 
+    0 0 8px 2px #047857,
+    0 0 18px 5px #065f46,
+    0 0 30px 10px rgba(4, 120, 87, 0.85);
+}
+
+/* 19. ÍNDIGO NOITE (ECLIPSE LUNAR) */
+.profile-avatar.frame-indigo-night,
+#vipTopPreviewFrame.frame-indigo-night {
+  border: 3px solid #4338ca;
+  box-shadow: 
+    0 0 8px 2px #4338ca,
+    0 0 18px 5px #3730a3,
+    0 0 30px 10px rgba(67, 56, 202, 0.85);
+}
+
+/* 20. GRAFITE PLATINA (METAL LIQUIDO CROMADO) */
+.profile-avatar.frame-dark-chrome,
+#vipTopPreviewFrame.frame-dark-chrome {
+  border: 3px solid #374151;
+  box-shadow: 
+    0 0 8px 2px #374151,
+    0 0 18px 5px #1f2937,
+    0 0 30px 10px rgba(55, 65, 81, 0.85);
+}
+/* 21. FÚCSIA NEON (#FF00FF DA IMAGEM 1) */
+.profile-avatar.frame-fuchsia-neon,
+#vipTopPreviewFrame.frame-fuchsia-neon {
+  border: 3px solid #ff00ff;
+  box-shadow: 
+    0 0 8px 2px #ff00ff,
+    0 0 18px 5px #e600e6,
+    0 0 30px 10px rgba(255, 0, 255, 0.85);
+}
+
+/* 22. BRONZE TERROSO (#8B6F47 DA IMAGEM 2) */
+.profile-avatar.frame-bronze-earth,
+#vipTopPreviewFrame.frame-bronze-earth {
+  border: 3px solid #8b6f47;
+  box-shadow: 
+    0 0 8px 2px #8b6f47,
+    0 0 18px 5px #6e4f30,
+    0 0 30px 10px rgba(139, 111, 71, 0.85);
+}
+
+/* 23. BEGE DOURADO (#D4AC6E DA IMAGEM 2) */
+.profile-avatar.frame-beige-gold,
+#vipTopPreviewFrame.frame-beige-gold {
+  border: 3px solid #d4ac6e;
+  box-shadow: 
+    0 0 8px 2px #d4ac6e,
+    0 0 18px 5px #b88d52,
+    0 0 30px 10px rgba(212, 172, 110, 0.85);
+}
+
+/* 24. CINZA PRATA ELEGANTE (W3-GRAY DA IMAGEM 3) */
+.profile-avatar.frame-w3-gray,
+#vipTopPreviewFrame.frame-w3-gray {
+  border: 3px solid #757575;
+  box-shadow: 
+    0 0 8px 2px #9e9e9e,
+    0 0 18px 5px #616161,
+    0 0 30px 10px rgba(117, 117, 117, 0.85);
+}
+
+/* 25. ROSA BEBÊ (PINK GLOW DELICADO) */
+.profile-avatar.frame-soft-pink,
+#vipTopPreviewFrame.frame-soft-pink {
+  border: 3px solid #f472b6;
+  box-shadow: 
+    0 0 8px 2px #f472b6,
+    0 0 18px 5px #ec4899,
+    0 0 30px 10px rgba(244, 114, 182, 0.85);
+}
+
+/* 26. ORQUÍDEA VIOLETA (LILÁS INTENSO) */
+.profile-avatar.frame-orchid-violet,
+#vipTopPreviewFrame.frame-orchid-violet {
+  border: 3px solid #c084fc;
+  box-shadow: 
+    0 0 8px 2px #c084fc,
+    0 0 18px 5px #a855f7,
+    0 0 30px 10px rgba(192, 132, 252, 0.85);
+}
+
+/* 27. OURO ROSÉ (LUXO FEMININO) */
+.profile-avatar.frame-rose-gold,
+#vipTopPreviewFrame.frame-rose-gold {
+  border: 3px solid #fb7185;
+  box-shadow: 
+    0 0 8px 2px #fb7185,
+    0 0 18px 5px #f43f5e,
+    0 0 30px 10px rgba(251, 113, 133, 0.85);
+}
+
+/* 28. MALVA GLAMOUR (ROSA ELEGANTE) */
+.profile-avatar.frame-mauve-glam,
+#vipTopPreviewFrame.frame-mauve-glam {
+  border: 3px solid #e879f9;
+  box-shadow: 
+    0 0 8px 2px #e879f9,
+    0 0 18px 5px #d946ef,
+    0 0 30px 10px rgba(232, 121, 249, 0.85);
+}
+
+/* 29. LILÁS ALFAZEMA (SUAVE E ROMÂNTICO) */
+.profile-avatar.frame-lavender-soft,
+#vipTopPreviewFrame.frame-lavender-soft {
+  border: 3px solid #ddd6fe;
+  box-shadow: 
+    0 0 8px 2px #c4b5fd,
+    0 0 18px 5px #8b5cf6,
+    0 0 30px 10px rgba(139, 92, 246, 0.85);
+}
+
+/* 30. MAGENTA DEEP (VINHO ROSADO) */
+.profile-avatar.frame-deep-magenta,
+#vipTopPreviewFrame.frame-deep-magenta {
+  border: 3px solid #be185d;
+  box-shadow: 
+    0 0 8px 2px #be185d,
+    0 0 18px 5px #9d174d,
+    0 0 30px 10px rgba(190, 24, 93, 0.85);
+}
+
+/* 31. PÊSSEGO ILUMINADO (SUNSET FEMININO) */
+.profile-avatar.frame-peach-glow,
+#vipTopPreviewFrame.frame-peach-glow {
+  border: 3px solid #fb923c;
+  box-shadow: 
+    0 0 8px 2px #fb923c,
+    0 0 18px 5px #f97316,
+    0 0 30px 10px rgba(251, 146, 60, 0.85);
+}
+
+/* 32. AMETISTA REVOLUT (ROXO CRISTAL) */
+.profile-avatar.frame-amethyst-crystal,
+#vipTopPreviewFrame.frame-amethyst-crystal {
+  border: 3px solid #a855f7;
+  box-shadow: 
+    0 0 8px 2px #a855f7,
+    0 0 18px 5px #9333ea,
+    0 0 30px 10px rgba(168, 85, 247, 0.85);
+}
+
+/* 33. ROSA CEREJA (CANDY NEON) */
+.profile-avatar.frame-cherry-pink,
+#vipTopPreviewFrame.frame-cherry-pink {
+  border: 3px solid #f43f5e;
+  box-shadow: 
+    0 0 8px 2px #f43f5e,
+    0 0 18px 5px #e11d48,
+    0 0 30px 10px rgba(244, 63, 94, 0.85);
+}
+
+/* 34. PÉROLA PRATA (BRILHO ACETINADO) */
+.profile-avatar.frame-silver-pearl,
+#vipTopPreviewFrame.frame-silver-pearl {
+  border: 3px solid #e5e7eb;
+  box-shadow: 
+    0 0 8px 2px #ffffff,
+    0 0 18px 5px #9ca3af,
+    0 0 30px 10px rgba(156, 163, 175, 0.85);
+}
+
+/* 35. CAFÉ DOURADO (BRONZE INTENSO) */
+.profile-avatar.frame-coffee-gold,
+#vipTopPreviewFrame.frame-coffee-gold {
+  border: 3px solid #78350f;
+  box-shadow: 
+    0 0 8px 2px #92400e,
+    0 0 18px 5px #b45309,
+    0 0 30px 10px rgba(180, 83, 9, 0.85);
+}
+
+/* 36. CITRINO VIVAZ (AMARELO ILUMINADO) */
+.profile-avatar.frame-vivid-citrine,
+#vipTopPreviewFrame.frame-vivid-citrine {
+  border: 3px solid #eab308;
+  box-shadow: 
+    0 0 8px 2px #eab308,
+    0 0 18px 5px #ca8a04,
+    0 0 30px 10px rgba(234, 179, 8, 0.85);
+}
+
+/* ==========================NAO APAGAR MOLDURAS ============================================== 
+   PROJETO VIP PREMIUM - 4 CONTORNOS DE LUZ E ENERGIA EM TORNO DO AVATAR MOLDURAS
+   ========================================================================= 
+
+/* 1. FOGO INCANDESCENTE (BRASAS DE PLASMA) 
 #profileVip .frame-plasma-fire {
   border: 2px solid #ff4500;
   box-shadow:
     0 0 10px #ff4500,
     0 -4px 12px rgba(255, 69, 0, 0.65);
-  /* Projeta o calor sutilmente para cima */
+
 }
 
-/* 2. NEON FIBRA ÓPTICA (LUZ INFINITA) */
+/* 2. NEON FIBRA ÓPTICA (LUZ INFINITA) 
 #profileVip .frame-fiber-neon {
   border: 2px solid #00f0ff;
   box-shadow:
@@ -6884,7 +7186,7 @@ background-size: 200% 100%;animation: nameFlowAnim 4s linear infinite;
     inset 0 0 4px #00f0ff;
 }
 
-/* 3. AURA PULSANTE (LUZ VITAL SEGURO MOBILE) */
+/* 3. AURA PULSANTE (LUZ VITAL SEGURO MOBILE) 
 #profileVip .frame-aura-pulse {
   border: 2px solid #ffd700;
   box-shadow: 0 0 8px #ffd700;
@@ -6905,13 +7207,15 @@ background-size: 200% 100%;animation: nameFlowAnim 4s linear infinite;
   }
 }
 
-/* 4. FAÍSCAS ELÉTRICAS (ALTA VOLTAGEM) */
+/* 4. FAÍSCAS ELÉTRICAS (ALTA VOLTAGEM) 
 #profileVip .frame-electric-spark {
   border: 2px solid #7000ff;
   box-shadow:
     0 0 8px #7000ff,
     0 0 14px rgba(112, 0, 255, 0.5);
 }
+
+*/
 
 
 /* ========================================================================= 

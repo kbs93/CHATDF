@@ -671,28 +671,110 @@ ESSA PARTE DO   textarea E IMPORTANTE NAO APAGAR
               </div>
 
               <!-- GAVETA 3: MOLDURA DE AVATAR -->
-              <div id="gaveta-avatar" class="vip-drawer-content hidden">
-                <div class="vip-control-card text-start border-0 rounded-0 m-0 ">
-                  <div class="position-relative">
-                    <button type="button" id="btnVipAvatarFrameSelect" class="vip-custom-select-btn">Nenhuma Moldura</button>
-                    <div id="listVipAvatarFrameSelect" class="vip-custom-dropdown hidden">
-                      <div class="vip-dropdown-option active" data-value="none">Nenhuma Moldura</div>
-                      <div class="vip-dropdown-option" data-value="frame-plasma-fire">Fogo Incandescente (Brasas de Plasma)</div>
-                      <div class="vip-dropdown-option" data-value="frame-fiber-neon">Neon Fibra Óptica (Luz Infinita)</div>
-                      <div class="vip-dropdown-option" data-value="frame-aura-pulse">Aura Pulsante (Luz Vital)</div>
-                      <div class="vip-dropdown-option" data-value="frame-electric-spark">Faíscas Elétricas (Alta Voltagem)</div>
-                    </div>
-                    <select id="vipAvatarFrameSelect" class="d-none">
-                      <option value="none" selected>Nenhuma Moldura</option>
-                      <option value="frame-plasma-fire">Fogo Incandescente (Brasas de Plasma)</option>
-                      <option value="frame-fiber-neon">Neon Fibra Óptica (Luz Infinita)</option>
-                      <option value="frame-aura-pulse">Aura Pulsante (Luz Vital)</option>
-                      <option value="frame-electric-spark">Faíscas Elétricas (Alta Voltagem)</option>
-                    </select>
-                  </div>
-                  <span class="small text-muted d-block mt-1.5" style="font-size: 1.5px; line-height: 1.2;">A moldura é exibida ao redor da sua foto no chat e no seu painel.</span>
-                </div>
-              </div>
+<div id="gaveta-avatar" class="vip-drawer-content hidden">
+  <div class="vip-control-card text-start border-0 rounded-0 m-0 ">
+    <div class="position-relative">
+      <button type="button" id="btnVipAvatarFrameSelect" class="vip-custom-select-btn">Nenhuma Moldura</button>
+      
+      <!-- DROPDOWN CUSTOMIZADO CONTINUADO A PARTIR DO 21 -->
+      <div id="listVipAvatarFrameSelect" class="vip-custom-dropdown hidden">
+        <div class="vip-dropdown-option active" data-value="none">Nenhuma Moldura</div>
+        <div class="vip-dropdown-option" data-value="frame-plasma-fire">Fogo Incandescente (Brasas de Plasma)</div>
+        <div class="vip-dropdown-option" data-value="frame-fiber-neon">Neon Fibra Óptica (Luz Infinita)</div>
+        <div class="vip-dropdown-option" data-value="frame-aura-pulse">Aura Pulsante (Luz Vital)</div>
+        <div class="vip-dropdown-option" data-value="frame-electric-spark">Faíscas Elétricas (Alta Voltagem)</div>
+        
+        <div class="vip-dropdown-option" data-value="frame-toxic-green">Verde Veneno (Tóxico Radioativo)</div>
+        <div class="vip-dropdown-option" data-value="frame-ruby-red">Vermelho Rubi (Sangue de Vampiro)</div>
+        <div class="vip-dropdown-option" data-value="frame-cobalt-blue">Azul Cobalto (Tempestade Magnética)</div>
+        <div class="vip-dropdown-option" data-value="frame-magenta-shock">Rosa Choque (Cyberpunk Magenta)</div>
+        <div class="vip-dropdown-option" data-value="frame-inferno-orange">Laranja Inferno (Magma Vulcânico)</div>
+        <div class="vip-dropdown-option" data-value="frame-deep-teal">Turquesa Fechado (Oceano Profundo)</div>
+        <div class="vip-dropdown-option" data-value="frame-royal-purple">Roxo Imperial (Reino Sombrio)</div>
+        <div class="vip-dropdown-option" data-value="frame-lime-charge">Verde Lima (Microchip Vital)</div>
+        <div class="vip-dropdown-option" data-value="frame-noble-wine">Vinho Nobre (Sangue de Rubi)</div>
+        <div class="vip-dropdown-option" data-value="frame-amber-gold">Âmbar Dourado (Ouro Negro)</div>
+        <div class="vip-dropdown-option" data-value="frame-cosmic-violet">Violeta Cósmico (Nebulosa Espacial)</div>
+        <div class="vip-dropdown-option" data-value="frame-sapphire-blue">Azul Safira (Cristal Congelado)</div>
+        <div class="vip-dropdown-option" data-value="frame-vibrant-coral">Coral Vivo (Energia Solar)</div>
+        <div class="vip-dropdown-option" data-value="frame-dark-emerald">Esmeralda Escura (Floresta Encantada)</div>
+        <div class="vip-dropdown-option" data-value="frame-indigo-night">Índigo Noite (Eclipse Lunar)</div>
+        <div class="vip-dropdown-option" data-value="frame-dark-chrome">Grafite Platina (Metal Líquido Cromado)</div>
+
+        <!-- MOLDURAS CONTINUADAS DAS SUAS IMAGENS E FEMININAS (21 A 36) -->
+        <div class="vip-dropdown-option" data-value="frame-fuchsia-neon">Fúcsia Neon (Alta Intensidade #FF00FF)</div>
+        <div class="vip-dropdown-option" data-value="frame-bronze-earth">Bronze Terroso (#8B6F47)</div>
+        <div class="vip-dropdown-option" data-value="frame-beige-gold">Bege Dourado (#D4AC6E)</div>
+        <div class="vip-dropdown-option" data-value="frame-w3-gray">Cinza Prata Elegante</div>
+        <div class="vip-dropdown-option" data-value="frame-soft-pink">Rosa Bebê (Pink Glow)</div>
+        <div class="vip-dropdown-option" data-value="frame-orchid-violet">Orquídea Violeta (Lilás Intenso)</div>
+        <div class="vip-dropdown-option" data-value="frame-rose-gold">Ouro Rosé (Luxo Feminino)</div>
+        <div class="vip-dropdown-option" data-value="frame-mauve-glam">Malva Glamour (Rosa Elegante)</div>
+        <div class="vip-dropdown-option" data-value="frame-lavender-soft">Lilás Alfazema (Romântico)</div>
+        <div class="vip-dropdown-option" data-value="frame-deep-magenta">Magenta Deep (Vinho Rosado)</div>
+        <div class="vip-dropdown-option" data-value="frame-peach-glow">Pêssego Iluminado (Sunset)</div>
+        <div class="vip-dropdown-option" data-value="frame-amethyst-crystal">Ametista Cristal (Roxo)</div>
+        <div class="vip-dropdown-option" data-value="frame-cherry-pink">Rosa Cereja (Candy Neon)</div>
+        <div class="vip-dropdown-option" data-value="frame-silver-pearl">Pérola Prata (Acetinado)</div>
+        <div class="vip-dropdown-option" data-value="frame-coffee-gold">Café Dourado (Bronze Intenso)</div>
+        <div class="vip-dropdown-option" data-value="frame-vivid-citrine">Citrino Vivaz (Amarelo)</div>
+      </div>
+
+      <!-- SELECT NATIVO OCULTO SINCRONIZADO -->
+      <select id="vipAvatarFrameSelect" class="d-none">
+        <option value="none" selected>Nenhuma Moldura</option>
+        <option value="frame-plasma-fire">Fogo Incandescente (Brasas de Plasma)</option>
+        <option value="frame-fiber-neon">Neon Fibra Óptica (Luz Infinita)</option>
+        <option value="frame-aura-pulse">Aura Pulsante (Luz Vital)</option>
+        <option value="frame-electric-spark">Faíscas Elétricas (Alta Voltagem)</option>
+        <option value="frame-toxic-green">Verde Veneno (Tóxico Radioativo)</option>
+        <option value="frame-ruby-red">Vermelho Rubi (Sangue de Vampiro)</option>
+        <option value="frame-cobalt-blue">Azul Cobalto (Tempestade Magnética)</option>
+        <option value="frame-magenta-shock">Rosa Choque (Cyberpunk Magenta)</option>
+        <option value="frame-inferno-orange">Laranja Inferno (Magma Vulcânico)</option>
+        <option value="frame-deep-teal">Turquesa Fechado (Oceano Profundo)</option>
+        <option value="frame-royal-purple">Roxo Imperial (Reino Sombrio)</option>
+        <option value="frame-lime-charge">Verde Lima (Microchip Vital)</option>
+        <option value="frame-noble-wine">Vinho Nobre (Sangue de Rubi)</option>
+        <option value="frame-amber-gold">Âmbar Dourado (Ouro Negro)</option>
+        <option value="frame-cosmic-violet">Violeta Cósmico (Nebulosa Espacial)</option>
+        <option value="frame-sapphire-blue">Azul Safira (Cristal Congelado)</option>
+        <option value="frame-vibrant-coral">Coral Vivo (Energia Solar)</option>
+        <option value="frame-dark-emerald">Esmeralda Escura (Floresta Encantada)</option>
+        <option value="option value="frame-indigo-night">Índigo Noite (Eclipse Lunar)</option>
+        <option value="frame-dark-chrome">Grafite Platina (Metal Líquido Cromado)</option>
+        <option value="frame-fuchsia-neon">Fúcsia Neon (Alta Intensidade #FF00FF)</option>
+        <option value="frame-bronze-earth">Bronze Terroso (#8B6F47)</option>
+        <option value="frame-beige-gold">Bege Dourado (#D4AC6E)</option>
+        <option value="frame-w3-gray">Cinza Prata Elegante</option>
+        <option value="frame-soft-pink">Rosa Bebê (Pink Glow)</option>
+        <option value="frame-orchid-violet">Orquídea Violeta (Lilás Intenso)</option>
+        <option value="frame-rose-gold">Ouro Rosé (Luxo Feminino)</option>
+        <option value="frame-mauve-glam">Malva Glamour (Rosa Elegante)</option>
+        <option value="frame-lavender-soft">Lilás Alfazema (Romântico)</option>
+        <option value="frame-deep-magenta">Magenta Deep (Vinho Rosado)</option>
+        <option value="frame-peach-glow">Pêssego Iluminado (Sunset)</option>
+        <option value="frame-amethyst-crystal">Ametista Cristal (Roxo)</option>
+        <option value="frame-cherry-pink">Rosa Cereja (Candy Neon)</option>
+        <option value="frame-silver-pearl">Pérola Prata (Acetinado)</option>
+        <option value="frame-coffee-gold">Café Dourado (Bronze Intenso)</option>
+        <option value="frame-vivid-citrine">Citrino Vivaz (Amarelo)</option>
+      </select>
+    </div>
+    <span class="small text-muted d-block mt-1.5" style="font-size: 1.5px; line-height: 1.2;">A moldura é exibida ao redor da sua foto no chat e no seu painel.</span>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
 
               <!-- GAVETA 4: CAPA DE PERFIL -->
               <div id="gaveta-capa" class="vip-drawer-content hidden">
