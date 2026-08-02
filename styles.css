@@ -6073,23 +6073,6 @@ body.viewing-other-profile .profile-photo-upload-btn {
     font-size: 20px;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #profileVip .vip-control-card:focus-within {
   border-color: #6f42c1;
   box-shadow: 0 4px 14px rgba(111, 66, 193, 0.1);
@@ -6155,481 +6138,118 @@ body.viewing-other-profile .profile-photo-upload-btn {
 }
 
 /* --- DEGRADÊS ESTÁTICOS SÓ NAS LETRAS --- */
-#profileVip #vipPreviewName.nick-gradient-blue-purple {
-  background-image: linear-gradient(135deg, #0d6efd, #a020f0);
-}
-
-#profileVip #vipPreviewName.nick-gradient-gold {
-  background-image: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-  font-weight: bold;
-}
-
-#profileVip #vipPreviewName.nick-gradient-sunset {
-  background-image: linear-gradient(135deg, #ff512f, #dd2476);
-}
-
-#profileVip #vipPreviewName.nick-gradient-ocean {
-  background-image: linear-gradient(135deg, #02aab0, #00cdac);
-}
-
-#profileVip #vipPreviewName.nick-gradient-forest {
-  background-image: linear-gradient(135deg, #11998e, #38ef7d);
-}
-
-#profileVip #vipPreviewName.nick-gradient-ruby {
-  background-image: linear-gradient(135deg, #cb2d3e, #ef473a);
-}
-
-#profileVip #vipPreviewName.nick-gradient-cyberpunk {
-  background-image: linear-gradient(135deg, #f12711, #f5af19);
-}
-
-#profileVip #vipPreviewName.nick-gradient-cotton {
-  background-image: linear-gradient(135deg, #ff9a9e, #fecfef);
-}
-
-#profileVip #vipPreviewName.nick-gradient-lavender {
-  background-image: linear-gradient(135deg, #a18cd1, #fbc2eb);
-}
-
-#profileVip #vipPreviewName.nick-gradient-fire {
-  background-image: linear-gradient(135deg, #f12711, #f5af19);
-}
-
-#profileVip #vipPreviewName.nick-gradient-platinum {
-  background-image: linear-gradient(135deg, #757f9a, #d7dde8);
-}
-
-#profileVip #vipPreviewName.nick-gradient-vintage {
-  background-image: linear-gradient(135deg, #ca7345, #735135);
-}
-
-#profileVip #vipPreviewName.nick-gradient-bubblegum {
-  background-image: linear-gradient(135deg, #ff00cc, #333399);
-}
-
-#profileVip #vipPreviewName.nick-gradient-galaxy {
-  background-image: linear-gradient(135deg, #654ea3, #eaafc8);
-}
-
-#profileVip #vipPreviewName.nick-gradient-mint {
-  background-image: linear-gradient(135deg, #00c6ff, #0072ff);
-}
-
-/* --- RECURSOS ANIMADOS SÓ NAS LETRAS --- */
+#profileVip #vipPreviewName.nick-gradient-blue-purple {background-image: linear-gradient(135deg, #0d6efd, #a020f0);}
+#profileVip #vipPreviewName.nick-gradient-gold {background-image: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+font-weight: bold;}
+#profileVip #vipPreviewName.nick-gradient-sunset {background-image: linear-gradient(135deg, #ff512f, #dd2476);}
+#profileVip #vipPreviewName.nick-gradient-ocean {background-image: linear-gradient(135deg, #02aab0, #00cdac);}
+#profileVip #vipPreviewName.nick-gradient-forest {background-image: linear-gradient(135deg, #11998e, #38ef7d);}
+#profileVip #vipPreviewName.nick-gradient-ruby {background-image: linear-gradient(135deg, #cb2d3e, #ef473a);}
+#profileVip #vipPreviewName.nick-gradient-cyberpunk {background-image: linear-gradient(135deg, #f12711, #f5af19);}
+#profileVip #vipPreviewName.nick-gradient-cotton {background-image: linear-gradient(135deg, #ff9a9e, #fecfef);}
+#profileVip #vipPreviewName.nick-gradient-lavender {  background-image: linear-gradient(135deg, #a18cd1, #fbc2eb);}
+#profileVip #vipPreviewName.nick-gradient-fire {background-image: linear-gradient(135deg, #f12711, #f5af19);}
+#profileVip #vipPreviewName.nick-gradient-platinum {background-image: linear-gradient(135deg, #757f9a, #d7dde8);}
+#profileVip #vipPreviewName.nick-gradient-vintage {background-image: linear-gradient(135deg, #ca7345, #735135);}
+#profileVip #vipPreviewName.nick-gradient-bubblegum {background-image: linear-gradient(135deg, #ff00cc, #333399);}
+#profileVip #vipPreviewName.nick-gradient-galaxy {background-image: linear-gradient(135deg, #654ea3, #eaafc8);}
+#profileVip #vipPreviewName.nick-gradient-mint {background-image: linear-gradient(135deg, #00c6ff, #0072ff);}
 /* --- RECURSOS ANIMADOS SÓ NAS LETRAS COM CONTORNO E NEON GLOW --- */
-#profileVip #vipPreviewName.nick-gradient-neon {
-  background-image: linear-gradient(90deg, #ff007f, #39ff14, #00f0ff, #ff007f);
-  background-size: 300% 100%;
-  animation: nameFlowAnim 4s linear infinite;
-  filter: drop-shadow(0px 0px 3px rgba(57, 255, 20, 0.6));
-}
-
-#profileVip #vipPreviewName.nick-anim-rainbow {
-  background-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet, red);
-  background-size: 300% 100%;
-  animation: nameFlowAnim 3s linear infinite;
-  filter: drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.5));
-}
-
-#profileVip #vipPreviewName.nick-anim-aurora {
-  background-image: linear-gradient(90deg, #0575e6, #00f260, #0575e6);
-  background-size: 200% 100%;
-  animation: nameFlowAnim 5s ease infinite;
-  filter: drop-shadow(0px 0px 3px rgba(0, 242, 96, 0.5));
-}
-
-#profileVip #vipPreviewName.nick-anim-magma {
-  background-image: linear-gradient(90deg, #f12711, #f5af19, #f12711);
-  background-size: 200% 100%;
-  animation: nameFlowAnim 2.5s ease infinite;
-  filter: drop-shadow(0px 0px 3px rgba(241, 39, 17, 0.7));
-}
-
-#profileVip #vipPreviewName.nick-anim-matrix {
-  background-image: linear-gradient(90deg, #00FF00, #003300, #00FF00);
-  background-size: 200% 100%;
-  animation: nameFlowAnim 4s linear infinite;
-  -webkit-text-stroke: 0.5px #003300;
-}
-
-#profileVip #vipPreviewName.nick-anim-electric {
-  background-image: linear-gradient(90deg, #00ffff, #ffffff, #0072ff, #00ffff);
-  background-size: 300% 100%;
-  animation: nameFlowAnim 1.5s linear infinite;
-  filter: drop-shadow(0px 0px 4px rgba(0, 240, 255, 0.8));
-}
-
-#profileVip #vipPreviewName.nick-anim-gold-flow {
-  background-image: linear-gradient(90deg, #bf953f, #aa771c, #fcf6ba, #bf953f);
-  background-size: 300% 100%;
-  animation: nameFlowAnim 3s linear infinite;
-  font-weight: bold;
-  -webkit-text-stroke: 0.3px #543d0c;
-}
-
-#profileVip #vipPreviewName.nick-anim-glitch {
-  background-image: linear-gradient(90deg, #2b2b2b, #ff0000, #00ffff, #2b2b2b);
-  background-size: 300% 100%;
-  animation: nameFlowAnim 1s steps(4) infinite;
-}
-
-#profileVip #vipPreviewName.nick-anim-ice {
-  background-image: linear-gradient(90deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa);
-  background-size: 300% 100%;
-  animation: nameFlowAnim 4s ease infinite;
-  filter: drop-shadow(0px 0px 3px rgba(128, 222, 234, 0.6));
-}
-
-#profileVip #vipPreviewName.nick-anim-vampire {
-  background-image: linear-gradient(90deg, #4a0000, #ff0000, #4a0000);
-  background-size: 200% 100%;
-  animation: nameFlowAnim 3s ease-in-out infinite;
-  -webkit-text-stroke: 0.5px #110000;
-}
-
-#profileVip #vipPreviewName.nick-anim-candy {
-  background-image: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c);
-  background-size: 200% 100%;
-  animation: nameFlowAnim 3s linear infinite;
-  filter: drop-shadow(0px 0px 3px rgba(255, 126, 179, 0.6));
-}
-
-#profileVip #vipPreviewName.nick-anim-toxic {
-  background-image: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f);
-  background-size: 200% 100%;
-  animation: nameFlowAnim 2s linear infinite;
-  filter: drop-shadow(0px 0px 4px rgba(168, 255, 120, 0.7));
-}
-
-#profileVip #vipPreviewName.nick-anim-shadow {
-  background-image: linear-gradient(90deg, #000000, #434343, #000000);
-  background-size: 200% 100%;
-  animation: nameFlowAnim 5s linear infinite;
-  -webkit-text-stroke: 0.5px #ffffff;
-}
-
-#profileVip #vipPreviewName.nick-anim-miami {
-  background-image: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe);
-  background-size: 200% 100%;
-  animation: nameFlowAnim 3s ease-in-out infinite;
-  filter: drop-shadow(0px 0px 3px rgba(0, 242, 254, 0.6));
-}
-
-#profileVip #vipPreviewName.nick-anim-phoenix {
-  background-image: linear-gradient(90deg, #f857a6, #ff5858, #f857a6);
-  background-size: 200% 100%;
-  animation: nameFlowAnim 2.5s ease infinite;
-  filter: drop-shadow(0px 0px 4px rgba(255, 88, 88, 0.6));
-}
+#profileVip #vipPreviewName.nick-gradient-neon {background-image: linear-gradient(90deg, #ff007f, #39ff14, #00f0ff, #ff007f);
+background-size: 300% 100%;animation: nameFlowAnim 4s linear infinite;filter: drop-shadow(0px 0px 3px rgba(57, 255, 20, 0.6));}
+#profileVip #vipPreviewName.nick-anim-rainbow {background-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet, red);
+background-size: 300% 100%;animation: nameFlowAnim 3s linear infinite;filter: drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.5));}
+#profileVip #vipPreviewName.nick-anim-aurora {background-image: linear-gradient(90deg, #0575e6, #00f260, #0575e6);background-size: 200% 100%;
+animation: nameFlowAnim 5s ease infinite;filter: drop-shadow(0px 0px 3px rgba(0, 242, 96, 0.5));}
+#profileVip #vipPreviewName.nick-anim-magma {background-image: linear-gradient(90deg, #f12711, #f5af19, #f12711);background-size: 200% 100%;
+animation: nameFlowAnim 2.5s ease infinite;filter: drop-shadow(0px 0px 3px rgba(241, 39, 17, 0.7));}
+#profileVip #vipPreviewName.nick-anim-matrix {background-image: linear-gradient(90deg, #00FF00, #003300, #00FF00);background-size: 200% 100%;
+animation: nameFlowAnim 4s linear infinite;-webkit-text-stroke: 0.5px #003300;}
+#profileVip #vipPreviewName.nick-anim-electric {background-image: linear-gradient(90deg, #00ffff, #ffffff, #0072ff, #00ffff);background-size: 300% 100%;
+animation: nameFlowAnim 1.5s linear infinite;filter: drop-shadow(0px 0px 4px rgba(0, 240, 255, 0.8));}
+#profileVip #vipPreviewName.nick-anim-gold-flow {background-image: linear-gradient(90deg, #bf953f, #aa771c, #fcf6ba, #bf953f);
+  background-size: 300% 100%;animation: nameFlowAnim 3s linear infinite;font-weight: bold;-webkit-text-stroke: 0.3px #543d0c;}
+#profileVip #vipPreviewName.nick-anim-glitch {background-image: linear-gradient(90deg, #2b2b2b, #ff0000, #00ffff, #2b2b2b);background-size: 300% 100%;
+  animation: nameFlowAnim 1s steps(4) infinite;}
+#profileVip #vipPreviewName.nick-anim-ice {background-image: linear-gradient(90deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa);background-size: 300% 100%;
+animation: nameFlowAnim 4s ease infinite;filter: drop-shadow(0px 0px 3px rgba(128, 222, 234, 0.6));}
+#profileVip #vipPreviewName.nick-anim-vampire {background-image: linear-gradient(90deg, #4a0000, #ff0000, #4a0000);background-size: 200% 100%;
+animation: nameFlowAnim 3s ease-in-out infinite;-webkit-text-stroke: 0.5px #110000;}
+#profileVip #vipPreviewName.nick-anim-candy {background-image: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c);background-size: 200% 100%;
+animation: nameFlowAnim 3s linear infinite;filter: drop-shadow(0px 0px 3px rgba(255, 126, 179, 0.6));}
+#profileVip #vipPreviewName.nick-anim-toxic {background-image: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f);background-size: 200% 100%;
+animation: nameFlowAnim 2s linear infinite;filter: drop-shadow(0px 0px 4px rgba(168, 255, 120, 0.7));}
+#profileVip #vipPreviewName.nick-anim-shadow {background-image: linear-gradient(90deg, #000000, #434343, #000000);background-size: 200% 100%;
+animation: nameFlowAnim 5s linear infinite;-webkit-text-stroke: 0.5px #ffffff;}
+#profileVip #vipPreviewName.nick-anim-miami {background-image: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe);background-size: 200% 100%;
+animation: nameFlowAnim 3s ease-in-out infinite;filter: drop-shadow(0px 0px 3px rgba(0, 242, 254, 0.6));}
+#profileVip #vipPreviewName.nick-anim-phoenix {background-image: linear-gradient(90deg, #f857a6, #ff5858, #f857a6);background-size: 200% 100%;
+animation: nameFlowAnim 2.5s ease infinite;filter: drop-shadow(0px 0px 4px rgba(255, 88, 88, 0.6));}
 
 @keyframes nameFlowAnim {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  100% {
-    background-position: 300% 50%;
-  }
-}
-
+  0% {background-position: 0% 50%;}
+  100% {background-position: 300% 50%;}}
 /* Força os estilos de fonte reativos do select inline a dominarem de forma limpa */
 #profileVip #vipPreviewName[style*="font-family"] {
   display: inline-block;
 }
 
-
-/* =================NAO APAGAR MOLDURAS EM TORNO DA FOTO ======================================================== 
-   MOLDURAS EXCLUSIVAS (AVATAR FRAMES - APLICAÇÃO EM TEMPO REAL)
-   ========================================================================= 
-#profileVip .frame-gold {
-  border: 3px solid #ffd700;
-  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
-}
-
-#profileVip .frame-neon-pulse {
-  border: 3px solid #39ff14;
-  animation: neonPulse 1.5s infinite alternate;
-}
-
-#profileVip .frame-rainbow {
-  border: 3px solid transparent;
-  background-image: linear-gradient(#fff, #fff), linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
-  background-origin: border-box;
-  background-clip: content-box, border-box;
-  animation: rainbowSpin 4s linear infinite;
-}
-
-@keyframes rainbowSpin {
-  0% {
-    filter: hue-rotate(0deg);
-  }
-
-  100% {
-    filter: hue-rotate(360deg);
-  }
-}
-
-#profileVip .frame-diamond {
-  border: 3px solid #00f0ff;
-  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5), inset 0 0 5px rgba(0, 240, 255, 0.3);
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px);
-  background-size: 8px 8px;
-}
-
-#profileName[class*="nick-gradient-"],
-#profileName[class*="nick-anim-"] {
-  display: inline-block;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-
-
-
-.profile-avatar #vipTopPreviewFrame {
-  z-index: 10;
-  pointer-events: none;
-  box-sizing: border-box;
-}
-
-
-#vipTopPreviewFrame.frame-plasma-fire {
-  border: 3px solid #ff4500;
-  box-shadow: 0 0 12px #ff4500, inset 0 0 6px #ff4500;
-}
-
-#vipTopPreviewFrame.frame-fiber-neon {
-  border: 3px solid #00f0ff;
-  box-shadow: 0 0 14px #00f0ff, inset 0 0 6px #00f0ff;
-}
-
-#vipTopPreviewFrame.frame-aura-pulse {
-  border: 3px solid #ffd700;
-  box-shadow: 0 0 10px #ffd700;
-  animation: auraPulseEngine 2s infinite ease-in-out;
-}
-
-#vipTopPreviewFrame.frame-electric-spark {
-  border: 3px solid #7000ff;
-  box-shadow: 0 0 10px #7000ff, 0 0 16px rgba(112, 0, 255, 0.6);
-}
-*/
-
-
-
-
 /* ========================================================================= 
-   CAPAS DE PERFIL / BANNER DOS VIP (SUPORTE PARA PERFIL REAL E MINI-PREVIEW)
+   TEMA DE PERFIL VIP (SUPORTE PARA PERFIL REAL E MINI-PREVIEW)
    ========================================================================= */
 
-/* Capa Roxo Espacial */
-.banner-grad-purple,
-#profileVip #vipPreviewBanner.banner-grad-purple {
-  background: linear-gradient(135deg, #1e0034 0%, #44006b 50%, #1e0034 100%);
-}
-
-/* Capa Ouro com Glitter */
-.banner-grad-gold,
-#profileVip #vipPreviewBanner.banner-grad-gold {
-  background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728);
-}
-
-/* Capa Aurora Boreal Animada */
-.banner-anim-aurora,
-#profileVip #vipPreviewBanner.banner-anim-aurora {
-  background: linear-gradient(270deg, #0575e6, #00f260, #0575e6);
-  background-size: 200% 200%;
-  animation: auroraFlow 8s ease infinite;
-}
-
-/* ========================================================================= 
-   PROJETO VIP PREMIUM - 30 CLASSES EXCLUSIVAS PARA AS CAPAS DE PERFIL (BANNERS)
-   ========================================================================= */
-
-/* ─── 15 CAPAS COM DEGRADÊS ESTÁTICOS DE ELITE ─── */
-.banner-grad-purple,
-#profileVip #vipPreviewBanner.banner-grad-purple {
-  background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #1e1b4b 100%);
-}
-
-.banner-grad-gold,
-#profileVip #vipPreviewBanner.banner-grad-gold {
-  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 50%, #b38728 100%);
-}
-
-.banner-grad-sunset,
-#profileVip #vipPreviewBanner.banner-grad-sunset {
-  background: linear-gradient(135deg, #ff512f 0%, #dd2476 100%);
-}
-
-.banner-grad-ocean,
-#profileVip #vipPreviewBanner.banner-grad-ocean {
-  background: linear-gradient(135deg, #02aab0 0%, #00cdac 100%);
-}
-
-.banner-grad-emerald,
-#profileVip #vipPreviewBanner.banner-grad-emerald {
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-}
-
-.banner-grad-ruby,
-#profileVip #vipPreviewBanner.banner-grad-ruby {
-  background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%);
-}
-
-.banner-grad-cyberpunk,
-#profileVip #vipPreviewBanner.banner-grad-cyberpunk {
-  background: linear-gradient(135deg, #f12711 0%, #f5af19 100%);
-}
-
-.banner-grad-cotton,
-#profileVip #vipPreviewBanner.banner-grad-cotton {
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-}
-
-.banner-grad-lavender,
-#profileVip #vipPreviewBanner.banner-grad-lavender {
-  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
-}
-
-.banner-grad-fire,
-#profileVip #vipPreviewBanner.banner-grad-fire {
-  background: linear-gradient(135deg, #ff0000 0%, #ff7300 50%, #ffcc00 100%);
-}
-
-.banner-grad-platinum,
-#profileVip #vipPreviewBanner.banner-grad-platinum {
-  background: linear-gradient(135deg, #757f9a 0%, #d7dde8 100%);
-}
-
-.banner-grad-vintage,
-#profileVip #vipPreviewBanner.banner-grad-vintage {
-  background: linear-gradient(135deg, #ca7345 0%, #735135 100%);
-}
-
-.banner-grad-bubblegum,
-#profileVip #vipPreviewBanner.banner-grad-bubblegum {
-  background: linear-gradient(135deg, #ff00cc 0%, #333399 100%);
-}
-
-.banner-grad-galaxy,
-#profileVip #vipPreviewBanner.banner-grad-galaxy {
-  background: linear-gradient(135deg, #654ea3 0%, #eaafc8 100%);
-}
-
-.banner-grad-mint,
-#profileVip #vipPreviewBanner.banner-grad-mint {
-  background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-}
-
-/* ─── 15 CAPAS COM DEGRADÊS ANIMADOS PREMIUM ─── */
-.banner-anim-aurora,
-#profileVip #vipPreviewBanner.banner-anim-aurora {
-  background: linear-gradient(270deg, #0575e6, #00f260, #0575e6);
-  background-size: 400% 400%;
-  animation: bannerMoveEngine 6s ease infinite;
-}
-
-.banner-anim-neon,
-#profileVip #vipPreviewBanner.banner-anim-neon {
-  background: linear-gradient(270deg, #ff007f, #39ff14, #00f0ff, #ff007f);
-  background-size: 400% 400%;
-  animation: bannerMoveEngine 5s linear infinite;
-}
-
-.banner-anim-rainbow,
-#profileVip #vipPreviewBanner.banner-anim-rainbow {
-  background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet, red);
-  background-size: 400% 400%;
-  animation: bannerMoveEngine 8s linear infinite;
-}
-
-.banner-anim-magma,
-#profileVip #vipPreviewBanner.banner-anim-magma {
-  background: linear-gradient(270deg, #f12711, #f5af19, #f12711);
-  background-size: 400% 400%;
-  animation: bannerMoveEngine 4s ease infinite;
-}
-
-.banner-anim-matrix,
-#profileVip #vipPreviewBanner.banner-anim-matrix {
-  background: linear-gradient(180deg, #001100, #00ff00, #001100);
-  background-size: 100% 400%;
-  animation: bannerMoveEngine 3s linear infinite;
-}
-
-.banner-anim-electric,
-#profileVip #vipPreviewBanner.banner-anim-electric {
-  background: linear-gradient(270deg, #00ffff, #ffffff, #0072ff, #00ffff);
-  background-size: 400% 400%;
-  animation: bannerMoveEngine 2s linear infinite;
-}
-
-.banner-anim-gold-flow,
-#profileVip #vipPreviewBanner.banner-anim-gold-flow {
-  background: linear-gradient(270deg, #bf953f, #aa771c, #fcf6ba, #bf953f);
-  background-size: 400% 400%;
-  animation: bannerMoveEngine 5s ease-in-out infinite;
-}
-
-.banner-anim-glitch,
-#profileVip #vipPreviewBanner.banner-anim-glitch {
-  background: linear-gradient(270deg, #2b2b2b, #ff0000, #00ffff, #2b2b2b);
-  background-size: 400% 400%;
-  animation: bannerMoveEngine 1.5s steps(4) infinite;
-}
-
-.banner-anim-ice,
-#profileVip #vipPreviewBanner.banner-anim-ice {
-  background: linear-gradient(270deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa);
-  background-size: 400% 400%;
-  animation: bannerMoveEngine 6s ease infinite;
-}
-
-.banner-anim-vampire,
-#profileVip #vipPreviewBanner.banner-anim-vampire {
-  background: linear-gradient(270deg, #4a0000, #ff0000, #4a0000);
-  background-size: 400% 400%;
-  animation: bannerMoveEngine 4s ease-in-out infinite;
-}
-
-.banner-anim-candy,
-#profileVip #vipPreviewBanner.banner-anim-candy {
-  background: linear-gradient(270deg, #ff758c, #ff7eb3, #ff758c);
-  background-size: 400% 400%;
-  animation: bannerMoveEngine 5s linear infinite;
-}
-
-.banner-anim-toxic,
-#profileVip #vipPreviewBanner.banner-anim-toxic {
-  background: linear-gradient(270deg, #56ab2f, #a8ff78, #56ab2f);
-  background-size: 400% 400%;
-  animation: bannerMoveEngine 3s linear infinite;
-}
-
-.banner-anim-shadow,
-#profileVip #vipPreviewBanner.banner-anim-shadow {
-  background: linear-gradient(270deg, #000000, #434343, #000000);
-  background-size: 400% 400%;
-  animation: bannerMoveEngine 7s linear infinite;
-}
-
-.banner-anim-miami,
-#profileVip #vipPreviewBanner.banner-anim-miami {
-  background: linear-gradient(270deg, #00f2fe, #4facfe, #00f2fe);
-  background-size: 400% 400%;
-  animation: bannerMoveEngine 4s ease infinite;
-}
-
-.banner-anim-phoenix,
-#profileVip #vipPreviewBanner.banner-anim-phoenix {
-  background: linear-gradient(270deg, #f857a6, #ff5858, #f857a6);
-  background-size: 400% 400%;
-  animation: bannerMoveEngine 5s ease infinite;
-}
-
+/* Roxo Espacial */
+.banner-grad-purple,#profileVip #vipPreviewBanner.banner-grad-purple {background: linear-gradient(135deg, #1e0034 0%, #44006b 50%, #1e0034 100%);}
+/* Ouro com Glitter */
+.banner-grad-gold,#profileVip #vipPreviewBanner.banner-grad-gold {background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728);}
+/*Aurora Boreal Animada */
+.banner-anim-aurora,#profileVip #vipPreviewBanner.banner-anim-aurora {background: linear-gradient(270deg, #0575e6, #00f260, #0575e6);
+  background-size: 200% 200%;animation: auroraFlow 8s ease infinite;}
+.banner-grad-purple,#profileVip #vipPreviewBanner.banner-grad-purple {background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #1e1b4b 100%);}
+.banner-grad-gold,#profileVip #vipPreviewBanner.banner-grad-gold {background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 50%, #b38728 100%);}
+.banner-grad-sunset,#profileVip #vipPreviewBanner.banner-grad-sunset {background: linear-gradient(135deg, #ff512f 0%, #dd2476 100%);}
+.banner-grad-ocean,#profileVip #vipPreviewBanner.banner-grad-ocean {background: linear-gradient(135deg, #02aab0 0%, #00cdac 100%);}
+.banner-grad-emerald,#profileVip #vipPreviewBanner.banner-grad-emerald {background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);}
+.banner-grad-ruby,#profileVip #vipPreviewBanner.banner-grad-ruby {background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%);}
+.banner-grad-cyberpunk,#profileVip #vipPreviewBanner.banner-grad-cyberpunk {background: linear-gradient(135deg, #f12711 0%, #f5af19 100%);}
+.banner-grad-cotton,#profileVip #vipPreviewBanner.banner-grad-cotton {background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);}
+.banner-grad-lavender,#profileVip #vipPreviewBanner.banner-grad-lavender {background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);}
+.banner-grad-fire,#profileVip #vipPreviewBanner.banner-grad-fire {  background: linear-gradient(135deg, #ff0000 0%, #ff7300 50%, #ffcc00 100%);}
+.banner-grad-platinum,#profileVip #vipPreviewBanner.banner-grad-platinum {background: linear-gradient(135deg, #757f9a 0%, #d7dde8 100%);}
+.banner-grad-vintage,#profileVip #vipPreviewBanner.banner-grad-vintage {background: linear-gradient(135deg, #ca7345 0%, #735135 100%);}
+.banner-grad-bubblegum,#profileVip #vipPreviewBanner.banner-grad-bubblegum {background: linear-gradient(135deg, #ff00cc 0%, #333399 100%);}
+.banner-grad-galaxy,#profileVip #vipPreviewBanner.banner-grad-galaxy {background: linear-gradient(135deg, #654ea3 0%, #eaafc8 100%);}
+.banner-grad-mint,#profileVip #vipPreviewBanner.banner-grad-mint {background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);}
+.banner-anim-aurora,#profileVip #vipPreviewBanner.banner-anim-aurora {background: linear-gradient(270deg, #0575e6, #00f260, #0575e6);
+background-size: 400% 400%;animation: bannerMoveEngine 6s ease infinite;}
+.banner-anim-neon,#profileVip #vipPreviewBanner.banner-anim-neon {background: linear-gradient(270deg, #ff007f, #39ff14, #00f0ff, #ff007f);
+background-size: 400% 400%;animation: bannerMoveEngine 5s linear infinite;}
+.banner-anim-rainbow,#profileVip #vipPreviewBanner.banner-anim-rainbow {background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet, red);
+background-size: 400% 400%;animation: bannerMoveEngine 8s linear infinite;}
+.banner-anim-magma,#profileVip #vipPreviewBanner.banner-anim-magma {background: linear-gradient(270deg, #f12711, #f5af19, #f12711);
+background-size: 400% 400%;animation: bannerMoveEngine 4s ease infinite;}
+.banner-anim-matrix,#profileVip #vipPreviewBanner.banner-anim-matrix {background: linear-gradient(180deg, #001100, #00ff00, #001100);
+background-size: 100% 400%;animation: bannerMoveEngine 3s linear infinite;}
+.banner-anim-electric,#profileVip #vipPreviewBanner.banner-anim-electric {background: linear-gradient(270deg, #00ffff, #ffffff, #0072ff, #00ffff);background-size: 400% 400%;
+  animation: bannerMoveEngine 2s linear infinite;}
+.banner-anim-gold-flow,#profileVip #vipPreviewBanner.banner-anim-gold-flow {background: linear-gradient(270deg, #bf953f, #aa771c, #fcf6ba, #bf953f);
+background-size: 400% 400%;animation: bannerMoveEngine 5s ease-in-out infinite;}
+.banner-anim-glitch,#profileVip #vipPreviewBanner.banner-anim-glitch {background: linear-gradient(270deg, #2b2b2b, #ff0000, #00ffff, #2b2b2b);
+background-size: 400% 400%;animation: bannerMoveEngine 1.5s steps(4) infinite;}
+.banner-anim-ice,#profileVip #vipPreviewBanner.banner-anim-ice {background: linear-gradient(270deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa);
+background-size: 400% 400%;animation: bannerMoveEngine 6s ease infinite;}
+.banner-anim-vampire,#profileVip #vipPreviewBanner.banner-anim-vampire {background: linear-gradient(270deg, #4a0000, #ff0000, #4a0000);
+background-size: 400% 400%;animation: bannerMoveEngine 4s ease-in-out infinite;}
+.banner-anim-candy,#profileVip #vipPreviewBanner.banner-anim-candy {background: linear-gradient(270deg, #ff758c, #ff7eb3, #ff758c);
+background-size: 400% 400%;animation: bannerMoveEngine 5s linear infinite;}
+.banner-anim-toxic,#profileVip #vipPreviewBanner.banner-anim-toxic {background: linear-gradient(270deg, #56ab2f, #a8ff78, #56ab2f);
+background-size: 400% 400%;animation: bannerMoveEngine 3s linear infinite;}
+.banner-anim-shadow,#profileVip #vipPreviewBanner.banner-anim-shadow {background: linear-gradient(270deg, #000000, #434343, #000000);background-size: 400% 400%;
+  animation: bannerMoveEngine 7s linear infinite;}
+.banner-anim-miami,#profileVip #vipPreviewBanner.banner-anim-miami {background: linear-gradient(270deg, #00f2fe, #4facfe, #00f2fe);
+background-size: 400% 400%;animation: bannerMoveEngine 4s ease infinite;}
+.banner-anim-phoenix,#profileVip #vipPreviewBanner.banner-anim-phoenix {background: linear-gradient(270deg, #f857a6, #ff5858, #f857a6);
+  background-size: 400% 400%;animation: bannerMoveEngine 5s ease infinite;}
 
 /* ========================================================================= 
    DEGRADES PARA O NOME DO TOPO (#profileName)
@@ -6701,291 +6321,96 @@ background-size: 300% 100%;animation: nameFlowAnim 3s linear infinite;filter: dr
 #profileName.nick-anim-aurora {background-image: linear-gradient(90deg, #0575e6, #00f260, #0575e6);
 background-size: 200% 100%;animation: nameFlowAnim 5s ease infinite;
 filter: drop-shadow(0px 0px 3px rgba(0, 242, 96, 0.5));}
-#profileName.nick-anim-magma {background-image: linear-gradient(90deg, #f12711, #f5af19, #f12711);
-background-size: 200% 100%;animation: nameFlowAnim 2.5s ease infinite;
+#profileName.nick-anim-magma {background-image: linear-gradient(90deg, #f12711, #f5af19, #f12711);background-size: 200% 100%;animation: nameFlowAnim 2.5s ease infinite;
 filter: drop-shadow(0px 0px 3px rgba(241, 39, 17, 0.7));}
-#profileName.nick-anim-matrix {background-image: linear-gradient(90deg, #00FF00, #003300, #00FF00);
-background-size: 200% 100%;animation: nameFlowAnim 4s linear infinite;
+#profileName.nick-anim-matrix {background-image: linear-gradient(90deg, #00FF00, #003300, #00FF00);background-size: 200% 100%;animation: nameFlowAnim 4s linear infinite;
 -webkit-text-stroke: 0.5px #003300;}
-
-#profileName.nick-anim-electric {
-  background-image: linear-gradient(90deg, #00ffff, #ffffff, #0072ff, #00ffff);
-  background-size: 300% 100%;
-  animation: nameFlowAnim 1.5s linear infinite;
-  filter: drop-shadow(0px 0px 4px rgba(0, 240, 255, 0.8));
-}
-
-#profileName.nick-anim-gold-flow {
-  background-image: linear-gradient(90deg, #bf953f, #aa771c, #fcf6ba, #bf953f);
-  background-size: 300% 100%;
-  animation: nameFlowAnim 3s linear infinite;
-  font-weight: bold;
-  -webkit-text-stroke: 0.3px #543d0c;
-}
-
-
-
-#profileName.nick-anim-ice {
-  background-image: linear-gradient(90deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa);
-  background-size: 300% 100%;
-  animation: nameFlowAnim 4s ease infinite;
-  filter: drop-shadow(0px 0px 3px rgba(128, 222, 234, 0.6));
-}
-
-#profileName.nick-anim-vampire {
-  background-image: linear-gradient(90deg, #4a0000, #ff0000, #4a0000);
-  background-size: 200% 100%;
-  animation: nameFlowAnim 3s ease-in-out infinite;
-  -webkit-text-stroke: 0.5px #110000;
-}
-
-#profileName.nick-anim-candy {
-  background-image: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c);
-  background-size: 200% 100%;
-  animation: nameFlowAnim 3s linear infinite;
-  filter: drop-shadow(0px 0px 3px rgba(255, 126, 179, 0.6));
-}
-
-#profileName.nick-anim-toxic {
-  background-image: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f);
-  background-size: 200% 100%;
-  animation: nameFlowAnim 2s linear infinite;
-  filter: drop-shadow(0px 0px 4px rgba(168, 255, 120, 0.7));
-}
-
-#profileName.nick-anim-shadow {
-  background-image: linear-gradient(90deg, #000000, #434343, #000000);
-  background-size: 200% 100%;
-  animation: nameFlowAnim 5s linear infinite;
-  -webkit-text-stroke: 0.5px #ffffff;
-}
-
-#profileName.nick-anim-miami {
-  background-image: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe);
-  background-size: 200% 100%;
-  animation: nameFlowAnim 3s ease-in-out infinite;
-  filter: drop-shadow(0px 0px 3px rgba(0, 242, 254, 0.6));
-}
-
-#profileName.nick-anim-phoenix {
-  background-image: linear-gradient(90deg, #f857a6, #ff5858, #f857a6);
-  background-size: 200% 100%;
-  animation: nameFlowAnim 2.5s ease infinite;
-  filter: drop-shadow(0px 0px 4px rgba(255, 88, 88, 0.6));
-}
-
-
-
-
-
+#profileName.nick-anim-electric {background-image: linear-gradient(90deg, #00ffff, #ffffff, #0072ff, #00ffff);background-size: 300% 100%;
+  animation: nameFlowAnim 1.5s linear infinite;filter: drop-shadow(0px 0px 4px rgba(0, 240, 255, 0.8));}
+#profileName.nick-anim-gold-flow {background-image: linear-gradient(90deg, #bf953f, #aa771c, #fcf6ba, #bf953f);background-size: 300% 100%;
+animation: nameFlowAnim 3s linear infinite;font-weight: bold;-webkit-text-stroke: 0.3px #543d0c;}
+#profileName.nick-anim-ice {background-image: linear-gradient(90deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa);background-size: 300% 100%;
+  animation: nameFlowAnim 4s ease infinite;filter: drop-shadow(0px 0px 3px rgba(128, 222, 234, 0.6));}
+#profileName.nick-anim-vampire {background-image: linear-gradient(90deg, #4a0000, #ff0000, #4a0000);background-size: 200% 100%;
+  animation: nameFlowAnim 3s ease-in-out infinite;-webkit-text-stroke: 0.5px #110000;}
+#profileName.nick-anim-candy {background-image: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c);background-size: 200% 100%;
+animation: nameFlowAnim 3s linear infinite;filter: drop-shadow(0px 0px 3px rgba(255, 126, 179, 0.6));}
+#profileName.nick-anim-toxic {background-image: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f);background-size: 200% 100%;
+animation: nameFlowAnim 2s linear infinite;filter: drop-shadow(0px 0px 4px rgba(168, 255, 120, 0.7));}
+#profileName.nick-anim-shadow {background-image: linear-gradient(90deg, #000000, #434343, #000000);background-size: 200% 100%;
+animation: nameFlowAnim 5s linear infinite;-webkit-text-stroke: 0.5px #ffffff;}
+#profileName.nick-anim-miami {background-image: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe);background-size: 200% 100%; 
+   animation: nameFlowAnim 3s ease-in-out infinite;filter: drop-shadow(0px 0px 3px rgba(0, 242, 254, 0.6));}
+#profileName.nick-anim-phoenix {background-image: linear-gradient(90deg, #f857a6, #ff5858, #f857a6);background-size: 200% 100%;
+animation: nameFlowAnim 2.5s ease infinite;filter: drop-shadow(0px 0px 4px rgba(255, 88, 88, 0.6));}
 /* MOTOR DE RENDERIZAÇÃO E MOVIMENTO DOS DEGRADÊS ANIMADOS VIP */
 @keyframes bannerMoveEngine {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-
-
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}}
 @keyframes rainbowSpin {
-  0% {
-    filter: hue-rotate(0deg);
-  }
+  0% {filter: hue-rotate(0deg);}
+  100% {filter: hue-rotate(360deg);}}
 
-  100% {
-    filter: hue-rotate(360deg);
-  }
-}
+#profileVip .frame-diamond {border: 3px solid #00f0ff;box-shadow: 0 0 10px rgba(0, 240, 255, 0.5), inset 0 0 5px rgba(0, 240, 255, 0.3);
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px);background-size: 8px 8px;}
 
-#profileVip .frame-diamond {
-  border: 3px solid #00f0ff;
-  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5), inset 0 0 5px rgba(0, 240, 255, 0.3);
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px);
-  background-size: 8px 8px;
-}
+
 /* ======================================================================== 
    PROJETO VIP PREMIUM - 4 MOLDURAS EXCLUSIVAS COM EFEITOS FÍSICOS TÁTEIS
    EFEITOS VIP: TRANSFORMANDO A PRÓPRIA BORDA DO AVATAR EM NEON GLOW
    ========================================================================= */
 /* 1. FOGO INCANDESCENTE (BRASAS DE PLASMA) */
-.profile-avatar.frame-plasma-fire,
-#vipTopPreviewFrame.frame-plasma-fire {
-  border: 3px solid #ff4500;
-  box-shadow: 
-    0 0 8px 2px #ff4500,
-    0 0 18px 5px #ff7300,
-    0 0 28px 6px rgba(255, 69, 0, 0.85);
-}
-
+.profile-avatar.frame-plasma-fire,#vipTopPreviewFrame.frame-plasma-fire {border: 3px solid #ff4500;box-shadow:
+   0 0 8px 2px #ff4500,0 0 18px 5px #ff7300,0 0 28px 6px rgba(255, 69, 0, 0.85);}
 /* 2. NEON FIBRA ÓPTICA (LUZ INFINITA) */
-.profile-avatar.frame-fiber-neon,
-#vipTopPreviewFrame.frame-fiber-neon {
-  border: 3px solid #00f0ff;
-  box-shadow: 
-    0 0 8px 2px #00f0ff,
-    0 0 18px 5px #0072ff,
-    0 0 30px 6px rgba(0, 240, 255, 0.85);
-}
-
+.profile-avatar.frame-fiber-neon,#vipTopPreviewFrame.frame-fiber-neon {border: 3px solid #00f0ff;box-shadow: 
+0 0 8px 2px #00f0ff,0 0 18px 5px #0072ff,0 0 30px 6px rgba(0, 240, 255, 0.85);}
 /* 3. AURA PULSANTE (LUZ VITAL) */
-.profile-avatar.frame-aura-pulse,
-#vipTopPreviewFrame.frame-aura-pulse {
-  border: 1px solid #ffd700;
-  box-shadow: 
-    0 0 8px 2px #ffd700,
-    0 0 20px 5px #ffae00,
-    0 0 32px 6px rgba(255, 215, 0, 0.85);
-}
-
+.profile-avatar.frame-aura-pulse,#vipTopPreviewFrame.frame-aura-pulse {border: 1px solid #ffd700;box-shadow: 
+0 0 8px 2px #ffd700,0 0 20px 5px #ffae00,0 0 32px 6px rgba(255, 215, 0, 0.85);}
 /* 4. FAÍSCAS ELÉTRICAS (ALTA VOLTAGEM) */
-.profile-avatar.frame-electric-spark,
-#vipTopPreviewFrame.frame-electric-spark {
-  border: 3px solid #b026ff;
-  box-shadow: 
-    0 0 8px 2px #b026ff,
-    0 0 18px 5px #7000ff,
-    0 0 10px 4px rgba(176, 38, 255, 0.9);
-}
+.profile-avatar.frame-electric-spark,#vipTopPreviewFrame.frame-electric-spark {border: 3px solid #b026ff;box-shadow: 
+0 0 8px 2px #b026ff,0 0 18px 5px #7000ff,0 0 10px 4px rgba(176, 38, 255, 0.9);}
 /* 5. VERDE VENENO (TÓXICO RADIOATIVO) */
-.profile-avatar.frame-toxic-green,
-#vipTopPreviewFrame.frame-toxic-green {
-  border: 3px solid #10b981;
-  box-shadow: 
-    0 0 8px 2px #10b981,
-    0 0 18px 5px #059669,
-    0 0 30px 10px rgba(16, 185, 129, 0.85);
-}
-
+.profile-avatar.frame-toxic-green,#vipTopPreviewFrame.frame-toxic-green {border: 3px solid #10b981;box-shadow: 
+0 0 8px 2px #10b981,0 0 18px 5px #059669,0 0 30px 10px rgba(16, 185, 129, 0.85);}
 /* 6. VERMELHO RUBI (SANGUE DE VAMPIRO) */
-.profile-avatar.frame-ruby-red,
-#vipTopPreviewFrame.frame-ruby-red {
-  border: 3px solid #dc2626;
-  box-shadow: 
-    0 0 8px 2px #dc2626,
-    0 0 18px 5px #991b1b,
-    0 0 30px 10px rgba(220, 38, 38, 0.85);
-}
-
+.profile-avatar.frame-ruby-red,#vipTopPreviewFrame.frame-ruby-red {border: 3px solid #dc2626;box-shadow: 
+0 0 8px 2px #dc2626,0 0 18px 5px #991b1b,0 0 30px 10px rgba(220, 38, 38, 0.85);}
 /* 7. AZUL COBALTO (TEMPESTADE MAGNÉTICA) */
-.profile-avatar.frame-cobalt-blue,
-#vipTopPreviewFrame.frame-cobalt-blue {
-  border: 3px solid #1d4ed8;
-  box-shadow: 
-    0 0 8px 2px #1d4ed8,
-    0 0 18px 5px #1e40af,
-    0 0 30px 10px rgba(29, 78, 216, 0.85);
-}
-
+.profile-avatar.frame-cobalt-blue,#vipTopPreviewFrame.frame-cobalt-blue {border: 3px solid #1d4ed8;box-shadow: 
+0 0 8px 2px #1d4ed8,0 0 18px 5px #1e40af, 0 0 30px 10px rgba(29, 78, 216, 0.85);}
 /* 8. ROSA CHOQUE (CYBERPUNK MAGENTA) */
-.profile-avatar.frame-magenta-shock,
-#vipTopPreviewFrame.frame-magenta-shock {
-  border: 3px solid #db2777;
-  box-shadow: 
-    0 0 8px 2px #db2777,
-    0 0 18px 5px #be185d,
-    0 0 30px 10px rgba(219, 39, 119, 0.85);
-}
-
+.profile-avatar.frame-magenta-shock,#vipTopPreviewFrame.frame-magenta-shock {border: 3px solid #db2777;box-shadow: 
+0 0 8px 2px #db2777,0 0 18px 5px #be185d,0 0 30px 10px rgba(219, 39, 119, 0.85);}
 /* 9. LARANJA INFERNO (MAGMA VULCÂNICO) */
-.profile-avatar.frame-inferno-orange,
-#vipTopPreviewFrame.frame-inferno-orange {
-  border: 3px solid #ea580c;
-  box-shadow: 
-    0 0 8px 2px #ea580c,
-    0 0 18px 5px #c2410c,
-    0 0 30px 10px rgba(234, 88, 12, 0.85);
-}
-
+.profile-avatar.frame-inferno-orange,#vipTopPreviewFrame.frame-inferno-orange {border: 3px solid #ea580c;box-shadow: 
+0 0 8px 2px #ea580c,0 0 18px 5px #c2410c,0 0 30px 10px rgba(234, 88, 12, 0.85);}
 /* 10. TURQUESA FECHADO (OCEANO PROFUNDO) */
-.profile-avatar.frame-deep-teal,
-#vipTopPreviewFrame.frame-deep-teal {
-  border: 3px solid #0d9488;
-  box-shadow: 
-    0 0 8px 2px #0d9488,
-    0 0 18px 5px #0f766e,
-    0 0 30px 10px rgba(13, 148, 136, 0.85);
-}
-
+.profile-avatar.frame-deep-teal,#vipTopPreviewFrame.frame-deep-teal {border: 3px solid #0d9488;box-shadow: 
+0 0 8px 2px #0d9488,0 0 18px 5px #0f766e,0 0 30px 10px rgba(13, 148, 136, 0.85);}
 /* 11. ROXO IMPERIAL (REINO SOMBRIO) */
-.profile-avatar.frame-royal-purple,
-#vipTopPreviewFrame.frame-royal-purple {
-  border: 3px solid #7e22ce;
-  box-shadow: 
-    0 0 8px 2px #7e22ce,
-    0 0 18px 5px #6b21a8,
-    0 0 30px 10px rgba(126, 34, 206, 0.85);
-}
-
+.profile-avatar.frame-royal-purple,#vipTopPreviewFrame.frame-royal-purple {border: 3px solid #7e22ce;box-shadow: 
+0 0 8px 2px #7e22ce,0 0 18px 5px #6b21a8,0 0 30px 10px rgba(126, 34, 206, 0.85);}
 /* 12. VERDE LIMA (MICROCHIP VITAL) */
-.profile-avatar.frame-lime-charge,
-#vipTopPreviewFrame.frame-lime-charge {
-  border: 3px solid #65a30d;
-  box-shadow: 
-    0 0 8px 2px #65a30d,
-    0 0 18px 5px #4d7c0f,
-    0 0 30px 10px rgba(101, 163, 13, 0.85);
-}
-
+.profile-avatar.frame-lime-charge,#vipTopPreviewFrame.frame-lime-charge {border: 3px solid #65a30d;box-shadow: 
+  0 0 8px 2px #65a30d,0 0 18px 5px #4d7c0f,0 0 30px 10px rgba(101, 163, 13, 0.85);}
 /* 13. VINHO NOBRE (SANGUE DE RUBI) */
-.profile-avatar.frame-noble-wine,
-#vipTopPreviewFrame.frame-noble-wine {
-  border: 3px solid #9f1239;
-  box-shadow: 
-    0 0 8px 2px #9f1239,
-    0 0 18px 5px #881337,
-    0 0 30px 10px rgba(159, 18, 57, 0.85);
-}
-
+.profile-avatar.frame-noble-wine,#vipTopPreviewFrame.frame-noble-wine {border: 3px solid #9f1239;box-shadow: 
+0 0 8px 2px #9f1239,0 0 18px 5px #881337,0 0 30px 10px rgba(159, 18, 57, 0.85);}
 /* 14. ÂMBAR DOURADO (OURO NEGRO) */
-.profile-avatar.frame-amber-gold,
-#vipTopPreviewFrame.frame-amber-gold {
-  border: 3px solid #d97706;
-  box-shadow: 
-    0 0 8px 2px #d97706,
-    0 0 18px 5px #b45309,
-    0 0 30px 10px rgba(217, 119, 6, 0.85);
-}
-
-
-
+.profile-avatar.frame-amber-gold,#vipTopPreviewFrame.frame-amber-gold {border: 3px solid #d97706;box-shadow: 
+0 0 8px 2px #d97706,0 0 18px 5px #b45309,0 0 30px 10px rgba(217, 119, 6, 0.85);}
 /* 16. AZUL SAFIRA (CRISTAL CONGELADO) */
-.profile-avatar.frame-sapphire-blue,
-#vipTopPreviewFrame.frame-sapphire-blue {
-  border: 3px solid #0284c7;
-  box-shadow: 
-    0 0 8px 2px #0284c7,
-    0 0 18px 5px #0369a1,
-    0 0 30px 10px rgba(2, 132, 199, 0.85);
-}
-
+.profile-avatar.frame-sapphire-blue,#vipTopPreviewFrame.frame-sapphire-blue {border: 3px solid #0284c7;box-shadow: 
+0 0 8px 2px #0284c7,0 0 18px 5px #0369a1,0 0 30px 10px rgba(2, 132, 199, 0.85);}
 /* 17. CORAL VIVO (ENERGIA SOLAR) */
-.profile-avatar.frame-vibrant-coral,
-#vipTopPreviewFrame.frame-vibrant-coral {
-  border: 3px solid #f43f5e;
-  box-shadow: 
-    0 0 8px 2px #f43f5e,
-    0 0 18px 5px #e11d48,
-    0 0 30px 10px rgba(244, 63, 94, 0.85);
-}
-
+.profile-avatar.frame-vibrant-coral,#vipTopPreviewFrame.frame-vibrant-coral {border: 3px solid #f43f5e;box-shadow: 
+0 0 8px 2px #f43f5e,0 0 18px 5px #e11d48,0 0 30px 10px rgba(244, 63, 94, 0.85);}
 /* 18. ESMRALDA ESCURA (FLORESTA ENCANTADA) */
-.profile-avatar.frame-dark-emerald,
-#vipTopPreviewFrame.frame-dark-emerald {
-  border: 3px solid #047857;
-  box-shadow: 
-    0 0 8px 2px #047857,
-    0 0 18px 5px #065f46,
-    0 0 30px 10px rgba(4, 120, 87, 0.85);
-}
-
+.profile-avatar.frame-dark-emerald,#vipTopPreviewFrame.frame-dark-emerald {border: 3px solid #047857;box-shadow: 
+0 0 8px 2px #047857,0 0 18px 5px #065f46,0 0 30px 10px rgba(4, 120, 87, 0.85);}
 /* 19. ÍNDIGO NOITE (ECLIPSE LUNAR) */
 .profile-avatar.frame-indigo-night,
 #vipTopPreviewFrame.frame-indigo-night {
@@ -7164,60 +6589,6 @@ background-size: 200% 100%;animation: nameFlowAnim 4s linear infinite;
     0 0 18px 5px #ca8a04,
     0 0 30px 10px rgba(234, 179, 8, 0.85);
 }
-
-/* ==========================NAO APAGAR MOLDURAS ============================================== 
-   PROJETO VIP PREMIUM - 4 CONTORNOS DE LUZ E ENERGIA EM TORNO DO AVATAR MOLDURAS
-   ========================================================================= 
-
-/* 1. FOGO INCANDESCENTE (BRASAS DE PLASMA) 
-#profileVip .frame-plasma-fire {
-  border: 2px solid #ff4500;
-  box-shadow:
-    0 0 10px #ff4500,
-    0 -4px 12px rgba(255, 69, 0, 0.65);
-
-}
-
-/* 2. NEON FIBRA ÓPTICA (LUZ INFINITA) 
-#profileVip .frame-fiber-neon {
-  border: 2px solid #00f0ff;
-  box-shadow:
-    0 0 12px #00f0ff,
-    inset 0 0 4px #00f0ff;
-}
-
-/* 3. AURA PULSANTE (LUZ VITAL SEGURO MOBILE) 
-#profileVip .frame-aura-pulse {
-  border: 2px solid #ffd700;
-  box-shadow: 0 0 8px #ffd700;
-  animation: auraPulseEngine 2s infinite ease-in-out;
-}
-
-@keyframes auraPulseEngine {
-
-  0%,
-  100% {
-    box-shadow: 0 0 6px rgba(255, 215, 0, 0.4);
-    border-color: rgba(255, 215, 0, 0.7);
-  }
-
-  50% {
-    box-shadow: 0 0 16px rgba(255, 215, 0, 0.9);
-    border-color: rgba(255, 215, 0, 1);
-  }
-}
-
-/* 4. FAÍSCAS ELÉTRICAS (ALTA VOLTAGEM) 
-#profileVip .frame-electric-spark {
-  border: 2px solid #7000ff;
-  box-shadow:
-    0 0 8px #7000ff,
-    0 0 14px rgba(112, 0, 255, 0.5);
-}
-
-*/
-
-
 /* ========================================================================= 
    DROPDOWNS E LISTAS INTERNAS MODERNAS DA SEÇÃO VIP
    ========================================================================= */

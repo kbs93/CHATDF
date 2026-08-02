@@ -1586,12 +1586,46 @@ function restaurarVisualPadraoPerfil() {
     profilePanel.style.background = "";
   }
 
-  // 5. Reseta a opção do select do Tema de volta para o "Padrão do Sistema"
+  // 5. Reseta os selects nativos ocultos para os valores padrão do sistema
+  const typeSelect = document.getElementById("vipNameColorType");
+  const fontSelect = document.getElementById("vipNameFont");
+  const frameSelect = document.getElementById("vipAvatarFrameSelect");
   const bannerSelect = document.getElementById("vipProfileBannerSelect");
-  const btnBannerSelect = document.getElementById("btnVipProfileBannerSelect");
+
+  if (typeSelect) typeSelect.value = "solid";
+  if (fontSelect) fontSelect.value = "default";
+  if (frameSelect) frameSelect.value = "none";
   if (bannerSelect) bannerSelect.value = "default";
-  if (btnBannerSelect) btnBannerSelect.textContent = "Padrão do Sistema";
+
+  // 6. Reseta o texto dos botões visíveis dos dropdowns personalizados
+  const btnType = document.getElementById("btnVipNameColorType");
+  const btnFont = document.getElementById("btnVipNameFont");
+  const btnFrame = document.getElementById("btnVipAvatarFrameSelect");
+  const btnBanner = document.getElementById("btnVipProfileBannerSelect");
+
+  if (btnType) btnType.textContent = "Cor Sólida Comum";
+  if (btnFont) btnFont.textContent = "Padrão do Chat";
+  if (btnFrame) btnFrame.textContent = "Nenhuma Moldura";
+  if (btnBanner) btnBanner.textContent = "Padrão do Sistema";
+
+  // 7. Limpa a marcação ativa (classe "active") das opções dentro dos dropdowns personalizados
+  document.querySelectorAll('.vip-custom-dropdown').forEach(dropdown => {
+    dropdown.querySelectorAll('.vip-dropdown-option').forEach(option => {
+      option.classList.remove('active');
+      const val = option.getAttribute('data-value');
+      if (val === "solid" || val === "default" || val === "none") {
+        option.classList.add('active');
+      }
+    });
+    dropdown.classList.add('hidden'); // Garante que a lista feche ao alternar de aba
+  });
+
+  // 8. Reseta as variáveis globais temporárias de cores VIP
+  window.__vipNOME_COR_SELECIONADA = "#6f42c1";
+  window.__vipMENSAGEM_COR_SELECIONADA = "#333333";
 }
+
+
 
 
 /* ================================================================================
