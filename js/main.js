@@ -1871,12 +1871,18 @@ if (valorEfeito !== "solid") {
     }
 
     // Estilo de Fonte
-    if (fontSelect && fontSelect.value !== "default") {
-      let herancaTipo = "sans-serif";
-      if (["Courgette", "Lobster", "Bangers", "Pacifico", "Satisfy"].includes(fontSelect.value)) {
-        herancaTipo = "cursive";
+// Estilo de Fonte
+    if (fontSelect) {
+      if (fontSelect.value !== "default") {
+        let herancaTipo = "sans-serif";
+        if (["Courgette", "Lobster", "Bangers", "Pacifico", "Satisfy"].includes(fontSelect.value)) {
+          herancaTipo = "cursive";
+        }
+        topName.style.fontFamily = `'${fontSelect.value}', ${herancaTipo}`;
+      } else {
+        // Limpa a fonte personalizada e restaura o padrão do sistema/chat
+        topName.style.fontFamily = "";
       }
-      topName.style.fontFamily = `'${fontSelect.value}', ${herancaTipo}`;
     }
 
     if (topText) {
