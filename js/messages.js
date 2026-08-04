@@ -128,6 +128,7 @@ function setChatLoading(isLoading) {
 
 
 // 10-06-26 EDITA o botao de denuncia dentro do reply 
+// EDITA o botão do reply: Lixeira para mensagem própria / Bandeira para mensagem de terceiros
 function bindMessageReplyClick(div, msgId, msg) {
   div.addEventListener("click", (event) => {
     if (
@@ -137,18 +138,15 @@ function bindMessageReplyClick(div, msgId, msg) {
       event.target.closest(".youtube-reply-thumb")
     ) return;
 
-// 21-06-26 Verifica se a mensagem clicada é uma animação Lottie (.json) JSON LOTTIE ANIMAÇÃO EMOJI
-if (!window.replyingTo) {
-      // 21-06-26 Verifica se a mensagem clicada é uma animação Lottie (.json)
+    if (!window.replyingTo) {
       const ehLottie = typeof msg.text === "string" && msg.text.trim().endsWith(".json");
-      // Cria um ID único temporário para o motor do Lottie usar dentro do Preview
       const idLottiePreview = "lottie-preview-" + Math.random().toString(36).substring(2, 11);
-      // Se for Lottie, passa uma div vazia com o ID único para a função de UI desenhar
       const textoPassado = ehLottie 
         ? `<div id="${idLottiePreview}" style="width: 32px; height: 32px; display: inline-block; vertical-align: middle;"></div>` 
         : msg.text;
+      
       showReplyPreview(msgId, textoPassado, msg.user, msg.photo || msg.avatar);
-      // Se for Lottie, inicia o player animado dentro do balão de preview agora que ele abriu no DOM
+
       if (ehLottie) {
         requestAnimationFrame(() => {
           if (typeof window.renderizarEmojiLottie === "function") {
@@ -162,61 +160,96 @@ if (!window.replyingTo) {
         const antigoBtn = preview.querySelector(".reply-report-action");
         if (antigoBtn) antigoBtn.remove();
 
-        const reportBtn = document.createElement("span");
-        reportBtn.className = "reply-report-action";
-        reportBtn.setAttribute("title", "Denunciar mensagem");
-        reportBtn.innerHTML = `<i class="bi bi-flag-fill"></i>`;
+        // Identifica se a mensagem pertence ao usuário atualmente logado
+        const isMinhaMensagem = currentUser && (currentUser.uid === msg.uid);
 
-        reportBtn.addEventListener("click", async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
+        const actionBtn = document.createElement("span");
+        actionBtn.className = "reply-report-action";
 
-          if (reportBtn.classList.contains("reported")) return;
+        if (isMinhaMensagem) {
+          // ICONE DE LIXEIRA PARA MENSAGEM PRÓPRIA
+          actionBtn.setAttribute("title", "Excluir mensagem");
+          actionBtn.innerHTML = `<i class="bi bi-trash" style="color: #000000; font-size:20px;"></i>`;
 
-          try {
-            const { doc, updateDoc, arrayUnion, increment, getDoc } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
-            const { auth } = await import("./firebase-config.js");
+          actionBtn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-            const user = auth.currentUser;
-            if (!user) {
-              showToast("Faça login para denunciar.");
-              return;
+            try {
+              const { doc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
+              const msgDocRef = doc(db, "salas", window.salaAtual, "messages", msgId);
+
+              await deleteDoc(msgDocRef);
+
+              // Fecha a caixa de reply
+              preview.style.display = "none";
+              preview.innerHTML = "";
+              window.replyingTo = null;
+
+              showToast("mensagem excluída ");
+            } catch (err) {
+              console.error("Erro ao excluir mensagem:", err);
+              showToast("Erro ao excluir mensagem.");
             }
+          });
 
-            const msgDocRef = doc(db, "salas", window.salaAtual, "messages", msgId);
-            const snapshot = await getDoc(msgDocRef);
-            
-            if (snapshot.exists()) {
-              const data = snapshot.data();
-              const denunciantes = data.denunciadoPor || [];
+        } else {
+          // ICONE DE BANDEIRA PARA MENSAGENS DE OUTROS USUÁRIOS
+          actionBtn.setAttribute("title", "Denunciar mensagem");
+          actionBtn.innerHTML = `<i class="bi bi-flag-fill"><span style="color: #00000063; font-size:0.82rem;">Denunciar mensagem</span></i>`;
 
-              if (denunciantes.includes(user.uid)) {
-                showToast("Você já denunciou esta mensagem.");
-                reportBtn.classList.add("reported");
+          actionBtn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (actionBtn.classList.contains("reported")) return;
+
+            try {
+              const { doc, updateDoc, arrayUnion, increment, getDoc } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
+              const { auth } = await import("./firebase-config.js");
+
+              const user = auth.currentUser;
+              if (!user) {
+                showToast("Faça login para denunciar.");
                 return;
               }
+
+              const msgDocRef = doc(db, "salas", window.salaAtual, "messages", msgId);
+              const snapshot = await getDoc(msgDocRef);
+              
+              if (snapshot.exists()) {
+                const data = snapshot.data();
+                const denunciantes = data.denunciadoPor || [];
+
+                if (denunciantes.includes(user.uid)) {
+                  showToast("Você já denunciou esta mensagem.");
+                  actionBtn.classList.add("reported");
+                  return;
+                }
+              }
+
+              await updateDoc(msgDocRef, {
+                denunciasContador: increment(1),
+                denunciadoPor: arrayUnion(user.uid)
+              });
+
+              actionBtn.classList.add("reported");
+              actionBtn.innerHTML = `<i class="bi bi-pin-angle-fill"></i>`; 
+              showToast("Mensagem denunciada.");
+
+            } catch (err) {
+              console.error("Erro ao registrar denúncia:", err);
+              showToast("Erro ao processar denúncia.");
             }
+          });
+        }
 
-            await updateDoc(msgDocRef, {
-              denunciasContador: increment(1),
-              denunciadoPor: arrayUnion(user.uid)
-            });
-
-            reportBtn.classList.add("reported");
-            reportBtn.innerHTML = `<i class="bi bi-pin-angle-fill"></i>`; 
-            showToast("Mensagem denunciada.");
-
-          } catch (err) {
-            console.error("Erro ao registrar denúncia:", err);
-            showToast("Erro ao processar denúncia.");
-          }
-        });
-
-        preview.appendChild(reportBtn);
+        preview.appendChild(actionBtn);
       }
     }
   });
 }
+
 
 
 
@@ -573,7 +606,9 @@ ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0
 }
 
 // 10-06-26 edita o Botao de denuncia dentro do reply Se a mensagem atingir 4 ou mais denuncias, oculta o conteúdo cirurgicamente no DOM
-function renderPlainMessage(msg) {
+
+
+/*function renderPlainMessage(msg) {
   if (msg.denunciasContador && msg.denunciasContador >= 3) {
     return `<span class="msg-hidden">[Mensagem removida pelos usuarios..]</span>`;
   }
@@ -586,7 +621,22 @@ function renderPlainMessage(msg) {
       <button class="toggle-expand">Ler mais</button>`;
   }
   return `<span style="white-space:pre-wrap;color:${color};">${highlighted}</span>`;
+}*/
+function renderPlainMessage(msg) {
+  if (msg.denunciasContador && msg.denunciasContador >= 3) {
+    return `<span class="msg-hidden">[Mensagem removida pelos usuarios..]</span>`;
+  }
+  const long = msg.text.length > 200;
+  const color = msg.color || "#1E293B";
+  if (long) {
+    return `
+      <span class="msg-text" style="color:${color};">${msg.text}</span>
+      <button class="toggle-expand">Ler mais</button>`;
+  }
+  return `<span style="white-space:pre-wrap;color:${color};">${msg.text}</span>`;
 }
+
+
 
 function renderSticker(url) {
   return `<img src="${url.trim()}" alt="sticker" class="sticker-img" draggable="false">`;
@@ -792,42 +842,79 @@ const processSnapshot = (snapshot) => {
   const pendingReplies = [];
   let addedCount = 0;
 
-  snapshot.docChanges().forEach((change) => {
+
+
+
+snapshot.docChanges().forEach((change) => {
+    // 🔹 TRATAMENTO EM TEMPO REAL PARA REMOÇÃO DE MENSAGEM no CHAT (EXCLUI e  LIXEIRA)
+  // 🔹 TRATAMENTO EM TEMPO REAL PARA REMOÇÃO DE MENSAGEM (PRESERVA FOTO/NOME E ALTERA SÓ O TEXTO)
+    // 🔹 TRATAMENTO EM TEMPO REAL PARA REMOÇÃO DE MENSAGEM (TRAVA DE SCROLL RIGIDA)
+    if (change.type === "removed") {
+      const msgId = change.doc.id;
+      const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
+
+      if (msgDiv) {
+        // Captura a posição exata da rolagem do chat antes da alteração
+        const chatContainer = document.getElementById("chat-container");
+        const scrollPosicaoAtual = chatContainer ? chatContainer.scrollTop : 0;
+
+        const timeDiv = msgDiv.querySelector(".message-time");
+        const replyBox = msgDiv.querySelector(".reply-container");
+        
+        if (replyBox) replyBox.style.display = "none";
+
+        if (timeDiv && timeDiv.previousElementSibling) {
+          timeDiv.previousElementSibling.innerHTML = `
+            <div class="msg-deleted-box" style="display: flex; align-items: center; gap: 6px; color: #888; font-style: italic; margin-top: 4px;">
+              <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
+              <span style="font-size: 0.88rem;">Mensagem excluída</span>
+            </div>
+          `;
+        }
+
+        msgDiv.style.pointerEvents = "none";
+
+        // Força o container a se manter na mesma posição de rolagem sem pular
+        if (chatContainer) {
+          chatContainer.scrollTop = scrollPosicaoAtual;
+          requestAnimationFrame(() => {
+            chatContainer.scrollTop = scrollPosicaoAtual;
+          });
+        }
+      }
+
+      replyCache.delete(msgId);
+      messagesMap.delete(msgId);
+
+      return;
+    }
+
     // 🔹 TRATAMENTO EM TEMPO REAL PARA MENSAGENS DENUNCIADAS
     if (change.type === "modified") {
       const msgId = change.doc.id;
       const msgData = change.doc.data();
       
-      // 10-06-26 edita o botao denuncia dentro do reply Se a mensagem atingiu o limite de 4 ou mais denúncias
       if (msgData.denunciasContador && msgData.denunciasContador >= 4) {
-        // Procura a div da mensagem na tela usando o ID do documento
         const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
         if (msgDiv) {
-          // Localiza o span de texto para alterar seu conteúdo de forma limpa
           const textSpan = msgDiv.querySelector(".msg-text") || msgDiv.querySelector("span[style*='color']");
           if (textSpan) {
             textSpan.className = "msg-hidden";
-            textSpan.style.color = ""; // Remove a cor customizada para aplicar o cinza do CSS
+            textSpan.style.color = "";
             textSpan.textContent = "[Mensagem removida pelos usuarios..]";
           }
         }
       }
-      return; // Interrompe o processo deste documento e vai para o próximo
+      return;
     }
 
-    // 🔹 SUA LÓGICA ORIGINAL DE ADIÇÃO (MANTIDA 100% INTACTA)
+    // 🔹 SUA LÓGICA ORIGINAL DE ADIÇÃO
     if (change.type !== "added") return;
-
     const docSnap = change.doc;
     const msgId = docSnap.id;
-
-
     if (renderedMessages.has(msgId)) return;
-
     renderedMessages.add(msgId);
-
     const raw = docSnap.data();
-
     const msg = {
       ...raw,
       text: typeof raw.text === "string"
@@ -1356,8 +1443,7 @@ requestAnimationFrame(() => {
   });
 
 });
-  //15-05-26 função para remover mensagens com mais de 24h do DOM, mantendo o cache atualizado para evitar que reapareçam ao navegar no chat
-
+  
   window.smartScrollToBottom = () => {
     if (!window.isUserReading) {
       requestAnimationFrame(() => {
@@ -1369,20 +1455,19 @@ requestAnimationFrame(() => {
         } else {
 
 requestAnimationFrame(() => {
-
   const scrollFinal = () => {
     chat.scrollTop = chat.scrollHeight;
   };
 
   scrollFinal();
-
   requestAnimationFrame(scrollFinal);
-
   setTimeout(scrollFinal, 50);
-
   setTimeout(scrollFinal, 120);
 
 });
+
+
+
  }});
 
       window.newMessagesCount = 0;

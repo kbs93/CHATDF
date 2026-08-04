@@ -1634,7 +1634,7 @@ footer a {
   font-weight: 700;
   margin-bottom: 2px;
   background: transparent;
-  color: var(--author-color, #2563eb);
+  color: var(--author-color, #000000);
   padding: 0;
   border-radius: 0;
   font-size: 14px;
@@ -1644,6 +1644,8 @@ footer a {
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: left;
+   padding: 4px 28px 5px 0px;
+  
 }
 
 /* Botao X Fechar dentro do campo de menção */
@@ -1664,7 +1666,8 @@ footer a {
     right: auto;
     width: fit-content;
     max-width: min(78vw, 320px);
-    gap: 8px;
+    
+    gap:8px;
   }
 
   .reply-preview .reply-info {
@@ -1690,6 +1693,7 @@ footer a {
   }
 }
 
+/* AJUSTE MOBILE */
 @media (max-width: 480px) {
   .reply-preview {
     padding: 1px 5px 20px;
@@ -1700,10 +1704,10 @@ footer a {
     width: 56px;
     height: 56px;
   }
-
+/*edita o espacamento do nome do usuario dentro do campo de menção 03-08-26 */
   .reply-preview .reply-author {
     font-size: 1.1rem;
-    padding: 4px 8px;
+    padding: 4px 48px 5px 0px;
   }
 
   .reply-preview .reply-text {
@@ -2848,7 +2852,7 @@ emoji-picker {
   display: none !important;
 }
 
-/* ================= 30-05-26 BLOQUEIO DE CAMPOS DO LOGIN (TRAVA DE LOGIN) ================= */
+/* ================= 30-05-26 modal DO LOGIN no index inicial  (TRAVA DE LOGIN) ================= */
 .bloqueado {
   opacity: 0.4 !important;
   pointer-events: none !important;
@@ -2856,11 +2860,11 @@ emoji-picker {
   transition: all 0.3s ease;
 }
 
-/*-----------------------*/
+/*-------modal de login inicial inicio ----------------*/
 .modal-login-box {
   width: 100%;
   max-width: 980px;
-  height: 520px;
+  height: 580px;
   background: #fff;
   border-radius: 18px;
   display: flex;
@@ -5541,7 +5545,7 @@ do botao lapis
 
 
 /* ========================================================================= 10-06-26
-   MELHORIA DE MODERAÇÃO E UX: BOTÃO DE DENÚNCIA ISOLADO
+   MELHORIA DE MODERAÇÃO E UX: BOTÃO DE DENUNCIA ISOLADO
    ========================================================================= */
 
 /* Modifica cirurgicamente o comportamento do balão ativo para abrir espaço na base */
@@ -5550,15 +5554,14 @@ do botao lapis
   /* Aumentado de 21px para 28px para desgrudar o texto do botão */
 }
 
-/* Posiciona o botão de denúncia com margens confortáveis em cima e embaixo */
-/* Posiciona o botão de denúncia com margens confortáveis em cima e embaixo */
+/* Posiciona o botão de denuncia bandeira com margens confortáveis em cima e embaixo */
 .reply-report-action {
   position: absolute;
   left: 14px;
   bottom: 8px;
   /* Ajustado para alinhar a base do ícone perfeitamente */
-  color: #d93025;
-  font-size: 17px;
+  color: #3b3a3a7e;
+  font-size: 19px;
   /* Aumentado levemente para o ícone ter uma boa área de clique */
   cursor: pointer;
   text-decoration: none;
@@ -5570,12 +5573,12 @@ do botao lapis
 
 /* Feedback visual quando o usuário clica em "Denunciado" */
 .reply-report-action.reported {
-  color: #d93025;
+ color: #3b3a3a7e;
   cursor: not-allowed;
   font-size: 20px;
 }
 
-/* ESTILO DA LINHA DE MENSAGEM OCULTADA APÓS 3 DENÚNCIAS */
+/* ESTILO DA LINHA DE MENSAGEM OCULTADA APÓS 3 DENUNCIAS */
 .msg-hidden {
   color: #5756568f;
   font-style: italic;
@@ -7233,4 +7236,19 @@ color: #1e1b4b;
 .profile-panel.vip-mode-active[class*="banner-anim-"] .profile-tab.active {
 background: #020641;
 color: #ffffff;
+}
+
+
+
+/* ESTILO DA CAIXA DE MENSAGEM EXCLUÍDA - SUAVE E ESTÁVEL */
+.msg-deleted-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #888;
+  font-style: italic;
+  margin-top: 4px;
+  padding: 4px 0;
+  min-height: 24px;
+  transition: all 0.25s ease-in-out; /* Transição suave que impede o tranco seco na tela */
 }

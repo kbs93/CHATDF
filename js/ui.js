@@ -266,7 +266,7 @@ export function showToast(message, type = "error") {
   }, 2000);
 }
 
-// Destaca @menções como "badges cor do nome do usuario dentro da menção"
+/* Destaca @menções como "badges cor do nome do usuario dentro da menção"
 export function highlightMentions(text) {
   return text.replace(/@(\w+)/g, (_, nome) => {
     const cor = getColorFromName(nome);
@@ -274,12 +274,20 @@ export function highlightMentions(text) {
   });
 }
 
-// ================================================= Gera cor consistente com base no nome ============================
-// ================================================= Retorna preto por padrão (Cores reservadas para VIP) ============================
 export function getColorFromName(name) {
   // Retorna a cor preta padrão para todos os usuários comuns
+  return "#0004ff49";
+}
+*/
+// Retorna o texto puro sem aplicar nenhuma formatação de menção
+export function highlightMentions(text) {
+  return text;
+}
+export function getColorFromName(name) {
   return "#1E293B";
 }
+
+
 // Faz scroll automático, só se estiver no fim
 export function scrollToBottom(container) {
   const nearBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 150;

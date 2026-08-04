@@ -749,7 +749,7 @@ document.getElementById("contextProfileBtn")?.addEventListener("click", async (e
 
 // ================= DENUNCIAR MENSAGEM PELO MINI MENU 06-05-26 E 04-07-26 =================
 // ================= DENUNCIAR USUÁRIO PELO MINI MENU DA MENSAGEM (CHAT-DF UX) =================
-// ================= DENUNCIAR USUÁRIO PELO MINI MENU DA MENSAGEM (CHAT-DF UX) =================
+
 document.getElementById("contextReportBtn")?.addEventListener("click", (e) => {
   e.preventDefault();
   // Removido o stopPropagation para permitir que o clique chegue perfeitamente até a validação unificada do users-panel.js
