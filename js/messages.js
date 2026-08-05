@@ -67,6 +67,8 @@ const messagesMap = new Map();
 // CONTROLES DE ENVIO
 let floodCount = 0;
 let floodResetTimeout = null;
+// CONTROLE DE DENÚNCIA (COOLDOWN)
+let ultimaDenunciaTime = 0;
 
 // =================== HELPERS VISUAIS ========================================================
 function sanitizeMessageAvatar(photo) {
@@ -129,8 +131,12 @@ function setChatLoading(isLoading) {
 
 // 10-06-26 EDITA o botao de denuncia dentro do reply 
 // EDITA o botão do reply: Lixeira para mensagem própria / Bandeira para mensagem de terceiros
+
 function bindMessageReplyClick(div, msgId, msg) {
   div.addEventListener("click", (event) => {
+    // BLOQUEIA O REPLY SE A MENSAGEM ESTIVER OCULTADA POR DENÚNCIA
+    if (msg.denunciasContador && msg.denunciasContador >= 1) return;
+
     if (
       event.target.classList.contains("toggle-expand") ||
       event.target.closest(".quoted-reply-box") ||
@@ -139,14 +145,19 @@ function bindMessageReplyClick(div, msgId, msg) {
     ) return;
 
     if (!window.replyingTo) {
-      const ehLottie = typeof msg.text === "string" && msg.text.trim().endsWith(".json");
+
+      // Checa se a mensagem já possui denúncia para ocultar o texto na caixa de reply
+      const isOcultada = msg.denunciasContador && msg.denunciasContador >= 1;
+      const ehLottie = !isOcultada && typeof msg.text === "string" && msg.text.trim().endsWith(".json");
       const idLottiePreview = "lottie-preview-" + Math.random().toString(36).substring(2, 11);
-      const textoPassado = ehLottie 
-        ? `<div id="${idLottiePreview}" style="width: 32px; height: 32px; display: inline-block; vertical-align: middle;"></div>` 
-        : msg.text;
+      
+      const textoPassado = isOcultada
+        ? `<span class="msg-hidden"><i class="bi bi-emoji-frown"> Mensagem ocultada..</i></span>`
+        : (ehLottie 
+            ? `<div id="${idLottiePreview}" style="width: 32px; height: 32px; display: inline-block; vertical-align: middle;"></div>` 
+            : msg.text);
       
       showReplyPreview(msgId, textoPassado, msg.user, msg.photo || msg.avatar);
-
       if (ehLottie) {
         requestAnimationFrame(() => {
           if (typeof window.renderizarEmojiLottie === "function") {
@@ -154,8 +165,7 @@ function bindMessageReplyClick(div, msgId, msg) {
           }
         });
       }
-
-      const preview = document.getElementById("replyPreview");
+const preview = document.getElementById("replyPreview");
       if (preview) {
         const antigoBtn = preview.querySelector(".reply-report-action");
         if (antigoBtn) antigoBtn.remove();
@@ -165,6 +175,18 @@ function bindMessageReplyClick(div, msgId, msg) {
 
         const actionBtn = document.createElement("span");
         actionBtn.className = "reply-report-action";
+
+        // Função auxiliar para fechar a prévia suavemente sem dar tranco no scroll
+        const fecharPreviewSuave = () => {
+          preview.style.transition = "opacity 0.15s ease";
+          preview.style.opacity = "0";
+          setTimeout(() => {
+            preview.style.display = "none";
+            preview.style.opacity = "1";
+            preview.innerHTML = "";
+            window.replyingTo = null;
+          }, 150);
+        };
 
         if (isMinhaMensagem) {
           // ICONE DE LIXEIRA PARA MENSAGEM PRÓPRIA
@@ -179,13 +201,10 @@ function bindMessageReplyClick(div, msgId, msg) {
               const { doc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
               const msgDocRef = doc(db, "salas", window.salaAtual, "messages", msgId);
 
+              // Fecha suavemente antes de deletar para evitar tremulação no chat
+              fecharPreviewSuave();
+
               await deleteDoc(msgDocRef);
-
-              // Fecha a caixa de reply
-              preview.style.display = "none";
-              preview.innerHTML = "";
-              window.replyingTo = null;
-
               showToast("mensagem excluída ");
             } catch (err) {
               console.error("Erro ao excluir mensagem:", err);
@@ -194,15 +213,25 @@ function bindMessageReplyClick(div, msgId, msg) {
           });
 
         } else {
-          // ICONE DE BANDEIRA PARA MENSAGENS DE OUTROS USUÁRIOS
+          // DENUNCIA ICONE DE BANDEIRA PARA MENSAGENS DE OUTROS USUÁRIOS
           actionBtn.setAttribute("title", "Denunciar mensagem");
           actionBtn.innerHTML = `<i class="bi bi-flag-fill"><span style="color: #00000063; font-size:0.82rem;">Denunciar mensagem</span></i>`;
-
+          
           actionBtn.addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
 
             if (actionBtn.classList.contains("reported")) return;
+
+            const agora = Date.now();
+            const tempoEspera = 180000; // 3 minutos
+            const ultimaDenuncia = window.lastReportTime || 0;
+            const tempoPassado = agora - ultimaDenuncia;
+
+            if (tempoPassado < tempoEspera) {
+              showToast(`Aguarde um instante.`);
+              return;
+            }
 
             try {
               const { doc, updateDoc, arrayUnion, increment, getDoc } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
@@ -233,8 +262,14 @@ function bindMessageReplyClick(div, msgId, msg) {
                 denunciadoPor: arrayUnion(user.uid)
               });
 
+              window.lastReportTime = Date.now();
+
+              // Atualiza o texto visual mantendo a caixa firme sem alterar a estrutura do reply
               actionBtn.classList.add("reported");
               actionBtn.innerHTML = `<i class="bi bi-pin-angle-fill"></i>`; 
+              
+              // Fecha a caixa suavemente após a denúncia ser concluída
+              fecharPreviewSuave();
               showToast("Mensagem denunciada.");
 
             } catch (err) {
@@ -243,7 +278,6 @@ function bindMessageReplyClick(div, msgId, msg) {
             }
           });
         }
-
         preview.appendChild(actionBtn);
       }
     }
@@ -264,9 +298,11 @@ function createMessageElement(msgId, msg, timestamp = "") {
   const idUnicoLottie = "lottie-" + Math.random().toString(36).substring(2, 11);
 
   // 10-06-26 Se tiver 3 denúncias, bloqueia sticker e youtube também, mandando direto para o texto oculto
-  if (msg.denunciasContador && msg.denunciasContador >= 3) {
+// Se tiver 1 ou mais denúncias, bloqueia sticker e youtube, mandando direto para o texto oculto
+  if (msg.denunciasContador && msg.denunciasContador >= 1) {
     content = renderPlainMessage(msg);
   } else if (isSticker(msg.text)) {
+
     // EVOLUÇÃO PARA LOTTIE (.JSON): Gera a div vazia com o ID único dinâmico
     // edita o tamanho largura do  emoji para 38px 10-06-26
     if (msg.text.trim().endsWith(".json")) {
@@ -318,7 +354,8 @@ function createMessageElement(msgId, msg, timestamp = "") {
   `;
 
   // Inicializa o player Lottie em background caso seja um arquivo .json válido
-  if (isSticker(msg.text) && msg.text.trim().endsWith(".json") && !(msg.denunciasContador && msg.denunciasContador >= 3)) {
+ // Inicializa o player Lottie em background caso seja um arquivo .json válido
+  if (isSticker(msg.text) && msg.text.trim().endsWith(".json") && !(msg.denunciasContador && msg.denunciasContador >= 1)) {
     requestAnimationFrame(() => {
       if (typeof window.renderizarEmojiLottie === "function") {
         window.renderizarEmojiLottie(idUnicoLottie, msg.text.trim());
@@ -605,26 +642,15 @@ function formatTimestamp(ts) {
 ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")} `;
 }
 
-// 10-06-26 edita o Botao de denuncia dentro do reply Se a mensagem atingir 4 ou mais denuncias, oculta o conteúdo cirurgicamente no DOM
+// 10-06-26 edita o Botao de denuncia dentro do reply 
+/*Renderização Inicial (Quando o Chat Carrega ou Atualiza do Zero)
+O que faz: É a função responsável por montar o HTML das mensagens de texto comum. Quando o chat abre, ele verifica se a mensagem tem denunciasContador >= 1.
+Resultado: Se a mensagem já possui 1 denúncia no banco, ele renderiza na tela o texto: 
+"[Mensagem ocultada..]". Se não tiver denúncia, exibe o texto normal da mensagem. */
 
-
-/*function renderPlainMessage(msg) {
-  if (msg.denunciasContador && msg.denunciasContador >= 3) {
-    return `<span class="msg-hidden">[Mensagem removida pelos usuarios..]</span>`;
-  }
-  const highlighted = highlightMentions(msg.text);
-  const long = msg.text.length > 200;
-  const color = msg.color || "#1E293B";
-  if (long) {
-    return `
-      <span class="msg-text" style="color:${color};">${highlighted}</span>
-      <button class="toggle-expand">Ler mais</button>`;
-  }
-  return `<span style="white-space:pre-wrap;color:${color};">${highlighted}</span>`;
-}*/
 function renderPlainMessage(msg) {
-  if (msg.denunciasContador && msg.denunciasContador >= 3) {
-    return `<span class="msg-hidden">[Mensagem removida pelos usuarios..]</span>`;
+  if (msg.denunciasContador && msg.denunciasContador >= 1) {
+    return `<span class="msg-hidden" style=" font-style: italic; font-size: 1rem; font-weight: 400;"><i class="bi bi-emoji-frown"> Mensagem ocultada..</i></span>`;
   }
   const long = msg.text.length > 200;
   const color = msg.color || "#1E293B";
@@ -635,8 +661,6 @@ function renderPlainMessage(msg) {
   }
   return `<span style="white-space:pre-wrap;color:${color};">${msg.text}</span>`;
 }
-
-
 
 function renderSticker(url) {
   return `<img src="${url.trim()}" alt="sticker" class="sticker-img" draggable="false">`;
@@ -847,40 +871,27 @@ const processSnapshot = (snapshot) => {
 
 snapshot.docChanges().forEach((change) => {
     // 🔹 TRATAMENTO EM TEMPO REAL PARA REMOÇÃO DE MENSAGEM no CHAT (EXCLUI e  LIXEIRA)
-  // 🔹 TRATAMENTO EM TEMPO REAL PARA REMOÇÃO DE MENSAGEM (PRESERVA FOTO/NOME E ALTERA SÓ O TEXTO)
-    // 🔹 TRATAMENTO EM TEMPO REAL PARA REMOÇÃO DE MENSAGEM (TRAVA DE SCROLL RIGIDA)
-    if (change.type === "removed") {
+  if (change.type === "removed") {
       const msgId = change.doc.id;
       const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
 
       if (msgDiv) {
-        // Captura a posição exata da rolagem do chat antes da alteração
-        const chatContainer = document.getElementById("chat-container");
-        const scrollPosicaoAtual = chatContainer ? chatContainer.scrollTop : 0;
-
         const timeDiv = msgDiv.querySelector(".message-time");
         const replyBox = msgDiv.querySelector(".reply-container");
         
         if (replyBox) replyBox.style.display = "none";
 
         if (timeDiv && timeDiv.previousElementSibling) {
+          // Mantém a altura mínima da linha intacta para não colapsar a div e evitar o tremor do chat
           timeDiv.previousElementSibling.innerHTML = `
-            <div class="msg-deleted-box" style="display: flex; align-items: center; gap: 6px; color: #888; font-style: italic; margin-top: 4px;">
+            <div class="msg-deleted-box" style="display: flex; align-items: center; gap: 6px; color: #888; font-style: italic; margin-top: 4px; min-height: 24px;">
               <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
-              <span style="font-size: 0.88rem;">Mensagem excluída</span>
+              <span style="font-size:0.92rem;">Mensagem excluida</span>
             </div>
           `;
         }
 
         msgDiv.style.pointerEvents = "none";
-
-        // Força o container a se manter na mesma posição de rolagem sem pular
-        if (chatContainer) {
-          chatContainer.scrollTop = scrollPosicaoAtual;
-          requestAnimationFrame(() => {
-            chatContainer.scrollTop = scrollPosicaoAtual;
-          });
-        }
       }
 
       replyCache.delete(msgId);
@@ -889,24 +900,39 @@ snapshot.docChanges().forEach((change) => {
       return;
     }
 
-    // 🔹 TRATAMENTO EM TEMPO REAL PARA MENSAGENS DENUNCIADAS
     if (change.type === "modified") {
       const msgId = change.doc.id;
       const msgData = change.doc.data();
       
-      if (msgData.denunciasContador && msgData.denunciasContador >= 4) {
+      if (msgData.denunciasContador && msgData.denunciasContador >= 1) {
         const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
         if (msgDiv) {
           const textSpan = msgDiv.querySelector(".msg-text") || msgDiv.querySelector("span[style*='color']");
           if (textSpan) {
             textSpan.className = "msg-hidden";
             textSpan.style.color = "";
-            textSpan.textContent = "[Mensagem removida pelos usuarios..]";
+            textSpan.textContent = "Mensagem ocultada..";
           }
         }
       }
       return;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // 🔹 SUA LÓGICA ORIGINAL DE ADIÇÃO
     if (change.type !== "added") return;
