@@ -2316,7 +2316,6 @@ window.attachmentActions.profile = async () => {
 function perfilEstaCompleto() {
   const nome = editName?.value.trim();
   const cidade = editCity?.value.trim();
-  const recado = editMood?.value.trim();
   const idade = editAge?.value.trim();
   const genero = editGender?.value.trim();
 
@@ -2335,7 +2334,6 @@ function perfilEstaCompleto() {
   const completo = !!(
     nome &&
     cidade &&
-    recado &&
     idade &&
     genero &&
     avatarValido &&
@@ -2357,10 +2355,17 @@ function perfilEstaCompleto() {
   return completo;
 }
 
+
 setTimeout(() => {
-  [editName, editAge, editMood].forEach(input => {
+  [editName, editAge].forEach(input => {
     input?.addEventListener("input", perfilEstaCompleto);
   });
+
+
+
+
+
+
 
   document.addEventListener("click", (e) => {
     if (e.target.classList.contains("city-dropdown-item") || e.target.classList.contains("gender-dropdown-item")) {
@@ -2444,10 +2449,7 @@ saveProfileBtn?.addEventListener("click", async () => {
     return;
   }
 
-  if (!editMood.value.trim()) {
-    showToast("Por favor, preencha o seu Recado (Frase Favorita).");
-    return;
-  }
+
 
   try {
     showToast("Salvando alterações...");
@@ -2491,7 +2493,7 @@ saveProfileBtn?.addEventListener("click", async () => {
     await updateDoc(refUser, {
       nome: editName.value.trim(),
       cidade: cidadeSelecionada,
-      mood: editMood.value.trim(),
+    
       idade: editAge.value.trim(),
       genero: generoSelecionado,
       instagram: instaUser,
@@ -2517,7 +2519,6 @@ saveProfileBtn?.addEventListener("click", async () => {
       lastChanged: Date.now()
     });
 
-    showToast("Perfil salvo e atualizado com sucesso!");
     document.getElementById("profileEditTooltip")?.classList.remove("show");
 
     window.attachmentActions.profile();

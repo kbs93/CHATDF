@@ -131,11 +131,15 @@ function setChatLoading(isLoading) {
 
 // 10-06-26 EDITA o botao de denuncia dentro do reply 
 // EDITA o botão do reply: Lixeira para mensagem própria / Bandeira para mensagem de terceiros
-
 function bindMessageReplyClick(div, msgId, msg) {
   div.addEventListener("click", (event) => {
+    // Busca o dado atualizado no Map ou verifica se a mensagem visível já está ocultada
+    const msgAtualizada = messagesMap.get(msgId) || msg;
+    const temClasseOculta = div.querySelector(".msg-hidden") !== null;
+    const isOcultada = temClasseOculta || (msgAtualizada.denunciasContador && msgAtualizada.denunciasContador >= 1);
+
     // BLOQUEIA O REPLY SE A MENSAGEM ESTIVER OCULTADA POR DENÚNCIA
-    if (msg.denunciasContador && msg.denunciasContador >= 1) return;
+    if (isOcultada) return;
 
     if (
       event.target.classList.contains("toggle-expand") ||
@@ -146,16 +150,16 @@ function bindMessageReplyClick(div, msgId, msg) {
 
     if (!window.replyingTo) {
 
-      // Checa se a mensagem já possui denúncia para ocultar o texto na caixa de reply
-      const isOcultada = msg.denunciasContador && msg.denunciasContador >= 1;
-      const ehLottie = !isOcultada && typeof msg.text === "string" && msg.text.trim().endsWith(".json");
+      // Garantia de ocultação de texto no reply
+      const ehLottie = !isOcultada && typeof msgAtualizada.text === "string" && msgAtualizada.text.trim().endsWith(".json");
       const idLottiePreview = "lottie-preview-" + Math.random().toString(36).substring(2, 11);
       
       const textoPassado = isOcultada
-        ? `<span class="msg-hidden"><i class="bi bi-emoji-frown"> Mensagem ocultada..</i></span>`
+        ? `<span class="msg-hidden" style="font-style: italic; font-size: 1rem; font-weight: 400;"><i class="bi bi-emoji-frown"> Mensagem ocultada..</i></span>`
         : (ehLottie 
             ? `<div id="${idLottiePreview}" style="width: 32px; height: 32px; display: inline-block; vertical-align: middle;"></div>` 
-            : msg.text);
+            : msgAtualizada.text);
+
       
       showReplyPreview(msgId, textoPassado, msg.user, msg.photo || msg.avatar);
       if (ehLottie) {
@@ -283,6 +287,7 @@ const preview = document.getElementById("replyPreview");
     }
   });
 }
+
 
 
 
@@ -870,7 +875,7 @@ const processSnapshot = (snapshot) => {
 
 
 snapshot.docChanges().forEach((change) => {
-    // 🔹 TRATAMENTO EM TEMPO REAL PARA REMOÇÃO DE MENSAGEM no CHAT (EXCLUI e  LIXEIRA)
+    // TRATAMENTO EM TEMPO REAL PARA REMOÇÃO DE MENSAGEM no CHAT (EXCLUI e  LIXEIRA)
   if (change.type === "removed") {
       const msgId = change.doc.id;
       const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
@@ -899,8 +904,8 @@ snapshot.docChanges().forEach((change) => {
 
       return;
     }
-
-    if (change.type === "modified") {
+    //TRATAMENTO EM MENSAGEM OCULTADA POR DENUNCIA (OCULTA O TEXTO E MANTÉM A ESTRUTURA DO REPLY)    
+if (change.type === "modified") {
       const msgId = change.doc.id;
       const msgData = change.doc.data();
       
@@ -911,28 +916,13 @@ snapshot.docChanges().forEach((change) => {
           if (textSpan) {
             textSpan.className = "msg-hidden";
             textSpan.style.color = "";
-            textSpan.textContent = "Mensagem ocultada..";
+            textSpan.innerHTML = `<i class="bi bi-emoji-frown"></i> Mensagem ocultada..`;
           }
         }
       }
       return;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 
     // 🔹 SUA LÓGICA ORIGINAL DE ADIÇÃO
     if (change.type !== "added") return;

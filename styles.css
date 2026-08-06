@@ -1344,6 +1344,8 @@ footer a {
   padding: 3px 0 5px 13px;
   background: #ffffff;
   -webkit-overflow-scrolling: touch;
+  /* Desativa a âncora automática do navegador que tenta adivinhar o scroll ao alterar elementos */
+  overflow-anchor: none;
 }
 
 /*COR DE FUNDO DO CAMPO E ENVIAR MSG*/
@@ -5584,6 +5586,7 @@ do botao lapis
   pointer-events: none;
 }
 /* ESTILO DA CAIXA DE MENSAGEM EXCLUIDA - SUAVE E ESTÁVEL */
+/* ESTILO DA CAIXA DE MENSAGEM EXCLUIDA - FIXO E SEM LAYOUT SHIFT */
 .msg-deleted-box {
   display: flex;
   align-items: center;
@@ -5593,10 +5596,8 @@ do botao lapis
   margin-top: 4px;
   padding: 4px 0;
   min-height: 24px;
-  transition: all 0.25s ease-in-out; /* Transição suave que impede o tranco seco na tela */
-  font-size: 24px;
+  font-size: 0.92rem;
   font-weight: 400;
-  
 }
 
 
@@ -7248,6 +7249,41 @@ color: #1e1b4b;
 background: #020641;
 color: #ffffff;
 }
+
+
+/* ========================================================= 
+   ESTRUTURA PARA MENSAGEM EXCLUÍDA (SEM IMPORTANT)
+   ========================================================= */
+#chat-container .message.deleted-message-node {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 6px 12px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Esconde elementos internos mantendo especificidade alta pelo pai */
+#chat-container .message.deleted-message-node .message-click-area,
+#chat-container .message.deleted-message-node .reply-container,
+#chat-container .message.deleted-message-node .message-time {
+  display: none;
+}
+
+/* Caixa fixa para a mensagem excluída */
+.msg-deleted-box-fixed {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #888888;
+  font-style: italic;
+  font-size: 0.9rem;
+  min-height: 24px;
+  line-height: 24px;
+  user-select: none;
+}
+
+
 
 
 
