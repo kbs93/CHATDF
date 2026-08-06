@@ -2518,7 +2518,7 @@ saveProfileBtn?.addEventListener("click", async () => {
       sala: appState.currentRoom || sala,
       lastChanged: Date.now()
     });
-
+    showToast("Perfil salvo e atualizado com sucesso!");
     document.getElementById("profileEditTooltip")?.classList.remove("show");
 
     window.attachmentActions.profile();

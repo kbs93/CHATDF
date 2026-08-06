@@ -7252,7 +7252,7 @@ color: #ffffff;
 
 
 /* ========================================================= 
-   ESTRUTURA PARA MENSAGEM EXCLUÍDA (SEM IMPORTANT)
+   ESTRUTURA PARA MENSAGEM EXCLUÍDA impede de A TELA SE MEXER TODA 
    ========================================================= */
 #chat-container .message.deleted-message-node {
   margin-top: 4px;
