@@ -136,30 +136,31 @@ const appState = {
 window.appState = appState;
 // ================= PRESENÇA DA SALA RTDB realtime================= 18-05-26 E 07-07-26 ADICIONADO: Contador de denúncias por sessão/login
 // ================= PRESENÇA DA SALA RTDB COM RECONEXÃO GARANTIDA =================
-
 async function updateUserRoomPresence() {
   const user = auth.currentUser;
   if (!user) return;
   try {
-    const { update, onValue, onDisconnect } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js");
+    const { set, update, onValue, onDisconnect } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js");
     
     const userStatusRef = ref(rtdb, "status/" + user.uid);
     const connectedRef = ref(rtdb, ".info/connected");
 
-    // 1. Escuta o estado do Socket do Firebase
+    // Escuta continuamente o estado de conexão do socket
     onValue(connectedRef, async (snap) => {
       if (snap.val() === true) {
+        // 1. Configura a ação para quando perder a conexão (muda apenas online para false)
         await onDisconnect(userStatusRef).update({
           online: false,
           lastChanged: Date.now()
         });
 
-        await update(userStatusRef, {
+        // 2. Força a gravação completa do status online sempre que reconectar
+        await set(userStatusRef, {
           uid: user.uid,
           name: appState.currentUser?.nome || appState.currentUser?.displayNameChat || user.displayName || "Usuário",
           avatar: appState.currentUser?.photoURL || "./img/avatar.png",
           online: true,
-          sala: appState.currentRoom || null,
+          sala: appState.currentRoom || "geral",
           lastChanged: Date.now()
         });
       }
@@ -169,6 +170,16 @@ async function updateUserRoomPresence() {
     console.error("Erro ao atualizar presença da sala:", err);
   }
 }
+
+
+
+
+
+
+
+
+
+
 
 // 2. ESCUTA NATIVA DO NAVEGADOR (Força o envio assim que a rede/Wi-Fi voltar)
 window.addEventListener("online", () => {
@@ -2517,11 +2528,9 @@ saveProfileBtn?.addEventListener("click", async () => {
       sala: appState.currentRoom || sala,
       lastChanged: Date.now()
     });
-    showToast("Perfil salvo e atualizado com sucesso!");
+  
     document.getElementById("profileEditTooltip")?.classList.remove("show");
-
     window.attachmentActions.profile();
-
   } catch (err) {
     console.error(err);
     showToast("Erro ao salvar perfil");

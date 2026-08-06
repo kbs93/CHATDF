@@ -7,12 +7,14 @@ import {
   signInWithEmailAndPassword,
   linkWithCredential
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-
 import {
   ref,
   set,
+  update,
+  onValue,
   onDisconnect
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
 import {
   doc,
   getDoc,
@@ -349,7 +351,9 @@ else {
 }
 
 // ===================== PRESENÇA ONLINE ======================
+// ===================== PRESENÇA ONLINE (RECONEXÃO AUTOMÁTICA FIX) ======================
 const userStatusRef = ref(rtdb, "status/" + user.uid);
+const connectedRef = ref(rtdb, ".info/connected");
 
 const isPasswordUser = user.providerData?.some(
   p => p.providerId === "password"
@@ -358,22 +362,35 @@ const isPasswordUser = user.providerData?.some(
 if (isPasswordUser && !user.emailVerified) {
   await set(userStatusRef, null);
 } else {
-  await onDisconnect(userStatusRef).remove();
-let finalAvatar = sanitizeAvatarUrl(profilePhoto);
+  let finalAvatar = sanitizeAvatarUrl(profilePhoto);
 
-// 18-05-26 adicionando sala atual do usuário para contagem de presença por sala
-  // CORREÇÃO: Lê os parâmetros da URL dinamicamente no momento da gravação, evitando sala presa
-  const dynamicUrlParams = new URLSearchParams(window.location.search);
-  const activeRoom = window.location.pathname.includes("chat.html") ? (dynamicUrlParams.get("sala") || "geral") : null;
-  await set(userStatusRef, { 
-    uid: user.uid,
-    name: profileName,
-    avatar: finalAvatar,
-    online: true,
-    sala: activeRoom,
-    lastChanged: Date.now()
+  onValue(connectedRef, async (snap) => {
+    if (snap.val() === true) {
+      // 1. Quando o socket cair, apenas altera o status para offline, sem apagar o nó
+      await onDisconnect(userStatusRef).update({
+        online: false,
+        lastChanged: Date.now()
+      });
+
+      // 2. Sempre que a rede conectar/reconectar, regrava online: true imediatamente
+      const dynamicUrlParams = new URLSearchParams(window.location.search);
+      const activeRoom = window.location.pathname.includes("chat.html") ? (dynamicUrlParams.get("sala") || "geral") : null;
+
+      await set(userStatusRef, { 
+        uid: user.uid,
+        name: profileName,
+        avatar: finalAvatar,
+        online: true,
+        sala: activeRoom,
+        lastChanged: Date.now()
+      });
+    }
   });
 }
+
+
+
+
   // Fecha modal (se estiver no index)
   const modal = document.getElementById("loginModal");
   if (modal) modal.classList.add("hidden");
@@ -446,11 +463,11 @@ unsubscribeUserAreaProfileListener = onSnapshot(liveUserRef, (snap) => {
         window.replyingTo = null;
         window.dispatchEvent(new Event("resetColorPicker"));
         localStorage.removeItem("chatdf_user_color");
-
-        if (currentUser?.uid) {
-          const userStatusRef = ref(rtdb, "status/" + currentUser.uid);
-          await set(userStatusRef, null);
-        }
+if (currentUser?.uid) {
+  const userStatusRef = ref(rtdb, "status/" + currentUser.uid);
+  await set(userStatusRef, null); // Deleta o nó imediatamente do banco ao clicar em Sair
+}
+ 
 
         clearUserAreaCache();
         await signOutUser();
@@ -474,10 +491,9 @@ if (logoutBtn) {
 
       // Remove presença online antes do logout
       if (currentUser?.uid) {
-        const userStatusRef = ref(rtdb, "status/" + currentUser.uid);
-        await set(userStatusRef, null);
-      }
-
+  const userStatusRef = ref(rtdb, "status/" + currentUser.uid);
+  await set(userStatusRef, null); // Deleta o nó imediatamente do banco ao clicar em Sair
+}
       // Logout
          clearUserAreaCache();
 

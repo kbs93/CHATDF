@@ -160,7 +160,7 @@ if (cachedUsers.length) {
 }
   
 // Tolerância para quedas rápidas de conexão (evita piscar a bolinha verde)
-  const TOLERANCIA_OFFLINE_MS = 10000; // 10 segundos de margem
+  const TOLERANCIA_OFFLINE_MS = 0; // 10 segundos de margem
 
   onValue(statusRef, (snapshot) => {
     if (!onlineUsersList) return;

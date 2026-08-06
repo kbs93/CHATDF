@@ -1345,7 +1345,7 @@ footer a {
   background: #ffffff;
   -webkit-overflow-scrolling: touch;
   /* Desativa a âncora automática do navegador que tenta adivinhar o scroll ao alterar elementos */
-  overflow-anchor: none;
+  overflow-anchor:auto;
 }
 
 /*COR DE FUNDO DO CAMPO E ENVIAR MSG*/
@@ -1519,7 +1519,10 @@ footer a {
 
   .chat-center {
     max-width: 50vw;
-    font-size: 14px;
+     left: 35%;
+  font-weight: 600;
+  font-size: 16px;
+  font-family:Arial, Helvetica, sans-serif;
   }
 
   .nav-btn img {
