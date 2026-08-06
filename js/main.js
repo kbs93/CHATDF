@@ -1351,7 +1351,7 @@ if (!isPanelOpen) {
 
     if (editName) editName.value = nome;
       if (editCity) editCity.value = data.cidade || "";
-      if (editMood) editMood.value = data.mood || "";
+     
 
       if (editAge) editAge.value = data.idade || "";
       if (editGender) editGender.value = data.genero || "";
@@ -1364,7 +1364,6 @@ const setInputValue = (el, val) => {
 
 setInputValue(editName, nome);
 setInputValue(editCity, data.cidade);
-setInputValue(editMood, data.mood);
 setInputValue(editAge, data.idade);
 setInputValue(editGender, data.genero);
 
@@ -1514,7 +1513,7 @@ function applyProfileMode(isOwner) {
       }
       editName?.removeAttribute("disabled");
       editCity?.removeAttribute("disabled");
-      editMood?.removeAttribute("disabled");
+    
     } else {
       if (uploadPhotoBtn) {
         uploadPhotoBtn.style.opacity = "0.01";
