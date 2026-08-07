@@ -3,7 +3,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 
 import { 
-  getFirestore 
+  initializeFirestore 
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 /* 🔵 NOVO IMPORT — REALTIME DATABASE */
@@ -20,19 +20,16 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
 
-// ------- COLE AQUI AS SUAS CREDENCIAIS DO FIREBASE ----------
+// ------- CREDENCIAIS DO FIREBASE ----------
 const firebaseConfig = {
-
   apiKey: "AIzaSyA5ApoFDkyW9nyxrgCjzbWGiuAwP2ldUD0",
   authDomain: "chatdf-4102025.firebaseapp.com",
   projectId: "chatdf-4102025",
- storageBucket: "chatdf-4102025.firebasestorage.app",
+  storageBucket: "chatdf-4102025.firebasestorage.app",
   messagingSenderId: "74233540933",
   appId: "1:74233540933:web:df0e118e40c1e1513fce2c",
   measurementId: "G-1N8ZP3MK3N",
-  /* 🔵 IMPORTANTE — URL DO REALTIME DATABASE */
   databaseURL: "https://chatdf-4102025-default-rtdb.firebaseio.com"
-
 };
 // -----------------------------------------------------------
 
@@ -41,8 +38,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 
-/* 🔵 FIRESTORE (mensagens) */
-const db = getFirestore(app);
+/* 🔵 FIRESTORE (Com reconexão estável para evitar ERR_QUIC_PROTOCOL_ERROR) */
+const db = initializeFirestore(app, {
+  experimentalAutoDetectLongPolling: true
+});
 
 
 /* 🔵 REALTIME DATABASE (usuários online) */
@@ -55,17 +54,14 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 
-
 async function signInWithGoogle() {
   return signInWithPopup(auth, provider);
 }
 
 
-
 function signOutUser() {
   return signOut(auth);
 }
-
 
 
 /* wrapper para facilitar o onAuthStateChanged */

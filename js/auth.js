@@ -411,73 +411,90 @@ saveUserAreaCache({
 if (unsubscribeUserAreaProfileListener) {
   unsubscribeUserAreaProfileListener();
 }
-
 const liveUserRef = doc(db, "users", user.uid);
 
-unsubscribeUserAreaProfileListener = onSnapshot(liveUserRef, (snap) => {
-  if (!snap.exists()) {
-    renderLoggedUserArea(userArea, profileName, profilePhoto);
-    return;
+unsubscribeUserAreaProfileListener = onSnapshot(
+  liveUserRef, 
+  (snap) => {
+    if (!snap.exists()) {
+      renderLoggedUserArea(userArea, profileName, profilePhoto);
+      return;
+    }
+
+    const liveData = snap.data();
+
+    const liveName =
+      liveData.nome ||
+      liveData.name ||
+      liveData.displayName ||
+      profileName ||
+      "Usuário";
+
+    const livePhoto = sanitizeAvatarUrl(
+      liveData.foto ||
+      liveData.avatar ||
+      liveData.photoURL ||
+      profilePhoto
+    );
+
+    saveUserAreaCache({
+      isLoggedIn: true,
+      uid: user.uid,
+      profileName: liveName,
+      profilePhoto: livePhoto
+    });
+
+    renderLoggedUserArea(userArea, liveName, livePhoto);
+
+    //11-05-2026
+    if (!liveData.perfilCompleto) {
+      setTimeout(() => {
+        showEditProfileTooltip();
+      }, 500);
+    }
+
+    // 21-06-26 Notifica dinamicamente os scripts do chat sobre mudanças no perfil
+    document.dispatchEvent(new CustomEvent("chatdf:user-ready", {
+      detail: { user, userData: liveData }
+    }));
+
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.onclick = async () => {
+        try {
+          window.replyingTo = null;
+          window.dispatchEvent(new Event("resetColorPicker"));
+          localStorage.removeItem("chatdf_user_color");
+          if (currentUser?.uid) {
+            const userStatusRef = ref(rtdb, "status/" + currentUser.uid);
+            await set(userStatusRef, null);
+          }
+
+          clearUserAreaCache();
+          await signOutUser();
+          showToast("Volte sempre!");
+        } catch (err) {
+          console.error("Erro ao sair:", err);
+        }
+      };
+    }
+  },
+  (error) => {
+    // Evita que erros do WebChannel travem a aplicação no console
+    console.warn("Aviso na sincronização de perfil em tempo real:", error);
   }
+);
 
-  const liveData = snap.data();
 
-  const liveName =
-    liveData.nome ||
-    liveData.name ||
-    liveData.displayName ||
-    profileName ||
-    "Usuário";
 
-  const livePhoto = sanitizeAvatarUrl(
-    liveData.foto ||
-    liveData.avatar ||
-    liveData.photoURL ||
-    profilePhoto
-  );
 
-  saveUserAreaCache({
-    isLoggedIn: true,
-    uid: user.uid,
-    profileName: liveName,
-    profilePhoto: livePhoto
-  });
 
-  renderLoggedUserArea(userArea, liveName, livePhoto);
 
-  //11-05-2026
-  if (!liveData.perfilCompleto) {
-  setTimeout(() => {
-    showEditProfileTooltip();
-  }, 500);
-}
-// 21-06-26 Notifica dinamicamente os scripts do chat sobre mudanças no perfil para o bloqueio de envio
-  document.dispatchEvent(new CustomEvent("chatdf:user-ready", {
-    detail: { user, userData: liveData }
-  }));
 
-  const logoutBtn = document.getElementById("logoutBtn");
-  if (logoutBtn) {
-    logoutBtn.onclick = async () => {
-      try {
-        window.replyingTo = null;
-        window.dispatchEvent(new Event("resetColorPicker"));
-        localStorage.removeItem("chatdf_user_color");
-if (currentUser?.uid) {
-  const userStatusRef = ref(rtdb, "status/" + currentUser.uid);
-  await set(userStatusRef, null); // Deleta o nó imediatamente do banco ao clicar em Sair
-}
- 
 
-        clearUserAreaCache();
-        await signOutUser();
-        showToast("Volte sempre!");
-      } catch (err) {
-        console.error("Erro ao sair:", err);
-      }
-    };
-  }
-});
+
+
+
   // Evento sair (CORRIGIDO) presença do suario 
  const logoutBtn = document.getElementById("logoutBtn");
 if (logoutBtn) {
