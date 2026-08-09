@@ -309,11 +309,12 @@ function createMessageElement(msgId, msg, timestamp = "") {
   const idUnicoLottie = "lottie-" + Math.random().toString(36).substring(2, 11);
 
 // Se a mensagem estiver excluída, altera apenas o texto interno sem injetar classe externa
+// Se a mensagem estiver excluída, define a cor cinza no texto para todos os usuários
   if (msg.deleted === true) {
     content = `
-      <div class="msg-deleted-box">
-        <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
-        <span style="font-size:0.92rem; font-style: italic; color: #888;">Mensagem excluída</span>
+      <div class="msg-deleted-box" style="display: flex; align-items: center; gap: 6px; color: #888; font-style: italic;">
+        <i class="bi bi-ban" style="font-size: 0.9rem; color: #888;"></i>
+        <span style="font-size: 0.92rem; color: #888 !important; font-style: italic;">Mensagem excluída</span>
       </div>
     `;
   } else if (msg.denunciasContador && msg.denunciasContador >= 1) {
@@ -650,9 +651,9 @@ Resultado: Se a mensagem já possui 1 denúncia no banco, ele renderiza na tela 
 function renderPlainMessage(msg) {
   if (msg.deleted === true) {
     return `
-      <div class="msg-deleted-box-fixed">
-        <i class="bi bi-ban"></i>
-        <span>Mensagem excluída</span>
+      <div class="msg-deleted-box-fixed" style="display: flex; align-items: center; gap: 6px; color: #888; font-style: italic;">
+        <i class="bi bi-ban" style="color: #888;"></i>
+        <span style="color: #888 !important; font-style: italic;">Mensagem excluída</span>
       </div>
     `;
   }
