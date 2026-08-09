@@ -449,15 +449,15 @@ function setupChat() {
     touchStartY = e.touches[0].clientY;
   }, { passive: true });
 
-  chat.addEventListener("touchmove", (e) => {
+chat.addEventListener("touchmove", (e) => {
     if (window.innerWidth > 768) return;
 
     if (document.activeElement === input) {
       let touchCurrentY = e.touches[0].clientY;
       let deltaY = Math.abs(touchCurrentY - touchStartY);
 
-      // Só fecha se o usuário realmente arrastar o dedo por mais de 25 pixels verticalmente
-      if (deltaY > 25) {
+      // Aumentado a margem para 50px e apenas quando a rolagem for intencionalmente para cima
+      if (deltaY > 50 && touchCurrentY < touchStartY) {
         input.blur();
       }
     }

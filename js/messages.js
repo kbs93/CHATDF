@@ -132,14 +132,15 @@ function setChatLoading(isLoading) {
 // 10-06-26 EDITA o botao de denuncia dentro do reply 
 // EDITA o botão do reply: Lixeira para mensagem própria / Bandeira para mensagem de terceiros
 function bindMessageReplyClick(div, msgId, msg) {
-  div.addEventListener("click", (event) => {
-    // Busca o dado atualizado no Map ou verifica se a mensagem visível já está ocultada
+div.addEventListener("click", (event) => {
+    // Busca o dado atualizado no Map ou verifica se a mensagem está excluída/ocultada
     const msgAtualizada = messagesMap.get(msgId) || msg;
     const temClasseOculta = div.querySelector(".msg-hidden") !== null;
+    const isExcluida = msgAtualizada.deleted === true || div.classList.contains("deleted-message-node");
     const isOcultada = temClasseOculta || (msgAtualizada.denunciasContador && msgAtualizada.denunciasContador >= 1);
 
-    // BLOQUEIA O REPLY SE A MENSAGEM ESTIVER OCULTADA POR DENÚNCIA
-    if (isOcultada) return;
+    // BLOQUEIA O REPLY SE A MENSAGEM ESTIVER EXCLUÍDA OU OCULTADA
+    if (isExcluida || isOcultada) return;
 
     if (
       event.target.classList.contains("toggle-expand") ||
@@ -196,25 +197,31 @@ const preview = document.getElementById("replyPreview");
           // ICONE DE LIXEIRA PARA MENSAGEM PRÓPRIA
           actionBtn.setAttribute("title", "Excluir mensagem");
           actionBtn.innerHTML = `<i class="bi bi-trash" style="color: #000000; font-size:20px;"></i>`;
-
           actionBtn.addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
 
             try {
-              const { doc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
+              const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
               const msgDocRef = doc(db, "salas", window.salaAtual, "messages", msgId);
 
-              // Fecha suavemente antes de deletar para evitar tremulação no chat
+              // Fecha suavemente a prévia de resposta antes de atualizar no Firebase
               fecharPreviewSuave();
 
-              await deleteDoc(msgDocRef);
-              showToast("mensagem excluída ");
+              // Soft Delete: Atualiza o status da mensagem sem apagar o documento do banco
+              await updateDoc(msgDocRef, {
+                deleted: true,
+                text: "Mensagem excluída"
+              });
+
+              showToast("Mensagem excluída");
             } catch (err) {
               console.error("Erro ao excluir mensagem:", err);
               showToast("Erro ao excluir mensagem.");
             }
           });
+
+
 
         } else {
           // DENUNCIA ICONE DE BANDEIRA PARA MENSAGENS DE OUTROS USUÁRIOS
@@ -287,29 +294,31 @@ const preview = document.getElementById("replyPreview");
     }
   });
 }
-
-
-
-
-
 function createMessageElement(msgId, msg, timestamp = "") {
-  // Se tiver cor VIP definida no objeto da mensagem, usa ela; caso contrário, padroniza como preto
+  const div = document.createElement("div");
+  div.classList.add("message");
+  div.dataset.id = msgId;
+  div.dataset.uid = msg.uid || msg.user;
+
   const userColor = msg.vipNameColorSolid || msg.vipNameColor || "#1E293B";
   const ytId = extractYouTubeId(msg.text);
   const avatar = sanitizeMessageAvatar(msg.photo || msg.avatar);
-  const cidade = msg.replyTo ? "" : (msg.cidade || msg.city || ""); // 01-05-26
+  const cidade = msg.replyTo ? "" : (msg.cidade || msg.city || "");
 
   let content = "";
   const idUnicoLottie = "lottie-" + Math.random().toString(36).substring(2, 11);
 
-  // 10-06-26 Se tiver 3 denúncias, bloqueia sticker e youtube também, mandando direto para o texto oculto
-// Se tiver 1 ou mais denúncias, bloqueia sticker e youtube, mandando direto para o texto oculto
-  if (msg.denunciasContador && msg.denunciasContador >= 1) {
+// Se a mensagem estiver excluída, altera apenas o texto interno sem injetar classe externa
+  if (msg.deleted === true) {
+    content = `
+      <div class="msg-deleted-box">
+        <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
+        <span style="font-size:0.92rem; font-style: italic; color: #888;">Mensagem excluída</span>
+      </div>
+    `;
+  } else if (msg.denunciasContador && msg.denunciasContador >= 1) {
     content = renderPlainMessage(msg);
   } else if (isSticker(msg.text)) {
-
-    // EVOLUÇÃO PARA LOTTIE (.JSON): Gera a div vazia com o ID único dinâmico
-    // edita o tamanho largura do  emoji para 38px 10-06-26
     if (msg.text.trim().endsWith(".json")) {
       content = `<div id="${idUnicoLottie}" class="sticker-img" style="width: 30px; height: 30px; display: inline-block;" draggable="false"></div>`;
     } else {
@@ -321,19 +330,11 @@ function createMessageElement(msgId, msg, timestamp = "") {
     content = renderPlainMessage(msg);
   }
 
-  const div = document.createElement("div");
-  div.classList.add("message");
-
   if (msg.user === "Kbsweb") {
     div.classList.add("admin-message");
   }
 
-  div.dataset.id = msgId;
-  //AGRUPANDO AS MENSAGEM Salva o UID (ou nome) para o sistema de agrupamento reconhecer 09-06-26
-  div.dataset.uid = msg.uid || msg.user;
-
-  // 01-05-26 edita o nome da cidade em baixo do nome do usuario 
-  // 06-05-26 edita o menu em frente o nome do usuario <div class="message-user-info">
+  // Monta sempre o cabeçalho com foto, nome e cidade para manter o clustering estável
   div.innerHTML = `
   <div class="message-click-area" style="display:flex;align-items:center;gap:6px;">
     <img 
@@ -358,9 +359,7 @@ function createMessageElement(msgId, msg, timestamp = "") {
   <div class="message-time">${timestamp}</div>
   `;
 
-  // Inicializa o player Lottie em background caso seja um arquivo .json válido
- // Inicializa o player Lottie em background caso seja um arquivo .json válido
-  if (isSticker(msg.text) && msg.text.trim().endsWith(".json") && !(msg.denunciasContador && msg.denunciasContador >= 1)) {
+  if (isSticker(msg.text) && msg.text.trim().endsWith(".json") && !msg.deleted && !(msg.denunciasContador && msg.denunciasContador >= 1)) {
     requestAnimationFrame(() => {
       if (typeof window.renderizarEmojiLottie === "function") {
         window.renderizarEmojiLottie(idUnicoLottie, msg.text.trim());
@@ -370,40 +369,39 @@ function createMessageElement(msgId, msg, timestamp = "") {
 
   bindMessageReplyClick(div, msgId, msg);
 
-  // ================= mini MENU ⋮  06-05-06 ==================================
   const clickArea = div.querySelector(".message-click-area");
-  clickArea.addEventListener("click", (e) => {
-    e.stopPropagation();
+  if (clickArea) {
+    clickArea.addEventListener("click", (e) => {
+      e.stopPropagation();
 
-    const menu = document.getElementById("messageContextMenu");
-    if (!menu) return;
+      const menu = document.getElementById("messageContextMenu");
+      if (!menu) return;
 
-    const rect = clickArea.getBoundingClientRect();
-    const menuWidth = 170;
-    const margin = 8;
+      const rect = clickArea.getBoundingClientRect();
+      const menuWidth = 170;
+      const margin = 8;
 
-    let left = rect.left;
-    let top = rect.bottom + 6;
+      let left = rect.left;
+      let top = rect.bottom + 6;
 
-    if (left < margin) left = margin;
-    if (left + menuWidth > window.innerWidth - margin) {
-      left = window.innerWidth - menuWidth - margin;
-    }
+      if (left < margin) left = margin;
+      if (left + menuWidth > window.innerWidth - margin) {
+        left = window.innerWidth - margin - menuWidth;
+      }
 
-    menu.style.left = left + "px";
-    menu.style.top = top + "px";
-    menu.classList.remove("hidden");
+      menu.style.left = left + "px";
+      menu.style.top = top + "px";
+      menu.classList.remove("hidden");
 
-    menu.dataset.msgId = msgId;
-    menu.dataset.uid = msg.uid || "";
-    menu.dataset.user = msg.user;
-    menu.dataset.text = msg.text;
-  });
+      menu.dataset.msgId = msgId;
+      menu.dataset.uid = msg.uid || "";
+      menu.dataset.user = msg.user;
+      menu.dataset.text = msg.text;
+    });
+  }
 
   return div;
 }
-
-
 
 
 
@@ -434,10 +432,6 @@ if (closeBtn) {
     }
   });
 }
-
-
-
-
 
 function saveMessagesCache(sala, chat) {
   if (!chat || !sala) return;
@@ -654,6 +648,14 @@ Resultado: Se a mensagem já possui 1 denúncia no banco, ele renderiza na tela 
 "[Mensagem ocultada..]". Se não tiver denúncia, exibe o texto normal da mensagem. */
 
 function renderPlainMessage(msg) {
+  if (msg.deleted === true) {
+    return `
+      <div class="msg-deleted-box-fixed">
+        <i class="bi bi-ban"></i>
+        <span>Mensagem excluída</span>
+      </div>
+    `;
+  }
   if (msg.denunciasContador && msg.denunciasContador >= 1) {
     return `<span class="msg-hidden" style=" font-style: italic; font-size: 1rem; font-weight: 400;"><i class="bi bi-emoji-frown"> Mensagem ocultada..</i></span>`;
   }
@@ -876,42 +878,70 @@ const processSnapshot = (snapshot) => {
 
 snapshot.docChanges().forEach((change) => {
     // TRATAMENTO EM TEMPO REAL PARA REMOÇÃO DE MENSAGEM no CHAT (EXCLUI e  LIXEIRA)
-  if (change.type === "removed") {
-      const msgId = change.doc.id;
-      const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
+    if (change.type === "removed") {
+  const msgId = change.doc.id;
+  const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
 
-      if (msgDiv) {
-        const timeDiv = msgDiv.querySelector(".message-time");
-        const replyBox = msgDiv.querySelector(".reply-container");
-        
-        if (replyBox) replyBox.style.display = "none";
+  if (msgDiv && chat) {
+    // 1. Captura a altura da mensagem e a posição do scroll antes de alterar a estrutura
+    const alturaAntes = msgDiv.offsetHeight;
+    const scrollAntes = chat.scrollTop;
 
-        if (timeDiv && timeDiv.previousElementSibling) {
-          // Mantém a altura mínima da linha intacta para não colapsar a div e evitar o tremor do chat
-          timeDiv.previousElementSibling.innerHTML = `
-            <div class="msg-deleted-box" style="display: flex; align-items: center; gap: 6px; color: #888; font-style: italic; margin-top: 4px; min-height: 24px;">
-              <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
-              <span style="font-size:0.92rem;">Mensagem excluida</span>
-            </div>
-          `;
-        }
+    const timeDiv = msgDiv.querySelector(".message-time");
+    const replyBox = msgDiv.querySelector(".reply-container");
+    
+    if (replyBox) replyBox.style.display = "none";
+    if (timeDiv) timeDiv.style.display = "none"; // Esconde a hora para não empurrar o layout
 
-        msgDiv.style.pointerEvents = "none";
-      }
-
-      replyCache.delete(msgId);
-      messagesMap.delete(msgId);
-
-      return;
+    if (timeDiv && timeDiv.previousElementSibling) {
+      timeDiv.previousElementSibling.innerHTML = `
+        <div class="msg-deleted-box" style="display: flex; align-items: center; gap: 6px; color: #888; font-style: italic; margin-top: 2px; min-height: 24px;">
+          <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
+          <span style="font-size:0.92rem;">Mensagem excluida</span>
+        </div>
+      `;
     }
+
+    // 2. Calcula a nova altura e compensa no scroll instantaneamente para a tela não pular
+    const alturaDepois = msgDiv.offsetHeight;
+    const diferenca = alturaAntes - alturaDepois;
+    if (diferenca > 0) {
+      chat.scrollTop = scrollAntes - diferenca;
+    }
+
+    msgDiv.style.pointerEvents = "none";
+  }
+
+  replyCache.delete(msgId);
+  messagesMap.delete(msgId);
+
+  return;
+}
+
+
     //TRATAMENTO EM MENSAGEM OCULTADA POR DENUNCIA (OCULTA O TEXTO E MANTÉM A ESTRUTURA DO REPLY)    
+// TRATAMENTO EM MENSAGEM EXCLUIDA OU OCULTADA (ATUALIZA O CONTEÚDO SEM REMOVER A DIV DO DOM)
 if (change.type === "modified") {
       const msgId = change.doc.id;
       const msgData = change.doc.data();
-      
-      if (msgData.denunciasContador && msgData.denunciasContador >= 1) {
-        const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
-        if (msgDiv) {
+      const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
+
+      if (msgDiv) {
+        if (msgData.deleted === true) {
+          const replyBox = msgDiv.querySelector(".reply-container");
+          if (replyBox) replyBox.style.display = "none";
+
+          // Atualiza apenas a div do texto, preservando a foto e a estrutura intactas
+          const bodyContent = msgDiv.children[2];
+          if (bodyContent) {
+            bodyContent.innerHTML = `
+              <div class="msg-deleted-box">
+                <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
+                <span style="font-size:0.92rem; font-style: italic; color: #888;">Mensagem excluída</span>
+              </div>
+            `;
+          }
+        } else if (msgData.denunciasContador && msgData.denunciasContador >= 1) {
           const textSpan = msgDiv.querySelector(".msg-text") || msgDiv.querySelector("span[style*='color']");
           if (textSpan) {
             textSpan.className = "msg-hidden";
@@ -922,6 +952,7 @@ if (change.type === "modified") {
       }
       return;
     }
+
     
 
     // 🔹 SUA LÓGICA ORIGINAL DE ADIÇÃO
@@ -1055,13 +1086,13 @@ let mensagemMaisVelhaCarregada = null;
 const paginacaoScroll = async () => {
   if (isInitialLoad || carregandoHistorico) return;
   
-  if (chat.scrollTop === 0) {
+  // Executa a busca quando o scroll chega próximo ao topo (< 40px)
+  if (chat.scrollTop <= 40) {
     const maxLimit = getMaxMessages();
     const totalRenderizadas = chat.querySelectorAll(".message").length;
     
     if (totalRenderizadas >= maxLimit) return;
     
-    // Captura a mensagem mais antiga que está atualmente na tela
     const primeiraMsgEl = chat.querySelector(".message");
     if (!primeiraMsgEl) return;
     
@@ -1070,34 +1101,31 @@ const paginacaoScroll = async () => {
     if (!msgReferencia || !msgReferencia.createdAt) return;
     
     const alturaAntes = chat.scrollHeight;
+    const scrollPosAntes = chat.scrollTop;
     carregandoHistorico = true;
     
-
-//27-06-26  Avança o tamanho da janela de visualização do onSnapshot de 50 em 50
     try {
+      limiteAtual += 30;
+      qAchatada = obterQueryAtiva();
       
-      limiteAtual += 50;
-      
-      // Desliga temporariamente o listener antigo para evitar duplicidade de renderização
+      // Mantém o ouvinte ativo e só re-executa a busca via snapshot ordenado sem recriar objetos do zero
       if (typeof unsubCurrent === "function") unsubCurrent();
       
-      // Monta a nova query com o limite expandido e reativa a escuta
-      qAchatada = obterQueryAtiva();
       unsubCurrent = onSnapshot(qAchatada, (snapshot) => {
         processSnapshot(snapshot);
-        // Ajusta a rolagem para manter a posição do usuário após injetar as novas mensagens
+        
+        // Mantém exatamente o nó de visualização travado
         requestAnimationFrame(() => {
-          chat.scrollTop = chat.scrollHeight - alturaAntes;
+          const alturaDepois = chat.scrollHeight;
+          chat.scrollTop = scrollPosAntes + (alturaDepois - alturaAntes);
         });
       });
-      
-    }
-    
-    
-    catch (errHist) {
+    } catch (errHist) {
       console.warn("Erro ao buscar histórico estático:", errHist);
     } finally {
-      carregandoHistorico = false;
+      setTimeout(() => {
+        carregandoHistorico = false;
+      }, 300);
     }
   }
 };
@@ -1340,20 +1368,16 @@ input.value = "";
     document.querySelector("emoji-picker")?.remove();
 
 if (input && input.style) {
-
   input.style.height = "44px";
-
+  
   requestAnimationFrame(() => {
-
-    const chat =
-      document.getElementById("chat-container");
-
     if (chat) {
-      chat.scrollTop = chat.scrollHeight;
+      chat.scrollTo({
+        top: chat.scrollHeight,
+        behavior: isInitialLoad ? "auto" : "smooth"
+      });
     }
-
   });
-
 }
 
   } catch (err) {

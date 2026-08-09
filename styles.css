@@ -1342,7 +1342,6 @@ footer a {
   flex-direction: column;
   overflow: hidden;
 }
-
 #chat-container {
   flex: 1;
   min-height: 0;
@@ -1351,9 +1350,12 @@ footer a {
   padding: 3px 0 5px 13px;
   background: #ffffff;
   -webkit-overflow-scrolling: touch;
-  /* Desativa a âncora automática do navegador que tenta adivinhar o scroll ao alterar elementos */
-  overflow-anchor:auto;
+  /* Ativa a ancoragem do navegador para o scroll não pular ao carregar mensagens no topo */
+  overflow-anchor: auto;
+  /* Isola o cálculo de layout dentro do container de mensagens para evitar travamento da página inteira */
+  contain: layout style;
 }
+
 
 /*COR DE FUNDO DO CAMPO E ENVIAR MSG*/
 #message-input-area {
@@ -7273,7 +7275,7 @@ color: #ffffff;
 
 
 /* ========================================================= 
-   ESTRUTURA PARA MENSAGEM EXCLUÍDA impede de A TELA SE MEXER TODA 
+   ESTRUTURA PARA MENSAGEM EXCLUIDA impede de A TELA SE MEXER TODA 
    ========================================================= */
 #chat-container .message.deleted-message-node {
   margin-top: 4px;
@@ -7304,7 +7306,35 @@ color: #ffffff;
   user-select: none;
 }
 
+/* ====================================================================================
+COMPACTAÇÃO TOTAL DE MENSAGENS EXCLUIDAS (SEM ESPAÇAMENTO) PARA EVITAR QUEBRAR O LAYOUT
+=====================================================================================*/
+#chat-container .message.deleted-message-node {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  min-height: 0;
+  background: transparent;
+}
 
+#chat-container .message.deleted-message-node .msg-deleted-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #888888;
+  font-style: italic;
+  font-size: 0.88rem;
+  line-height: 1.2;
+  min-height: 20px;
+  padding: 1px 0;
+  user-select: none;
+}
+
+#chat-container .message.deleted-message-node .msg-deleted-box {
+  font-size: 0.85rem;
+  color: #a0a0a0;
+}
 
 
 
