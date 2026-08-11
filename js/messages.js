@@ -1271,7 +1271,7 @@ export async function sendMessage(input) {
     return;
   }
 
-  const perfilRef = doc(db, "salas", "users", currentUser.uid);
+  const perfilRef = doc(db, "users", currentUser.uid);
   const perfilSnap = await getDoc(perfilRef);
   const userProfile = perfilSnap.exists() ? perfilSnap.data() : {};
 
