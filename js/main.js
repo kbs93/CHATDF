@@ -1556,9 +1556,6 @@ function applyProfileMode(isOwner) {
 /* ========================================================================
 Função que ZERA 100% qualquer efeito VIP no painel padrão (Info e Editar perfil)
 =====================================================================*/
-/* ========================================================================
-Função que ZERA 100% qualquer efeito VIP no painel padrão (Info e Editar perfil)
-=====================================================================*/
 function restaurarVisualPadraoPerfil() {
   const topName = document.getElementById("profileName");
   const topFrame = document.getElementById("vipTopPreviewFrame");

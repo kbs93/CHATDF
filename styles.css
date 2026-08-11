@@ -1261,6 +1261,10 @@ footer a {
   flex: 1;
   overflow-y: auto;
 }
+/*EDITAR o espacamento das lateral dentro do chat */
+  #chat-container {
+    padding-left: 6px;
+  }
 
 /* ------------------------ BASE DO CAMPO DE ENVIO 11-05-26 -------------------------- */
 #message-input-wrapper {
@@ -1342,19 +1346,7 @@ footer a {
   flex-direction: column;
   overflow: hidden;
 }
-#chat-container {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 3px 0 5px 13px;
-  background: #ffffff;
-  -webkit-overflow-scrolling: touch;
-  /* Ativa a ancoragem do navegador para o scroll não pular ao carregar mensagens no topo */
-  overflow-anchor: auto;
-  /* Isola o cálculo de layout dentro do container de mensagens para evitar travamento da página inteira */
-  contain: layout style;
-}
+
 
 
 /*COR DE FUNDO DO CAMPO E ENVIAR MSG*/
@@ -1783,18 +1775,7 @@ footer a {
   margin-right: 8px;
 }
 
-.message {
-  opacity: 1;
-  transform: none;
-  animation: none;
-}
 
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 /*=============== EDITA campo de enviar mensagens no chat textarea cresce de acordo com o texto ======================= */
 .message-input {
@@ -3568,29 +3549,7 @@ NES Anexos estilo WhatsApp zap EDITA O BOTAO SHEET TAMBEM 27-02-26
 
   }
 }
-/* ==================================================================================================
- BOTAO VER AS ULTIMAS 100 MENSAGEM ANTIGAS 18-01-26 
- ===============================ANIMAÇÃO DE MENSAGENS ANTIGAS=============================== */
-.message {
-  will-change: auto;
-}
 
-.message.fade-in {
-  will-change: transform, opacity;
-  animation: fadeInMessage 140ms ease-out both;
-}
-
-@keyframes fadeInMessage {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 /* ============================================== 26-02-2026=======
 BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
@@ -6595,6 +6554,37 @@ max-height: 1000px;
 /* Expande dinamicamente */
 transition: max-height 0.3s ease-in-out;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* ========================================================================= 
 18-07-26 VIP CARROSSEL COM DESIGN NATIVO DE APLICATIVO (UX PREMIUM - CHAT-DF)
 ========================================================================= */
@@ -6687,95 +6677,6 @@ margin-right: 6px;
 margin-left: 6px;
 }
 
-/* ========================================================================= 
-18-07-26 VIP CARROSSEL COM DESIGN NATIVO DE APLICATIVO (UX PREMIUM - CHAT-DF)
-========================================================================= */
-.vip-carousel-wrapper {
-position: relative;
-display: flex;
-align-items: center;
-width: 100%;
-background: #ffffff;
-padding: 6px 0;
-}
-
-.vip-carousel-wrapper .color-grid {
-display: flex;
-flex-direction: row;
-flex-wrap: nowrap;
-gap: 12px;
-width: 100%;
-max-height: none;
-overflow-x: auto;
-overflow-y: hidden;
-padding: 8px 6px;
-scroll-behavior: smooth;
-scroll-snap-type: x mandatory;
-scrollbar-width: none;
--ms-overflow-style: none;
-}
-
-.vip-carousel-wrapper .color-grid::-webkit-scrollbar {
-display: none;
-width: 0;
-height: 0;
-}
-
-.vip-carousel-wrapper .color-grid .color-box {
-flex: 0 0 36px;
-width: 36px;
-height: 36px;
-border-radius: 8px;
-scroll-snap-align: start;
-}
-
-.vip-carousel-wrapper .carousel-arrow {
-flex-shrink: 0;
-width: 36px;
-height: 36px;
-background-color: #5553532c;
-border: 1px solid rgba(0, 0, 0, 0.08);
-border-radius: 50%;
-color: #1e1b4b;
-display: flex;
-align-items: center;
-justify-content: center;
-cursor: pointer;
-z-index: 10;
-user-select: none;
-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
--webkit-tap-highlight-color: transparent;
-transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
-}
-
-.vip-carousel-wrapper .carousel-arrow i {
-font-size: 27px;
-display: flex;
-align-items: center;
-justify-content: center;
-}
-
-.vip-carousel-wrapper .carousel-arrow:hover {
-background: #f8fafc;
-color: #6f42c1;
-box-shadow: 0 4px 12px rgba(111, 66, 193, 0.15);
-}
-
-.vip-carousel-wrapper .carousel-arrow:active {
-transform: scale(0.9);
-background: #f1f5f9;
-}
-
-.vip-carousel-wrapper .carousel-arrow.left {
-margin-right: 6px;
-}
-
-.vip-carousel-wrapper .carousel-arrow.right {
-margin-left: 6px;
-}
-
-/* RESTAURAR ABAS DO PERFIL NA HORIZONTAL */
-/* RESTAURAR ABAS DO PERFIL NA HORIZONTAL */
 /* RESTAURAR ABAS DO PERFIL NA HORIZONTAL */
 .profile-body .profile-tabs {
 display: flex;
@@ -7336,5 +7237,60 @@ COMPACTAÇÃO TOTAL DE MENSAGENS EXCLUIDAS (SEM ESPAÇAMENTO) PARA EVITAR QUEBRA
   color: #a0a0a0;
 }
 
+/* ================= PULL TO REFRESH / INFINITE SCROLL INVERSO (UX NATIVA) ================= */
+#chat-container {
+  overscroll-behavior-y: contain; /* Trava a atualização nativa da página no mobile */
+}
 
+.pull-to-refresh-spinner {
+  display: none;
+  width: 100%;
+  padding: 12px 0 6px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 100;
+   background:#ffffff;
+}
 
+.pull-to-refresh-spinner.visible {
+  display: flex !important;
+}
+
+/* Círculo flutuante no estilo nativo iOS/Android */
+.pull-to-refresh-spinner .spinner-box {
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ 
+  margin: 0 auto;
+}
+
+/* Única seta preta */
+.pull-to-refresh-spinner .spinner-box i {
+  font-size: 28px;
+  color: #222222; /* Cor preta padrão de app */
+  display: inline-block;
+  line-height: 1;
+  font-weight: bold;
+ 
+}
+
+/* Animação de rotação contínua */
+.pull-to-refresh-spinner.spinning .spinner-box i {
+  animation: spinnerRotate 0.75s linear infinite;
+}
+
+@keyframes spinnerRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

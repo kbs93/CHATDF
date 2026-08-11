@@ -36,8 +36,7 @@ let currentMountedChat = null;
 const MESSAGES_CACHE_PREFIX = "chatdf_messages_cache_v1:";
 const USER_AREA_CACHE_KEY = "chatdf_user_area_cache";
 const DEFAULT_AVATAR = "./img/avatar.png";
-// ================= MAPEAMENTO DE SALAS ================= 18-05-26  
- // mapear nomes de salas para IDs, para evitar problemas com caracteres especiais e facilitar mudanças futuras
+
 const ROOM_ALIASES = {
   "Bate papo Geral": "geral",
   "Religiao": "religiao",
@@ -49,15 +48,12 @@ const ROOM_ALIASES = {
   "Entretenimento": "entretenimento"
 };
 
+/*====================================================================================================
+  Normaliza o nome da sala retornado do front-end para corresponder ao ID interno da coleção no banco
+======================================================================================================== */
 function normalizeRoomId(room) {
   return ROOM_ALIASES[room] || room || "geral";
 }
-
-// CONTROLE DE HISTÓRICO de mensagem de dias no chat 
-let diaAtualChat = new Date();
-let carregandoHistorico = false;
-let diasCarregados = 1;
-
 
 // CACHE / ESTADO
 const replyCache = new Map();
@@ -67,15 +63,23 @@ const messagesMap = new Map();
 // CONTROLES DE ENVIO
 let floodCount = 0;
 let floodResetTimeout = null;
-// CONTROLE DE DENÚNCIA (COOLDOWN)
 let ultimaDenunciaTime = 0;
 
 // =================== HELPERS VISUAIS ========================================================
+/*====================================================================================================
+  Sanitiza o avatar do usuário, aplicando o avatar padrão caso a foto seja inválida ou um link local
+======================================================================================================== */
 function sanitizeMessageAvatar(photo) {
+  /*====================================================================================================
+    Verifica se a foto é nula ou não é uma string válida
+  ======================================================================================================== */
   if (!photo || typeof photo !== "string") return DEFAULT_AVATAR;
 
   const trimmed = photo.trim();
 
+  /*====================================================================================================
+    Bloqueia URLs de ambiente local (localhost/127.0.0.1) para evitar quebras no ambiente de produção
+  ======================================================================================================== */
   if (trimmed.includes("127.0.0.1") || trimmed.includes("localhost")) {
     return DEFAULT_AVATAR;
   }
@@ -83,6 +87,9 @@ function sanitizeMessageAvatar(photo) {
   return trimmed;
 }
 
+/*====================================================================================================
+  Lê os dados salvos em cache na sessionStorage referente à área do usuário logado
+======================================================================================================== */
 function getCachedUserArea() {
   try {
     const raw = sessionStorage.getItem(USER_AREA_CACHE_KEY);
@@ -93,6 +100,9 @@ function getCachedUserArea() {
   }
 }
 
+/*====================================================================================================
+  Consolida os dados do perfil visual do usuário buscando do perfil do banco, cache ou dados de auth
+======================================================================================================== */
 function resolveUserVisualProfile(userProfile = {}, currentUserData = null) {
   const cachedUserArea = getCachedUserArea();
 
@@ -111,37 +121,50 @@ function resolveUserVisualProfile(userProfile = {}, currentUserData = null) {
     cachedUserArea?.profilePhoto ||
     currentUserData?.photoURL
   );
-//01-05-26
-  const profileCity =
-  userProfile.cidade ||
-  userProfile.city ||
-  "";
 
-return { profileName, profilePhoto, profileCity };
+  const profileCity =
+    userProfile.cidade ||
+    userProfile.city ||
+    "";
+
+  return { profileName, profilePhoto, profileCity };
 }
 
+/*====================================================================================================
+  Gera a chave de identificação do cache local de mensagens no sessionStorage baseado na sala atual
+======================================================================================================== */
 function getMessagesCacheKey(sala) {
   return `${MESSAGES_CACHE_PREFIX}${sala}`;
 }
 
+/*====================================================================================================
+  Alterna a classe visual de carregamento no body durante transições de salas
+======================================================================================================== */
 function setChatLoading(isLoading) {
   document.body.classList.toggle("chat-loading", Boolean(isLoading));
 }
 
-
-// 10-06-26 EDITA o botao de denuncia dentro do reply 
-// EDITA o botão do reply: Lixeira para mensagem própria / Bandeira para mensagem de terceiros
+/*====================================================================================================
+  Associa o evento de clique na mensagem para acionar a janela de resposta (reply), exclusão ou denúncia
+======================================================================================================== */
 function bindMessageReplyClick(div, msgId, msg) {
-div.addEventListener("click", (event) => {
-    // Busca o dado atualizado no Map ou verifica se a mensagem está excluída/ocultada
+  /*====================================================================================================
+    Escuta o evento de clique na área da mensagem
+  ======================================================================================================== */
+  div.addEventListener("click", (event) => {
     const msgAtualizada = messagesMap.get(msgId) || msg;
     const temClasseOculta = div.querySelector(".msg-hidden") !== null;
     const isExcluida = msgAtualizada.deleted === true || div.classList.contains("deleted-message-node");
     const isOcultada = temClasseOculta || (msgAtualizada.denunciasContador && msgAtualizada.denunciasContador >= 1);
 
-    // BLOQUEIA O REPLY SE A MENSAGEM ESTIVER EXCLUÍDA OU OCULTADA
+    /*====================================================================================================
+      Bloqueia o acionamento da prévia de resposta se a mensagem estiver excluída ou ocultada
+    ======================================================================================================== */
     if (isExcluida || isOcultada) return;
 
+    /*====================================================================================================
+      Ignora cliques em botões de expansão, caixas de citação e prévias de mídias/vídeos do YouTube
+    ======================================================================================================== */
     if (
       event.target.classList.contains("toggle-expand") ||
       event.target.closest(".quoted-reply-box") ||
@@ -149,9 +172,10 @@ div.addEventListener("click", (event) => {
       event.target.closest(".youtube-reply-thumb")
     ) return;
 
+    /*====================================================================================================
+      Se não houver uma resposta pendente no momento, ativa a caixa de prévia do reply
+    ======================================================================================================== */
     if (!window.replyingTo) {
-
-      // Garantia de ocultação de texto no reply
       const ehLottie = !isOcultada && typeof msgAtualizada.text === "string" && msgAtualizada.text.trim().endsWith(".json");
       const idLottiePreview = "lottie-preview-" + Math.random().toString(36).substring(2, 11);
       
@@ -161,27 +185,43 @@ div.addEventListener("click", (event) => {
             ? `<div id="${idLottiePreview}" style="width: 32px; height: 32px; display: inline-block; vertical-align: middle;"></div>` 
             : msgAtualizada.text);
 
-      
       showReplyPreview(msgId, textoPassado, msg.user, msg.photo || msg.avatar);
+      
+      /*====================================================================================================
+        Renderiza animação Lottie na prévia de resposta caso a mensagem seja uma figurinha animada .json
+      ======================================================================================================== */
       if (ehLottie) {
         requestAnimationFrame(() => {
+          /*====================================================================================================
+            Verifica a existência da função global de renderização de emojis Lottie antes da chamada
+          ======================================================================================================== */
           if (typeof window.renderizarEmojiLottie === "function") {
             window.renderizarEmojiLottie(idLottiePreview, msg.text.trim());
           }
         });
       }
-const preview = document.getElementById("replyPreview");
+
+      const preview = document.getElementById("replyPreview");
+      
+      /*====================================================================================================
+        Injeta os botões de ação dinâmicos de exclusão (própria) ou denúncia (terceiros) dentro do preview
+      ======================================================================================================== */
       if (preview) {
         const antigoBtn = preview.querySelector(".reply-report-action");
+        
+        /*====================================================================================================
+          Remove botão de ação antigo caso ele já exista na DOM antes de injetar o novo
+        ======================================================================================================== */
         if (antigoBtn) antigoBtn.remove();
 
-        // Identifica se a mensagem pertence ao usuário atualmente logado
         const isMinhaMensagem = currentUser && (currentUser.uid === msg.uid);
 
         const actionBtn = document.createElement("span");
         actionBtn.className = "reply-report-action";
 
-        // Função auxiliar para fechar a prévia suavemente sem dar tranco no scroll
+        /*====================================================================================================
+          Função para fechar suavemente o balão de resposta sem gerar impactos ou saltos de scroll
+        ======================================================================================================== */
         const fecharPreviewSuave = () => {
           preview.style.transition = "opacity 0.15s ease";
           preview.style.opacity = "0";
@@ -193,10 +233,16 @@ const preview = document.getElementById("replyPreview");
           }, 150);
         };
 
+        /*====================================================================================================
+          Define a lógica do botão da prévia: Exclusão caso a mensagem pertença ao próprio usuário logado
+        ======================================================================================================== */
         if (isMinhaMensagem) {
-          // ICONE DE LIXEIRA PARA MENSAGEM PRÓPRIA
           actionBtn.setAttribute("title", "Excluir mensagem");
           actionBtn.innerHTML = `<i class="bi bi-trash" style="color: #000000; font-size:20px;"></i>`;
+          
+          /*====================================================================================================
+            Evento de clique para exclusão suave da mensagem enviada pelo próprio usuário
+          ======================================================================================================== */
           actionBtn.addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -205,10 +251,11 @@ const preview = document.getElementById("replyPreview");
               const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
               const msgDocRef = doc(db, "salas", window.salaAtual, "messages", msgId);
 
-              // Fecha suavemente a prévia de resposta antes de atualizar no Firebase
               fecharPreviewSuave();
 
-              // Soft Delete: Atualiza o status da mensagem sem apagar o documento do banco
+              /*====================================================================================================
+                Aplica soft delete atualizando o campo 'deleted' para true no Firestore
+              ======================================================================================================== */
               await updateDoc(msgDocRef, {
                 deleted: true,
                 text: "Mensagem excluída"
@@ -220,25 +267,30 @@ const preview = document.getElementById("replyPreview");
               showToast("Erro ao excluir mensagem.");
             }
           });
-
-
-
         } else {
-          // DENUNCIA ICONE DE BANDEIRA PARA MENSAGENS DE OUTROS USUÁRIOS
           actionBtn.setAttribute("title", "Denunciar mensagem");
           actionBtn.innerHTML = `<i class="bi bi-flag-fill"><span style="color: #00000063; font-size:0.82rem;">Denunciar mensagem</span></i>`;
           
+          /*====================================================================================================
+            Evento de clique para registrar denúncia contra mensagens inadequadas de terceiros
+          ======================================================================================================== */
           actionBtn.addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
 
+            /*====================================================================================================
+              Interrompe a ação caso a mensagem já tenha sido denunciada nesta sessão
+            ======================================================================================================== */
             if (actionBtn.classList.contains("reported")) return;
 
             const agora = Date.now();
-            const tempoEspera = 180000; // 3 minutos
+            const tempoEspera = 180000;
             const ultimaDenuncia = window.lastReportTime || 0;
             const tempoPassado = agora - ultimaDenuncia;
 
+            /*====================================================================================================
+              Aplica tempo de espera (cooldown) de 3 minutos entre denúncias sucessivas
+            ======================================================================================================== */
             if (tempoPassado < tempoEspera) {
               showToast(`Aguarde um instante.`);
               return;
@@ -249,6 +301,10 @@ const preview = document.getElementById("replyPreview");
               const { auth } = await import("./firebase-config.js");
 
               const user = auth.currentUser;
+              
+              /*====================================================================================================
+                Valida se existe usuário ativo antes de permitir o envio de denúncia ao banco
+              ======================================================================================================== */
               if (!user) {
                 showToast("Faça login para denunciar.");
                 return;
@@ -257,10 +313,16 @@ const preview = document.getElementById("replyPreview");
               const msgDocRef = doc(db, "salas", window.salaAtual, "messages", msgId);
               const snapshot = await getDoc(msgDocRef);
               
+              /*====================================================================================================
+                Verifica se o snapshot existe e impede denúncias duplicadas do mesmo usuário
+              ======================================================================================================== */
               if (snapshot.exists()) {
                 const data = snapshot.data();
                 const denunciantes = data.denunciadoPor || [];
 
+                /*====================================================================================================
+                  Trava o reenvio caso o UID do usuário já conste no array de denunciantes
+                ======================================================================================================== */
                 if (denunciantes.includes(user.uid)) {
                   showToast("Você já denunciou esta mensagem.");
                   actionBtn.classList.add("reported");
@@ -268,6 +330,9 @@ const preview = document.getElementById("replyPreview");
                 }
               }
 
+              /*====================================================================================================
+                Incrementa o contador de denúncias e registra a UID do denunciante no documento
+              ======================================================================================================== */
               await updateDoc(msgDocRef, {
                 denunciasContador: increment(1),
                 denunciadoPor: arrayUnion(user.uid)
@@ -275,11 +340,9 @@ const preview = document.getElementById("replyPreview");
 
               window.lastReportTime = Date.now();
 
-              // Atualiza o texto visual mantendo a caixa firme sem alterar a estrutura do reply
               actionBtn.classList.add("reported");
               actionBtn.innerHTML = `<i class="bi bi-pin-angle-fill"></i>`; 
               
-              // Fecha a caixa suavemente após a denúncia ser concluída
               fecharPreviewSuave();
               showToast("Mensagem denunciada.");
 
@@ -294,6 +357,10 @@ const preview = document.getElementById("replyPreview");
     }
   });
 }
+
+/*====================================================================================================
+  Cria o elemento DOM HTML individual da mensagem com foto, nome, conteúdo, horario e menus de contexto
+======================================================================================================== */
 function createMessageElement(msgId, msg, timestamp = "") {
   const div = document.createElement("div");
   div.classList.add("message");
@@ -308,8 +375,9 @@ function createMessageElement(msgId, msg, timestamp = "") {
   let content = "";
   const idUnicoLottie = "lottie-" + Math.random().toString(36).substring(2, 11);
 
-// Se a mensagem estiver excluída, altera apenas o texto interno sem injetar classe externa
-// Se a mensagem estiver excluída, define a cor cinza no texto para todos os usuários
+  /*====================================================================================================
+    Tratamento de renderização do conteúdo conforme o status da mensagem (Excluída, Ocultada ou Mídia)
+  ======================================================================================================== */
   if (msg.deleted === true) {
     content = `
       <div class="msg-deleted-box" style="display: flex; align-items: center; gap: 6px; color: #888; font-style: italic;">
@@ -320,6 +388,9 @@ function createMessageElement(msgId, msg, timestamp = "") {
   } else if (msg.denunciasContador && msg.denunciasContador >= 1) {
     content = renderPlainMessage(msg);
   } else if (isSticker(msg.text)) {
+    /*====================================================================================================
+      Diferencia a criação da div entre figurinha animada (.json) e figurinha estática (imagem)
+    ======================================================================================================== */
     if (msg.text.trim().endsWith(".json")) {
       content = `<div id="${idUnicoLottie}" class="sticker-img" style="width: 30px; height: 30px; display: inline-block;" draggable="false"></div>`;
     } else {
@@ -331,11 +402,13 @@ function createMessageElement(msgId, msg, timestamp = "") {
     content = renderPlainMessage(msg);
   }
 
+  /*====================================================================================================
+    Aplica estilo visual diferenciado para mensagens de administradores
+  ======================================================================================================== */
   if (msg.user === "Kbsweb") {
     div.classList.add("admin-message");
   }
 
-  // Monta sempre o cabeçalho com foto, nome e cidade para manter o clustering estável
   div.innerHTML = `
   <div class="message-click-area" style="display:flex;align-items:center;gap:6px;">
     <img 
@@ -360,8 +433,14 @@ function createMessageElement(msgId, msg, timestamp = "") {
   <div class="message-time">${timestamp}</div>
   `;
 
+  /*====================================================================================================
+    Agenda a inicialização da animação Lottie para figurinhas após a injeção da estrutura no DOM
+  ======================================================================================================== */
   if (isSticker(msg.text) && msg.text.trim().endsWith(".json") && !msg.deleted && !(msg.denunciasContador && msg.denunciasContador >= 1)) {
     requestAnimationFrame(() => {
+      /*====================================================================================================
+        Executa a renderização do Lottie através da janela global caso o método esteja disponível
+      ======================================================================================================== */
       if (typeof window.renderizarEmojiLottie === "function") {
         window.renderizarEmojiLottie(idUnicoLottie, msg.text.trim());
       }
@@ -371,6 +450,10 @@ function createMessageElement(msgId, msg, timestamp = "") {
   bindMessageReplyClick(div, msgId, msg);
 
   const clickArea = div.querySelector(".message-click-area");
+  
+  /*====================================================================================================
+    Associa evento de abertura do menu contextual ao clicar na foto ou nome do autor da mensagem
+  ======================================================================================================== */
   if (clickArea) {
     clickArea.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -385,6 +468,9 @@ function createMessageElement(msgId, msg, timestamp = "") {
       let left = rect.left;
       let top = rect.bottom + 6;
 
+      /*====================================================================================================
+        Ajusta a posição do menu contextual dentro dos limites visíveis da janela
+      ======================================================================================================== */
       if (left < margin) left = margin;
       if (left + menuWidth > window.innerWidth - margin) {
         left = window.innerWidth - margin - menuWidth;
@@ -404,12 +490,9 @@ function createMessageElement(msgId, msg, timestamp = "") {
   return div;
 }
 
-
-
-
-
-
-// fechar mini menu ao clicar fora 06-05-26
+/*====================================================================================================
+  Event Listener global para ocultar menus contextuais quando o usuário clica fora deles
+======================================================================================================== */
 document.addEventListener("click", () => {
   const menu = document.getElementById("messageContextMenu");
   if (menu) {
@@ -420,9 +503,12 @@ document.addEventListener("click", () => {
     m.classList.remove("show-actions");
   });
 });
-// botao x dentro do mini menu 
+
 const closeBtn = document.getElementById("closeContextMenu");
 
+/*====================================================================================================
+  Fecha o menu contextual flutuante ao clicar no botão X
+======================================================================================================== */
 if (closeBtn) {
   closeBtn.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -434,6 +520,9 @@ if (closeBtn) {
   });
 }
 
+/*====================================================================================================
+  Salva o estado e lista de mensagens exibidas na sala no cache local da sessionStorage
+======================================================================================================== */
 function saveMessagesCache(sala, chat) {
   if (!chat || !sala) return;
 
@@ -458,6 +547,9 @@ function saveMessagesCache(sala, chat) {
   }
 }
 
+/*====================================================================================================
+  Restaura do cache (sessionStorage) as mensagens salvas para renderização instantânea ao trocar de sala
+======================================================================================================== */
 function restoreMessagesCache(chat, sala) {
   if (!chat || !sala) return false;
 
@@ -499,20 +591,12 @@ function restoreMessagesCache(chat, sala) {
       messagesMap.set(id, fullMsg);
 
       const div = createMessageElement(id, safeMsg, timestamp);
-//15-05-26 edita o formato do timestamp para mostrar data e hora em linhas separadas, 
-// facilitando a extração para a função de remoção de mensagens expiradas
-      const createdAtMs =
-  safeMsg.createdAt?.seconds
-    ? safeMsg.createdAt.seconds * 1000
-    : Date.now();
 
+      const createdAtMs = safeMsg.createdAt?.seconds
+        ? safeMsg.createdAt.seconds * 1000
+        : Date.now();
 
-
-div.setAttribute(
-  "data-created-at",
-  createdAtMs
-);
-      
+      div.setAttribute("data-created-at", createdAtMs);
       fragment.appendChild(div);
 
       if (safeMsg.replyTo) {
@@ -522,8 +606,6 @@ div.setAttribute(
 
     chat.replaceChildren(fragment);
     chat.scrollTop = chat.scrollHeight;
-    applyClustering(); // AGRUPANDO AS MENSAGEM Aplica o visual agrupado no cache 09-06-26
-
 
     pendingReplies.forEach(({ msg, div }) => {
       renderReply(msg).then((replyHTML) => {
@@ -539,6 +621,9 @@ div.setAttribute(
   }
 }
 
+/*====================================================================================================
+  Limpa e cancela as escutas ativas do Firebase Firestore para desocupar recursos de memória
+======================================================================================================== */
 function cleanupMessageListeners() {
   if (typeof unsubscribeCurrentMessages === "function") {
     unsubscribeCurrentMessages();
@@ -552,39 +637,9 @@ function cleanupMessageListeners() {
   historyListeners.clear();
 }
 
-
-// AGRUPANDO AS MENSAGEM 09-06-26 nova função para aplicar agrupamento visual de mensagens do mesmo usuário enviadas em sequência, 
-// ignorando mensagens de outros usuários no meio e considerando o minuto de envio para evitar agrupamento de mensagens enviadas com muito tempo de diferença
-function applyClustering() {
-  // Pega todas as mensagens renderizadas na tela
-  const msgs = document.querySelectorAll(".message");
-  let lastUid = null;
-  let lastTimeMin = null;
-
-  msgs.forEach((el) => {
-    const currentUid = el.dataset.uid;
-    
-    // Extrai o tempo exato do atributo que você já criou (data-created-at)
-    const timestampMs = Number(el.getAttribute("data-created-at")) || 0;
-    const dateObj = new Date(timestampMs);
-    // Cria uma string no formato "YYYY-MM-DD-HH-MM" (ignora os segundos)
-    const currentMinute = `${dateObj.getFullYear()}-${dateObj.getMonth()}-${dateObj.getDate()}-${dateObj.getHours()}-${dateObj.getMinutes()}`;
-
-    // Se o UID for igual ao anterior E o minuto for o mesmo, agrupa!
-    if (currentUid && currentUid === lastUid && currentMinute === lastTimeMin) {
-      el.classList.add("is-grouped");
-    } else {
-      el.classList.remove("is-grouped");
-    }
-
-    // Atualiza as variáveis para comparar com a próxima mensagem do loop
-    lastUid = currentUid;
-    lastTimeMin = currentMinute;
-  });
-}
-
-
-
+/*====================================================================================================
+  Gera um ID único alfanumérico formatado por data/hora ISO com sufixo randômico para ordenação no banco
+======================================================================================================== */
 function gerarIdISO() {
   const d = new Date();
   const pad = (n) => n.toString().padStart(2, "0");
@@ -602,32 +657,11 @@ function gerarIdISO() {
   return `${localISO}_BRT_${rand}`;
 }
 
-function formatarDia(d) {
-  const pad = (n) => n.toString().padStart(2, "0");
-
-  const yyyy = d.getFullYear();
-  const mm = pad(d.getMonth() + 1);
-  const dd = pad(d.getDate());
-
-  return `${yyyy}-${mm}-${dd}`;
-}
-
-function getDiaAtual() {
-  const d = new Date();
-  const pad = (n) => n.toString().padStart(2, "0");
-
-  const yyyy = d.getFullYear();
-  const mm = pad(d.getMonth() + 1);
-  const dd = pad(d.getDate());
-
-  return `${yyyy}-${mm}-${dd}`;
-}
-
-// ================================ HELPERS ==========================================================
-
-
 const isSticker = (text = "") => /\.(png|webp|jpg|jpeg|gif|json)$/i.test(String(text).trim());
 
+/*====================================================================================================
+  Extrai o ID único de 11 caracteres de URLs válidas de vídeos do YouTube
+======================================================================================================== */
 function extractYouTubeId(url = "") {
   const match = String(url).match(
     /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/
@@ -635,6 +669,9 @@ function extractYouTubeId(url = "") {
   return match ? match[1] : null;
 }
 
+/*====================================================================================================
+  Converte o objeto de carimbo de data do Firestore em uma string formatada em DD/MM HH:MM:SS
+======================================================================================================== */
 function formatTimestamp(ts) {
   if (!ts) return "";
   const d = ts.toDate();
@@ -642,12 +679,9 @@ function formatTimestamp(ts) {
 ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")} `;
 }
 
-// 10-06-26 edita o Botao de denuncia dentro do reply 
-/*Renderização Inicial (Quando o Chat Carrega ou Atualiza do Zero)
-O que faz: É a função responsável por montar o HTML das mensagens de texto comum. Quando o chat abre, ele verifica se a mensagem tem denunciasContador >= 1.
-Resultado: Se a mensagem já possui 1 denúncia no banco, ele renderiza na tela o texto: 
-"[Mensagem ocultada..]". Se não tiver denúncia, exibe o texto normal da mensagem. */
-
+/*====================================================================================================
+  Gera o HTML de renderização para mensagens simples de texto, tratando mensagens longas ou ocultadas
+======================================================================================================== */
 function renderPlainMessage(msg) {
   if (msg.deleted === true) {
     return `
@@ -670,10 +704,16 @@ function renderPlainMessage(msg) {
   return `<span style="white-space:pre-wrap;color:${color};">${msg.text}</span>`;
 }
 
+/*====================================================================================================
+  Gera a tag HTML de imagem para exibição de figurinhas estáticas na conversa
+======================================================================================================== */
 function renderSticker(url) {
   return `<img src="${url.trim()}" alt="sticker" class="sticker-img" draggable="false">`;
 }
 
+/*====================================================================================================
+  Gera o HTML da caixa de prévia com imagem de capa (thumbnail) e botão de play para vídeos do YouTube
+======================================================================================================== */
 function renderYouTube(id) {
   const thumb = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 
@@ -685,6 +725,9 @@ function renderYouTube(id) {
   `;
 }
 
+/*====================================================================================================
+  Converte cores em formato hexadecimal/nome para RGBA atribuindo nível de opacidade/transparência
+======================================================================================================== */
 function toRGBA(color, alpha = 0.15) {
   const el = document.createElement("span");
   el.style.color = color;
@@ -696,8 +739,9 @@ function toRGBA(color, alpha = 0.15) {
   return rgb.replace("rgb(", "rgba(").replace(")", `, ${alpha})`);
 }
 
-
-//================== Edita os emoji ANIMADOS dentro do reply  adicionando o JSON LITTE  23-06-26 ======================
+/*====================================================================================================
+  Renderiza de forma assíncrona o trecho de prévia com a mensagem original quando citado em um reply
+======================================================================================================== */
 async function renderReply(msg) {
   if (!msg.replyTo) return "";
   let d = replyCache.get(msg.replyTo);
@@ -730,9 +774,9 @@ async function renderReply(msg) {
   if (!color) color = "#3f3f3f";
   let content = "";
   const idUnicoReplyLottie = "lottie-reply-" + Math.random().toString(36).substring(2, 11);
+
   if (isSticker(d.text)) {
     if (d.text.trim().endsWith(".json")) {
-      // EDITA O tamanho do emoji dentro do reply para 35px 10-06-26
       content = `<div id="${idUnicoReplyLottie}" class="sticker-img" style="width: 30px; height: 30px; display: inline-block;"></div>`;
       requestAnimationFrame(() => {
         if (typeof window.renderizarEmojiLottie === "function") {
@@ -742,11 +786,7 @@ async function renderReply(msg) {
     } else {
       content = renderSticker(d.text);
     }
-    
-  } 
-  
-  // edita a borda o reply ao responde o usuario
-  else {
+  } else {
     const ytId = extractYouTubeId(d.text);
     if (ytId) {
       const thumb = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
@@ -760,10 +800,11 @@ async function renderReply(msg) {
       content = `<div class="quoted-text reply-text">${short}</div>`;
     }
   }
-  // 04-07-26  EDITAR  usuário respondido NO CAMPO DO CHAT REPLY e a foto 
-const bg = toRGBA(color, 0.17);
+
+  const bg = toRGBA(color, 0.17);
   const safeRepliedAvatar = d.photo || d.avatar || "./img/avatar.png";
-return `
+
+  return `
     <div class="quoted-reply-box"
          style="
            border-left: 4px solid ${color};
@@ -788,23 +829,26 @@ return `
       </div>
     </div>
   `;
-
-
 }
 
-// ================= PERFORMANCE limite de mensagens no DOM =================
 const MAX_MESSAGES_DESKTOP = 150;
 const MAX_MESSAGES_MOBILE = 100;
 
+/*====================================================================================================
+  Retorna o número máximo de mensagens mantidas na tela baseando-se no tamanho da tela do dispositivo
+======================================================================================================== */
 function getMaxMessages() {
   return window.innerWidth < 600 ? MAX_MESSAGES_MOBILE : MAX_MESSAGES_DESKTOP;
 }
 
+/*====================================================================================================
+  Remove as mensagens excedentes no topo da árvore DOM quando o limite da tela for atingido
+======================================================================================================== */
 function trimMessages(chat) {
   const max = getMaxMessages();
   while (chat.children.length > max) {
     const first = chat.firstElementChild;
-    if (!first) break;
+    if (!first || first.classList.contains("pull-to-refresh-spinner")) break;
 
     const id = first.dataset?.id;
     if (id) renderedMessages.delete(id);
@@ -813,32 +857,34 @@ function trimMessages(chat) {
   }
 }
 
-
 // ===================== INIT LISTENER DE MENSAGENS =======================================================
+/*====================================================================================================
+  Inicializa o listener do chat, configurando o carregamento inicial, escutas do Firestore e scroll
+======================================================================================================== */
 export function initMessages(chat, sala) {
-    sala = normalizeRoomId(sala); // 18-05-26 normalizar o ID da sala para evitar problemas com caracteres especiais e facilitar mudanças futuras
-  const isSameRoom =
-    currentMountedRoom === sala &&
-    currentMountedChat === chat;
+  sala = normalizeRoomId(sala);
+  const isSameRoom = currentMountedRoom === sala && currentMountedChat === chat;
 
   window.salaAtual = sala;
 
   cleanupMessageListeners();
 
+  /*====================================================================================================
+    Verifica se o container do chat está presente no HTML antes de dar prosseguimento à inicialização
+  ======================================================================================================== */
   if (!chat) {
     console.warn("initMessages: container de chat não encontrado");
     return () => {};
   }
 
+  // Trava o Pull-to-refresh nativo do navegador mobile
+  chat.style.overscrollBehaviorY = "contain";
+
   setChatLoading(true);
   isInitialLoad = true;
 
-// NOVA ESTRUTURA ACHATADA: Busca direto da sala, sem pastas de dias 28-05-26 
-const chatRefAchatado = collection(db, "salas", sala, "messages");
+  const chatRefAchatado = collection(db, "salas", sala, "messages");
   if (!isSameRoom) {
-    diasCarregados = 1;
-    diaAtualChat = new Date();
-
     const restoredFromCache = restoreMessagesCache(chat, sala);
 
     if (!restoredFromCache) {
@@ -856,396 +902,429 @@ const chatRefAchatado = collection(db, "salas", sala, "messages");
   currentMountedRoom = sala;
   currentMountedChat = chat;
 
-// 27-06-26 Limite controlado dinamicamente para expansão em tempo real
-  let limiteAtual = 50; 
-
-  const obterQueryAtiva = () => query(
-    chatRefAchatado,
-    orderBy("createdAt"),
-    limitToLast(limiteAtual)
-  );
-
-  let qAchatada = obterQueryAtiva();
-
-//14-05-26 dias modelo de janela deslizantes 
-//14-05-26 dias modelo de janela deslizantes 
-const processSnapshot = (snapshot) => {
-  const fragment = document.createDocumentFragment();
-  const pendingReplies = [];
-  let addedCount = 0;
-
-
-
-
-snapshot.docChanges().forEach((change) => {
-    // TRATAMENTO EM TEMPO REAL PARA REMOÇÃO DE MENSAGEM no CHAT (EXCLUI e  LIXEIRA)
-    if (change.type === "removed") {
-  const msgId = change.doc.id;
-  const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
-
-  if (msgDiv && chat) {
-    // 1. Captura a altura da mensagem e a posição do scroll antes de alterar a estrutura
-    const alturaAntes = msgDiv.offsetHeight;
-    const scrollAntes = chat.scrollTop;
-
-    const timeDiv = msgDiv.querySelector(".message-time");
-    const replyBox = msgDiv.querySelector(".reply-container");
-    
-    if (replyBox) replyBox.style.display = "none";
-    if (timeDiv) timeDiv.style.display = "none"; // Esconde a hora para não empurrar o layout
-
-    if (timeDiv && timeDiv.previousElementSibling) {
-      timeDiv.previousElementSibling.innerHTML = `
-        <div class="msg-deleted-box" style="display: flex; align-items: center; gap: 6px; color: #888; font-style: italic; margin-top: 2px; min-height: 24px;">
-          <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
-          <span style="font-size:0.92rem;">Mensagem excluida</span>
-        </div>
-      `;
-    }
-
-    // 2. Calcula a nova altura e compensa no scroll instantaneamente para a tela não pular
-    const alturaDepois = msgDiv.offsetHeight;
-    const diferenca = alturaAntes - alturaDepois;
-    if (diferenca > 0) {
-      chat.scrollTop = scrollAntes - diferenca;
-    }
-
-    msgDiv.style.pointerEvents = "none";
+  // Garantia do Elemento Visual Spinner no topo
+  let spinnerEl = chat.querySelector(".pull-to-refresh-spinner");
+  if (!spinnerEl) {
+    spinnerEl = document.createElement("div");
+    spinnerEl.className = "pull-to-refresh-spinner";
+    spinnerEl.innerHTML = `<div class="spinner-box"><i class="bi bi-arrow-repeat"></i></div>`;
+    chat.prepend(spinnerEl);
   }
 
-  replyCache.delete(msgId);
-  messagesMap.delete(msgId);
+ // ============================================================================================================================
+//ESTADO E PAGINAÇÃO INVERSA DAS MENSAGEM   MOSTRA AS MENSAGENS MAIS ANTIGAS PRIMEIRO, E VAI CARREGANDO MAIS CONFORME O USUÁRIO ROLA PARA CIMA
+// ============================================================================================================================
+  let oldestDoc = null; // Guarda o ponteiro da mensagem mais antiga no topo
+  let hasMoreHistory = true; // Trava quando não houver mais mensagens antigas
+  let isLoadingHistory = false; // Trava para evitar requisições simultâneas
+  const BATCH_SIZE = 30; // Quantidade de mensagens antigas por lote
 
-  return;
-}
+  // 1. QUERY INICIAL (Escuta em tempo real apenas as últimas mensagens)
 
+  const qAchatada = query(
+    chatRefAchatado,
+    orderBy("createdAt"),
+    limitToLast(BATCH_SIZE)
+  );
 
-    //TRATAMENTO EM MENSAGEM OCULTADA POR DENUNCIA (OCULTA O TEXTO E MANTÉM A ESTRUTURA DO REPLY)    
-// TRATAMENTO EM MENSAGEM EXCLUIDA OU OCULTADA (ATUALIZA O CONTEÚDO SEM REMOVER A DIV DO DOM)
-if (change.type === "modified") {
-      const msgId = change.doc.id;
-      const msgData = change.doc.data();
-      const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
+  /*====================================================================================================
+    Processa alterações do snapshot recebidas do Firestore (adição, modificação e remoção em tempo real)
+  ======================================================================================================== */
+  const processSnapshot = (snapshot) => {
+    const fragment = document.createDocumentFragment();
+    const pendingReplies = [];
+    let addedCount = 0;
 
-      if (msgDiv) {
-        if (msgData.deleted === true) {
+    /*====================================================================================================
+      Armazena o documento mais antigo do lote inicial para servirem de cursor na paginação do histórico
+    ======================================================================================================== */
+    if (snapshot.docs.length > 0 && !oldestDoc) {
+      oldestDoc = snapshot.docs[0];
+    }
+
+    /*====================================================================================================
+      Itera sobre cada alteração individual do snapshot retornado pelo banco de dados
+    ======================================================================================================== */
+    snapshot.docChanges().forEach((change) => {
+      /*====================================================================================================
+        Tratamento para alteração do tipo 'removed': atualiza o visual da mensagem removida dinamicamente
+      ======================================================================================================== */
+      if (change.type === "removed") {
+        const msgId = change.doc.id;
+        const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
+
+        if (msgDiv && chat) {
+          const alturaAntes = msgDiv.offsetHeight;
+          const scrollAntes = chat.scrollTop;
+
+          const timeDiv = msgDiv.querySelector(".message-time");
           const replyBox = msgDiv.querySelector(".reply-container");
-          if (replyBox) replyBox.style.display = "none";
 
-          // Atualiza apenas a div do texto, preservando a foto e a estrutura intactas
-          const bodyContent = msgDiv.children[2];
-          if (bodyContent) {
-            bodyContent.innerHTML = `
-              <div class="msg-deleted-box">
+          if (replyBox) replyBox.style.display = "none";
+          if (timeDiv) timeDiv.style.display = "none";
+
+          if (timeDiv && timeDiv.previousElementSibling) {
+            timeDiv.previousElementSibling.innerHTML = `
+              <div class="msg-deleted-box" style="display: flex; align-items: center; gap: 6px; color: #888; font-style: italic; margin-top: 2px; min-height: 24px;">
                 <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
-                <span style="font-size:0.92rem; font-style: italic; color: #888;">Mensagem excluída</span>
+                <span style="font-size:0.92rem;">Mensagem excluída</span>
               </div>
             `;
           }
-        } else if (msgData.denunciasContador && msgData.denunciasContador >= 1) {
-          const textSpan = msgDiv.querySelector(".msg-text") || msgDiv.querySelector("span[style*='color']");
-          if (textSpan) {
-            textSpan.className = "msg-hidden";
-            textSpan.style.color = "";
-            textSpan.innerHTML = `<i class="bi bi-emoji-frown"></i> Mensagem ocultada..`;
+
+          const alturaDepois = msgDiv.offsetHeight;
+          const diferenca = alturaAntes - alturaDepois;
+          if (diferenca > 0) {
+            chat.scrollTop = scrollAntes - diferenca;
+          }
+
+          msgDiv.style.pointerEvents = "none";
+        }
+
+        replyCache.delete(msgId);
+        messagesMap.delete(msgId);
+        return;
+      }
+
+      /*====================================================================================================
+        Tratamento para alteração do tipo 'modified': atualiza os dados visuais de mensagens modificadas
+      ======================================================================================================== */
+      if (change.type === "modified") {
+        const msgId = change.doc.id;
+        const msgData = change.doc.data();
+        const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
+
+        if (msgDiv) {
+          if (msgData.deleted === true) {
+            const replyBox = msgDiv.querySelector(".reply-container");
+            if (replyBox) replyBox.style.display = "none";
+
+            const bodyContent = msgDiv.children[2];
+            if (bodyContent) {
+              bodyContent.innerHTML = `
+                <div class="msg-deleted-box">
+                  <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
+                  <span style="font-size:0.92rem; font-style: italic; color: #888;">Mensagem excluída</span>
+                </div>
+              `;
+            }
+          } else if (msgData.denunciasContador && msgData.denunciasContador >= 1) {
+            const textSpan = msgDiv.querySelector(".msg-text") || msgDiv.querySelector("span[style*='color']");
+            if (textSpan) {
+              textSpan.className = "msg-hidden";
+              textSpan.style.color = "";
+              textSpan.innerHTML = `<i class="bi bi-emoji-frown"></i> Mensagem ocultada..`;
+            }
           }
         }
+        return;
       }
-      return;
-    }
 
-    
-
-    // 🔹 SUA LÓGICA ORIGINAL DE ADIÇÃO
-    if (change.type !== "added") return;
-    const docSnap = change.doc;
-    const msgId = docSnap.id;
-    if (renderedMessages.has(msgId)) return;
-    renderedMessages.add(msgId);
-    const raw = docSnap.data();
-    const msg = {
-      ...raw,
-      text: typeof raw.text === "string"
-        ? raw.text
-        : ""
-    };
-
-    replyCache.set(msgId, {
-      user: msg.user,
-      text: msg.text,
-      photo: msg.photo,
-      color: msg.color
-    });
-
-    if (!messagesMap.has(msgId)) {
-      const fullMsg = {
-        id: msgId,
-        ...msg
+      /*====================================================================================================
+        Verifica se a alteração é do tipo 'added', ignorando outros tipos de alterações que não sejam adições
+      ======================================================================================================== */
+      if (change.type !== "added") return;
+      const docSnap = change.doc;
+      const msgId = docSnap.id;
+      if (renderedMessages.has(msgId)) return;
+      renderedMessages.add(msgId);
+      const raw = docSnap.data();
+      const msg = {
+        ...raw,
+        text: typeof raw.text === "string" ? raw.text : ""
       };
 
-      messagesState.push(fullMsg);
-      messagesMap.set(msgId, fullMsg);
-    }
-
-    const timestamp = msg.createdAt
-      ? formatTimestamp(msg.createdAt)
-      : "";
-
-    const div = createMessageElement(
-      msgId,
-      msg,
-      timestamp
-    );
-    const createdAtMs =
-  msg.createdAt?.toMillis?.()
-  || (msg.createdAt?.seconds * 1000)
-  || Date.now();
-
-
-// 15-05-26 edita o formato do timestamp para mostrar data e hora em linhas separadas, 
-// facilitando a extração para a função de remoção de mensagens expiradas
-div.setAttribute(
-  "data-created-at",
-  createdAtMs
-);
-
-    fragment.appendChild(div);
-
-    addedCount++;
-
-    if (msg.replyTo) {
-      pendingReplies.push({
-        msg,
-        div
+      replyCache.set(msgId, {
+        user: msg.user,
+        text: msg.text,
+        photo: msg.photo,
+        color: msg.color
       });
-    }
-  });
 
-//14-05-26 dias modelo de janela deslizantes
-if (addedCount > 0) {
-  chat.appendChild(fragment);
+      if (!messagesMap.has(msgId)) {
+        const fullMsg = { id: msgId, ...msg };
+        messagesState.push(fullMsg);
+        messagesMap.set(msgId, fullMsg);
+      }
 
-  const msgs = [
-    ...chat.querySelectorAll(".message")
-  ];
+      const timestamp = msg.createdAt ? formatTimestamp(msg.createdAt) : "";
+      const div = createMessageElement(msgId, msg, timestamp);
+      const createdAtMs = msg.createdAt?.toMillis?.() || (msg.createdAt?.seconds * 1000) || Date.now();
 
+      div.setAttribute("data-created-at", createdAtMs);
+      fragment.appendChild(div);
+      addedCount++;
 
-msgs.sort((a, b) => {
-    const timeA = Number(a.getAttribute("data-created-at")) || 0;
-    const timeB = Number(b.getAttribute("data-created-at")) || 0;
-    
-    return timeA - timeB;
-  });
-
-
-  msgs.forEach(el => {
-    chat.appendChild(el);
-  });
-  applyClustering(); // AGRUPANDO AS MENSAGEM Aplica o visual agrupado em tempo real 09-06-26
-}
-
-
-  if (!carregandoHistorico && addedCount > 0) {
-    setTimeout(() => {
-      window.smartScrollToBottom?.();
-    }, isInitialLoad ? 0 : 80);
-  }
-
-  requestAnimationFrame(() => {
-    trimMessages(chat);
-  });
-
-  pendingReplies.forEach(({ msg, div }) => {
-    renderReply(msg).then((replyHTML) => {
-      const box = div.querySelector(".reply-container");
-
-      if (box && replyHTML) {
-        box.innerHTML = replyHTML;
+      if (msg.replyTo) {
+        pendingReplies.push({ msg, div });
       }
     });
-  });
 
-  setTimeout(() => {
-    saveMessagesCache(sala, chat);
-
-    isInitialLoad = false;
-
-    setChatLoading(false);
-  }, 0);
-};
-
-
-
-// 28-05-26  Como o banco agora é unificado, não precisamos de fallback de "ontem"
-let unsubCurrent = onSnapshot(qAchatada, (snapshot) => {
-  processSnapshot(snapshot);
-});
-
-// CORREÇÃO 21-06-26 : Busca mensagens antigas de forma estática com getDocs para evitar refaturamento do onSnapshot
-let mensagemMaisVelhaCarregada = null;
-
-const paginacaoScroll = async () => {
-  if (isInitialLoad || carregandoHistorico) return;
-  
-  // Executa a busca quando o scroll chega próximo ao topo (< 40px)
-  if (chat.scrollTop <= 40) {
-    const maxLimit = getMaxMessages();
-    const totalRenderizadas = chat.querySelectorAll(".message").length;
-    
-    if (totalRenderizadas >= maxLimit) return;
-    
-    const primeiraMsgEl = chat.querySelector(".message");
-    if (!primeiraMsgEl) return;
-    
-    const idPrimeira = primeiraMsgEl.dataset.id;
-    const msgReferencia = messagesMap.get(idPrimeira);
-    if (!msgReferencia || !msgReferencia.createdAt) return;
-    
-    const alturaAntes = chat.scrollHeight;
-    const scrollPosAntes = chat.scrollTop;
-    carregandoHistorico = true;
-    
-    try {
-      limiteAtual += 30;
-      qAchatada = obterQueryAtiva();
-      
-      // Mantém o ouvinte ativo e só re-executa a busca via snapshot ordenado sem recriar objetos do zero
-      if (typeof unsubCurrent === "function") unsubCurrent();
-      
-      unsubCurrent = onSnapshot(qAchatada, (snapshot) => {
-        processSnapshot(snapshot);
-        
-        // Mantém exatamente o nó de visualização travado
-        requestAnimationFrame(() => {
-          const alturaDepois = chat.scrollHeight;
-          chat.scrollTop = scrollPosAntes + (alturaDepois - alturaAntes);
-        });
-      });
-    } catch (errHist) {
-      console.warn("Erro ao buscar histórico estático:", errHist);
-    } finally {
+    /*====================================================================================================
+      Se novas mensagens forem adicionadas, anexa o fragmento no chat e faz rolagem suave para o fundo
+    ======================================================================================================== */
+    if (addedCount > 0) {
+      chat.appendChild(fragment);
       setTimeout(() => {
-        carregandoHistorico = false;
-      }, 300);
+        window.smartScrollToBottom?.();
+      }, isInitialLoad ? 0 : 80);
+    }
+
+    pendingReplies.forEach(({ msg, div }) => {
+      renderReply(msg).then((replyHTML) => {
+        const box = div.querySelector(".reply-container");
+        if (box && replyHTML) {
+          box.innerHTML = replyHTML;
+        }
+      });
+    });
+
+    setTimeout(() => {
+      saveMessagesCache(sala, chat);
+      isInitialLoad = false;
+      setChatLoading(false);
+    }, 0);
+  };
+
+  /*====================================================================================================
+    Função assíncrona que busca lotes de mensagens antigas no banco de dados ao rolar até o topo do chat
+  ======================================================================================================== */
+  async function loadMoreOlderMessages() {
+    /*====================================================================================================
+      Verifica se o sistema já está carregando, se não há mais mensagens ou se não há ponteiro de consulta
+    ======================================================================================================== */
+    if (isLoadingHistory || !hasMoreHistory || !oldestDoc) return;
+
+    isLoadingHistory = true;
+
+    // Exibe o Spinner e ativa a rotação
+    if (spinnerEl) {
+      spinnerEl.classList.add("visible", "spinning");
+    }
+
+    try {
+      const { endBefore, limitToLast: firestoreLimitToLast } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
+
+      const qHistorico = query(
+        chatRefAchatado,
+        orderBy("createdAt"),
+        endBefore(oldestDoc),
+        firestoreLimitToLast(BATCH_SIZE)
+      );
+
+      const snapshot = await getDocs(qHistorico);
+
+      // DELAY FORÇADO DE 2 SEGUNDOS COM SPINNER GIRANDO
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      /*====================================================================================================
+        Verifica se o snapshot do histórico retornou vazio e encerra a busca de histórico antigo
+      ======================================================================================================== */
+      if (snapshot.empty) {
+        hasMoreHistory = false;
+      } else {
+        oldestDoc = snapshot.docs[0];
+
+        const previousScrollHeight = chat.scrollHeight;
+        const previousScrollTop = chat.scrollTop;
+
+        const fragment = document.createDocumentFragment();
+        const pendingReplies = [];
+
+        snapshot.docs.forEach((docSnap) => {
+          const msgId = docSnap.id;
+          if (renderedMessages.has(msgId)) return;
+          renderedMessages.add(msgId);
+
+          const raw = docSnap.data();
+          const msg = {
+            ...raw,
+            text: typeof raw.text === "string" ? raw.text : ""
+          };
+
+          replyCache.set(msgId, {
+            user: msg.user,
+            text: msg.text,
+            photo: msg.photo,
+            color: msg.color
+          });
+
+          if (!messagesMap.has(msgId)) {
+            const fullMsg = { id: msgId, ...msg };
+            messagesState.unshift(fullMsg);
+            messagesMap.set(msgId, fullMsg);
+          }
+
+          const timestamp = msg.createdAt ? formatTimestamp(msg.createdAt) : "";
+          const div = createMessageElement(msgId, msg, timestamp);
+          const createdAtMs = msg.createdAt?.toMillis?.() || (msg.createdAt?.seconds * 1000) || Date.now();
+
+          div.setAttribute("data-created-at", createdAtMs);
+          fragment.appendChild(div);
+
+          if (msg.replyTo) {
+            pendingReplies.push({ msg, div });
+          }
+        });
+
+        /*====================================================================================================
+          Insere o fragmento de mensagens antigas no topo, respeitando a posição do spinner
+        ======================================================================================================== */
+        if (spinnerEl && spinnerEl.nextSibling) {
+          chat.insertBefore(fragment, spinnerEl.nextSibling);
+        } else {
+          chat.insertBefore(fragment, chat.firstChild);
+        }
+
+        pendingReplies.forEach(({ msg, div }) => {
+          renderReply(msg).then((replyHTML) => {
+            const box = div.querySelector(".reply-container");
+            if (box && replyHTML) box.innerHTML = replyHTML;
+          });
+        });
+
+        // RETENÇÃO EXATA DE SCROLL (SEM PULOS)
+        const newScrollHeight = chat.scrollHeight;
+        chat.scrollTop = (newScrollHeight - previousScrollHeight) + previousScrollTop;
+      }
+    } catch (err) {
+      console.error("Erro ao carregar histórico antigo:", err);
+    } finally {
+      isLoadingHistory = false;
+      if (spinnerEl) {
+        spinnerEl.classList.remove("visible", "spinning");
+      }
     }
   }
-};
 
+  /*====================================================================================================
+    Função do ouvinte de scroll para identificar quando o usuário se aproxima do topo do container
+  ======================================================================================================== */
+  const handleScroll = () => {
+    /*====================================================================================================
+      Verifica se a distância de rolagem do topo é menor ou igual a 10px para carregar mensagens antigas
+    ======================================================================================================== */
+    if (chat.scrollTop <= 10) {
+      loadMoreOlderMessages();
+    }
+  };
 
+  chat.addEventListener("scroll", handleScroll);
 
-chat.addEventListener("scroll", paginacaoScroll);
+  let unsubCurrent = onSnapshot(qAchatada, (snapshot) => {
+    processSnapshot(snapshot);
+  });
 
-unsubscribeCurrentMessages = () => {
-  if (unsubCurrent) unsubCurrent();
-  setChatLoading(false);
-};
+  unsubscribeCurrentMessages = () => {
+    if (unsubCurrent) unsubCurrent();
+    chat.removeEventListener("scroll", handleScroll);
+    setChatLoading(false);
+  };
 
-
-
-return () => {
-    chat.removeEventListener("scroll", paginacaoScroll);
+  return () => {
     saveMessagesCache(sala, chat);
     cleanupMessageListeners();
   };
 }
 
-// ================= ENVIO — AGORA COM REPLY FUNCIONANDO =========================================================
+// ================= ENVIO =========================================================
+/*====================================================================================================
+  Envia a mensagem digitada pelo usuário realizando sanitização, bloqueios e gravação no Firestore
+======================================================================================================== */
 export async function sendMessage(input) {
-  let text = input.value.trim(); // melhoria 03-05-26 
+  let text = input.value.trim();
   if (!text) return;
-// 03-05-26  (floodCount >= 4): Limite de 4 mensagens por minuto para evitar flood. Contagem é resetada a cada 60 segundos.
+
+  /*====================================================================================================
+    Bloqueia o envio contínuo de mensagens caso a contagem de flood atinja o limite estabelecido
+  ======================================================================================================== */
   if (floodCount >= 4) {
     showToast("Envio muito rápido, Aguarde um instante.");
     return;
   }
   floodCount++;
+  
+  /*====================================================================================================
+    Inicia o temporizador para resetar a contagem do controle de anti-flood após o tempo pré-definido
+  ======================================================================================================== */
   if (!floodResetTimeout) {
     floodResetTimeout = setTimeout(() => {
       floodCount = 0;
       floodResetTimeout = null;
-    }, 40000);// 40 segundos para resetar a contagem de mensagens enviadas, permitindo um pouco mais de flexibilidade sem ser tão restritivo quanto 1 minuto exato
+    }, 40000);
   }
   const htmlPattern = /<[^>]*>/g;
+  
+  /*====================================================================================================
+    Verifica e bloqueia tags HTML dentro do texto digitado para prevenir vulnerabilidades de XSS
+  ======================================================================================================== */
   if (htmlPattern.test(text)) {
     showToast("Não é permitido este tipo de mensagens.");
     return;
   }
+  
+  /*====================================================================================================
+    Verifica se existe um usuário autenticado no sistema antes de prosseguir com o envio
+  ======================================================================================================== */
   if (!currentUser) {
     showToast("Faça login para enviar mensagens.");
     return;
   }
 
-// ------------------------ BLOQUEAR ENVIO SEM PERFIL COMPLETO 11-05-26 --------------------------
-const perfilRef = doc(db, "users", currentUser.uid);
-const perfilSnap = await getDoc(perfilRef);
-const userProfile = perfilSnap.exists() ? perfilSnap.data() : {};
+  const perfilRef = doc(db, "salas", "users", currentUser.uid);
+  const perfilSnap = await getDoc(perfilRef);
+  const userProfile = perfilSnap.exists() ? perfilSnap.data() : {};
 
-if (userProfile.perfilCompleto !== true) {
-  showToast("Complete seu perfil para enviar mensagens.");
-
-  document.dispatchEvent(new CustomEvent("chatdf:open-profile"));
-
-  return;
-}
-
-
-// -------------- SANITIZAÇÃO DE DADOS PESSOAIS 03-05-26  -----------------
-
-// EMAIL
-// EMAIL (mesmo sem .com, .br etc)
-text = text.replace(
-  /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\b/gi,
-  "***"
-);
-// TELEFONE (formatos comuns)
-text = text.replace(
-  /(\+?55)?\s*\(?\d{2}\)?\s*9?\d{4}[-\s]?\d{4}/g,
-  "***"
-);
-
-// CPF (com ou sem pontuação)
-text = text.replace(
-  /\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/g,
-  "***"
-);
-
-// -------- NORMALIZAÇÃO (anti-burlar com letras) 03-05-26 ---------------
-const somenteNumeros = text.replace(/\D/g, "");
-
-// se parecer telefone ou tentativa disfarçada
-if (somenteNumeros.length >= 10) {
-  text = text.replace(/\d/g, "*");
-}
-  function bloqueiaTelefone(text) {
-    const nums = text.replace(/\D/g, "");
-
-    if (/^9\d{8}$/.test(nums)) return true;
-    if (/^\d{2}9\d{8}$/.test(nums)) return true;
-
-    const padrao = /(\+?55)?\s*\(?\d{0,2}\)?\s*9\d{4}[-\s]?\d{4}/;
-    if (padrao.test(text)) return true;
-
-    return false;
+  /*====================================================================================================
+    Verifica se o usuário completou seu perfil e dispara o evento de abertura de perfil se for falso
+  ======================================================================================================== */
+  if (userProfile.perfilCompleto !== true) {
+    showToast("Complete seu perfil para enviar mensagens.");
+    document.dispatchEvent(new CustomEvent("chatdf:open-profile"));
+    return;
   }
 
-// TELEFONE → mascarar ao invés de bloquear 03-05-26
-if (bloqueiaTelefone(text)) {
-  text = text.replace(/\d/g, "*");
-}
+  text = text.replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\b/gi, "***");
+  text = text.replace(/(\+?55)?\s*\(?\d{2}\)?\s*9?\d{4}[-\s]?\d{4}/g, "***");
+  text = text.replace(/\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/g, "***");
+
+  const somenteNumeros = text.replace(/\D/g, "");
+  
+  /*====================================================================================================
+    Verifica a presença de sequências numéricas longas e faz a substituição por asteriscos
+  ======================================================================================================== */
+  if (somenteNumeros.length >= 10) {
+    text = text.replace(/\d/g, "*");
+  }
+
+  /*====================================================================================================
+    Identifica se a mensagem contém formatos de número de telefone usando padrões de expressões regulares
+  ======================================================================================================== */
+  function bloqueiaTelefone(text) {
+    const nums = text.replace(/\D/g, "");
+    if (/^9\d{8}$/.test(nums)) return true;
+    if (/^\d{2}9\d{8}$/.test(nums)) return true;
+    const padrao = /(\+?55)?\s*\(?\d{0,2}\)?\s*9\d{4}[-\s]?\d{4}/;
+    return padrao.test(text);
+  }
+
+  /*====================================================================================================
+    Mascara os números do texto caso o validador de telefones retorne positivo
+  ======================================================================================================== */
+  if (bloqueiaTelefone(text)) {
+    text = text.replace(/\d/g, "*");
+  }
 
   const dangerousPatterns = [
-    "javascript:",
-    "onerror=",
-    "onload=",
-    "<script",
-    "data:text/html",
-    "data:text/javascript",
-    "vbscript:",
-    "base64"
+    "javascript:", "onerror=", "onload=", "<script", "data:text/html",
+    "data:text/javascript", "vbscript:", "base64"
   ];
 
   const lower = text.toLowerCase();
-
+  
+  /*====================================================================================================
+    Percorre a lista de termos e padrões perigosos para bloquear mensagens maliciosas no chat
+  ======================================================================================================== */
   for (const p of dangerousPatterns) {
     if (lower.includes(p)) {
       showToast("Nao e permitido esse tipo de mensagem.");
@@ -1253,89 +1332,92 @@ if (bloqueiaTelefone(text)) {
     }
   }
 
+  /*====================================================================================================
+    Verifica o tamanho do texto para impedir o envio de mensagens acentuadamente extensas
+  ======================================================================================================== */
   if (text.length > 720) {
     showToast(" Texto muito grande! ");
     return;
   }
 
+  /*====================================================================================================
+    Aplica travamento rigoroso para limites extremos de texto acima de 1000 caracteres
+  ======================================================================================================== */
   if (text.length > 1000) {
     showToast(" Mensagem excessivamente longa bloqueada.");
     return;
   }
 
   const youtubeId = extractYouTubeId(text);
+  
+  /*====================================================================================================
+    Verifica se a mensagem contém links genéricos HTTP/HTTPS não autorizados (diferentes do YouTube)
+  ======================================================================================================== */
   if (/https?:\/\//.test(text) && !youtubeId) {
     showToast("Apenas links do YouTube são permitidos.");
     return;
   }
 
   try {
-   // Se o usuário tiver cor VIP salva usa ela, senão padroniza como o grafite suave #1E293B
     const userColorChoice = userProfile?.vipMsgColor || "#1E293B";
-
     const idOrganizado = gerarIdISO();
-
     let replyUserColor = null;
 
+    /*====================================================================================================
+      Recupera a cor personalizada configurada na prévia de resposta se houver um reply ativo
+    ======================================================================================================== */
     if (window.replyingTo) {
       const replyPreview = document.getElementById("replyPreview");
       replyUserColor = replyPreview?.dataset?.replyColor || null;
     }
 
-   const { profileName, profilePhoto, profileCity } = resolveUserVisualProfile(
-  userProfile,
-  currentUser
-);
+    const { profileName, profilePhoto, profileCity } = resolveUserVisualProfile(userProfile, currentUser);
 
     const finalPhoto = sanitizeMessageAvatar(
-      userProfile?.foto ||
-      userProfile?.avatar ||
-      userProfile?.photoURL ||
-      currentUser?.photoURL ||
-      profilePhoto
+      userProfile?.foto || userProfile?.avatar || userProfile?.photoURL || currentUser?.photoURL || profilePhoto
     );
-// 28-05-26 Salvando na nova estrutura achatada  NOVO BANCO DE DADOS 
+
     const chatRefAchatado = collection(
       db,
       "salas",
       normalizeRoomId(window.salaAtual),
       "messages"
     );
-await setDoc(doc(chatRefAchatado, idOrganizado), {
-  uid: currentUser.uid,
-  user: profileName,
-  cidade: profileCity,
-  photo: finalPhoto,
-  avatar: finalPhoto,
-  text,
-  color: userColorChoice,
-  replyTo: window.replyingTo || null,
-  replyColor: replyUserColor,
-  createdAt: serverTimestamp(),
-});
 
-    /* ========================================================= 28-05-26 
-Esse código faz uma limpeza automática de mensagens antigas no banco de dados para evitar acúmulo e reduzir custos, agindo assim:
-Sorteio (Amostragem de 15%): Ele não roda sempre. Toda vez que uma mensagem é enviada, há uma chance de 15% (Math.random() < 0.15) de a limpeza ser ativada. 
-Isso economiza leituras no Firebase.
-Checagem de Limite: Ele conta o total de mensagens na sala. Se passar de 150 mensagens, ele calcula o excesso.
-Exclusão: Ele busca as mensagens mais velhas daquela sala e deleta esse excesso do banco, mantendo o histórico sob controle de forma silenciosa
-    // ========================================================= */
-// =========================================================
-    // FIREBASE FAXINA AUTOMÁTICA OTIMIZADA (Roda por amostragem de 10% para economizar cota de leitura) 21-06-26
-    // =========================================================
-    // FIREBASE FAXINA AUTOMÁTICA OTIMIZADA COM DELAY DE CONSOLIDAÇÃO
-    if (Math.random() < 0.15) { // Aumentado levemente para 15% para garantir maior eficácia
+    await setDoc(doc(chatRefAchatado, idOrganizado), {
+      uid: currentUser.uid,
+      user: profileName,
+      cidade: profileCity,
+      photo: finalPhoto,
+      avatar: finalPhoto,
+      text,
+      color: userColorChoice,
+      replyTo: window.replyingTo || null,
+      replyColor: replyUserColor,
+      createdAt: serverTimestamp(),
+    });
+
+    /*====================================================================================================
+     Limpeza de Mensagens no firebse 110 passar disso gera limpeza de mensagem antiga dentro do banco de dados 
+    Math.random() < 0.10: Executar a faxina apenas em 10% dos envios
+     ======================================================================================================== */
+    if (Math.random() < 0.10) {
       setTimeout(async () => {
         try {
           const snapshotCount = await getCountFromServer(chatRefAchatado);
           const totalMensagens = snapshotCount.data().count;
 
-          if (totalMensagens > 150) {
-            const excesso = totalMensagens - 150;
+          /*====================================================================================================
+            Verifica se a contagem total de mensagens ultrapassa 110 documentos para efetuar o expurgo
+          ======================================================================================================== */
+          if (totalMensagens > 110) {
+            const excesso = totalMensagens - 110;
             const qMaisVelhas = query(chatRefAchatado, orderBy("createdAt", "asc"), limit(excesso));
             const docsMaisVelhos = await getDocs(qMaisVelhas);
 
+            /*====================================================================================================
+              Itera sobre os documentos retornados na consulta e executa a exclusão individual do banco
+            ======================================================================================================== */
             docsMaisVelhos.forEach((docSnap) => {
               deleteDoc(docSnap.ref);
             });
@@ -1343,13 +1425,14 @@ Exclusão: Ele busca as mensagens mais velhas daquela sala e deleta esse excesso
         } catch (erroFaxina) {
           console.warn("Faxina em segundo plano ignorada:", erroFaxina);
         }
-      }, 2000); // Aguarda 2 segundos para o carimbo de data (serverTimestamp) se consolidar no banco
+      }, 2000);
     }
 
-
-
-    // =========================================================
-input.value = "";
+    input.value = "";
+    
+    /*====================================================================================================
+      Garante que o campo de entrada recupere o foco do teclado após o envio bem-sucedido
+    ======================================================================================================== */
     if (typeof input.focus === 'function') {
       input.focus();
     }
@@ -1357,6 +1440,9 @@ input.value = "";
 
     setTimeout(() => {
       const lastTime = document.querySelector(".message:last-child .message-time");
+      /*====================================================================================================
+        Verifica a presença da hora da última mensagem e atualiza com o horário corrente do dispositivo
+      ======================================================================================================== */
       if (lastTime) {
         const now = new Date();
         lastTime.textContent = formatTimestamp({ toDate: () => now });
@@ -1368,18 +1454,24 @@ input.value = "";
 
     document.querySelector("emoji-picker")?.remove();
 
-if (input && input.style) {
-  input.style.height = "44px";
-  
-  requestAnimationFrame(() => {
-    if (chat) {
-      chat.scrollTo({
-        top: chat.scrollHeight,
-        behavior: isInitialLoad ? "auto" : "smooth"
+    /*====================================================================================================
+      Ajusta a altura da caixa de texto do input e executa rolagem automática da conversa para a base
+    ======================================================================================================== */
+    if (input && input.style) {
+      input.style.height = "44px";
+      
+      requestAnimationFrame(() => {
+        /*====================================================================================================
+          Verifica a existência do elemento container do chat para realizar a rolagem
+        ======================================================================================================== */
+        if (chat) {
+          chat.scrollTo({
+            top: chat.scrollHeight,
+            behavior: isInitialLoad ? "auto" : "smooth"
+          });
+        }
       });
     }
-  });
-}
 
   } catch (err) {
     console.error(err);
@@ -1387,14 +1479,18 @@ if (input && input.style) {
   }
 }
 
-// ======================================================
-// EVENTOS
-// ======================================================
+// ================= EVENTOS =================
+/*====================================================================================================
+  Escuta o evento de redimensionamento de janela (resize) para ajustar unidades CSS dinâmicas (--vh)
+======================================================================================================== */
 window.addEventListener("resize", () => {
   const vh = window.innerHeight * 0.01;
   document.body.style.setProperty("--vh", `${vh}px`);
 });
 
+/*====================================================================================================
+  Salva as mensagens no cache local antes do descarregamento ou fechamento da aba no navegador
+======================================================================================================== */
 window.addEventListener("beforeunload", () => {
   const chat = document.getElementById("chat-container");
   if (chat && window.salaAtual) {
@@ -1402,6 +1498,9 @@ window.addEventListener("beforeunload", () => {
   }
 });
 
+/*====================================================================================================
+  Trata os cliques globais em prévias de vídeos do YouTube para abrir o link oficial em uma nova aba
+======================================================================================================== */
 document.addEventListener("click", (e) => {
   const preview = e.target.closest(".youtube-preview, .youtube-reply-thumb");
   if (preview) {
@@ -1410,82 +1509,82 @@ document.addEventListener("click", (e) => {
   }
 });
 
-// ======================================================
-// BOTÃO NOVA MENSAGEM + SCROLL INTELIGENTE
-// ======================================================
+// ================= BOTÃO NOVA MENSAGEM + SCROLL INTELIGENTE =================
 const chat = document.getElementById("chat-container");
 const newMessagesBtn = document.getElementById("newMessagesBtn");
 
-
+/*====================================================================================================
+  Configura os ouvintes de rolagem, contador de notificações e botão flutuante para ir ao fundo do chat
+======================================================================================================== */
 if (chat && newMessagesBtn) {
   const countEl = newMessagesBtn.querySelector(".msg-badge");
   window.newMessagesCount = Number(window.newMessagesCount) || 0;
 
   chat.addEventListener("scroll", () => {
-    const nearBottom =
-      chat.scrollHeight - chat.scrollTop - chat.clientHeight < 60;
+    const nearBottom = chat.scrollHeight - chat.scrollTop - chat.clientHeight < 60;
 
+    /*====================================================================================================
+      Oculta o botão de rolagem caso o usuário esteja próximo do final do container
+    ======================================================================================================== */
     if (nearBottom) {
       window.isUserReading = false;
       newMessagesBtn.classList.add("hidden");
     } else {
       window.isUserReading = true;
     }
-
-
-  });
-// SEGREDO MOBILE: Impede que o botão roube o foco da tela ao ser tocado
-newMessagesBtn.addEventListener("mousedown", (e) => e.preventDefault());
-newMessagesBtn.addEventListener("touchstart", (e) => {
-  e.preventDefault(); // Bloqueia o celular de fechar o teclado nativamente
-  newMessagesBtn.click(); // Força a descida da tela
-});
-
-newMessagesBtn.addEventListener("click", () => {
-  window.isUserReading = false;
-  window.newMessagesCount = 0;
-
-  if (countEl) {
-    countEl.textContent = "";
-    countEl.style.display = "none";
-  }
-
-  newMessagesBtn.classList.add("hidden");
-
-  requestAnimationFrame(() => {
-
-    chat.scrollTo({
-      top: chat.scrollHeight,
-      behavior: "auto"
-    });
-    //23-05-26 melhoria para garantir que o foco seja aplicado após o scroll, evitando que o teclado no mobile abra antes do scroll terminar
-requestAnimationFrame(() => {
-
-      const input =
-        document.getElementById("messageInput");
-
-      if (input) {
-        
-        // Bloqueia o foco automático no mobile para não abrir o teclado sozinho
-        if (window.innerWidth > 768) {
-          input.focus();
-
-          const length = input.value.length;
-
-          input.setSelectionRange(
-            length,
-            length
-          );
-        }
-      }
-
-    });
-
   });
 
-});
+  newMessagesBtn.addEventListener("mousedown", (e) => e.preventDefault());
   
+  /*====================================================================================================
+    Trata o toque em telas mobile impedindo o fechamento nativo do teclado antes da rolagem
+  ======================================================================================================== */
+  touchstart: newMessagesBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    newMessagesBtn.click();
+  });
+
+  /*====================================================================================================
+    Associa o clique no botão flutuante para redefinir o contador e descer o scroll para o fundo
+  ======================================================================================================== */
+  newMessagesBtn.addEventListener("click", () => {
+    window.isUserReading = false;
+    window.newMessagesCount = 0;
+
+    if (countEl) {
+      countEl.textContent = "";
+      countEl.style.display = "none";
+    }
+
+    newMessagesBtn.classList.add("hidden");
+
+    requestAnimationFrame(() => {
+      chat.scrollTo({
+        top: chat.scrollHeight,
+        behavior: "auto"
+      });
+
+      requestAnimationFrame(() => {
+        const input = document.getElementById("messageInput");
+        /*====================================================================================================
+          Foca a caixa de digitação automaticamente em navegadores desktop ao clicar para descer a tela
+        ======================================================================================================== */
+        if (input && window.innerWidth > 768) {
+          input.focus();
+          const length = input.value.length;
+          input.setSelectionRange(length, length);
+        }
+      });
+    });
+  });
+  
+  /*====================================================================================================
+    Executa rolagem inteligente controlando a exibição do selo badge de novas mensagens não lidas
+  ======================================================================================================== */
   window.smartScrollToBottom = () => {
+    /*====================================================================================================
+      Se o usuário não estiver lendo mensagens antigas no momento, rola automaticamente para a base
+    ======================================================================================================== */
     if (!window.isUserReading) {
       requestAnimationFrame(() => {
         const lastMsg = chat.lastElementChild;
@@ -1494,22 +1593,18 @@ requestAnimationFrame(() => {
         if (isInitialLoad) {
           chat.scrollTop = chat.scrollHeight;
         } else {
+          requestAnimationFrame(() => {
+            const scrollFinal = () => {
+              chat.scrollTop = chat.scrollHeight;
+            };
 
-requestAnimationFrame(() => {
-  const scrollFinal = () => {
-    chat.scrollTop = chat.scrollHeight;
-  };
-
-  scrollFinal();
-  requestAnimationFrame(scrollFinal);
-  setTimeout(scrollFinal, 50);
-  setTimeout(scrollFinal, 120);
-
-});
-
-
-
- }});
+            scrollFinal();
+            requestAnimationFrame(scrollFinal);
+            setTimeout(scrollFinal, 50);
+            setTimeout(scrollFinal, 120);
+          });
+        }
+      });
 
       window.newMessagesCount = 0;
 
@@ -1521,6 +1616,9 @@ requestAnimationFrame(() => {
       window.newMessagesCount = Number(window.newMessagesCount) || 0;
       window.newMessagesCount += 1;
 
+      /*====================================================================================================
+        Exibe a badge com a contagem incremental das novas mensagens recebidas no topo do botão
+      ======================================================================================================== */
       if (window.newMessagesCount > 0) {
         if (countEl) {
           countEl.textContent = String(window.newMessagesCount);
@@ -1540,7 +1638,9 @@ requestAnimationFrame(() => {
   };
 }
 
-// ===================FECHA BOTÃO SE CLICAR FORA============================================
+/*====================================================================================================
+  Fecha o botão flutuante de mensagens não lidas se o usuário clicar em outra área da tela
+======================================================================================================== */
 document.addEventListener("click", (e) => {
   const btn = document.getElementById("newMessagesBtn");
   if (!btn) return;
@@ -1549,4 +1649,3 @@ document.addEventListener("click", (e) => {
     btn.classList.add("hidden");
   }
 });
-
