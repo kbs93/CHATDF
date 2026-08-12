@@ -904,7 +904,7 @@ Salvar alteração VIP
   <!-- 01-07-26 MODAL DE DENÚNCIA dentro do painel do Usuário  Estrutura do Modal dentro do painel do Usuario de Denúncia (CHAT-DF UX) -->
   <!-- 01-07-26 MODAL DE DENÚNCIA dentro do painel do Usuário  Estrutura do Modal dentro do painel do Usuario de Denúncia (CHAT-DF UX) -->
   <div id="reportUserModal"
-    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 10005;">
+  style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); display: none; align-items: flex-start; justify-content: center; padding-top: 150px;z-index: 10005;">
     <div
       style="background: #ffffff; width: 90%; max-width: 450px; padding: 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; font-family: sans-serif;">
       <button id="closeReportModalX" type="button"
@@ -919,15 +919,31 @@ Salvar alteração VIP
       </p>
       <label style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Motivo para a
         denúncia</label>
-      <select id="reportReasonSelect"
-        style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; background: #f9f9f9; outline: none; margin-bottom: 24px;">
-        <option value="">Selecione um motivo</option>
-        <option value="perfil inapropriado">perfil inapropriado</option>
-        <option value="Assédio / Ofensas">Assédio / Ofensas</option>
-        <option value="Mensagem preconceituosa">Mensagem preconceituosa</option>
-        <option value="Discurso de ódio">Discurso de ódio</option>
-        <option value="Conteudo sexual">Conteudo sexual</option>
-      </select>
+<!-- Estrutura Accordion Customizada -->
+<div class="custom-accordion-select" id="customReportSelect">
+  <!-- Input invisível para preservar o envio do valor no formulário -->
+  <input type="hidden" id="reportReasonSelect" value="">
+  
+  <!-- Caixa Visível Fechada/Aberta -->
+  <div class="accordion-select-trigger" id="accordionTrigger">
+    <span id="accordionSelectedText">Selecione um motivo</span>
+    <i class="bi bi-chevron-down accordion-arrow" id="accordionArrow"></i>
+  </div>
+  
+  <!-- Lista que expande para baixo -->
+  <div class="accordion-select-dropdown hidden" id="accordionDropdown">
+    <div class="accordion-option" data-value="spam">Preconceito / racismo</div>
+    <div class="accordion-option" data-value="harassment">Assédio / Ofensas</div>
+    <div class="accordion-option" data-value="inappropriate">Palavras inapropriadas</div>
+    <div class="accordion-option" data-value="fake">Causando discordia</div>
+    <div class="accordion-option" data-value="hate">Discurso de Ódio</div>
+    <div class="accordion-option" data-value="sexual">Conteúdo Sexual</div>
+  </div>
+</div>
+
+
+
+
       <div style="display: flex; gap: 12px; justify-content: flex-end;">
         <button id="cancelReportBtn" type="button"
           style="padding: 12px 24px; border: none; background: #212121; color: #fff; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancela</button>
@@ -970,7 +986,7 @@ MODAL DO BANNER VIP
   <div id="vipBannerModal" class="gif-banner-modal hidden">
     <div class="gif-banner-modal-content">
       <span id="closeVipBannerModal" class="gif-banner-close">&times;</span>
-      <h4 style="font-size: 18px; font-weight: 700; color: #1e1b4b; margin-bottom: 10px; text-align: center;">Banner VIP (GIF / Imagem)</h4>
+      <h4 style="font-size: 18px; font-weight: 700; color: #1e1b4b; margin-bottom: 10px; text-align: center;">Edita seu Banner</h4>
       
       <!-- Área do Banner (Container Visual de Prévia) -->
       <div id="vipBannerPreviewBox" class="gif-banner-preview-box"></div>
@@ -986,7 +1002,7 @@ MODAL DO BANNER VIP
 
     <!-- Campo de Busca botao de buscar Giphy -->
 <div class="chat-input-group">
-  <input type="text" id="giphySearchInput" class="chat-input" placeholder="Pesquisar imagem ou GIF...">
+  <input type="text" id="giphySearchInput" class="chat-input" placeholder="Pesq palavras chave: neon, flores, por do sol...">
   <button id="btnSearchGiphy" class="chat-btn-search" type="button">
     <i class="bi bi-search" style="font-size: 18px;"></i>
   </button>
@@ -1007,7 +1023,11 @@ MODAL DO BANNER VIP
 </div>
 
       <!-- Botão de Ação -->
-      <button id="btnSaveVipBannerUrl" type="button" class="btn btn-dark w-100 fw-bold" style="border-radius: 10px; font-size: 15px; background: #020641;">Salvar Banner</button>
+  <!-- Botões de Ação (Salvar e Limpar) -->
+      <div class="d-flex gap-2 w-100 mt-2">
+        <button id="btnClearVipBannerUrl" type="button" class="btn btn-dark  w-50 fw-bold" style="border-radius: 10px; font-size: 15px;background: #020641;">Limpar</button>
+        <button id="btnSaveVipBannerUrl" type="button" class="btn btn-dark w-50 fw-bold" style="border-radius: 10px; font-size: 15px; background: #020641;">Salvar</button>
+      </div>
     </div>
   </div>
 

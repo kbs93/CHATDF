@@ -1530,7 +1530,7 @@ footer a {
     width: 25px;
   }
     #chat-container {
-    padding-left: 16px;
+    padding-left: 8px;
     padding-right: 4px;
   }
 }
@@ -7277,4 +7277,102 @@ COMPACTAÇÃO TOTAL DE MENSAGENS EXCLUIDAS (SEM ESPAÇAMENTO) PARA EVITAR QUEBRA
   100% {
     transform: rotate(360deg);
   }
+}
+
+
+
+
+/* ========================================================================= 
+   ESTRUTURA POR EXPANSÃO ACOPLADA (ACCORDION DE DENUNCIA) - UX CHAT-DF
+   ========================================================================= */
+
+.custom-accordion-select {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Caixa Principal do Select */
+.accordion-select-trigger {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 15px;
+  color: #333;
+  user-select: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+
+
+/* Seta com Animação de Giro Smooth (180°) */
+.accordion-arrow {
+  font-size: 14px;
+  color: #666;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.custom-accordion-select.open .accordion-arrow {
+  transform: rotate(180deg);
+}
+
+.custom-accordion-select.open .accordion-select-trigger {
+  border-color: #bfbfbf;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Lista Expansível (Expandindo Exclusivamente para Baixo) */
+.accordion-select-dropdown {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #bfbfbf;
+  border-top: none;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  /* Limite de altura proporcional para exibir no máximo 3 itens e rolar o restante */
+  max-height: 144px; /* 48px x 3 itens */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.accordion-select-dropdown.hidden {
+  display: none !important;
+}
+
+/* Itens da Lista com Requisito Mobile (Touch Target 48px) */
+.accordion-option {
+  min-height: 48px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #444;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.accordion-option:last-child {
+  border-bottom: none;
+}
+
+.accordion-option:hover,
+.accordion-option:active {
+  background-color: #f0f8ff;
+  color: #00a2d3;
+}
+.accordion-option.selected {
+   background:#a6a6a6;
+  color: #ffffff;
+  font-weight: 600;
 }

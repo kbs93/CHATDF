@@ -860,6 +860,62 @@ document.getElementById("sendReport")?.addEventListener("click", async () => {
   }
 });
 
+// ================= CONTROLE DO ACCORDION CUSTOMIZADO DE DENUNCIA =================
+document.addEventListener("DOMContentLoaded", () => {
+  const customSelect = document.getElementById("customReportSelect");
+  const trigger = document.getElementById("accordionTrigger");
+  const dropdown = document.getElementById("accordionDropdown");
+  const selectedText = document.getElementById("accordionSelectedText");
+  const hiddenInput = document.getElementById("reportReasonSelect");
+
+  if (trigger && dropdown) {
+    // Ação de Clique: Abre/Fecha a expansão
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = customSelect.classList.toggle("open");
+      dropdown.classList.toggle("hidden", !isOpen);
+    });
+
+    // Seleção dos Itens
+    dropdown.querySelectorAll(".accordion-option").forEach((option) => {
+      option.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const value = option.getAttribute("data-value");
+        const text = option.textContent;
+
+        // Atualiza o valor do input oculto e o texto visível
+        hiddenInput.value = value;
+        selectedText.textContent = text;
+
+        // Destaque visual no item selecionado
+        dropdown.querySelectorAll(".accordion-option").forEach(opt => opt.classList.remove("selected"));
+        option.classList.add("selected");
+
+        // Recolhe a caixa após a seleção
+        customSelect.classList.remove("open");
+        dropdown.classList.add("hidden");
+      });
+    });
+
+    // Fechar se clicar fora do Accordion
+    document.addEventListener("click", (e) => {
+      if (customSelect && !customSelect.contains(e.target)) {
+        customSelect.classList.remove("open");
+        dropdown.classList.add("hidden");
+      }
+    });
+  }
+});
+
+
+
+
+
+
+
+
+
+
 
 
 // ===================== PERFIL DO USUÁRIO PERFIL===================== 03-04-26
@@ -3275,8 +3331,16 @@ const renderImageItem = (thumbUrl, fullUrl) => {
   });
 
   // FECHAR O MODAL NO X
+ // FECHAR O MODAL NO X
   closeBannerModal?.addEventListener("click", () => {
     bannerModal?.classList.add("hidden");
+  });
+
+  // BOTÃO DE LIMPAR CAMPO E PREVIEW
+  const clearBannerBtn = document.getElementById("btnClearVipBannerUrl");
+  clearBannerBtn?.addEventListener("click", () => {
+    if (urlInput) urlInput.value = "";
+    if (previewBox) previewBox.style.backgroundImage = "none";
   });
 
   // PRÉVIA EM TEMPO REAL AO DIGITAR/COLAR LINK MANUAMENTE
