@@ -244,29 +244,32 @@ function bindMessageReplyClick(div, msgId, msg) {
             Evento de clique para exclusão suave da mensagem enviada pelo próprio usuário
           ======================================================================================================== */
           actionBtn.addEventListener("click", async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+  e.preventDefault();
+  e.stopPropagation();
 
-            try {
-              const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
-              const msgDocRef = doc(db, "salas", window.salaAtual, "messages", msgId);
+  // CORREÇÃO: Zera a variável de memória na hora para liberar o envio de novas mensagens sem pegar o ID antigo
+  window.replyingTo = null;
+  fecharPreviewSuave();
 
-              fecharPreviewSuave();
+  try {
+    const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
+    const msgDocRef = doc(db, "salas", window.salaAtual, "messages", msgId);
 
-              /*====================================================================================================
-                Aplica soft delete atualizando o campo 'deleted' para true no Firestore
-              ======================================================================================================== */
-              await updateDoc(msgDocRef, {
-                deleted: true,
-                text: "Mensagem excluída"
-              });
+    /*====================================================================================================
+      Aplica soft delete atualizando o campo 'deleted' para true no Firestore
+    ======================================================================================================== */
+    await updateDoc(msgDocRef, {
+      deleted: true,
+      text: "Mensagem excluída"
+    });
 
-              showToast("Mensagem excluída");
-            } catch (err) {
-              console.error("Erro ao excluir mensagem:", err);
-              showToast("Erro ao excluir mensagem.");
-            }
-          });
+    showToast("Mensagem excluída");
+  } catch (err) {
+    console.error("Erro ao excluir mensagem:", err);
+    showToast("Erro ao excluir mensagem.");
+  }
+});
+
         } else {
           actionBtn.setAttribute("title", "Denunciar mensagem");
           actionBtn.innerHTML = `<i class="bi bi-flag-fill"><span style="color: #00000063; font-size:0.82rem;">Denunciar mensagem</span></i>`;
@@ -995,30 +998,41 @@ export function initMessages(chat, sala) {
         const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
 
         if (msgDiv) {
-          if (msgData.deleted === true) {
-            const replyBox = msgDiv.querySelector(".reply-container");
-            if (replyBox) replyBox.style.display = "none";
+     if (msgData.deleted === true) {
+  // CORREÇÃO: Limpa a memória e fecha a caixa de reply em tempo real se a mensagem apagada for a que estava em resposta
+  if (window.replyingTo === msgId) {
+    window.replyingTo = null;
+    const preview = document.getElementById("replyPreview");
+    if (preview) {
+      preview.style.display = "none";
+      preview.innerHTML = "";
+    }
+  }
 
-            const bodyContent = msgDiv.children[2];
-            if (bodyContent) {
-              bodyContent.innerHTML = `
-                <div class="msg-deleted-box">
-                  <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
-                  <span style="font-size:0.92rem; font-style: italic; color: #888;">Mensagem excluída</span>
-                </div>
-              `;
-            }
-          } else if (msgData.denunciasContador && msgData.denunciasContador >= 1) {
-            const textSpan = msgDiv.querySelector(".msg-text") || msgDiv.querySelector("span[style*='color']");
-            if (textSpan) {
-              textSpan.className = "msg-hidden";
-              textSpan.style.color = "";
-              textSpan.innerHTML = `<i class="bi bi-emoji-frown"></i> Mensagem ocultada..`;
-            }
-          }
-        }
-        return;
-      }
+  const replyBox = msgDiv.querySelector(".reply-container");
+  if (replyBox) replyBox.style.display = "none";
+
+  const bodyContent = msgDiv.children[2];
+  if (bodyContent) {
+    bodyContent.innerHTML = `
+      <div class="msg-deleted-box">
+        <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
+        <span style="font-size:0.92rem; font-style: italic; color: #888;">Mensagem excluída</span>
+      </div>
+    `;
+  }
+}
+else if (msgData.denunciasContador && msgData.denunciasContador >= 1) {
+  const textSpan = msgDiv.querySelector(".msg-text") || msgDiv.querySelector("span[style*='color']");
+  if (textSpan) {
+    textSpan.className = "msg-hidden";
+    textSpan.style.color = "";
+    textSpan.innerHTML = `<i class="bi bi-emoji-frown"></i> Mensagem ocultada..`;
+  }
+}
+}
+return;
+}
 
       /*====================================================================================================
         Verifica se a alteração é do tipo 'added', ignorando outros tipos de alterações que não sejam adições
