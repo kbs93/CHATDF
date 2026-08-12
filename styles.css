@@ -6877,22 +6877,6 @@ font-size: 1.2rem;
 transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
-/* Cores e Degradê Oficial do Instagram */
-.social-icon-btn.instagram {
-background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aebe6 90%);
-color: #ffffff !important;
-box-shadow: 0 4px 10px rgba(214, 36, 159, 0.3);
-}
-
-.social-icon-btn.instagram:hover {
-transform: translateY(-2px) scale(1.05);
-box-shadow: 0 6px 14px rgba(214, 36, 159, 0.45);
-color: #ffffff !important;
-}
-
-.social-icon-btn.instagram:active {
-transform: translateY(0) scale(0.95);
-}
 
 /* ========================================================================= 
 TRAVAMENTO EXCLUSIVO DO TOPO AZUL APENAS NA ABA VIP (SEM BAGUNÇAR)
@@ -7139,7 +7123,7 @@ BORDA E TEMA DO MODAL DO USUARIO VIP (EXCLUSIVO DA ABA VIP)
 /* A borda e o padding só existem quando o painel possui a classe .vip-mode-active */
 .profile-panel.vip-mode-active[class*="banner-grad-"],
 .profile-panel.vip-mode-active[class*="banner-anim-"] {
-padding: 10px;
+padding: 7px;
 box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
