@@ -1025,42 +1025,7 @@ body.chat-loading .message {
   }
 }
 
-/* ================== FOOTER =================== */
 
-footer {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(135deg, #2604bdd5 100%);
-}
-
-footer .img-credito {
-  display: inline-block;
-  margin-bottom: 8px;
-}
-
-footer .img-credito img {
-  max-width: 140px;
-  height: auto;
-  opacity: 0.8;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-footer .img-credito img:hover {
-  opacity: 1;
-  transform: scale(1.05);
-}
-
-footer p {
-  font-size: 16px;
-  margin-top: 4px;
-}
-
-footer a {
-  font-size: 16px;
-  color: #f1a6a6;
-  text-decoration: none;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
 
 /* ================== CHAT PAGE NAVBAR =================== */
 
@@ -1078,11 +1043,6 @@ footer a {
   align-items: center;
   min-width: 0;
 }
-
-
-
-
-
 
 /* ========================= FIXAR MENU TOGGLER NO CHAT.HTML ========================= */
 .chat-page .navbar {
@@ -7375,4 +7335,245 @@ COMPACTAÇÃO TOTAL DE MENSAGENS EXCLUIDAS (SEM ESPAÇAMENTO) PARA EVITAR QUEBRA
    background:#a6a6a6;
   color: #ffffff;
   font-weight: 600;
+}
+
+/* ========================================================
+   RODAPÉ PERSONALIZADO (SEM BOOTSTRAP) - CHAT-DF
+   ======================================================== */
+.custom-footer {
+  background-color: #ffffff;
+  color: #333333;
+  padding: 45px 20px 20px 20px;
+  border-top: 1px solid #e5e7eb;
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+/* Títulos */
+.footer-title {
+  color: #1f2937; /* Grafite escuro */
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+
+/* Descrição e Textos */
+.footer-description {
+  color: #4b5563; /* Grafite médio */
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* Redes Sociais */
+.social-links {
+  display: flex;
+  gap: 15px;
+  font-size: 1.2rem;
+}
+
+.social-links a {
+  color: #4b5563;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.social-links a:hover {
+  color: #0d6efd; /* Azul de destaque no hover */
+  transform: translateY(-2px);
+}
+
+/* Listas de Links */
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-links li a {
+  color: #6b7280; /* Cinza */
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease;
+}
+
+.footer-links li a:hover {
+  color: #111827; /* Preto suave no hover */
+}
+
+.footer-links li a i {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+/* Linha Divisória */
+.footer-divider {
+  border: 0;
+  border-top: 1px solid #e5e7eb;
+  margin: 30px 0 20px 0;
+}
+
+/* Direitos Autorais */
+.footer-bottom {
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.footer-bottom a {
+  color: #374151;
+  text-decoration: underline;
+}
+
+/* Responsividade Mobile (Telas pequenas) */
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .social-links {
+    justify-content: center;
+  }
+
+  .footer-links li a {
+    justify-content: center;
+  }
+}
+
+/* ========================================================
+   AJUSTE DE ESPAÇAMENTO E LAYOUT - PÁGINA DE CONTATO CHAT-DF
+   ======================================================== */
+#contato.contato-page-section {
+  padding-top: 130px; /* Afasta a seção para não ficar por baixo da navbar fixa */
+  padding-bottom: 90px; /* Espaçamento confortável em relação ao rodapé */
+  min-height: calc(100vh - 200px); /* Garante que preencha a tela sem achatar */
+  display: flex;
+  align-items: center;
+}
+
+#contato .contato-title-left {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+#contato .contato-list-items li {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+/* ========================================================
+   DESIGN PREMIUM DO FORMULÁRIO DE CONTATO (CHAT-DF UX)
+   ======================================================== */
+.contato-card-form {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px 28px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+/* Ícones internos dos inputs */
+.contato-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.contato-input-icon {
+  position: absolute;
+  left: 14px;
+  color: #94a3b8;
+  font-size: 1.1rem;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.contato-input-group .form-control {
+  padding-left: 42px;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.95rem;
+  color: #1e293b;
+  background-color: #f8fafc;
+  transition: all 0.2s ease;
+}
+
+.contato-input-group textarea.form-control {
+  height: auto;
+  padding-top: 12px;
+}
+
+/* Efeito ao clicar no campo */
+.contato-input-group .form-control:focus {
+  background-color: #ffffff;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.12);
+}
+
+.contato-input-group .form-control:focus + .contato-input-icon,
+.contato-input-group:focus-within .contato-input-icon {
+  color: #0d6efd;
+}
+
+/* Botão Centralizado */
+.contato-btn-submit {
+  background:#020641;
+  color: #ffffff;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(13, 110, 253, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.contato-btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+}
+
+.contato-btn-submit:active {
+  transform: scale(0.98);
+}
+/* ========================================================
+   RESPONSIVIDADE MOBILE - CENTRALIZAÇÃO DO CONTATO
+   ======================================================== */
+@media (max-width: 991px) {
+  #contato .contato-title-left {
+    text-align: center;
+  }
+
+  #contato .col-lg-5 {
+    text-align: center;
+  }
+
+  #contato .contato-list-items {
+    text-align: left;
+    display: inline-block;
+  }
 }

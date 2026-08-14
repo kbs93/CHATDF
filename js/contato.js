@@ -144,19 +144,8 @@ if (mensagem.length < 5) {
 } else {
   limparErro(msgInput);
 }
-
-    const textoFinal =
-`
-NOME == ${nome}
-/ / /
-EMAIL == ${email}
-/ / /
-TELEFONE == ${telefone || "Não informado"}
-/ / /
-MENSAGEM == ${mensagem}
-`;
-
-    if (textoFinal.length > 500) {
+// Validação individual do tamanho da mensagem
+    if (mensagem.length > 500) {
       feedback.textContent = " Mensagem muito longa (máx. 500 caracteres).";
       feedback.style.color = "red";
       return;
@@ -173,14 +162,16 @@ MENSAGEM == ${mensagem}
     const docId = `CONTATO_${dd}-${mm}-${yy}_${hh}-${mi}-${ss}`;
 
     feedback.textContent = " Enviando...";
-    botao.disabled = true; // botao de enviar
-
+    botao.disabled = true;
 
     try {
       await setDoc(
         doc(db, "feedbacks", docId),
         {
-          text: textoFinal,
+          nome: nome,
+          email: email,
+          telefone: telefone || "Não informado",
+          mensagem: mensagem,
           createdAt: serverTimestamp()
         }
       );
@@ -188,6 +179,7 @@ MENSAGEM == ${mensagem}
       feedback.textContent = "Mensagem enviada com sucesso!";
       feedback.style.color = "green";
       form.reset();
+      botao.disabled = false;
 
     } catch (err) {
       console.error("Erro ao enviar contato:", err);
@@ -195,8 +187,12 @@ MENSAGEM == ${mensagem}
       feedback.style.color = "red";
 
       botao.disabled = false;
-      botao.textContent = "Enviar";//botao de enviar 
-      botao.style.color = "red";
     }
+
+
+
+
+
+
   });
 });

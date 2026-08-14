@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chat - Conecte e Converse 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="shortcut icon" href="./img/imgicon2.png" />
+
+<!------fonte pra textos-->
+<link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+<!-- Carga de Fontes de Elite para Customização VIP do Chat-DF -->
+<!-- Importação de Fontes VIP Corrigida e Mapeada para o Chat-DF -->
+  
+<link href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link href="styles.css?v=2" rel="stylesheet">
+<!-- Caminhos RELATIVOS corretos -->
+
+
+<script type="module" src="./js/main.js"></script>
+<script type="module" src="./js/contato.js"></script>
+</head>
+<body class="index-page">
+<!-- 🔹 NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-3">
+<div class="container">
+<!--- BOTÃO ☰ -- EDITA O BOTA DO MENU PRINCIPAL -->
+<button class="navbar-toggler" type="button"
+data-bs-toggle="collapse"
+data-bs-target="#navbarNav"
+aria-expanded="false">
+<span class="navbar-toggler-icon">
+<span></span>
+</span>
+</button>
+ <a class="navbar-brand  align-items-center gap-2 " href="#">
+    <!-------<img src="img/imgicon2.png" alt="ChatDF" style="width:38px; height:35px; object-fit: contain;">---->
+    <span>chatdf.com.br</span>
+  </a>
+<div class="collapse navbar-collapse justify-content-end align-items-center" id="navbarNav">
+<ul class="navbar-nav align-items-center gap-lg-2">
+  <li class="nav-item"><a class="nav-link" href="index.html">Início</a></li>
+
+</ul>
+</div>
+<!-- nome e botao de sair -->
+<div id="userArea" class="d-flex align-items-center me-3">
+<a class="open-login btn-sair" id="btnLogin" href="#"></a>
+</div>
+</div>
+</nav>
+  <div id="toast" class="toast-container"></div>
+
+
+
+<!-- 🔹 CONTATO (Ajustado com margem superior e inferior py-5 perfeita para UX) -->
+<!-- 🔹 CONTATO -->
+<section id="contato" class="bg-light contato-page-section">
+  <div class="container">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-5">
+        <h2 class="section-title contato-title-left">Fale com a Equipe CHAT-DF</h2>
+        <p class="text-muted fs-6 mb-4">Queremos construir o melhor chat público do Distrito Federal junto com você. Tem alguma dúvida ou sugestão? Conte com a gente!</p>
+        <ul class="list-unstyled text-muted contato-list-items">
+          <li class="mb-3"><i class="bi bi-headset text-primary me-2 fs-5"></i> <strong>Atendimento humano:</strong> Nossa equipe está pronta para te ouvir e ajudar.</li>
+          <li class="mb-3"><i class="bi bi-clock-history text-primary me-2 fs-5"></i> <strong>Retorno garantido:</strong> Respondemos seu contato em até 24h úteis.</li>
+          <li class="mb-0"><i class="bi bi-shield-check text-success me-2 fs-5"></i> <strong>Espaço seguro:</strong> Sua privacidade e bem-estar em primeiro lugar.</li>
+        </ul>
+      </div>
+    <div class="col-lg-7">
+          <form class="col-md-11 mx-auto contato-card-form">
+            <!-- Nome -->
+            <div class="mb-3 contato-input-group">
+              <i class="bi bi-person contato-input-icon"></i>
+              <input type="text" class="form-control" placeholder="Seu nome completo">
+            </div>
+
+            <!-- E-mail -->
+            <div class="mb-3 contato-input-group">
+              <i class="bi bi-envelope contato-input-icon"></i>
+              <input type="email" class="form-control" placeholder="Seu e-mail de contato">
+            </div>
+
+            <!-- Telefone (IDs e atributos originais mantidos) -->
+            <div class="mb-3 contato-input-group">
+              <i class="bi bi-telephone contato-input-icon"></i>
+              <input type="tel" id="telefone" class="form-control" placeholder="( ) Telefone (Opcional)" inputmode="numeric" autocomplete="tel">
+            </div>
+
+            <!-- Mensagem -->
+            <div class="mb-4 contato-input-group">
+              <i class="bi bi-chat-text contato-input-icon" style="top: 14px;"></i>
+              <textarea class="form-control" rows="4" placeholder="Escreva sua mensagem..."></textarea>
+            </div>
+
+            <!-- Botão de Enviar Centralizado -->
+            <div class="text-center">
+              <button type="submit" class="contato-btn-submit">
+                <i class="bi bi-send-fill"></i> Enviar Mensagem
+              </button>
+            </div>
+          </form>
+        </div>
+
+    </div>
+  </div>
+</section>
+
+  <!-- 🔹 RODAPÉ -->
+<!-- 🔹 RODAPÉ (Organizado em colunas profissionais para melhor UX e navegação) -->
+<!-- 🔹 RODAPÉ (CSS Próprio - Fundo Branco e Tons Grafite/Cinza) -->
+<footer class="custom-footer">
+  <div class="footer-container">
+    <div class="footer-grid">
+      <!-- Coluna 1: Sobre e Redes Sociais -->
+      <div>
+        <h5 class="footer-title">ChatDF</h5>
+        <p class="footer-description">O chat público oficial do Distrito Federal. Conectando pessoas de todas as Regiões Administrativas em tempo real com segurança e respeito.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" aria-label="Twitter-X"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+        </div>
+      </div>
+
+      <!-- Coluna 2: Navegação -->
+      <div>
+        <h5 class="footer-title">Navegação</h5>
+        <ul class="footer-links">
+          <li><a href="#salas"><i class="bi bi-chevron-right"></i> Salas Ativas</a></li>
+          <li><a href="#categorias"><i class="bi bi-chevron-right"></i> Categorias Populares</a></li>
+          <li><a href="#sobre"><i class="bi bi-chevron-right"></i> Quem Somos</a></li>
+          <li><a href="#contato"><i class="bi bi-chevron-right"></i> Central de Ajuda</a></li>
+        </ul>
+      </div>
+
+      <!-- Coluna 3: Termos e Acesso -->
+      <div>
+        <h5 class="footer-title">Termos e Acesso</h5>
+        <ul class="footer-links">
+          <li><a href="#" class="open-login"><i class="bi bi-box-arrow-in-right"></i> Entrar / Registrar conta</a></li>
+          <li><a href="#" class="openPrivacyModalBtn"><i class="bi bi-shield-check"></i> Política de Privacidade</a></li>
+          <li><a href="#" class="openPrivacyModalBtn"><i class="bi bi-journal-text"></i> Diretrizes da Comunidade</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Linha Divisória de Direitos Autorais -->
+    <hr class="footer-divider">
+
+    <div class="footer-bottom">
+      <p>&copy; kbsweb - 2025 Todos os direitos reservados | Animações <a href="https://googlefonts.github.io/noto-emoji-animation/">Animated Emoji</a></p>
+    </div>
+  </div>
+</footer>
+  <!-- BOOTSTRAP -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@multiavatar/multiavatar/multiavatar.min.js"></script>
+</body>
+</html>
