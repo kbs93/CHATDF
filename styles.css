@@ -782,151 +782,15 @@ body.chat-loading .message {
   }
 }
 
-/* ================== CARDS / SEÇÕES =================== */
-
-.pill-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(235, 0, 0, 0.945);
-  border-radius: 999px;
-  padding: 8px 18px;
-  backdrop-filter: blur(2px);
-  color: #fff;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-  letter-spacing: 0.02em;
-}
-
-.section-title {
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: #0d0e3e;
-  text-align: center;
-  font-size: 31px;
-}
-
-.text-sub {
-  letter-spacing: -0.01em;
-  color: #0d0e3e;
-  text-align: center;
-  font-size: 18px;
-
-
-}
-
-.section-subtitle {
-  color: #445;
-  max-width: 860px;
-  margin: 0 auto 24px;
-}
-
-.category-card {
-  position: relative;
-
-  background:
-    rgba(255, 255, 255, 0.88);
-
-  border-radius: 28px;
-
-  padding: 28px;
-
-  border:
-    1px solid rgba(255, 255, 255, 0.9);
-
-  backdrop-filter: blur(10px);
-
-  box-shadow:
-    0 10px 30px rgba(15, 23, 42, 0.06);
-
-  transition:
-    transform .25s ease,
-    box-shadow .25s ease,
-    border-color .25s ease;
-
-  overflow: hidden;
-}
-
-.category-card:hover {
-  transform:
-    translateY(-8px);
-
-  box-shadow:
-    0 20px 45px rgba(15, 23, 42, 0.12);
-
-  border-color:
-    rgba(13, 110, 253, 0.14);
-}
-
-.category-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 18px;
-  background: #eaf1ff;
-  display: grid;
-  place-items: center;
-  margin-bottom: 14px;
-}
-
-.category-icon img {
-  width: 42px;
-  height: 42px;
-  object-fit: contain;
-}
-
-.category-card .btn {
-  border-radius: 14px;
-  font-weight: 600;
-}
-
-.stats {
-  background: linear-gradient(135deg, #f1f6ff, #ffffff);
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  border-radius: 18px;
-  padding: 18px 24px;
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.stats-item {
-  text-align: center;
-  flex: 1;
-  min-width: 150px;
-}
-
-.stats-item h3 {
-  font-weight: 700;
-  color: #0d6efd;
-  margin-bottom: 4px;
-}
-
-.pill-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  background: #0d6efd;
-  color: #fff;
-  border-radius: 14px;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.pill-link:hover {
-  background: #0957c2;
-  color: #fff;
-}
 
 
 
-.feature-card h5 {
-  font-weight: 700;
-  margin-bottom: 10px;
-}
+
+
+
+
+
+
 
 /*edita os card da sala 17-05-26*/
 .chat-rooms {
@@ -7461,6 +7325,7 @@ COMPACTAÇÃO TOTAL DE MENSAGENS EXCLUIDAS (SEM ESPAÇAMENTO) PARA EVITAR QUEBRA
 
 /* ========================================================
    AJUSTE DE ESPAÇAMENTO E LAYOUT - PÁGINA DE CONTATO CHAT-DF
+    DESIGN PREMIUM DO FORMULÁRIO DE CONTATO (CHAT-DF UX)
    ======================================================== */
 #contato.contato-page-section {
   padding-top: 130px; /* Afasta a seção para não ficar por baixo da navbar fixa */
@@ -7479,9 +7344,7 @@ COMPACTAÇÃO TOTAL DE MENSAGENS EXCLUIDAS (SEM ESPAÇAMENTO) PARA EVITAR QUEBRA
   font-size: 0.95rem;
   line-height: 1.6;
 }
-/* ========================================================
-   DESIGN PREMIUM DO FORMULÁRIO DE CONTATO (CHAT-DF UX)
-   ======================================================== */
+
 .contato-card-form {
   background: #ffffff;
   border-radius: 20px;
@@ -7560,9 +7423,7 @@ COMPACTAÇÃO TOTAL DE MENSAGENS EXCLUIDAS (SEM ESPAÇAMENTO) PARA EVITAR QUEBRA
 .contato-btn-submit:active {
   transform: scale(0.98);
 }
-/* ========================================================
-   RESPONSIVIDADE MOBILE - CENTRALIZAÇÃO DO CONTATO
-   ======================================================== */
+/* RESPONSIVIDADE MOBILE - CENTRALIZAÇÃO DO CONTATO */
 @media (max-width: 991px) {
   #contato .contato-title-left {
     text-align: center;
@@ -7575,5 +7436,200 @@ COMPACTAÇÃO TOTAL DE MENSAGENS EXCLUIDAS (SEM ESPAÇAMENTO) PARA EVITAR QUEBRA
   #contato .contato-list-items {
     text-align: left;
     display: inline-block;
+  }
+}
+
+
+
+/* ========================================================================= 
+   SEÇÃO DE RECURSOS / SOBRE CHAT-DF (CUSTOM CSS NATIVO - SEM BOOTSTRAP)
+   ========================================================================= */
+
+.chatdf-features-section {
+  background-color: #ffffff;
+  border-top: 1px solid #eef2f6;
+  padding: 140px 20px;
+  width: 100%;
+}
+
+.chatdf-features-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 220px; /* Espaçamento bem amplo entre um bloco e o outro */
+}
+
+.chatdf-feature-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+}
+
+.chatdf-feature-block.reverse {
+  flex-direction: row-reverse;
+}
+
+/* Coluna Visual da Imagem */
+.chatdf-feature-visual {
+  flex: 0 0 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chatdf-image-card {
+  width: 550px
+
+
+
+}
+
+
+
+/* Coluna de Textos */
+.chatdf-feature-info {
+  flex: 0 0 55%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+/* Pills de Categoria */
+.chatdf-pill {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  margin-bottom: 14px;
+}
+
+.chatdf-pill.pill-blue {
+  background-color: #e0edff;
+  color: #0b57d0;
+}
+
+.chatdf-pill.pill-green {
+  background-color: #e6f7ec;
+  color: #0d8338;
+}
+
+.chatdf-pill.pill-purple {
+  background-color: #f2eaff;
+  color: #6929c4;
+}
+
+/* Tipografia */
+.chatdf-feature-title {
+  font-size: 30px;
+  font-weight: 700;
+  color: #0d0e3e;
+  line-height: 1.25;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.5px;
+}
+
+.chatdf-feature-text {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #4b5563;
+  margin: 0 0 12px 0;
+}
+
+.chatdf-feature-subtext {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #6b7280;
+  margin: 0 0 18px 0;
+}
+
+/* Destaque Regional */
+.chatdf-regional-highlight {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background-color: #f9fbff;
+  border: 1px dashed #bfdbfe;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #334155;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.chatdf-regional-highlight i {
+  color: #dc2626;
+  font-size: 17px;
+  margin-top: 1px;
+}
+
+/* Tags/Ícones Inferiores */
+.chatdf-feature-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.chatdf-tag-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background-color: #f4f6f8;
+  border: 1px solid #e5e7eb;
+  color: #1f2937;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 8px;
+}
+
+.chatdf-tag-item i {
+  color: #0d6efd;
+  font-size: 14px;
+}
+
+/* ========================================================================= 
+   RESPONSIVIDADE MOBILE DA SEÇÃO DE RECURSOS
+   ========================================================================= */
+@media (max-width: 991px) {
+  .chatdf-features-section {
+    padding: 60px 16px;
+  }
+
+  .chatdf-features-container {
+    gap: 70px;
+  }
+
+  .chatdf-feature-block,
+  .chatdf-feature-block.reverse {
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+  }
+
+  .chatdf-feature-visual,
+  .chatdf-feature-info {
+    flex: 0 0 100%;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  .chatdf-feature-title {
+    font-size: 23px;
+  }
+
+  .chatdf-feature-tags {
+    justify-content: center;
+  }
+
+  .chatdf-regional-highlight {
+    text-align: left;
   }
 }

@@ -13,56 +13,68 @@ const salas = [
     id: "geral",
     nome: "Bate papo Geral",
     descricao: "Resenha livre e amizades pelo quadradinho",
-    icone: "bi-chat-dots-fill"
+    icone:"bi bi-chat-dots"
   },
 
   {
     id: "religiao",
     nome: "Religião e Fé",
     descricao: "Conversas, reflexões e eventos religiosos no DF",
-    icone: "bi-heart-fill"
+    icone: "bi bi-house-heart"
   },
 
   {
     id: "politica",
     nome: "Politica",
     descricao: "Debates, opiniões sobre os bastidores da nossa capital ",
-    icone: "bi-megaphone-fill"
+    icone: "bi bi-megaphone"
   },
 
   {
     id: "transito",
     nome: "Trânsito e Transporte",
     descricao: "Mobilidade, Metrô e ônibus do DF",
-    icone: "bi-sign-turn-right-fill"
+    icone:"bi bi-sign-stop"
   },
 
   {
     id: "lugares",
     nome: "Lugares para sair",
     descricao: "Dicas de bares, cafés, lanchonetes e picos no quadradinho",
-    icone: "bi-cup-hot-fill"
+    icone: "bi bi-cup-hot"
   },
 
   {
     id: "futebol",
     nome: "Futebol e Esportes",
     descricao: "Gama, Brasiliense, peladas e grandes jogos",
-    icone: "bi-trophy-fill"
+    icone: "bi bi-trophy"
   },
 
   {
     id: "eventos",
     nome: "Eventos e Shows",
     descricao: "O que fazer no fim de semana em Brasília",
-    icone: "bi-calendar-event-fill"
+    icone: "bi bi-calendar2-day"
   },
 
   {
     id: "entretenimento",
     nome: "Entretenimento",
-    descricao: "Compartilha Filmes, Series e Animes Favoritos.",
-    icone: "bi-chat-heart-fill"
+    descricao: "Fala Sobre Filmes,Series,Animes e musicas Favoritos.",
+    icone: "bi bi-chat-heart"
+  },
+    {
+    id: "games",
+    nome: "Games",
+    descricao: "Recomendação e tudo sobre jogos, online.",
+    icone: "bi-controller"
+  },
+    {
+    id: "concurso",
+    nome: "Concurso Público",
+    descricao: "Acompanhamento e dicas sobre concursos públicos.",
+    icone: "bi bi-journal-bookmark-fill"
   }
 
 ];

@@ -143,34 +143,31 @@ Alterna a classe visual de carregamento no body durante transições de salas
 function setChatLoading(isLoading) {
 document.body.classList.toggle("chat-loading", Boolean(isLoading));
 }
-
 /*====================================================================================================
 Associa o evento de clique na mensagem para acionar a janela de resposta (reply), exclusão ou denúncia
 ======================================================================================================== */
 function bindMessageReplyClick(div, msgId, msg) {
-/*====================================================================================================
-Escuta o evento de clique na área da mensagem
-======================================================================================================== */
-div.addEventListener("click", (event) => {
-const msgAtualizada = messagesMap.get(msgId) || msg;
-const temClasseOculta = div.querySelector(".msg-hidden") !== null;
-const isExcluida = msgAtualizada.deleted === true || div.classList.contains("deleted-message-node");
-const isOcultada = temClasseOculta || (msgAtualizada.denunciasContador && msgAtualizada.denunciasContador >= 1);
+  div.addEventListener("click", (event) => {
+    const msgAtualizada = messagesMap.get(msgId) || msg;
+    const temClasseOculta = div.querySelector(".msg-hidden") !== null;
+    const isExcluida = msgAtualizada.deleted === true || msgAtualizada.text === "Mensagem excluída";
+    const isOcultada = temClasseOculta || (msgAtualizada.denunciasContador && msgAtualizada.denunciasContador >= 1);
 
-/*====================================================================================================
-Bloqueia o acionamento da prévia de resposta se a mensagem estiver excluída ou ocultada
-======================================================================================================== */
-if (isExcluida || isOcultada) return;
+    /*====================================================================================================
+    Bloqueia o acionamento da prévia de resposta se a mensagem estiver excluída ou ocultada
+    ======================================================================================================== */
+    if (isExcluida || isOcultada) return;
 
-/*====================================================================================================
-Ignora cliques em botões de expansão, caixas de citação e prévias de mídias/vídeos do YouTube
-======================================================================================================== */
-if (
-event.target.classList.contains("toggle-expand") ||
-event.target.closest(".quoted-reply-box") ||
-event.target.closest(".youtube-preview") ||
-event.target.closest(".youtube-reply-thumb")
-) return;
+    /*====================================================================================================
+    Ignora cliques em botões de expansão, caixas de citação e prévias de mídias/vídeos do YouTube
+    ======================================================================================================== */
+    if (
+      event.target.classList.contains("toggle-expand") ||
+      event.target.closest(".quoted-reply-box") ||
+      event.target.closest(".youtube-preview") ||
+      event.target.closest(".youtube-reply-thumb")
+    ) return;
+
 
 /*====================================================================================================
 Se não houver uma resposta pendente no momento, ativa a caixa de prévia do reply
@@ -993,46 +990,56 @@ return;
 Tratamento para alteração do tipo 'modified': atualiza os dados visuais de mensagens modificadas
 ======================================================================================================== */
 if (change.type === "modified") {
-const msgId = change.doc.id;
-const msgData = change.doc.data();
-const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
+  const msgId = change.doc.id;
+  const msgData = change.doc.data();
+  const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
 
-if (msgDiv) {
-if (msgData.deleted === true) {
-// CORREÇÃO: Limpa a memória e fecha a caixa de reply em tempo real se a mensagem apagada for a que estava em resposta
-if (window.replyingTo === msgId) {
-window.replyingTo = null;
-const preview = document.getElementById("replyPreview");
-if (preview) {
-preview.style.display = "none";
-preview.innerHTML = "";
-}
+  // Sincroniza a memória global em tempo real
+  const msgExistente = messagesMap.get(msgId) || {};
+  messagesMap.set(msgId, { ...msgExistente, ...msgData });
+
+  if (msgDiv) {
+    if (msgData.deleted === true) {
+      // Limpa o cache de citação
+      replyCache.delete(msgId);
+
+      // Fecha o preview caso a mensagem estivesse selecionada no momento
+      if (window.replyingTo === msgId) {
+        window.replyingTo = null;
+        const preview = document.getElementById("replyPreview");
+        if (preview) {
+          preview.style.display = "none";
+          preview.innerHTML = "";
+        }
+      }
+
+      const replyBox = msgDiv.querySelector(".reply-container");
+      if (replyBox) replyBox.style.display = "none";
+
+      // Mantém a estrutura HTML original sem alterar classes ou alinhamento
+      const bodyContent = msgDiv.children[2];
+      if (bodyContent) {
+        bodyContent.innerHTML = `
+          <div class="msg-deleted-box">
+            <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
+            <span style="font-size:0.92rem; font-style: italic; color: #888;">Mensagem excluída</span>
+          </div>
+        `;
+      }
+    }
+    else if (msgData.denunciasContador && msgData.denunciasContador >= 1) {
+      const textSpan = msgDiv.querySelector(".msg-text") || msgDiv.querySelector("span[style*='color']");
+      if (textSpan) {
+        textSpan.className = "msg-hidden";
+        textSpan.style.color = "";
+        textSpan.innerHTML = `<i class="bi bi-emoji-frown"></i> Mensagem ocultada..`;
+      }
+    }
+  }
+  return;
 }
 
-const replyBox = msgDiv.querySelector(".reply-container");
-if (replyBox) replyBox.style.display = "none";
 
-const bodyContent = msgDiv.children[2];
-if (bodyContent) {
-bodyContent.innerHTML = `
-<div class="msg-deleted-box">
-<i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
-<span style="font-size:0.92rem; font-style: italic; color: #888;">Mensagem excluída</span>
-</div>
-`;
-}
-}
-else if (msgData.denunciasContador && msgData.denunciasContador >= 1) {
-const textSpan = msgDiv.querySelector(".msg-text") || msgDiv.querySelector("span[style*='color']");
-if (textSpan) {
-textSpan.className = "msg-hidden";
-textSpan.style.color = "";
-textSpan.innerHTML = `<i class="bi bi-emoji-frown"></i> Mensagem ocultada..`;
-}
-}
-}
-return;
-}
 
 /*====================================================================================================
 Verifica se a alteração é do tipo 'added', ignorando outros tipos de alterações que não sejam adições
