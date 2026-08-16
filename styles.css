@@ -7235,28 +7235,40 @@ BORDA E TEMA DO MODAL DO USUARIO VIP (EXCLUSIVO DA ABA VIP)
 ========================================================================*/
 /* A borda e o padding só existem quando o painel possui a classe .vip-mode-active */
 /* Borda e Tema ativados no Modal inteiro (Info e VIP) */
+/* 1. Zera qualquer borda e padding no modal inteiro */
 .profile-panel[class*="banner-grad-"],
 .profile-panel[class*="banner-anim-"] {
-  padding: 7px !important;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  padding: 0 !important;
+  box-shadow: none !important;
 }
 
+/* 2. Aplica o Tema/Degradê exclusivamente no corpo do perfil (do banner para baixo) */
+.profile-panel[class*="banner-grad-"] .profile-body,
+.profile-panel[class*="banner-anim-"] .profile-body {
+  background-attachment: fixed;
+}
+
+/* 3. Deixa a área de informações do usuário e abas transparentes sobre o tema */
+.profile-panel[class*="banner-grad-"] .profile-user-info,
+.profile-panel[class*="banner-anim-"] .profile-user-info,
 .profile-panel[class*="banner-grad-"] .profile-body .profile-tabs,
 .profile-panel[class*="banner-anim-"] .profile-body .profile-tabs {
   background: transparent !important;
 }
 
-/* Transparência das abas exclusiva para quando a aba VIP estiver ativa */
-.profile-panel.vip-mode-active[class*="banner-grad-"] .profile-body .profile-tabs,
-.profile-panel.vip-mode-active[class*="banner-anim-"] .profile-body .profile-tabs {
-background: transparent;
+/* 4. Envolve os dados da aba Info em um card branco moderno sobre o tema */
+.profile-panel[class*="banner-grad-"] .profile-content,
+.profile-panel[class*="banner-anim-"] .profile-content {
+  background: #ffffff;
+  border-radius: 16px;
+  margin: 6px 12px 16px 12px;
+  padding: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 }
 
-/* Conteúdo inferior opaco com fundo branco em qualquer aba */
-.profile-content {
-background: #ffffff;
-border-radius: 18px 18px 0 0;
-}
+
+
+
 
 /* Ajustes dos botões inativos exclusivamente dentro do modo VIP */
 .profile-panel.vip-mode-active[class*="banner-grad-"] .profile-tab,

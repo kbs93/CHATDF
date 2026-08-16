@@ -1403,7 +1403,13 @@ if (!isPanelOpen) {
         profileMemberSince.textContent = formatProfileDate(membroDesde);
       }
 
- aplicarVisualVipCompleto(data);
+ // Garante a capa sólida padrão ao abrir na aba Info
+      // Se for VIP salvo no banco, exibe o visual VIP completo no Info. Se não, exibe o padrão comum.
+      if (data.isVip === true) {
+        aplicarVisualVipCompleto(data);
+      } else {
+        restaurarVisualPadraoPerfil();
+      }
 
       if (profileEditorBannerPreview) {
         profileEditorBannerPreview.style.background = bannerColor;
@@ -1674,13 +1680,12 @@ function aplicarVisualVipCompleto(data = {}) {
   }
 
   // 5. TEMA EM TORNO DO PAINEL
-// 5. TEMA EM TORNO DO PAINEL
+// 5. TEMA EXCLUSIVO DO BANNER PARA BAIXO
   if (profilePanel) {
     profilePanel.className = profilePanel.className.replace(/banner-\S+/g, "").trim();
     if (temTema) {
       profilePanel.classList.add(data.vipProfileBanner);
     } else {
-      profilePanel.style.padding = "";
       profilePanel.style.background = "";
     }
   }
@@ -1841,10 +1846,6 @@ tabs.forEach(tab => {
     }
 
     // ISOLAMENTO VIP: Se você clicou em "Info" ou "Editar perfil", restaura o topo original
-   if (!isVip) {
-      const dataAtual = window.__currentProfileData || {};
-      aplicarVisualVipCompleto(dataAtual);
-    }
 
 
 
@@ -1883,13 +1884,26 @@ tabs.forEach(tab => {
       topMsgBox.classList.toggle("d-none", !isVip);
     }
 
-if (target === "vip") {
-      // Puxa o elemento real da capa de forma segura, corrigindo o erro 'topBanner is not defined'
+// ISOLAMENTO: Se clicou em "Info" ou "Editar perfil", restaura o topo padrão comum
+const data = window.__currentProfileData || {};
+
+    if (!isVip) {
+      // Se o usuário for VIP de verdade (salvou no banco), aplica o VIP na aba Info para todos verem
+      if (data.isVip === true) {
+        aplicarVisualVipCompleto(data);
+      } else {
+        // Se NÃO for VIP, limpa qualquer teste/simulação e volta ao padrão comum
+        restaurarVisualPadraoPerfil();
+      }
+    } else {
+      // Na aba VIP (Simulador), mostra o banner VIP e abre os controles de teste
       const profileCoverEl = document.querySelector(".profile-cover");
-      const data = window.__currentProfileData || {};
-      
-      if (profileCoverEl && data.vipBannerUrl) {
-        profileCoverEl.style.background = `url("${data.vipBannerUrl}") center/cover no-repeat`;
+      if (profileCoverEl) {
+        if (data.vipBannerUrl) {
+          profileCoverEl.style.background = `url("${data.vipBannerUrl}") center/cover no-repeat`;
+        } else {
+          profileCoverEl.style.background = selectedBannerColor || "#00000063";
+        }
       }
       inicializarPainelVipDinamico();
     }
@@ -2061,27 +2075,28 @@ if (valorEfeito !== "solid") {
 
 
 // Tema em torno do Modal Inteiro com limpeza da Capa
+// Tema em torno do Modal Inteiro PRESERVANDO a Capa / Banner
     if (profilePanel && bannerSelect) {
-      // Remove qualquer classe antiga de tema do painel
       profilePanel.className = profilePanel.className.replace(/banner-\S+/g, "").trim();
+      const data = window.__currentProfileData || {};
       
       if (bannerSelect.value === "default") {
         profilePanel.style.border = "";
         profilePanel.style.background = "";
-        // Restaura a cor padrão da capa quando não houver tema ativo
-        if (topBanner) {
+      } else {
+        profilePanel.classList.add(bannerSelect.value);
+      }
+
+      // Garante que o banner (GIF ou Cor) continue visível independente do tema escolhido
+      if (topBanner) {
+        if (data.vipBannerUrl) {
+          topBanner.style.background = `url("${data.vipBannerUrl}") center/cover no-repeat`;
+        } else {
           topBanner.style.backgroundImage = "none";
           topBanner.style.background = selectedBannerColor || "#00000063";
         }
-      } else {
-        profilePanel.classList.add(bannerSelect.value);
-        // Limpa o fundo inline da capa para o tema do painel/capa sobressair
-        if (topBanner) {
-          topBanner.style.background = "";
-        }
       }
     }
-
 
   };
 
@@ -2122,6 +2137,7 @@ if (valorEfeito !== "solid") {
 }
 
 // Vincula a gravação dos dados VIP ao botão de Salvar exclusivo
+// Vincula a gravação dos dados VIP ao botão de Salvar exclusivo
 document.getElementById("btnSaveVipSettings")?.addEventListener("click", async () => {
   const user = auth.currentUser;
   if (!user) return;
@@ -2131,10 +2147,11 @@ document.getElementById("btnSaveVipSettings")?.addEventListener("click", async (
     const refUser = doc(db, "users", user.uid);
 
     await updateDoc(refUser, {
+      isVip: true,
       vipNameColorType: document.getElementById("vipNameColorType").value,
-      vipNameColorSolid: window.__vipNOME_COR_SELECIONADA || "#6f42c1", // Salva a cor do quadradinho do nome
+      vipNameColorSolid: window.__vipNOME_COR_SELECIONADA || "#6f42c1",
       vipNameFont: document.getElementById("vipNameFont").value,
-      vipMsgColor: window.__vipMENSAGEM_COR_SELECIONADA || "#333333", // Salva a cor do quadradinho do texto
+      vipMsgColor: window.__vipMENSAGEM_COR_SELECIONADA || "#333333",
       vipAvatarFrame: document.getElementById("vipAvatarFrameSelect").value,
       vipProfileBanner: document.getElementById("vipProfileBannerSelect").value
     });
@@ -3445,7 +3462,7 @@ const renderImageItem = (thumbUrl, fullUrl) => {
   });
 
   // SALVAR NO FIRESTORE
-// SALVAR NO FIRESTORE E APLICAR APENAS APÓS A CONFIRMAÇÃO
+// SALVAR NO FIRESTORE PRESERVANDO FORMATAÇÕES ATIVAS DO SIMULADOR
   saveBannerBtn?.addEventListener("click", async () => {
     const user = auth.currentUser;
     if (!user || !currentProfileIsOwner) return;
@@ -3453,28 +3470,39 @@ const renderImageItem = (thumbUrl, fullUrl) => {
     const newUrl = urlInput?.value.trim() || "";
 
     try {
-      
       const refUser = doc(db, "users", user.uid);
 
       await updateDoc(refUser, {
         vipBannerUrl: newUrl
       });
 
-      // Aplica a alteração no perfil visível somente após a gravação confirmada
+      // Atualiza a memória local para não perder a referência
+      if (window.__currentProfileData) {
+        window.__currentProfileData.vipBannerUrl = newUrl;
+      }
+
+      // Aplica visualmente o banner na capa
       const profileCoverEl = document.querySelector(".profile-cover");
       if (profileCoverEl) {
         if (newUrl) {
           profileCoverEl.style.background = `url("${newUrl}") center/cover no-repeat`;
         } else {
+          profileCoverEl.style.backgroundImage = "none";
           profileCoverEl.style.background = selectedBannerColor || "#00000063";
         }
       }
 
+      // Reaplica a simulação dos efeitos da tela (nome, moldura, cores) para não serem resetados
+      if (typeof window.atualizarSimulacaoTopoVip === "function") {
+        window.atualizarSimulacaoTopoVip();
+      }
+
       bannerModal?.classList.add("hidden");
-      showToast("atualizado com sucesso!");
+      showToast("Banner atualizado com sucesso!");
     } catch (err) {
       console.error("Erro ao salvar Banner VIP:", err);
       showToast("Erro ao salvar o Banner VIP.");
     }
   });
+
 });
