@@ -1403,11 +1403,7 @@ if (!isPanelOpen) {
         profileMemberSince.textContent = formatProfileDate(membroDesde);
       }
 
-  if (profileCover) {
-        // Ao abrir o perfil (que inicia na aba Info), exibe sempre a cor sólida original
-        profileCover.style.backgroundImage = "none";
-        profileCover.style.background = bannerColor;
-      }
+ aplicarVisualVipCompleto(data);
 
       if (profileEditorBannerPreview) {
         profileEditorBannerPreview.style.background = bannerColor;
@@ -1608,7 +1604,102 @@ function applyProfileMode(isOwner) {
   }
 }
 
+/* ========================================================================
+Aplica todos os estilos VIP salvos no Firestore nas abas Info e Visualização
+=====================================================================*/
+/* ========================================================================
+Aplica todos os estilos VIP salvos no Firestore com isolamento por usuário
+=====================================================================*/
+function aplicarVisualVipCompleto(data = {}) {
+  const topName = document.getElementById("profileName");
+  const topFrame = document.getElementById("vipTopPreviewFrame");
+  const topBanner = document.querySelector(".profile-cover");
+  const topTag = document.getElementById("vipTopPreviewTag");
+  const topMood = document.getElementById("profileMood");
 
+  if (!topName || !topBanner) return;
+
+  const nome = data.nome || "Usuário";
+  const bannerCorOriginal = data.bannerColor || "#00000063";
+
+  // Identifica se o usuário realmente possui customizações VIP salvas
+  const temEfeitoNome = data.vipNameColorType && data.vipNameColorType !== "solid";
+  const temCorNome = !!data.vipNameColorSolid;
+  const temFonte = data.vipNameFont && data.vipNameFont !== "default";
+  const temMoldura = data.vipAvatarFrame && data.vipAvatarFrame !== "none";
+  const temTema = data.vipProfileBanner && data.vipProfileBanner !== "default";
+  const temBannerUrl = !!data.vipBannerUrl;
+
+  const isVipUser = temEfeitoNome || temFonte || temMoldura || temTema || temBannerUrl;
+
+  // 1. RESET E APLICAÇÃO DO NOME
+  topName.className = "fw-bold";
+  topName.style.background = "";
+  topName.style.webkitBackgroundClip = "";
+  topName.style.webkitTextFillColor = "";
+  topName.style.color = "";
+  topName.style.fontFamily = "";
+  topName.textContent = nome;
+
+  if (temEfeitoNome) {
+    topName.className = topName.className.replace(/nick-\S+/g, "").trim();
+    topName.classList.add(`nick-${data.vipNameColorType}`);
+  } else if (temCorNome) {
+    topName.style.color = data.vipNameColorSolid;
+  }
+
+  // 2. FONTE DO NOME
+  if (temFonte) {
+    let herancaTipo = "sans-serif";
+    if (["Courgette", "Lobster", "Bangers", "Pacifico", "Satisfy"].includes(data.vipNameFont)) {
+      herancaTipo = "cursive";
+    }
+    topName.style.fontFamily = `'${data.vipNameFont}', ${herancaTipo}`;
+  }
+
+  // 3. MOLDURA DO AVATAR
+  if (topFrame) {
+    topFrame.className = "position-absolute top-0 start-0 w-100 h-100 rounded-circle d-none";
+    if (temMoldura) {
+      topFrame.className = `position-absolute top-0 start-0 w-100 h-100 rounded-circle ${data.vipAvatarFrame}`;
+    }
+  }
+
+  // 4. CAPA / BANNER (Se não tiver imagem VIP, volta 100% para a cor do usuário)
+  if (temBannerUrl) {
+    topBanner.style.background = `url("${data.vipBannerUrl}") center/cover no-repeat`;
+  } else {
+    topBanner.style.backgroundImage = "none";
+    topBanner.style.background = bannerCorOriginal;
+  }
+
+  // 5. TEMA EM TORNO DO PAINEL
+// 5. TEMA EM TORNO DO PAINEL
+  if (profilePanel) {
+    profilePanel.className = profilePanel.className.replace(/banner-\S+/g, "").trim();
+    if (temTema) {
+      profilePanel.classList.add(data.vipProfileBanner);
+    } else {
+      profilePanel.style.padding = "";
+      profilePanel.style.background = "";
+    }
+  }
+  // 6. TAG DIAMANTE (Exibe APENAS se o usuário for realmente VIP)
+  if (topTag) {
+    if (isVipUser) {
+      topTag.classList.remove("d-none");
+      topTag.classList.add("d-inline-block");
+    } else {
+      topTag.classList.remove("d-inline-block");
+      topTag.classList.add("d-none");
+    }
+  }
+
+  // 7. RECADO (Visível na aba info)
+  if (topMood) {
+    topMood.style.display = "block";
+  }
+}
 /* ========================================================================
 Função que ZERA 100% qualquer efeito VIP no painel padrão (Info e Editar perfil)
 =====================================================================*/
@@ -1750,10 +1841,10 @@ tabs.forEach(tab => {
     }
 
     // ISOLAMENTO VIP: Se você clicou em "Info" ou "Editar perfil", restaura o topo original
-    if (!isVip) {
-      restaurarVisualPadraoPerfil();
+   if (!isVip) {
+      const dataAtual = window.__currentProfileData || {};
+      aplicarVisualVipCompleto(dataAtual);
     }
-
 
 
 

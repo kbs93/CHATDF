@@ -367,10 +367,33 @@ div.classList.add("message");
 div.dataset.id = msgId;
 div.dataset.uid = msg.uid || msg.user;
 
-const userColor = msg.vipNameColorSolid || msg.vipNameColor || "#1E293B";
 const ytId = extractYouTubeId(msg.text);
 const avatar = sanitizeMessageAvatar(msg.photo || msg.avatar);
 const cidade = msg.replyTo ? "" : (msg.cidade || msg.city || "");
+
+// Tratamento visual VIP do nome no chat
+const tipoEfeito = msg.vipNameColorType || "solid";
+const corSolida = msg.vipNameColorSolid || "#1E293B";
+const fonte = msg.vipNameFont || "default";
+const moldura = msg.vipAvatarFrame || "none";
+
+let classeEfeitoNome = "";
+let corInlineNome = "";
+let fonteInlineNome = "";
+// Identifica se a mensagem é de um usuário VIP para exibir o diamante
+const isVipMsg = tipoEfeito !== "solid" || fonte !== "default" || moldura !== "none";
+const tagDiamante = isVipMsg ? `<i class="bi bi-gem" style="font-size: 13px; color: #01b1f7; margin-left: 3px; vertical-align: middle;"></i>` : "";
+
+if (tipoEfeito !== "solid") {
+  classeEfeitoNome = `nick-${tipoEfeito}`;
+} else {
+  corInlineNome = `color: ${corSolida};`;
+}
+
+if (fonte !== "default") {
+  let herancaTipo = ["Courgette", "Lobster", "Bangers", "Pacifico", "Satisfy"].includes(fonte) ? "cursive" : "sans-serif";
+  fonteInlineNome = `font-family: '${fonte}', ${herancaTipo};`;
+}
 
 let content = "";
 const idUnicoLottie = "lottie-" + Math.random().toString(36).substring(2, 11);
@@ -411,16 +434,20 @@ div.classList.add("admin-message");
 
 div.innerHTML = `
 <div class="message-click-area" style="display:flex;align-items:center;gap:6px;">
-<img 
-src="${avatar}" 
-class="user-photo"
-onerror="this.src='./img/avatar.png'"
->
+<div class="message-avatar-wrap position-relative d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; flex-shrink: 0; margin-right: 8px;">
+  <img 
+    src="${avatar}" 
+    class="user-photo"
+    style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; margin: 0;"
+    onerror="this.src='./img/avatar.png'"
+  >
+  <div class="avatar-frame position-absolute rounded-circle ${moldura !== 'none' ? moldura : 'd-none'}" style="top: -2px; left: -2px; width: 44px; height: 44px; pointer-events: none; z-index: 2;"></div>
+</div>
 
 <div class="message-user-info">
 <div class="message-header">
-<b class="user-name message-author-name" style="color:${userColor};cursor:pointer;">
-${msg.user}${msg.user === "Kbsweb" ? "&nbsp Adm" : ""}:
+<b class="user-name message-author-name ${classeEfeitoNome}" style="${corInlineNome} ${fonteInlineNome} cursor:pointer; display:inline-flex; align-items:center; gap:2px;">
+${msg.user}${tagDiamante}${msg.user === "Kbsweb" ? "&nbsp;Adm" : ""}
 </b>
 </div>
 ${cidade ? `<span class="user-city"><i class="icon-cidade bi bi-geo-alt"></i> ${cidade}</span>` : ""}
@@ -801,6 +828,19 @@ content = `<div class="quoted-text reply-text">${short}</div>`;
 }
 }
 
+
+
+// Tratamento da fonte VIP do autor citado no reply
+let fonteReplyInline = "";
+if (d.vipNameFont && d.vipNameFont !== "default") {
+  let herancaTipo = ["Courgette", "Lobster", "Bangers", "Pacifico", "Satisfy"].includes(d.vipNameFont) ? "cursive" : "sans-serif";
+  fonteReplyInline = `font-family: '${d.vipNameFont}', ${herancaTipo};`;
+}
+
+
+
+
+
 const bg = toRGBA(color, 0.17);
 const safeRepliedAvatar = d.photo || d.avatar || "./img/avatar.png";
 
@@ -820,9 +860,11 @@ margin-bottom: 6px;
 ">
 <img src="${safeRepliedAvatar}" class="reply-user-avatar" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 2px;" onerror="this.src='./img/avatar.png'">
 <div style="display: flex; flex-direction: column; overflow: hidden; flex-grow: 1; text-align: left;">
-<div class="quoted-header" style="color:${color}; font-weight: 600; font-size: .97rem; text-align: left; width: 100%; margin-bottom: 2px;">
+
+<div class="quoted-header" style="color:${color}; ${fonteReplyInline} font-weight: 600; font-size: .97rem; text-align: left; width: 100%; margin-bottom: 2px;">
 ${d.user}
 </div>
+
 <div style="display: flex; text-align: left; width: 100%;">
 ${content}
 </div>
@@ -1056,10 +1098,13 @@ text: typeof raw.text === "string" ? raw.text : ""
 };
 
 replyCache.set(msgId, {
-user: msg.user,
-text: msg.text,
-photo: msg.photo,
-color: msg.color
+  user: msg.user,
+  text: msg.text,
+  photo: msg.photo,
+  color: msg.color,
+  vipNameFont: msg.vipNameFont || "default",
+  vipNameColorType: msg.vipNameColorType || "solid",
+  vipNameColorSolid: msg.vipNameColorSolid || msg.color || "#1E293B"
 });
 
 if (!messagesMap.has(msgId)) {
@@ -1164,10 +1209,13 @@ text: typeof raw.text === "string" ? raw.text : ""
 };
 
 replyCache.set(msgId, {
-user: msg.user,
-text: msg.text,
-photo: msg.photo,
-color: msg.color
+  user: msg.user,
+  text: msg.text,
+  photo: msg.photo,
+  color: msg.color,
+  vipNameFont: msg.vipNameFont || "default",
+  vipNameColorType: msg.vipNameColorType || "solid",
+  vipNameColorSolid: msg.vipNameColorSolid || msg.color || "#1E293B"
 });
 
 if (!messagesMap.has(msgId)) {
@@ -1413,6 +1461,10 @@ photo: finalPhoto,
 avatar: finalPhoto,
 text,
 color: userColorChoice,
+vipNameColorType: userProfile?.vipNameColorType || "solid",
+vipNameColorSolid: userProfile?.vipNameColorSolid || "#1E293B",
+vipNameFont: userProfile?.vipNameFont || "default",
+vipAvatarFrame: userProfile?.vipAvatarFrame || "none",
 replyTo: window.replyingTo || null,
 replyColor: replyUserColor,
 createdAt: serverTimestamp(),
@@ -1693,4 +1745,14 @@ if (!btn) return;
 if (!btn.classList.contains("hidden") && !btn.contains(e.target)) {
 btn.classList.add("hidden");
 }
+});
+
+
+// Sincroniza a cor do input com a cor VIP salva do usuário
+document.addEventListener("chatdf:user-ready", (e) => {
+  const input = document.getElementById("messageInput");
+  const userData = e.detail?.userData;
+  if (input && userData?.vipMsgColor) {
+    input.style.color = userData.vipMsgColor;
+  }
 });
