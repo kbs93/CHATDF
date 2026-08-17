@@ -1405,10 +1405,30 @@ if (!isPanelOpen) {
 
  // Garante a capa sólida padrão ao abrir na aba Info
       // Se for VIP salvo no banco, exibe o visual VIP completo no Info. Se não, exibe o padrão comum.
-      if (data.isVip === true) {
-        aplicarVisualVipCompleto(data);
+// Verifica qual aba está ativa na tela
+      const abaAtiva = document.querySelector('.profile-tab.active')?.dataset.tab || "info";
+
+      if (abaAtiva === "vip") {
+        // Se estiver na aba VIP, atualiza a capa e preserva as opções da simulação na tela
+        const profileCoverEl = document.querySelector(".profile-cover");
+        if (profileCoverEl) {
+          if (data.vipBannerUrl) {
+            profileCoverEl.style.background = `url("${data.vipBannerUrl}") center/cover no-repeat`;
+          } else {
+            profileCoverEl.style.backgroundImage = "none";
+            profileCoverEl.style.background = selectedBannerColor || "#00000063";
+          }
+        }
+        if (typeof window.atualizarSimulacaoTopoVip === "function") {
+          window.atualizarSimulacaoTopoVip();
+        }
       } else {
-        restaurarVisualPadraoPerfil();
+        // Se estiver na aba Info/Editar, renderiza de acordo com o status oficial do usuário
+        if (data.isVip === true) {
+          aplicarVisualVipCompleto(data);
+        } else {
+          restaurarVisualPadraoPerfil();
+        }
       }
 
       if (profileEditorBannerPreview) {

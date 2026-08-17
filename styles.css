@@ -4210,9 +4210,7 @@ body.index-page .profile-panel.open {
   background: #adadaf;
   color: #fff;
 }
-.profile-content {
-  padding: 16px;
-}
+
 .profile-section {
   display: none;
   animation: profileFade 0.2s ease;
@@ -6790,7 +6788,7 @@ flex-direction: row;
 align-items: center;
 justify-content: space-between;
 gap: 8px;
-padding: 14px 16px 10px;
+padding: 3px 16px 4px;
 border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 background: #ffffff;
 width: 100%;
@@ -6804,9 +6802,8 @@ background: transparent;
 
 /* Conteúdo inferior sempre branco em todas as abas */
 .profile-content {
-background: #ffffff;
 border-radius: 18px 18px 0 0;
-padding-top: 16px;
+padding-top: 4px;
 }
 
 /* Estilos dos botões inativos apenas quando a aba VIP estiver ativa */
@@ -6863,8 +6860,8 @@ color: #ffffff;
 display: grid;
 grid-template-columns: repeat(4, 1fr);
 gap: 8px;
-margin-top: 10px;
-margin-bottom: 12px;
+margin-top:2px;
+margin-bottom: 2px;
 }
 
 #profileVip .vip-btn-card {
@@ -6873,7 +6870,7 @@ min-height: 85px;
 background: #ffffff;
 border: 1px solid #f0f0f0;
 border-radius: 16px;
-padding: 8px 4px;
+padding: 4px 4px;
 display: flex;
 flex-direction: column;
 align-items: center;
@@ -6995,11 +6992,10 @@ transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 TRAVAMENTO EXCLUSIVO DO TOPO AZUL APENAS NA ABA VIP (SEM BAGUNÇAR)
 ========================================================================= */
 
+/* Permite a rolagem suave de todo o cabeçalho junto com o painel */
 #profilePanel.vip-mode-active .profile-top-header {
-position: sticky;
-top: 0;
-z-index: 30;
-background-color: #ffffff;
+  position: static;
+  background-color: transparent;
 }
 
 /* ========================================================================= 27-07-26
