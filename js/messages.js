@@ -18,7 +18,7 @@ limit
 import { currentUser } from "./auth.js";
 import { showToast, getColorFromName, highlightMentions } from "./ui.js";
 import { showReplyPreview } from "./ui.js";
-
+import { formatarAutorVipChat } from "./vip.js";
 
 // =================== STATE ========================================================
 window.replyingTo = null;
@@ -371,29 +371,14 @@ const ytId = extractYouTubeId(msg.text);
 const avatar = sanitizeMessageAvatar(msg.photo || msg.avatar);
 const cidade = msg.replyTo ? "" : (msg.cidade || msg.city || "");
 
-// Tratamento visual VIP do nome no chat
-const tipoEfeito = msg.vipNameColorType || "solid";
-const corSolida = msg.vipNameColorSolid || "#1E293B";
-const fonte = msg.vipNameFont || "default";
-const moldura = msg.vipAvatarFrame || "none";
-
-let classeEfeitoNome = "";
-let corInlineNome = "";
-let fonteInlineNome = "";
-// Identifica se a mensagem é de um usuário VIP para exibir o diamante
-const isVipMsg = tipoEfeito !== "solid" || fonte !== "default" || moldura !== "none";
-const tagDiamante = isVipMsg ? `<i class="bi bi-gem" style="font-size: 13px; color: #01b1f7; margin-left: 3px; vertical-align: middle;"></i>` : "";
-
-if (tipoEfeito !== "solid") {
-  classeEfeitoNome = `nick-${tipoEfeito}`;
-} else {
-  corInlineNome = `color: ${corSolida};`;
-}
-
-if (fonte !== "default") {
-  let herancaTipo = ["Courgette", "Lobster", "Bangers", "Pacifico", "Satisfy"].includes(fonte) ? "cursive" : "sans-serif";
-  fonteInlineNome = `font-family: '${fonte}', ${herancaTipo};`;
-}
+// Formatação VIP centralizada direto do módulo vip.js
+const { 
+  classeEfeito: classeEfeitoNome, 
+  corInline: corInlineNome, 
+  fonteInline: fonteInlineNome, 
+  tagDiamante, 
+  moldura 
+} = formatarAutorVipChat(msg);
 
 let content = "";
 const idUnicoLottie = "lottie-" + Math.random().toString(36).substring(2, 11);
@@ -1749,10 +1734,12 @@ btn.classList.add("hidden");
 
 
 // Sincroniza a cor do input com a cor VIP salva do usuário
+// Sincroniza a cor do texto e do cursor do input com a cor VIP salva do usuário
 document.addEventListener("chatdf:user-ready", (e) => {
   const input = document.getElementById("messageInput");
   const userData = e.detail?.userData;
   if (input && userData?.vipMsgColor) {
     input.style.color = userData.vipMsgColor;
+    input.style.caretColor = userData.vipMsgColor;
   }
 });

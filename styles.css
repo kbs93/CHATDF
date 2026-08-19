@@ -57,165 +57,41 @@ body.chat-loading .message {
 /* ========================================================================= 
    MAPEAMENTO DE FONTES LOCAIS EXCLUSIVAS VIP (MÉTODO LOCAL SEGURO)
    ========================================================================= */
-@font-face {
-  font-family: 'BebasNeue';
-  src: url('./fonts/BebasNeue-Regular.ttf') format('truetype');}
+@font-face {font-family: 'BebasNeue';src: url('./fonts/BebasNeue-Regular.ttf') format('truetype');}
 @font-face {font-family: 'RubikVinyl';src: url('./fonts/RubikVinyl-Regular.ttf') format('truetype');}
-@font-face {
-  font-family: 'Lobster';
-  src: url('./fonts/Lobster-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Barrio';
-  src: url('./fonts/Barrio-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'BraahOne';
-  src: url('./fonts/BraahOne-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'BungeeShade';
-  src: url('./fonts/BungeeShade-Regular.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'CaesarDressing';
-  src: url('./fonts/CaesarDressing-Regular.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Charm-Bold';
-  src: url('./fonts/Charm-Bold.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'CherryBombOne';
-  src: url('./fonts/CherryBombOne-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'CinzelDecorative';
-  src: url('./fonts/CinzelDecorative-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Cuprum-Italic';
-  src: url('./fonts/Cuprum-Italic-VariableFont_wght.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'EduAUVICWANTHand';
-  src: url('./fonts/EduAUVICWANTHand-VariableFont_wght.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'FasterOne';
-  src: url('./fonts/FasterOne-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'GeostarFill';
-  src: url('./fonts/GeostarFill-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Kablammo';
-  src: url('./fonts/Kablammo-Regular-VariableFont_MORF.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'KumarOneOutline';
-  src: url('./fonts/KumarOneOutline-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'LibertinusKeyboard';
-  src: url('./fonts/LibertinusKeyboard-VariableFont_wght.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Limelight';
-  src: url('./fonts/Limelight-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'ManufacturingConsent';
-  src: url('./fonts/ManufacturingConsent-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Matangi';
-  src: url('./fonts/Matangi-VariableFont_wght.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Matemasie';
-  src: url('./fonts/Matemasie-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'MeaCulpa';
-  src: url('./fonts/MeaCulpa-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'PlaywriteBEVLG';
-  src: url('./fonts/PlaywriteBEVLG-VariableFont_wght.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Praise';
-  src: url('./fonts/Praise-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Pridi';
-  src: url('./fonts/Pridi-Medium.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Pridi-ExtraLight';
-  src: url('./fonts/Pridi-ExtraLight.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Pridi-SemiBold';
-  src: url('./fonts/Pridi-SemiBold.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'RockSalt';
-  src: url('./fonts/RockSalt-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Tangerine';
-  src: url('./fonts/Tangerine-Bold.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'TASAExplorer';
-  src: url('./fonts/TASAExplorer-VariableFont_wght.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'TiltPrism';
-  src: url('./fonts/TiltPrism-Regular-VariableFont_XROT,YROT.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'UnifrakturMaguntia';
-  src: url('./fonts/UnifrakturMaguntia-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Urbanist-Italic';
-  src: url('./fonts/Urbanist-Italic-VariableFont_wght.ttf') format('truetype');
-}
+@font-face {font-family: 'Lobster';src: url('./fonts/Lobster-Regular.ttf') format('truetype');}
+@font-face {font-family: 'Barrio';src: url('./fonts/Barrio-Regular.ttf') format('truetype');}
+@font-face {font-family: 'BraahOne';src: url('./fonts/BraahOne-Regular.ttf') format('truetype');}
+@font-face {font-family: 'BungeeShade';src: url('./fonts/BungeeShade-Regular.ttf') format('truetype');}
+@font-face {font-family: 'CaesarDressing';src: url('./fonts/CaesarDressing-Regular.ttf') format('truetype');}
+@font-face {font-family: 'Charm-Bold';src: url('./fonts/Charm-Bold.ttf') format('truetype');}
+@font-face {font-family: 'CherryBombOne';src: url('./fonts/CherryBombOne-Regular.ttf') format('truetype');}
+@font-face {font-family: 'CinzelDecorative';src: url('./fonts/CinzelDecorative-Regular.ttf') format('truetype');}
+@font-face {font-family: 'Cuprum-Italic';src: url('./fonts/Cuprum-Italic-VariableFont_wght.ttf') format('truetype');}
+@font-face {font-family: 'EduAUVICWANTHand';src: url('./fonts/EduAUVICWANTHand-VariableFont_wght.ttf') format('truetype');}
+@font-face {font-family: 'FasterOne';src: url('./fonts/FasterOne-Regular.ttf') format('truetype');}
+@font-face {font-family: 'GeostarFill';src: url('./fonts/GeostarFill-Regular.ttf') format('truetype');}
+@font-face {font-family: 'Kablammo';src: url('./fonts/Kablammo-Regular-VariableFont_MORF.ttf') format('truetype');}
+@font-face {font-family: 'KumarOneOutline';src: url('./fonts/KumarOneOutline-Regular.ttf') format('truetype');}
+@font-face {font-family: 'LibertinusKeyboard';src: url('./fonts/LibertinusKeyboard-VariableFont_wght.ttf') format('truetype');}
+@font-face {font-family: 'Limelight';src: url('./fonts/Limelight-Regular.ttf') format('truetype');}
+@font-face {font-family: 'ManufacturingConsent';src: url('./fonts/ManufacturingConsent-Regular.ttf') format('truetype');}
+@font-face {font-family: 'Matangi';src: url('./fonts/Matangi-VariableFont_wght.ttf') format('truetype');}
+@font-face {font-family: 'Matemasie';src: url('./fonts/Matemasie-Regular.ttf') format('truetype');}
+@font-face {font-family: 'MeaCulpa';src: url('./fonts/MeaCulpa-Regular.ttf') format('truetype');}
+@font-face {font-family: 'PlaywriteBEVLG';src: url('./fonts/PlaywriteBEVLG-VariableFont_wght.ttf') format('truetype');}
+@font-face {font-family: 'Praise';src: url('./fonts/Praise-Regular.ttf') format('truetype');}
+@font-face {font-family: 'Pridi';src: url('./fonts/Pridi-Medium.ttf') format('truetype');}
+@font-face {font-family: 'Pridi-ExtraLight';src: url('./fonts/Pridi-ExtraLight.ttf') format('truetype');}
+@font-face {font-family: 'Pridi-SemiBold';src: url('./fonts/Pridi-SemiBold.ttf') format('truetype');}
+@font-face {font-family: 'RockSalt';src: url('./fonts/RockSalt-Regular.ttf') format('truetype');}
+@font-face {font-family: 'Tangerine';src: url('./fonts/Tangerine-Bold.ttf') format('truetype');}
+@font-face {font-family: 'TASAExplorer';src: url('./fonts/TASAExplorer-VariableFont_wght.ttf') format('truetype');}
+@font-face {font-family: 'TiltPrism';src: url('./fonts/TiltPrism-Regular-VariableFont_XROT,YROT.ttf') format('truetype');}
+@font-face {font-family: 'UnifrakturMaguntia';src: url('./fonts/UnifrakturMaguntia-Regular.ttf') format('truetype');}
+@font-face {font-family: 'Urbanist-Italic';src: url('./fonts/Urbanist-Italic-VariableFont_wght.ttf') format('truetype');}
 
 /* ================== HERO =================== */
-
 #background-animation {
   position: absolute;
   inset: 0;
@@ -1615,11 +1491,13 @@ body.chat-loading .message {
   word-break: break-word;
   transition: border-color 0.2s ease;
 
+  
+
 }
 /* Padroniza a cor do placeholder e do texto digitado no mobile/iOS */
+/* Padroniza a cor do placeholder e permite que o texto digitado receba a cor VIP */
 #message-input-area .message-input {
-  color: #000000;
-  -webkit-text-fill-color: #000000;
+  -webkit-text-fill-color: currentColor;
 }
 
 #message-input-area .message-input::placeholder {
@@ -4806,17 +4684,49 @@ do botao lapis
   color: #9aa0aa;
 }
 
-.profile-panel::-webkit-scrollbar {
-  width: 3px;
+/* ========================================================================= 
+   BARRA DE ROLAGEM ULTRAFINA / TRANSLÚCIDA (EXPERIÊNCIA APP NATIVO)
+   ========================================================================= */
+
+/* 1. Suporte Firefox */
+.profile-panel,
+.profile-body,
+#profileVip,
+.vip-content-panels {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
 }
 
-.profile-panel::-webkit-scrollbar-thumb {
-  background: rgba(40, 6, 94, 0.28);
-  border-radius: 999px;
+/* 2. Suporte Chrome, Edge e Safari WebKit */
+.profile-panel::-webkit-scrollbar,
+.profile-body::-webkit-scrollbar,
+#profileVip::-webkit-scrollbar,
+.vip-content-panels::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
 }
 
-.profile-panel::-webkit-scrollbar-track {
+.profile-panel::-webkit-scrollbar-track,
+.profile-body::-webkit-scrollbar-track,
+#profileVip::-webkit-scrollbar-track,
+.vip-content-panels::-webkit-scrollbar-track {
   background: transparent;
+}
+
+.profile-panel::-webkit-scrollbar-thumb,
+.profile-body::-webkit-scrollbar-thumb,
+#profileVip::-webkit-scrollbar-thumb,
+.vip-content-panels::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+
+.profile-panel::-webkit-scrollbar-thumb:hover,
+.profile-body::-webkit-scrollbar-thumb:hover,
+#profileVip::-webkit-scrollbar-thumb:hover,
+.vip-content-panels::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 #saveProfileBtn {
@@ -5885,7 +5795,9 @@ body.viewing-other-profile .profile-photo-upload-btn {
 #profileName[class*="nick-gradient-"],
 #profileName[class*="nick-anim-"],
 #profileVip #vipPreviewName[class*="nick-gradient-"],
-#profileVip #vipPreviewName[class*="nick-anim-"] {
+#profileVip #vipPreviewName[class*="nick-anim-"],
+.message-author-name[class*="nick-gradient-"],
+.message-author-name[class*="nick-anim-"] {
   display: inline-block;
   background-color: transparent;
   -webkit-background-clip: text;
@@ -5954,150 +5866,131 @@ animation: nameFlowAnim 2.5s ease infinite;filter: drop-shadow(0px 0px 4px rgba(
 /* ========================================================================= 
    TEMA DE PERFIL VIP (SUPORTE PARA PERFIL REAL E MINI-PREVIEW)
    ========================================================================= */
+/* ========================================================================= 
+   TEMA DE PERFIL VIP (SUPORTE PARA PERFIL REAL E MINI-PREVIEW)
+   ========================================================================= */
 
-/* Roxo Espacial */
-.banner-grad-purple,#profileVip #vipPreviewBanner.banner-grad-purple {background: linear-gradient(135deg, #1e0034 0%, #44006b 50%, #1e0034 100%);}
-/* Ouro com Glitter */
-.banner-grad-gold,#profileVip #vipPreviewBanner.banner-grad-gold {background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728);}
-/*Aurora Boreal Animada */
-.banner-anim-aurora,#profileVip #vipPreviewBanner.banner-anim-aurora {background: linear-gradient(270deg, #0575e6, #00f260, #0575e6);
-  background-size: 200% 200%;animation: auroraFlow 8s ease infinite;}
-.banner-grad-purple,#profileVip #vipPreviewBanner.banner-grad-purple {background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #1e1b4b 100%);}
-.banner-grad-gold,#profileVip #vipPreviewBanner.banner-grad-gold {background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 50%, #b38728 100%);}
-.banner-grad-sunset,#profileVip #vipPreviewBanner.banner-grad-sunset {background: linear-gradient(135deg, #ff512f 0%, #dd2476 100%);}
-.banner-grad-ocean,#profileVip #vipPreviewBanner.banner-grad-ocean {background: linear-gradient(135deg, #02aab0 0%, #00cdac 100%);}
-.banner-grad-emerald,#profileVip #vipPreviewBanner.banner-grad-emerald {background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);}
-.banner-grad-ruby,#profileVip #vipPreviewBanner.banner-grad-ruby {background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%);}
-.banner-grad-cyberpunk,#profileVip #vipPreviewBanner.banner-grad-cyberpunk {background: linear-gradient(135deg, #f12711 0%, #f5af19 100%);}
-.banner-grad-cotton,#profileVip #vipPreviewBanner.banner-grad-cotton {background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);}
-.banner-grad-lavender,#profileVip #vipPreviewBanner.banner-grad-lavender {background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);}
-.banner-grad-fire,#profileVip #vipPreviewBanner.banner-grad-fire {  background: linear-gradient(135deg, #ff0000 0%, #ff7300 50%, #ffcc00 100%);}
-.banner-grad-platinum,#profileVip #vipPreviewBanner.banner-grad-platinum {background: linear-gradient(135deg, #757f9a 0%, #d7dde8 100%);}
-.banner-grad-vintage,#profileVip #vipPreviewBanner.banner-grad-vintage {background: linear-gradient(135deg, #ca7345 0%, #735135 100%);}
-.banner-grad-bubblegum,#profileVip #vipPreviewBanner.banner-grad-bubblegum {background: linear-gradient(135deg, #ff00cc 0%, #333399 100%);}
-.banner-grad-galaxy,#profileVip #vipPreviewBanner.banner-grad-galaxy {background: linear-gradient(135deg, #654ea3 0%, #eaafc8 100%);}
-.banner-grad-mint,#profileVip #vipPreviewBanner.banner-grad-mint {background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);}
-.banner-anim-aurora,#profileVip #vipPreviewBanner.banner-anim-aurora {background: linear-gradient(270deg, #0575e6, #00f260, #0575e6);
-background-size: 400% 400%;animation: bannerMoveEngine 6s ease infinite;}
-.banner-anim-neon,#profileVip #vipPreviewBanner.banner-anim-neon {background: linear-gradient(270deg, #ff007f, #39ff14, #00f0ff, #ff007f);
-background-size: 400% 400%;animation: bannerMoveEngine 5s linear infinite;}
-.banner-anim-rainbow,#profileVip #vipPreviewBanner.banner-anim-rainbow {background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet, red);
-background-size: 400% 400%;animation: bannerMoveEngine 8s linear infinite;}
-.banner-anim-magma,#profileVip #vipPreviewBanner.banner-anim-magma {background: linear-gradient(270deg, #f12711, #f5af19, #f12711);
-background-size: 400% 400%;animation: bannerMoveEngine 4s ease infinite;}
-.banner-anim-matrix,#profileVip #vipPreviewBanner.banner-anim-matrix {background: linear-gradient(180deg, #001100, #00ff00, #001100);
-background-size: 100% 400%;animation: bannerMoveEngine 3s linear infinite;}
-.banner-anim-electric,#profileVip #vipPreviewBanner.banner-anim-electric {background: linear-gradient(270deg, #00ffff, #ffffff, #0072ff, #00ffff);background-size: 400% 400%;
-  animation: bannerMoveEngine 2s linear infinite;}
-.banner-anim-gold-flow,#profileVip #vipPreviewBanner.banner-anim-gold-flow {background: linear-gradient(270deg, #bf953f, #aa771c, #fcf6ba, #bf953f);
-background-size: 400% 400%;animation: bannerMoveEngine 5s ease-in-out infinite;}
-.banner-anim-glitch,#profileVip #vipPreviewBanner.banner-anim-glitch {background: linear-gradient(270deg, #2b2b2b, #ff0000, #00ffff, #2b2b2b);
-background-size: 400% 400%;animation: bannerMoveEngine 1.5s steps(4) infinite;}
-.banner-anim-ice,#profileVip #vipPreviewBanner.banner-anim-ice {background: linear-gradient(270deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa);
-background-size: 400% 400%;animation: bannerMoveEngine 6s ease infinite;}
-.banner-anim-vampire,#profileVip #vipPreviewBanner.banner-anim-vampire {background: linear-gradient(270deg, #4a0000, #ff0000, #4a0000);
-background-size: 400% 400%;animation: bannerMoveEngine 4s ease-in-out infinite;}
-.banner-anim-candy,#profileVip #vipPreviewBanner.banner-anim-candy {background: linear-gradient(270deg, #ff758c, #ff7eb3, #ff758c);
-background-size: 400% 400%;animation: bannerMoveEngine 5s linear infinite;}
-.banner-anim-toxic,#profileVip #vipPreviewBanner.banner-anim-toxic {background: linear-gradient(270deg, #56ab2f, #a8ff78, #56ab2f);
-background-size: 400% 400%;animation: bannerMoveEngine 3s linear infinite;}
-.banner-anim-shadow,#profileVip #vipPreviewBanner.banner-anim-shadow {background: linear-gradient(270deg, #000000, #434343, #000000);background-size: 400% 400%;
-  animation: bannerMoveEngine 7s linear infinite;}
-.banner-anim-miami,#profileVip #vipPreviewBanner.banner-anim-miami {background: linear-gradient(270deg, #00f2fe, #4facfe, #00f2fe);
-background-size: 400% 400%;animation: bannerMoveEngine 4s ease infinite;}
-.banner-anim-phoenix,#profileVip #vipPreviewBanner.banner-anim-phoenix {background: linear-gradient(270deg, #f857a6, #ff5858, #f857a6);
-  background-size: 400% 400%;animation: bannerMoveEngine 5s ease infinite;}
+/*1*/.banner-grad-purple,#profileVip #vipPreviewBanner.banner-grad-purple {background: linear-gradient(135deg, #ede9fe 0%, #c4b5fd 50%, #8b5cf6 100%);}
+/*2*/.banner-grad-gold,#profileVip #vipPreviewBanner.banner-grad-gold {background: linear-gradient(135deg, #fffbeb, #fde68a, #f59e0b);}
+/*3*/.banner-anim-aurora,#profileVip #vipPreviewBanner.banner-anim-aurora {background: linear-gradient(270deg, #38bdf8, #4ade80, #38bdf8);}
+/*4*/.banner-grad-lavender-space,#profileVip #vipPreviewBanner.banner-grad-lavender-space {background: linear-gradient(135deg, #aeeed9 40%, #c8c0ec 50%, #01b7ff 160%);}
+/*5*/.banner-grad-gold-light,#profileVip #vipPreviewBanner.banner-grad-gold-light {background: linear-gradient(135deg, #fef9c3 0%, #facc15 50%, #ea0808 100%);}
+/*6*/.banner-grad-sunset,#profileVip #vipPreviewBanner.banner-grad-sunset {background: linear-gradient(135deg, #ffedd5 0%, #fb923c 100%);}
+/*7*/.banner-grad-ocean,#profileVip #vipPreviewBanner.banner-grad-ocean {background: linear-gradient(135deg, #e0f2fe 0%, #38bdf8 100%);}
+/*8*/.banner-grad-emerald,#profileVip #vipPreviewBanner.banner-grad-emerald {background: linear-gradient(135deg, #dcfce7 0%, #4ade80 100%);}
+/*9*/.banner-grad-ruby,#profileVip #vipPreviewBanner.banner-grad-ruby {background: linear-gradient(135deg, #ffe4e6 0%, #fb7185 100%);}
+/*10*/.banner-grad-cyberpunk,#profileVip #vipPreviewBanner.banner-grad-cyberpunk {background: linear-gradient(135deg, #fed7aa 0%, #f472b6 100%);}
+/*11*/.banner-grad-cotton,#profileVip #vipPreviewBanner.banner-grad-cotton {background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);}
+/*12*/.banner-grad-lavender,#profileVip #vipPreviewBanner.banner-grad-lavender {background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);}
+/*13*/.banner-grad-fire,#profileVip #vipPreviewBanner.banner-grad-fire {  background: linear-gradient(135deg, #fee2e2 0%, #fdba74 50%, #fde047 100%);}
+/*14*/.banner-grad-platinum,#profileVip #vipPreviewBanner.banner-grad-platinum {background: linear-gradient(135deg, #3b3b3b 0%,#a9e8eb 50%, #5b81af 100%);}
+/*15*/.banner-grad-vintage,#profileVip #vipPreviewBanner.banner-grad-vintage {background: linear-gradient(135deg, #fef3c7 0%, #d97706 100%);}
+/*16*/.banner-grad-bubblegum,#profileVip #vipPreviewBanner.banner-grad-bubblegum {background: linear-gradient(135deg, #fae8ff 0%, #e879f9 100%);}
+/*17*/.banner-grad-galaxy,#profileVip #vipPreviewBanner.banner-grad-galaxy {background: linear-gradient(135deg, #f7d5a4 0%, #f472b6 100%);}
+/*18*/.banner-grad-mint,#profileVip #vipPreviewBanner.banner-grad-mint {background: linear-gradient(135deg, #ccfbf1 0%, #2dd4bf 100%);}
+/*19*/.banner-grad-peach,#profileVip #vipPreviewBanner.banner-grad-peach {background: linear-gradient(135deg, #ffedd5 0%, #f87171 100%);}
+/*20*/.banner-grad-citrus,#profileVip #vipPreviewBanner.banner-grad-citrus {background: linear-gradient(135deg, #ecfccb 0%, #84cc16 100%);}
+/*21*/.banner-grad-sky,#profileVip #vipPreviewBanner.banner-grad-sky {background: linear-gradient(135deg, #e0f7fa 0%, #80deea 100%);}
+/*22*/.banner-grad-matcha,#profileVip #vipPreviewBanner.banner-grad-matcha {background: linear-gradient(135deg, #f0fdf4 0%, #86efac 100%);}
+/*23*/.banner-grad-sand,#profileVip #vipPreviewBanner.banner-grad-sand {background: linear-gradient(135deg, #86863c 0%, #525151 100%);}
+/*24*/.banner-grad-aurora-static,#profileVip #vipPreviewBanner.banner-grad-aurora-static {background: linear-gradient(135deg, #7dd3fc 0%, #34d399 100%);}
+/*25*/.banner-anim-neon,#profileVip #vipPreviewBanner.banner-anim-neon {background: linear-gradient(135deg, #f43f5e 0%, #10b981 50%, #06b6d4 100%);}
+/*26*/.banner-anim-rainbow,#profileVip #vipPreviewBanner.banner-anim-rainbow {background: linear-gradient(135deg, #f87171, #fb923c, #facc15, #4ade80, #60a5fa, #818cf8, #c084fc);}
+/*27*/.banner-anim-magma,#profileVip #vipPreviewBanner.banner-anim-magma {background: linear-gradient(135deg, #fca5a5 0%, #fdba74 100%);}
+/*28*/.banner-anim-matrix,#profileVip #vipPreviewBanner.banner-anim-matrix {background: linear-gradient(135deg, #bbf7d0 0%, #22c55e 100%);}
+/*29*/.banner-anim-electric,#profileVip #vipPreviewBanner.banner-anim-electric {background: linear-gradient(135deg, #b8e6eb 0%, #006979 50%, #67e8f9 100%);}
+/*30*/.banner-anim-gold-flow,#profileVip #vipPreviewBanner.banner-anim-gold-flow {background: linear-gradient(135deg, #fef08a 0%, #ca8a04 50%, #fffbeb 100%);}
+/*31*/.banner-anim-glitch,#profileVip #vipPreviewBanner.banner-anim-glitch {background: linear-gradient(135deg, #e2e8f0 0%, #f87171 50%, #22d3ee 100%);}
+/*32*/.banner-anim-ice,#profileVip #vipPreviewBanner.banner-anim-ice {background: linear-gradient(135deg, #ecfeff 0%, #a5f3fc 50%, #06b6d4 100%);}
+/*33*/.banner-anim-vampire,#profileVip #vipPreviewBanner.banner-anim-vampire {background: linear-gradient(135deg, #ffe4e6 0%, #e11d48 100%);}
+/*34*/.banner-anim-candy,#profileVip #vipPreviewBanner.banner-anim-candy {background: linear-gradient(135deg, #fce7f3 0%, #f472b6 100%);}
+/*35*/.banner-anim-toxic,#profileVip #vipPreviewBanner.banner-anim-toxic {background: linear-gradient(135deg, #dcfce7 0%, #16a34a 100%);}
+/*36*/.banner-anim-shadow,#profileVip #vipPreviewBanner.banner-anim-shadow {background: linear-gradient(135deg, #594b5a 0%, #94a3b8 100%);}
+/*37*/.banner-anim-miami,#profileVip #vipPreviewBanner.banner-anim-miami {background: linear-gradient(135deg, #e0f2fe 0%, #38bdf8 100%);}
+/*38*/.banner-anim-phoenix,#profileVip #vipPreviewBanner.banner-anim-phoenix {background: linear-gradient(135deg, #fdf2f8 0%, #f43f5e 100%);}
+/*39*/.banner-anim-breeze,#profileVip #vipPreviewBanner.banner-anim-breeze {background: linear-gradient(135deg, #e0e7ff 0%, #38bdf8 100%);}
+/*40*/.banner-anim-spring,#profileVip #vipPreviewBanner.banner-anim-spring {background: linear-gradient(135deg, #f7d1ff 0%, #a7f3d0 100%);}
+/*41*/.banner-anim-sunset-glow,#profileVip #vipPreviewBanner.banner-anim-sunset-glow {background: linear-gradient(135deg, #fff7ed 0%, #fb923c 100%);}
+/*42*/.banner-grad-polar,#profileVip #vipPreviewBanner.banner-grad-polar {background: linear-gradient(135deg, #0d9488 0%, #4f46e5 50%, #d97706 100%);}
+/*43*/.banner-grad-marshmallow,#profileVip #vipPreviewBanner.banner-grad-marshmallow {background: linear-gradient(135deg, #f43f5e 0%, #9333ea 50%, #0284c7 100%);}
+/*44*/.banner-grad-tropical,#profileVip #vipPreviewBanner.banner-grad-tropical {background: linear-gradient(135deg, #ea580c 0%, #ca8a04 50%, #16a34a 100%);}
+/*45*/.banner-grad-garden,#profileVip #vipPreviewBanner.banner-grad-garden {background: linear-gradient(135deg, #65a30d 0%, #059669 50%, #065f46 100%);}
+/*46*/.banner-grad-horizon,#profileVip #vipPreviewBanner.banner-grad-horizon {background: linear-gradient(135deg, #2563eb 0%, #b3b4fa 50%, #00ec63 100%);}
+/*47*/.banner-grad-twilight,#profileVip #vipPreviewBanner.banner-grad-twilight {background: linear-gradient(135deg, #9333ea 0%, #46c9fd 50%, #71951d 100%);}
+/*48*/.banner-grad-sorbet,#profileVip #vipPreviewBanner.banner-grad-sorbet {background: linear-gradient(135deg, #f97316 0%, #db2777 50%, #be123c 100%);}
+/*49*/.banner-grad-lagoon,#profileVip #vipPreviewBanner.banner-grad-lagoon {background: linear-gradient(135deg, #1eb3a6 0%, #36dda5 50%, #00c3ff 100%);}
+/*50*/.banner-grad-quartz,#profileVip #vipPreviewBanner.banner-grad-quartz {background: linear-gradient(135deg, #e11d48 0%, #c026d3 50%, #86198f 100%);}
+/*51*/.banner-grad-dune,#profileVip #vipPreviewBanner.banner-grad-dune {background: linear-gradient(135deg, #ff6600 0%, #94002c 50%, #92400e 100%);}
+
 
 /* ========================================================================= 
    DEGRADES PARA O NOME DO TOPO (#profileName)
    ========================================================================= */
-#profileName.nick-gradient-blue-purple { background-image: linear-gradient(135deg, #0d6efd, #a020f0); }
-#profileName.nick-gradient-gold { background-image: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); font-weight: bold; }
-#profileName.nick-gradient-sunset { background-image: linear-gradient(135deg, #ff512f, #dd2476); }
-#profileName.nick-gradient-ocean { background-image: linear-gradient(135deg, #02aab0, #00cdac); }
-#profileName.nick-gradient-forest { background-image: linear-gradient(135deg, #11998e, #38ef7d); }
-#profileName.nick-gradient-ruby { background-image: linear-gradient(135deg, #cb2d3e, #ef473a); }
-#profileName.nick-gradient-cyberpunk { background-image: linear-gradient(135deg, #f12711, #f5af19); }
-#profileName.nick-gradient-cotton { background-image: linear-gradient(135deg, #ff9a9e, #fecfef); }
-#profileName.nick-gradient-lavender { background-image: linear-gradient(135deg, #a18cd1, #fbc2eb); }
-#profileName.nick-gradient-fire { background-image: linear-gradient(135deg, #ff0000, #ff7300, #ffcc00); }
-#profileName.nick-gradient-platinum { background-image: linear-gradient(135deg, #434343, #d7dde8, #ffffff, #757f9a); }
-#profileName.nick-gradient-vintage { background-image: linear-gradient(135deg, #ca7345, #735135); }
-#profileName.nick-gradient-bubblegum { background-image: linear-gradient(135deg, #ff00cc, #333399); }
-#profileName.nick-gradient-galaxy { background-image: linear-gradient(135deg, #654ea3, #eaafc8); }
-#profileName.nick-gradient-mint { background-image: linear-gradient(135deg, #00c6ff, #0072ff); }
+/**/#profileName.nick-gradient-cotton, .message-author-name.nick-gradient-cotton { background-image: linear-gradient(135deg, #ff9a9e, #fecfef); }
+/*2*/#profileName.nick-gradient-blue-purple, .message-author-name.nick-gradient-blue-purple { background-image: linear-gradient(135deg, #0d6efd, #a020f0); }
+/*3*/#profileName.nick-gradient-gold, .message-author-name.nick-gradient-gold { background-image: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); font-weight: bold; }
+/*4*/#profileName.nick-gradient-sunset, .message-author-name.nick-gradient-sunset { background-image: linear-gradient(135deg, #ff512f, #dd2476); }
+/*5*/#profileName.nick-gradient-ocean, .message-author-name.nick-gradient-ocean { background-image: linear-gradient(135deg, #02aab0, #00cdac); }
+/*6*/#profileName.nick-gradient-forest, .message-author-name.nick-gradient-forest { background-image: linear-gradient(135deg, #11998e, #38ef7d); }
+/*7*/#profileName.nick-gradient-ruby, .message-author-name.nick-gradient-ruby { background-image: linear-gradient(135deg, #cb2d3e, #ef473a); }
+/*8*/#profileName.nick-gradient-cyberpunk, .message-author-name.nick-gradient-cyberpunk { background-image: linear-gradient(135deg, #f12711, #f5af19); }
+/*9*/#profileName.nick-gradient-lavender, .message-author-name.nick-gradient-lavender { background-image: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+/*10*/#profileName.nick-gradient-fire, .message-author-name.nick-gradient-fire { background-image: linear-gradient(135deg, #ff0000, #ff7300, #ffcc00); }
+/*11*/#profileName.nick-gradient-platinum, .message-author-name.nick-gradient-platinum { background-image: linear-gradient(135deg, #434343, #d7dde8, #ffffff, #757f9a); }
+/*12*/#profileName.nick-gradient-vintage, .message-author-name.nick-gradient-vintage { background-image: linear-gradient(135deg, #ca7345, #735135); }
+/*13*/#profileName.nick-gradient-bubblegum, .message-author-name.nick-gradient-bubblegum { background-image: linear-gradient(135deg, #ff00cc, #333399); }
+/*14*/#profileName.nick-gradient-galaxy, .message-author-name.nick-gradient-galaxy { background-image: linear-gradient(135deg, #654ea3, #eaafc8); }
+/*15*/#profileName.nick-gradient-mint, .message-author-name.nick-gradient-mint { background-image: linear-gradient(135deg, #00c6ff, #0072ff); }
+/*16*/#profileName.nick-glow-green, .message-author-name.nick-glow-green { color: #15803d; text-shadow: 0 0 2px #22c55e, 0 0 8px rgba(34, 197, 94, 0.55); }
+/*17*/#profileName.nick-glow-purple, .message-author-name.nick-glow-purple { color: #6b21a8; text-shadow: 0 0 2px #c084fc, 0 0 8px rgba(192, 132, 252, 0.55); }
+/*18*/#profileName.nick-glow-red, .message-author-name.nick-glow-red { color: #b91c1c; text-shadow: 0 0 2px #ef4444, 0 0 8px rgba(239, 68, 68, 0.55); }
+/*19*/#profileName.nick-glow-gold, .message-author-name.nick-glow-gold { color: #a16207; text-shadow: 0 0 2px #eab308, 0 0 8px rgba(234, 179, 8, 0.6); }
+/*20*/#profileName.nick-glow-cyan, .message-author-name.nick-glow-cyan { color: #0369a1; text-shadow: 0 0 2px #38bdf8, 0 0 8px rgba(56, 189, 248, 0.55); }
+/*21*/#profileName.nick-glow-pink, .message-author-name.nick-glow-pink { color: #be185d; text-shadow: 0 0 2px #f43f5e, 0 0 8px rgba(244, 63, 94, 0.55); }
+/*22*/#profileName.nick-glow-blue, .message-author-name.nick-glow-blue { color: #1e40af; text-shadow: 0 0 2px #60a5fa, 0 0 8px rgba(96, 165, 250, 0.55); }
+/*23*/#profileName.nick-glow-orange, .message-author-name.nick-glow-orange { color: #c2410c; text-shadow: 0 0 2px #ff7426, 0 0 8px rgba(255, 116, 38, 0.55); }
+/*24*/#profileName.nick-glow-emerald, .message-author-name.nick-glow-emerald { color: #065f46; text-shadow: 0 0 2px #34d399, 0 0 8px rgba(52, 211, 153, 0.55); }
+/*25*/#profileName.nick-glow-wine, .message-author-name.nick-glow-wine { color: #881337; text-shadow: 0 0 2px #f43f5e, 0 0 8px rgba(244, 63, 94, 0.55); }
+/*26*/#profileName.nick-glow-amber, .message-author-name.nick-glow-amber { color: #78350f; text-shadow: 0 0 2px #fbbf24, 0 0 8px rgba(251, 191, 36, 0.6); }
+/*27*/#profileName.nick-glow-teal, .message-author-name.nick-glow-teal { color: #0f766e; text-shadow: 0 0 2px #2dd4bf, 0 0 8px rgba(45, 212, 191, 0.55); }
+/*28*/#profileName.nick-glow-indigo, .message-author-name.nick-glow-indigo { color: #3730a3; text-shadow: 0 0 2px #818cf8, 0 0 8px rgba(129, 140, 248, 0.55); }
+/*29*/#profileName.nick-glow-coral, .message-author-name.nick-glow-coral { color: #9f1239; text-shadow: 0 0 2px #ff6b81, 0 0 8px rgba(255, 107, 129, 0.55); }
+/*30*/#profileName.nick-glow-silver, .message-author-name.nick-glow-silver { color: #1f2937; text-shadow: 0 0 2px #9ca3af, 0 0 8px rgba(156, 163, 175, 0.55); }
+/*31*/#profileName.nick-glow-lime, .message-author-name.nick-glow-lime { color: #3f6212; text-shadow: 0 0 2px #84cc16, 0 0 8px rgba(132, 204, 22, 0.6); }
+/*32*/#profileName.nick-gradient-royal-purple, .message-author-name.nick-gradient-royal-purple { background-image: linear-gradient(135deg, #4b0082, #d80073); }
+/*33*/#profileName.nick-gradient-midnight-cyan, .message-author-name.nick-gradient-midnight-cyan { background-image: linear-gradient(135deg, #0f2027, #0083b0); }
+/*34*/#profileName.nick-gradient-deep-ruby, .message-author-name.nick-gradient-deep-ruby { background-image: linear-gradient(135deg, #580000, #b91d73); }
+/*35*/#profileName.nick-gradient-dark-emerald, .message-author-name.nick-gradient-dark-emerald { background-image: linear-gradient(135deg, #0b486b, #005c53); }
+/*36*/#profileName.nick-gradient-cosmic-violet, .message-author-name.nick-gradient-cosmic-violet { background-image: linear-gradient(135deg, #1f1c2c, #928dab); }
+/*37*/#profileName.nick-gradient-inferno-fire, .message-author-name.nick-gradient-inferno-fire { background-image: linear-gradient(135deg, #870000, #190a05); }
+/*38*/#profileName.nick-gradient-deep-sapphire, .message-author-name.nick-gradient-deep-sapphire { background-image: linear-gradient(135deg, #06f7ff, #ff09ea); }
+/*39*/#profileName.nick-gradient-electric-magenta, .message-author-name.nick-gradient-electric-magenta { background-image: linear-gradient(135deg, #61045f, #aa076b); }
+/*40*/#profileName.nick-gradient-poison-green, .message-author-name.nick-gradient-poison-green { background-image: linear-gradient(135deg, 	#00ffbf, #6404ff); }
+/*41*/#profileName.nick-gradient-bronze-gold, .message-author-name.nick-gradient-bronze-gold { background-image: linear-gradient(135deg, #362612, #8e6d32, #4a3410); font-weight: bold; }
+/*42*/#profileName.nick-gradient-black-ocean, .message-author-name.nick-gradient-black-ocean { background-image: linear-gradient(135deg, #120078, #BDB76B); }
+/*43*/#profileName.nick-gradient-dark-magma, .message-author-name.nick-gradient-dark-magma { background-image: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); }
+/*44*/#profileName.nick-gradient-plum-berry, .message-author-name.nick-gradient-plum-berry { background-image: linear-gradient(135deg, #3a1c71, #d76d77); }
+/*45*/#profileName.nick-gradient-electric-petroleum, .message-author-name.nick-gradient-electric-petroleum { background-image: linear-gradient(135deg, #003366, #00b4db); }
+/*46*/#profileName.nick-gradient-carmine-pink, .message-author-name.nick-gradient-carmine-pink { background-image: linear-gradient(135deg, #fd0c0c, #26a337); }
+/*47*/#profileName.nick-gradient-deep-indigo, .message-author-name.nick-gradient-deep-indigo { background-image: linear-gradient(135deg, #11002c, #480048); }
+/*48*/#profileName.nick-gradient-coffee-amber, .message-author-name.nick-gradient-coffee-amber { background-image: linear-gradient(135deg, #2c1603, #e65c00); }
+/*49*/#profileName.nick-gradient-night-teal, .message-author-name.nick-gradient-night-teal { background-image: linear-gradient(135deg, #00223e, #1d976c); }
+/*50*/#profileName.nick-gradient-cyber-red, .message-author-name.nick-gradient-cyber-red { background-image: linear-gradient(135deg, #430007, #c8102e, #4a00e0); }
+/*51*/#profileName.nick-gradient-dark-chrome, .message-author-name.nick-gradient-dark-chrome { background-image: linear-gradient(135deg, #161616, #434343, #161616); font-weight: bold; }
+/*52*/#profileName.nick-gradient-neon, .message-author-name.nick-gradient-neon { background-image: linear-gradient(90deg, #ff007f, #39ff14, #00f0ff, #ff007f); background-size: 300% 100%; animation: nameFlowAnim 10s linear infinite; filter: drop-shadow(0px 0px 3px rgba(57, 255, 20, 0.6)); }
+/*53*/#profileName.nick-anim-rainbow, .message-author-name.nick-anim-rainbow { background-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet, red); background-size: 300% 100%; animation: nameFlowAnim 8s linear infinite; filter: drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.5)); }
+/*54*/#profileName.nick-anim-aurora, .message-author-name.nick-anim-aurora { background-image: linear-gradient(90deg, #0575e6, #00f260, #0575e6); background-size: 200% 100%; animation: nameFlowAnim 5s ease infinite; filter: drop-shadow(0px 0px 3px rgba(0, 242, 96, 0.5)); }
+/*55*/#profileName.nick-anim-magma, .message-author-name.nick-anim-magma { background-image: linear-gradient(90deg, #f12711, #f5af19, #f12711); background-size: 200% 100%; animation: nameFlowAnim 5s ease infinite; filter: drop-shadow(0px 0px 3px rgba(241, 39, 17, 0.7)); }
+/*56*/#profileName.nick-anim-matrix, .message-author-name.nick-anim-matrix { background-image: linear-gradient(90deg, #00FF00, #003300, #00FF00); background-size: 200% 100%; animation: nameFlowAnim 4s linear infinite; -webkit-text-stroke: 0.5px #003300; }
+/*57*/#profileName.nick-anim-electric, .message-author-name.nick-anim-electric { background-image: linear-gradient(90deg, #00ffff, #ffffff, #0072ff, #00ffff); background-size: 300% 100%; animation: nameFlowAnim 5s linear infinite; filter: drop-shadow(0px 0px 4px rgba(0, 240, 255, 0.8)); }
+/*58*/#profileName.nick-anim-gold-flow, .message-author-name.nick-anim-gold-flow { background-image: linear-gradient(90deg, #bf953f, #aa771c, #fcf6ba, #bf953f); background-size: 300% 100%; animation: nameFlowAnim 5s linear infinite; font-weight: bold; -webkit-text-stroke: 0.3px #543d0c; }
+/*59*/#profileName.nick-anim-ice, .message-author-name.nick-anim-ice { background-image: linear-gradient(90deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa); background-size: 300% 100%; animation: nameFlowAnim 4s ease infinite; filter: drop-shadow(0px 0px 3px rgba(128, 222, 234, 0.6)); }
+/*60*/#profileName.nick-anim-vampire, .message-author-name.nick-anim-vampire { background-image: linear-gradient(90deg, #4a0000, #ff0000, #4a0000); background-size: 200% 100%; animation: nameFlowAnim 5s ease-in-out infinite; -webkit-text-stroke: 0.5px #110000; }
+/*61*/#profileName.nick-anim-candy, .message-author-name.nick-anim-candy { background-image: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c); background-size: 200% 100%; animation: nameFlowAnim 3s linear infinite; filter: drop-shadow(0px 0px 3px rgba(255, 126, 179, 0.6)); }
+/*62*/#profileName.nick-anim-toxic, .message-author-name.nick-anim-toxic { background-image: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f); background-size: 200% 100%; animation: nameFlowAnim 5s linear infinite; filter: drop-shadow(0px 0px 4px rgba(168, 255, 120, 0.7)); }
+/*63*/#profileName.nick-anim-miami, .message-author-name.nick-anim-miami { background-image: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe); background-size: 200% 100%; animation: nameFlowAnim 5s ease-in-out infinite; filter: drop-shadow(0px 0px 3px rgba(0, 242, 254, 0.6)); }
+/*64*/#profileName.nick-anim-phoenix, .message-author-name.nick-anim-phoenix { background-image: linear-gradient(90deg, #f857a6, #ff5858, #f857a6); background-size: 200% 100%; animation: nameFlowAnim 2.5s ease infinite; filter: drop-shadow(0px 0px 4px rgba(255, 88, 88, 0.6)); }
 
-/* ========================================================================= 
-   EFEITO GLOW DE ALTA LEGIBILIDADE (UX PREMIUM PARA FUNDO BRANCO)
-   ========================================================================= */
-#profileName.nick-glow-green {color: #15803d;text-shadow: 0 0 2px #22c55e, 0 0 8px rgba(34, 197, 94, 0.55);}
-#profileName.nick-glow-purple {color: #6b21a8;text-shadow: 0 0 2px #c084fc, 0 0 8px rgba(192, 132, 252, 0.55);}
-#profileName.nick-glow-red {color: #b91c1c;text-shadow: 0 0 2px #ef4444, 0 0 8px rgba(239, 68, 68, 0.55);}
-#profileName.nick-glow-gold {color: #a16207;text-shadow: 0 0 2px #eab308, 0 0 8px rgba(234, 179, 8, 0.6);}
-#profileName.nick-glow-cyan {color: #0369a1;text-shadow: 0 0 2px #38bdf8, 0 0 8px rgba(56, 189, 248, 0.55);}
-#profileName.nick-glow-pink {color: #be185d;text-shadow: 0 0 2px #f43f5e, 0 0 8px rgba(244, 63, 94, 0.55);}
-#profileName.nick-glow-blue {color: #1e40af;text-shadow: 0 0 2px #60a5fa, 0 0 8px rgba(96, 165, 250, 0.55);}
-#profileName.nick-glow-orange {color: #c2410c;text-shadow: 0 0 2px #ff7426, 0 0 8px rgba(255, 116, 38, 0.55);}
-#profileName.nick-glow-emerald {color: #065f46;text-shadow: 0 0 2px #34d399, 0 0 8px rgba(52, 211, 153, 0.55);}
-#profileName.nick-glow-wine {color: #881337;text-shadow: 0 0 2px #f43f5e, 0 0 8px rgba(244, 63, 94, 0.55);}
-#profileName.nick-glow-amber {color: #78350f;text-shadow: 0 0 2px #fbbf24, 0 0 8px rgba(251, 191, 36, 0.6);}
-#profileName.nick-glow-teal {color: #0f766e;text-shadow: 0 0 2px #2dd4bf, 0 0 8px rgba(45, 212, 191, 0.55);}
-#profileName.nick-glow-indigo {color: #3730a3;text-shadow: 0 0 2px #818cf8, 0 0 8px rgba(129, 140, 248, 0.55);}
-#profileName.nick-glow-coral {color: #9f1239;text-shadow: 0 0 2px #ff6b81, 0 0 8px rgba(255, 107, 129, 0.55);}
-#profileName.nick-glow-silver {color: #1f2937;text-shadow: 0 0 2px #9ca3af, 0 0 8px rgba(156, 163, 175, 0.55);}
-#profileName.nick-glow-lime {color: #3f6212;text-shadow: 0 0 2px #84cc16, 0 0 8px rgba(132, 204, 22, 0.6);}
-
-/* ========================================================================= 
-   20 NOVOS DEGRADÊS VIVOS E ELEGANTES (ALTO CONTRASTE PARA FUNDO BRANCO)
-   ========================================================================= */
-
-#profileName.nick-gradient-royal-purple { background-image: linear-gradient(135deg, #4b0082, #d80073); }
-#profileName.nick-gradient-midnight-cyan { background-image: linear-gradient(135deg, #0f2027, #0083b0); }
-#profileName.nick-gradient-deep-ruby { background-image: linear-gradient(135deg, #580000, #b91d73); }
-#profileName.nick-gradient-dark-emerald { background-image: linear-gradient(135deg, #0b486b, #005c53); }
-#profileName.nick-gradient-cosmic-violet { background-image: linear-gradient(135deg, #1f1c2c, #928dab); }
-#profileName.nick-gradient-inferno-fire { background-image: linear-gradient(135deg, #870000, #190a05); }
-#profileName.nick-gradient-deep-sapphire { background-image: linear-gradient(135deg, #000428, #004e92); }
-#profileName.nick-gradient-electric-magenta { background-image: linear-gradient(135deg, #61045f, #aa076b); }
-#profileName.nick-gradient-poison-green { background-image: linear-gradient(135deg, #134e5e, #1a2a6c); }
-#profileName.nick-gradient-bronze-gold { background-image: linear-gradient(135deg, #362612, #8e6d32, #4a3410); font-weight: bold; }
-#profileName.nick-gradient-black-ocean { background-image: linear-gradient(135deg, #120078, #0d0130); }
-#profileName.nick-gradient-dark-magma { background-image: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); }
-#profileName.nick-gradient-plum-berry { background-image: linear-gradient(135deg, #3a1c71, #d76d77); }
-#profileName.nick-gradient-electric-petroleum { background-image: linear-gradient(135deg, #003366, #00b4db); }
-#profileName.nick-gradient-carmine-pink { background-image: linear-gradient(135deg, #7b0d1e, #ff0055); }
-#profileName.nick-gradient-deep-indigo { background-image: linear-gradient(135deg, #11002c, #480048); }
-#profileName.nick-gradient-coffee-amber { background-image: linear-gradient(135deg, #2c1603, #e65c00); }
-#profileName.nick-gradient-night-teal { background-image: linear-gradient(135deg, #00223e, #1d976c); }
-#profileName.nick-gradient-cyber-red { background-image: linear-gradient(135deg, #430007, #c8102e, #4a00e0); }
-#profileName.nick-gradient-dark-chrome { background-image: linear-gradient(135deg, #161616, #434343, #161616); font-weight: bold; }
-#profileName.nick-gradient-neon {background-image: linear-gradient(90deg, #ff007f, #39ff14, #00f0ff, #ff007f);
-  background-size: 300% 100%;animation: nameFlowAnim 10s linear infinite;filter: drop-shadow(0px 0px 3px rgba(57, 255, 20, 0.6));}
-#profileName.nick-anim-rainbow {background-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet, red);
-background-size: 300% 100%;animation: nameFlowAnim 8s linear infinite;filter: drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.5));}
-#profileName.nick-anim-aurora {background-image: linear-gradient(90deg, #0575e6, #00f260, #0575e6);
-background-size: 200% 100%;animation: nameFlowAnim 5s ease infinite;
-filter: drop-shadow(0px 0px 3px rgba(0, 242, 96, 0.5));}
-#profileName.nick-anim-magma {background-image: linear-gradient(90deg, #f12711, #f5af19, #f12711);background-size: 200% 100%;animation: nameFlowAnim 5s ease infinite;
-filter: drop-shadow(0px 0px 3px rgba(241, 39, 17, 0.7));}
-#profileName.nick-anim-matrix {background-image: linear-gradient(90deg, #00FF00, #003300, #00FF00);background-size: 200% 100%;animation: nameFlowAnim 4s linear infinite;
--webkit-text-stroke: 0.5px #003300;}
-#profileName.nick-anim-electric {background-image: linear-gradient(90deg, #00ffff, #ffffff, #0072ff, #00ffff);background-size: 300% 100%;
-  animation: nameFlowAnim 5s linear infinite;filter: drop-shadow(0px 0px 4px rgba(0, 240, 255, 0.8));}
-#profileName.nick-anim-gold-flow {background-image: linear-gradient(90deg, #bf953f, #aa771c, #fcf6ba, #bf953f);background-size: 300% 100%;
-animation: nameFlowAnim 5s linear infinite;font-weight: bold;-webkit-text-stroke: 0.3px #543d0c;}
-#profileName.nick-anim-ice {background-image: linear-gradient(90deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa);background-size: 300% 100%;
-  animation: nameFlowAnim 4s ease infinite;filter: drop-shadow(0px 0px 3px rgba(128, 222, 234, 0.6));}
-#profileName.nick-anim-vampire {background-image: linear-gradient(90deg, #4a0000, #ff0000, #4a0000);background-size: 200% 100%;
-  animation: nameFlowAnim 5s ease-in-out infinite;-webkit-text-stroke: 0.5px #110000;}
-#profileName.nick-anim-candy {background-image: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c);background-size: 200% 100%;
-animation: nameFlowAnim 3s linear infinite;filter: drop-shadow(0px 0px 3px rgba(255, 126, 179, 0.6));}
-#profileName.nick-anim-toxic {background-image: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f);background-size: 200% 100%;
-animation: nameFlowAnim 5s linear infinite;filter: drop-shadow(0px 0px 4px rgba(168, 255, 120, 0.7));}
-#profileName.nick-anim-miami {background-image: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe);background-size: 200% 100%; 
-   animation: nameFlowAnim 5s ease-in-out infinite;filter: drop-shadow(0px 0px 3px rgba(0, 242, 254, 0.6));}
-#profileName.nick-anim-phoenix {background-image: linear-gradient(90deg, #f857a6, #ff5858, #f857a6);background-size: 200% 100%;
-animation: nameFlowAnim 2.5s ease infinite;filter: drop-shadow(0px 0px 4px rgba(255, 88, 88, 0.6));}
 /* MOTOR DE RENDERIZAÇÃO E MOVIMENTO DOS DEGRADÊS ANIMADOS VIP */
 @keyframes bannerMoveEngine {
   0% {background-position: 0% 50%;}
@@ -6117,398 +6010,157 @@ animation: nameFlowAnim 2.5s ease infinite;filter: drop-shadow(0px 0px 4px rgba(
    EFEITOS VIP: TRANSFORMANDO A PRÓPRIA BORDA DO AVATAR EM NEON GLOW
    ========================================================================= */
 /* 1. FOGO INCANDESCENTE (BRASAS DE PLASMA) */
-.profile-avatar.frame-plasma-fire,
-#vipTopPreviewFrame.frame-plasma-fire,
-.message-avatar-wrap .avatar-frame.frame-plasma-fire {
-  border: 3px solid #ff4500;
-  box-shadow: 0 0 8px 2px #ff4500, 0 0 18px 3px #ff7300, 0 0 2px 2px rgba(255, 69, 0, 0.85);
-}
-
+.profile-avatar.frame-plasma-fire,#vipTopPreviewFrame.frame-plasma-fire,.message-avatar-wrap .avatar-frame.frame-plasma-fire {
+  border: 3px solid #ff4500;box-shadow: 0 0 8px 2px #ff4500, 0 0 18px 3px #ff7300, 0 0 2px 2px rgba(255, 69, 0, 0.85);}
 /* 2. NEON FIBRA ÓPTICA (LUZ INFINITA) */
-.profile-avatar.frame-fiber-neon,
-#vipTopPreviewFrame.frame-fiber-neon,
-.message-avatar-wrap .avatar-frame.frame-fiber-neon {
-  border: 3px solid #00f0ff;
-  box-shadow: 0 0 8px 2px #00f0ff, 0 0 18px 3px #0072ff, 0 0 2px 2px rgba(0, 240, 255, 0.85);
-}
-
+.profile-avatar.frame-fiber-neon,#vipTopPreviewFrame.frame-fiber-neon,.message-avatar-wrap .avatar-frame.frame-fiber-neon {
+border: 3px solid #00f0ff;box-shadow: 0 0 8px 2px #00f0ff, 0 0 18px 3px #0072ff, 0 0 2px 2px rgba(0, 240, 255, 0.85);}
 /* 3. AURA PULSANTE (LUZ VITAL) */
-.profile-avatar.frame-aura-pulse,
-#vipTopPreviewFrame.frame-aura-pulse,
-.message-avatar-wrap .avatar-frame.frame-aura-pulse {
-  border: 1px solid #ffd700;
-  box-shadow: 0 0 8px 2px #ffd700, 0 0 20px 3px #ffae00, 0 0 2px 2px rgba(255, 215, 0, 0.85);
-}
-
+.profile-avatar.frame-aura-pulse,#vipTopPreviewFrame.frame-aura-pulse,.message-avatar-wrap .avatar-frame.frame-aura-pulse {
+border: 1px solid #ffd700;box-shadow: 0 0 8px 2px #ffd700, 0 0 20px 3px #ffae00, 0 0 2px 2px rgba(255, 215, 0, 0.85);}
 /* 4. FAÍSCAS ELÉTRICAS (ALTA VOLTAGEM) */
-.profile-avatar.frame-electric-spark,
-#vipTopPreviewFrame.frame-electric-spark,
-.message-avatar-wrap .avatar-frame.frame-electric-spark {
-  border: 3px solid #b026ff;
-  box-shadow: 0 0 8px 2px #b026ff, 0 0 18px 3px #7000ff, 0 0 2px 2px  rgba(176, 38, 255, 0.9);
-}
-
+.profile-avatar.frame-electric-spark,#vipTopPreviewFrame.frame-electric-spark,.message-avatar-wrap .avatar-frame.frame-electric-spark {
+border: 3px solid #b026ff;box-shadow: 0 0 8px 2px #b026ff, 0 0 18px 3px #7000ff, 0 0 2px 2px  rgba(176, 38, 255, 0.9);}
 /* 5. VERDE VENENO (TÓXICO RADIOATIVO) */
-.profile-avatar.frame-toxic-green,
-#vipTopPreviewFrame.frame-toxic-green,
+.profile-avatar.frame-toxic-green,#vipTopPreviewFrame.frame-toxic-green,
 .message-avatar-wrap .avatar-frame.frame-toxic-green {
-  border: 3px solid #10b981;
-  box-shadow: 0 0 8px 2px #10b981, 0 0 18px 3px #059669, 0 0 2px 2px rgba(16, 185, 129, 0.85);
-}
-
+border: 3px solid #10b981;box-shadow: 0 0 8px 2px #10b981, 0 0 18px 3px #059669, 0 0 2px 2px rgba(16, 185, 129, 0.85);}
 /* 6. VERMELHO RUBI (SANGUE DE VAMPIRO) */
-.profile-avatar.frame-ruby-red,
-#vipTopPreviewFrame.frame-ruby-red,
+.profile-avatar.frame-ruby-red,#vipTopPreviewFrame.frame-ruby-red,
 .message-avatar-wrap .avatar-frame.frame-ruby-red {
-  border: 3px solid #dc2626;
-  box-shadow: 0 0 8px 2px #dc2626, 0 0 18px 5px #991b1b, 0 0 2px 2px rgba(220, 38, 38, 0.85);
-}
-
+border: 3px solid #dc2626;box-shadow: 0 0 8px 2px #dc2626, 0 0 18px 5px #991b1b, 0 0 2px 2px rgba(220, 38, 38, 0.85);}
 /* 7. AZUL COBALTO (TEMPESTADE MAGNÉTICA) */
-.profile-avatar.frame-cobalt-blue,
-#vipTopPreviewFrame.frame-cobalt-blue,
+.profile-avatar.frame-cobalt-blue,#vipTopPreviewFrame.frame-cobalt-blue,
 .message-avatar-wrap .avatar-frame.frame-cobalt-blue {
-  border: 3px solid #1d4ed8;
-  box-shadow: 0 0 8px 2px #1d4ed8, 0 0 18px 3px #1e40af, 0 0 2px 2px  rgba(29, 78, 216, 0.85);
-}
-
+ border: 3px solid #1d4ed8;box-shadow: 0 0 8px 2px #1d4ed8, 0 0 18px 3px #1e40af, 0 0 2px 2px  rgba(29, 78, 216, 0.85);}
 /* 8. ROSA CHOQUE (CYBERPUNK MAGENTA) */
-.profile-avatar.frame-magenta-shock,
-#vipTopPreviewFrame.frame-magenta-shock,
+.profile-avatar.frame-magenta-shock,#vipTopPreviewFrame.frame-magenta-shock,
 .message-avatar-wrap .avatar-frame.frame-magenta-shock {
-  border: 3px solid #db2777;
-  box-shadow: 0 0 8px 2px #db2777, 0 0 18px 3px #be185d, 0 0 2px 2px  rgba(219, 39, 119, 0.85);
-}
-
+  border: 3px solid #db2777;box-shadow: 0 0 8px 2px #db2777, 0 0 18px 3px #be185d, 0 0 2px 2px  rgba(219, 39, 119, 0.85);}
 /* 9. LARANJA INFERNO (MAGMA VULCÂNICO) */
-.profile-avatar.frame-inferno-orange,
-#vipTopPreviewFrame.frame-inferno-orange,
+.profile-avatar.frame-inferno-orange,#vipTopPreviewFrame.frame-inferno-orange,
 .message-avatar-wrap .avatar-frame.frame-inferno-orange {
-  border: 3px solid #ea580c;
-  box-shadow: 0 0 8px 2px #ea580c, 0 0 18px 3px #c2410c, 0 0 2px 2px rgba(234, 88, 12, 0.85);
-}
-
+border: 3px solid #ea580c;box-shadow: 0 0 8px 2px #ea580c, 0 0 18px 3px #c2410c, 0 0 2px 2px rgba(234, 88, 12, 0.85);}
 /* 10. TURQUESA FECHADO (OCEANO PROFUNDO) */
-.profile-avatar.frame-deep-teal,
-#vipTopPreviewFrame.frame-deep-teal,
-.message-avatar-wrap .avatar-frame.frame-deep-teal {
-  border: 3px solid #0d9488;
-  box-shadow: 0 0 8px 2px #0d9488, 0 0 18px 3px #0f766e, 0 0 2px 2px  rgba(13, 148, 136, 0.85);
-}
-
+.profile-avatar.frame-deep-teal,#vipTopPreviewFrame.frame-deep-teal,.message-avatar-wrap .avatar-frame.frame-deep-teal {
+border: 3px solid #0d9488;box-shadow: 0 0 8px 2px #0d9488, 0 0 18px 3px #0f766e, 0 0 2px 2px  rgba(13, 148, 136, 0.85);}
 /* 11. ROXO IMPERIAL (REINO SOMBRIO) */
-.profile-avatar.frame-royal-purple,
-#vipTopPreviewFrame.frame-royal-purple,
-.message-avatar-wrap .avatar-frame.frame-royal-purple {
-  border: 3px solid #7e22ce;
-  box-shadow: 0 0 8px 2px #7e22ce, 0 0 18px 3px #6b21a8, 0 0 2px 2px  rgba(126, 34, 206, 0.85);
-}
-
+.profile-avatar.frame-royal-purple,#vipTopPreviewFrame.frame-royal-purple,.message-avatar-wrap .avatar-frame.frame-royal-purple {
+border: 3px solid #7e22ce;box-shadow: 0 0 8px 2px #7e22ce, 0 0 18px 3px #6b21a8, 0 0 2px 2px  rgba(126, 34, 206, 0.85);}
 /* 12. VERDE LIMA (MICROCHIP VITAL) */
-.profile-avatar.frame-lime-charge,
-#vipTopPreviewFrame.frame-lime-charge,
-.message-avatar-wrap .avatar-frame.frame-lime-charge {
-  border: 3px solid #65a30d;
-  box-shadow: 0 0 8px 2px #65a30d, 0 0 18px 3px #4d7c0f, 0 0 2px 2px  rgba(101, 163, 13, 0.85);
-}
-
+.profile-avatar.frame-lime-charge,#vipTopPreviewFrame.frame-lime-charge,.message-avatar-wrap .avatar-frame.frame-lime-charge {
+border: 3px solid #65a30d;box-shadow: 0 0 8px 2px #65a30d, 0 0 18px 3px #4d7c0f, 0 0 2px 2px  rgba(101, 163, 13, 0.85);}
 /* 13. VINHO NOBRE (SANGUE DE RUBI) */
-.profile-avatar.frame-noble-wine,
-#vipTopPreviewFrame.frame-noble-wine,
-.message-avatar-wrap .avatar-frame.frame-noble-wine {
-  border: 3px solid #9f1239;
-  box-shadow: 0 0 8px 2px #9f1239, 0 0 18px 3px #881337, 0 0 2px 2px  rgba(159, 18, 57, 0.85);
-}
-
+.profile-avatar.frame-noble-wine,#vipTopPreviewFrame.frame-noble-wine,.message-avatar-wrap .avatar-frame.frame-noble-wine {
+  border: 3px solid #9f1239;box-shadow: 0 0 8px 2px #9f1239, 0 0 18px 3px #881337, 0 0 2px 2px  rgba(159, 18, 57, 0.85);}
 /* 14. ÂMBAR DOURADO (OURO NEGRO) */
-.profile-avatar.frame-amber-gold,
-#vipTopPreviewFrame.frame-amber-gold,
-.message-avatar-wrap .avatar-frame.frame-amber-gold {
-  border: 3px solid #d97706;
-  box-shadow: 0 0 8px 2px #d97706, 0 0 18px 3px #b45309, 0 0 2px 2px  rgba(217, 119, 6, 0.85);
-}
-
+.profile-avatar.frame-amber-gold,#vipTopPreviewFrame.frame-amber-gold,.message-avatar-wrap .avatar-frame.frame-amber-gold {
+border: 3px solid #d97706;box-shadow: 0 0 8px 2px #d97706, 0 0 18px 3px #b45309, 0 0 2px 2px  rgba(217, 119, 6, 0.85);}
 /* 16. AZUL SAFIRA (CRISTAL CONGELADO) */
-.profile-avatar.frame-sapphire-blue,
-#vipTopPreviewFrame.frame-sapphire-blue,
-.message-avatar-wrap .avatar-frame.frame-sapphire-blue {
-  border: 3px solid #0284c7;
-  box-shadow: 0 0 8px 2px #0284c7, 0 0 18px 3px #0369a1, 0 0 2px 2px  rgba(2, 132, 199, 0.85);
-}
-
+.profile-avatar.frame-sapphire-blue,#vipTopPreviewFrame.frame-sapphire-blue,.message-avatar-wrap .avatar-frame.frame-sapphire-blue {
+border: 3px solid #0284c7;box-shadow: 0 0 8px 2px #0284c7, 0 0 18px 3px #0369a1, 0 0 2px 2px  rgba(2, 132, 199, 0.85);}
 /* 17. CORAL VIVO (ENERGIA SOLAR) */
-.profile-avatar.frame-vibrant-coral,
-#vipTopPreviewFrame.frame-vibrant-coral,
-.message-avatar-wrap .avatar-frame.frame-vibrant-coral {
-  border: 3px solid #f43f5e;
-  box-shadow: 0 0 8px 2px #f43f5e, 0 0 18px 3px #e11d48, 0 0 2px 2px  rgba(244, 63, 94, 0.85);
-}
-
+.profile-avatar.frame-vibrant-coral,#vipTopPreviewFrame.frame-vibrant-coral,.message-avatar-wrap .avatar-frame.frame-vibrant-coral {
+border: 3px solid #f43f5e;box-shadow: 0 0 8px 2px #f43f5e, 0 0 18px 3px #e11d48, 0 0 2px 2px  rgba(244, 63, 94, 0.85);}
 /* 18. ESMRALDA ESCURA (FLORESTA ENCANTADA) */
-.profile-avatar.frame-dark-emerald,
-#vipTopPreviewFrame.frame-dark-emerald,
-.message-avatar-wrap .avatar-frame.frame-dark-emerald {
-  border: 3px solid #047857;
-  box-shadow: 0 0 8px 2px #047857, 0 0 18px 3px #065f46, 0 0 2px 2px  rgba(4, 120, 87, 0.85);
-}
-
+.profile-avatar.frame-dark-emerald,#vipTopPreviewFrame.frame-dark-emerald,.message-avatar-wrap .avatar-frame.frame-dark-emerald {
+border: 3px solid #047857;box-shadow: 0 0 8px 2px #047857, 0 0 18px 3px #065f46, 0 0 2px 2px  rgba(4, 120, 87, 0.85);}
 /* 19. ÍNDIGO NOITE (ECLIPSE LUNAR) */
-.profile-avatar.frame-indigo-night,
-#vipTopPreviewFrame.frame-indigo-night,
-.message-avatar-wrap .avatar-frame.frame-indigo-night {
-  border: 3px solid #4338ca;
-  box-shadow: 0 0 8px 2px #4338ca, 0 0 18px 3px #3730a3, 0 0 2px 2px  rgba(67, 56, 202, 0.85);
-}
-
+.profile-avatar.frame-indigo-night,#vipTopPreviewFrame.frame-indigo-night,.message-avatar-wrap .avatar-frame.frame-indigo-night {
+border: 3px solid #4338ca;box-shadow: 0 0 8px 2px #4338ca, 0 0 18px 3px #3730a3, 0 0 2px 2px  rgba(67, 56, 202, 0.85);}
 /* 20. GRAFITE PLATINA (METAL LIQUIDO CROMADO) */
-.profile-avatar.frame-dark-chrome,
-#vipTopPreviewFrame.frame-dark-chrome,
+.profile-avatar.frame-dark-chrome,#vipTopPreviewFrame.frame-dark-chrome,
 .message-avatar-wrap .avatar-frame.frame-dark-chrome {
-  border: 3px solid #374151;
-  box-shadow: 0 0 8px 2px #374151, 0 0 18px 3px #1f2937, 0 0 2px 2px  rgba(55, 65, 81, 0.85);
-}
-
+border: 3px solid #374151;box-shadow: 0 0 8px 2px #374151, 0 0 18px 3px #1f2937, 0 0 2px 2px  rgba(55, 65, 81, 0.85);}
 /* 21. FÚCSIA NEON (#FF00FF DA IMAGEM 1) */
-.profile-avatar.frame-fuchsia-neon,
-#vipTopPreviewFrame.frame-fuchsia-neon,
-.message-avatar-wrap .avatar-frame.frame-fuchsia-neon {
-  border: 3px solid #ff00ff;
-  box-shadow: 0 0 8px 2px #ff00ff, 0 0 18px 3px #e600e6, 0 0 2px 2px  rgba(255, 0, 255, 0.85);
-}
-
+.profile-avatar.frame-fuchsia-neon,#vipTopPreviewFrame.frame-fuchsia-neon,.message-avatar-wrap .avatar-frame.frame-fuchsia-neon {
+border: 3px solid #ff00ff;box-shadow: 0 0 8px 2px #ff00ff, 0 0 18px 3px #e600e6, 0 0 2px 2px  rgba(255, 0, 255, 0.85);}
 /* 22. BRONZE TERROSO (#8B6F47 DA IMAGEM 2) */
-.profile-avatar.frame-bronze-earth,
-#vipTopPreviewFrame.frame-bronze-earth,
-.message-avatar-wrap .avatar-frame.frame-bronze-earth {
-  border: 3px solid #8b6f47;
-  box-shadow: 0 0 8px 2px #8b6f47, 0 0 18px 3px #6e4f30, 0 0 2px 2px  rgba(139, 111, 71, 0.85);
-}
-
+.profile-avatar.frame-bronze-earth,#vipTopPreviewFrame.frame-bronze-earth,.message-avatar-wrap .avatar-frame.frame-bronze-earth {
+border: 3px solid #8b6f47;box-shadow: 0 0 8px 2px #8b6f47, 0 0 18px 3px #6e4f30, 0 0 2px 2px  rgba(139, 111, 71, 0.85);}
 /* 23. BEGE DOURADO (#D4AC6E DA IMAGEM 2) */
-.profile-avatar.frame-beige-gold,
-#vipTopPreviewFrame.frame-beige-gold,
-.message-avatar-wrap .avatar-frame.frame-beige-gold {
-  border: 3px solid #d4ac6e;
-  box-shadow: 0 0 8px 2px #d4ac6e, 0 0 18px 3px #b88d52, 0 0 2px 2px  rgba(212, 172, 110, 0.85);
-}
-
+.profile-avatar.frame-beige-gold,#vipTopPreviewFrame.frame-beige-gold,.message-avatar-wrap .avatar-frame.frame-beige-gold {
+border: 3px solid #d4ac6e;box-shadow: 0 0 8px 2px #d4ac6e, 0 0 18px 3px #b88d52, 0 0 2px 2px  rgba(212, 172, 110, 0.85);}
 /* 24. CINZA PRATA ELEGANTE (W3-GRAY DA IMAGEM 3) */
-.profile-avatar.frame-w3-gray,
-#vipTopPreviewFrame.frame-w3-gray,
-.message-avatar-wrap .avatar-frame.frame-w3-gray {
-  border: 3px solid #757575;
-  box-shadow: 0 0 8px 2px #9e9e9e, 0 0 18px 3px #616161, 0 0 2px 2px  rgba(117, 117, 117, 0.85);
-}
-
+.profile-avatar.frame-w3-gray,#vipTopPreviewFrame.frame-w3-gray,.message-avatar-wrap .avatar-frame.frame-w3-gray {
+border: 3px solid #757575;box-shadow: 0 0 8px 2px #9e9e9e, 0 0 18px 3px #616161, 0 0 2px 2px  rgba(117, 117, 117, 0.85);}
 /* 25. ROSA BEBÊ (PINK GLOW DELICADO) */
-.profile-avatar.frame-soft-pink,
-#vipTopPreviewFrame.frame-soft-pink,
-.message-avatar-wrap .avatar-frame.frame-soft-pink {
-  border: 3px solid #f472b6;
-  box-shadow: 0 0 8px 2px #f472b6, 0 0 18px 3px #ec4899, 0 0 2px 2px  rgba(244, 114, 182, 0.85);
-}
-
+.profile-avatar.frame-soft-pink,#vipTopPreviewFrame.frame-soft-pink,.message-avatar-wrap .avatar-frame.frame-soft-pink {
+border: 3px solid #f472b6;box-shadow: 0 0 8px 2px #f472b6, 0 0 18px 3px #ec4899, 0 0 2px 2px  rgba(244, 114, 182, 0.85);}
 /* 26. ORQUÍDEA VIOLETA (LILÁS INTENSO) */
-.profile-avatar.frame-orchid-violet,
-#vipTopPreviewFrame.frame-orchid-violet,
-.message-avatar-wrap .avatar-frame.frame-orchid-violet {
-  border: 3px solid #c084fc;
-  box-shadow: 0 0 8px 2px #c084fc, 0 0 18px 3px #a855f7, 0 0 2px 2px  rgba(192, 132, 252, 0.85);
-}
-
+.profile-avatar.frame-orchid-violet,#vipTopPreviewFrame.frame-orchid-violet,.message-avatar-wrap .avatar-frame.frame-orchid-violet {
+border: 3px solid #c084fc;box-shadow: 0 0 8px 2px #c084fc, 0 0 18px 3px #a855f7, 0 0 2px 2px  rgba(192, 132, 252, 0.85);}
 /* 27. OURO ROSÉ (LUXO FEMININO) */
-.profile-avatar.frame-rose-gold,
-#vipTopPreviewFrame.frame-rose-gold,
-.message-avatar-wrap .avatar-frame.frame-rose-gold {
-  border: 3px solid #fb7185;
-  box-shadow: 0 0 8px 2px #fb7185, 0 0 18px 3px #f43f5e, 0 0 2px 2px  rgba(251, 113, 133, 0.85);
-}
-
+.profile-avatar.frame-rose-gold,#vipTopPreviewFrame.frame-rose-gold,.message-avatar-wrap .avatar-frame.frame-rose-gold {
+border: 3px solid #fb7185;box-shadow: 0 0 8px 2px #fb7185, 0 0 18px 3px #f43f5e, 0 0 2px 2px  rgba(251, 113, 133, 0.85);}
 /* 28. MALVA GLAMOUR (ROSA ELEGANTE) */
-.profile-avatar.frame-mauve-glam,
-#vipTopPreviewFrame.frame-mauve-glam,
-.message-avatar-wrap .avatar-frame.frame-mauve-glam {
-  border: 3px solid #e879f9;
-  box-shadow: 0 0 8px 2px #e879f9, 0 0 18px 3px #d946ef, 0 0 2px 2px  rgba(232, 121, 249, 0.85);
-}
-
+.profile-avatar.frame-mauve-glam,#vipTopPreviewFrame.frame-mauve-glam,.message-avatar-wrap .avatar-frame.frame-mauve-glam {
+border: 3px solid #e879f9;box-shadow: 0 0 8px 2px #e879f9, 0 0 18px 3px #d946ef, 0 0 2px 2px  rgba(232, 121, 249, 0.85);}
 /* 29. LILÁS ALFAZEMA (SUAVE E ROMÂNTICO) */
-.profile-avatar.frame-lavender-soft,
-#vipTopPreviewFrame.frame-lavender-soft,
-.message-avatar-wrap .avatar-frame.frame-lavender-soft {
-  border: 3px solid #ddd6fe;
-  box-shadow: 0 0 8px 2px #c4b5fd, 0 0 18px 3px #8b5cf6, 0 0 2px 2px  rgba(139, 92, 246, 0.85);
-}
-
+.profile-avatar.frame-lavender-soft,#vipTopPreviewFrame.frame-lavender-soft,.message-avatar-wrap .avatar-frame.frame-lavender-soft {
+border: 3px solid #ddd6fe;box-shadow: 0 0 8px 2px #c4b5fd, 0 0 18px 3px #8b5cf6, 0 0 2px 2px  rgba(139, 92, 246, 0.85);}
 /* 30. MAGENTA DEEP (VINHO ROSADO) */
-.profile-avatar.frame-deep-magenta,
-#vipTopPreviewFrame.frame-deep-magenta,
-.message-avatar-wrap .avatar-frame.frame-deep-magenta {
-  border: 3px solid #be185d;
-  box-shadow: 0 0 8px 2px #be185d, 0 0 18px 3px #9d174d, 0 0 2px 2px  rgba(190, 24, 93, 0.85);
-}
-
+.profile-avatar.frame-deep-magenta,#vipTopPreviewFrame.frame-deep-magenta,.message-avatar-wrap .avatar-frame.frame-deep-magenta {
+border: 3px solid #be185d;box-shadow: 0 0 8px 2px #be185d, 0 0 18px 3px #9d174d, 0 0 2px 2px  rgba(190, 24, 93, 0.85);}
 /* 31. PÊSSEGO ILUMINADO (SUNSET FEMININO) */
-.profile-avatar.frame-peach-glow,
-#vipTopPreviewFrame.frame-peach-glow,
-.message-avatar-wrap .avatar-frame.frame-peach-glow {
-  border: 3px solid #fb923c;
-  box-shadow: 0 0 8px 2px #fb923c, 0 0 18px 3px #f97316, 0 0 2px 2px  rgba(251, 146, 60, 0.85);
-}
-
+.profile-avatar.frame-peach-glow,#vipTopPreviewFrame.frame-peach-glow,.message-avatar-wrap .avatar-frame.frame-peach-glow {
+border: 3px solid #fb923c;box-shadow: 0 0 8px 2px #fb923c, 0 0 18px 3px #f97316, 0 0 2px 2px  rgba(251, 146, 60, 0.85);}
 /* 32. AMETISTA REVOLUT (ROXO CRISTAL) */
-.profile-avatar.frame-amethyst-crystal,
-#vipTopPreviewFrame.frame-amethyst-crystal,
-.message-avatar-wrap .avatar-frame.frame-amethyst-crystal {
-  border: 3px solid #a855f7;
-  box-shadow: 0 0 8px 2px #a855f7, 0 0 18px 3px #9333ea, 0 02px 2px  rgba(168, 85, 247, 0.85);
-}
-
+.profile-avatar.frame-amethyst-crystal,#vipTopPreviewFrame.frame-amethyst-crystal,.message-avatar-wrap .avatar-frame.frame-amethyst-crystal {
+border: 3px solid #a855f7;box-shadow: 0 0 8px 2px #a855f7, 0 0 18px 3px #9333ea, 0 02px 2px  rgba(168, 85, 247, 0.85);}
 /* 33. ROSA CEREJA (CANDY NEON) */
-.profile-avatar.frame-cherry-pink,
-#vipTopPreviewFrame.frame-cherry-pink,
-.message-avatar-wrap .avatar-frame.frame-cherry-pink {
-  border: 3px solid #f43f5e;
-  box-shadow: 0 0 8px 2px #f43f5e, 0 0 18px 3px #e11d48, 0 0 2px 2px  rgba(244, 63, 94, 0.85);
-}
-
+.profile-avatar.frame-cherry-pink,#vipTopPreviewFrame.frame-cherry-pink,.message-avatar-wrap .avatar-frame.frame-cherry-pink {
+border: 3px solid #f43f5e;box-shadow: 0 0 8px 2px #f43f5e, 0 0 18px 3px #e11d48, 0 0 2px 2px  rgba(244, 63, 94, 0.85);}
 /* 34. PÉROLA PRATA (BRILHO ACETINADO) */
-.profile-avatar.frame-silver-pearl,
-#vipTopPreviewFrame.frame-silver-pearl,
-.message-avatar-wrap .avatar-frame.frame-silver-pearl {
-  border: 3px solid #e5e7eb;
-  box-shadow: 0 0 8px 2px #ffffff, 0 0 18px 3px #9ca3af, 0 0 2px 2px  rgba(156, 163, 175, 0.85);
-}
-
+.profile-avatar.frame-silver-pearl,#vipTopPreviewFrame.frame-silver-pearl,.message-avatar-wrap .avatar-frame.frame-silver-pearl {
+border: 3px solid #e5e7eb;box-shadow: 0 0 8px 2px #ffffff, 0 0 18px 3px #9ca3af, 0 0 2px 2px  rgba(156, 163, 175, 0.85);}
 /* 35. CAFÉ DOURADO (BRONZE INTENSO) */
-.profile-avatar.frame-coffee-gold,
-#vipTopPreviewFrame.frame-coffee-gold,
-.message-avatar-wrap .avatar-frame.frame-coffee-gold {
-  border: 3px solid #78350f;
-  box-shadow: 0 0 8px 2px #92400e, 0 0 18px 3px #b45309, 0 0 2px 2px  rgba(180, 83, 9, 0.85);
-}
-
+.profile-avatar.frame-coffee-gold,#vipTopPreviewFrame.frame-coffee-gold,.message-avatar-wrap .avatar-frame.frame-coffee-gold {
+border: 3px solid #78350f;box-shadow: 0 0 8px 2px #92400e, 0 0 18px 3px #b45309, 0 0 2px 2px  rgba(180, 83, 9, 0.85);}
 /* 36. CITRINO VIVAZ (AMARELO ILUMINADO) */
-.profile-avatar.frame-vivid-citrine,
-#vipTopPreviewFrame.frame-vivid-citrine,
-.message-avatar-wrap .avatar-frame.frame-vivid-citrine {
-  border: 3px solid #eab308;
-  box-shadow: 0 0 8px 2px #eab308, 0 0 18px 3px #ca8a04, 0 0 30px 10px rgba(234, 179, 8, 0.85);
-}
+.profile-avatar.frame-vivid-citrine,#vipTopPreviewFrame.frame-vivid-citrine,.message-avatar-wrap .avatar-frame.frame-vivid-citrine {
+  border: 3px solid #eab308;box-shadow: 0 0 8px 2px #eab308, 0 0 18px 3px #ca8a04, 0 0 30px 10px rgba(234, 179, 8, 0.85);}
+
 /* ========================================================================= 
    AJUSTE DE MOLDURA VIP PARA O CHAT (MOBILE / TELAS PEQUENAS)
    ========================================================================= */
-@media (max-width: 768px) {
-  .message-avatar-wrap .avatar-frame {
-    border-width: 2px;
-  }
+@media (max-width: 768px) {.message-avatar-wrap .avatar-frame {border-width: 2px;}
+.message-avatar-wrap .avatar-frame.frame-plasma-fire {box-shadow: 0 0 4px 1px #ff4500, 0 0 8px 2px #ff7300;}
+.message-avatar-wrap .avatar-frame.frame-fiber-neon {box-shadow: 0 0 4px 1px #00f0ff, 0 0 8px 2px #0072ff;}
+.message-avatar-wrap .avatar-frame.frame-aura-pulse {box-shadow: 0 0 4px 1px #ffd700, 0 0 8px 2px #ffae00;}
+.message-avatar-wrap .avatar-frame.frame-electric-spark {box-shadow: 0 0 4px 1px #b026ff, 0 0 7px 2px #7000ff;}
+.message-avatar-wrap .avatar-frame.frame-toxic-green {box-shadow: 0 0 4px 1px #10b981, 0 0 8px 2px #059669;}
+.message-avatar-wrap .avatar-frame.frame-ruby-red {box-shadow: 0 0 4px 1px #dc2626, 0 0 8px 2px #991b1b;}
+.message-avatar-wrap .avatar-frame.frame-cobalt-blue {box-shadow: 0 0 4px 1px #1d4ed8, 0 0 8px 2px #1e40af;}
+.message-avatar-wrap .avatar-frame.frame-magenta-shock {box-shadow: 0 0 4px 1px #db2777, 0 0 8px 2px #be185d;}
+.message-avatar-wrap .avatar-frame.frame-inferno-orange {box-shadow: 0 0 4px 1px #ea580c, 0 0 8px 2px #c2410c;}
+.message-avatar-wrap .avatar-frame.frame-deep-teal {box-shadow: 0 0 4px 1px #0d9488, 0 0 8px 2px #0f766e;}
+.message-avatar-wrap .avatar-frame.frame-royal-purple {box-shadow: 0 0 4px 1px #7e22ce, 0 0 8px 2px #6b21a8;}
+.message-avatar-wrap .avatar-frame.frame-lime-charge {box-shadow: 0 0 4px 1px #65a30d, 0 0 8px 2px #4d7c0f;}
+.message-avatar-wrap .avatar-frame.frame-noble-wine {box-shadow: 0 0 4px 1px #9f1239, 0 0 8px 2px #881337;}
+.message-avatar-wrap .avatar-frame.frame-amber-gold {box-shadow: 0 0 4px 1px #d97706, 0 0 8px 2px #b45309;}
+.message-avatar-wrap .avatar-frame.frame-sapphire-blue {box-shadow: 0 0 4px 1px #0284c7, 0 0 8px 2px #0369a1;}
+.message-avatar-wrap .avatar-frame.frame-vibrant-coral {box-shadow: 0 0 4px 1px #f43f5e, 0 0 8px 2px #e11d48;}
+.message-avatar-wrap .avatar-frame.frame-dark-emerald {box-shadow: 0 0 4px 1px #047857, 0 0 8px 2px #065f46;}
+.message-avatar-wrap .avatar-frame.frame-indigo-night {box-shadow: 0 0 4px 1px #4338ca, 0 0 8px 2px #3730a3;}
+.message-avatar-wrap .avatar-frame.frame-dark-chrome {box-shadow: 0 0 4px 1px #374151, 0 0 8px 2px #1f2937;}
+.message-avatar-wrap .avatar-frame.frame-fuchsia-neon {box-shadow: 0 0 4px 1px #ff00ff, 0 0 8px 2px #e600e6;}
+.message-avatar-wrap .avatar-frame.frame-bronze-earth {box-shadow: 0 0 4px 1px #8b6f47, 0 0 8px 2px #6e4f30;}
+.message-avatar-wrap .avatar-frame.frame-beige-gold {box-shadow: 0 0 4px 1px #d4ac6e, 0 0 8px 2px #b88d52;}
+.message-avatar-wrap .avatar-frame.frame-w3-gray {box-shadow: 0 0 4px 1px #9e9e9e, 0 0 8px 2px #616161;}
+.message-avatar-wrap .avatar-frame.frame-soft-pink {box-shadow: 0 0 4px 1px #f472b6, 0 0 8px 2px #ec4899;}
+.message-avatar-wrap .avatar-frame.frame-orchid-violet {box-shadow: 0 0 4px 1px #c084fc, 0 0 8px 2px #a855f7;}
+.message-avatar-wrap .avatar-frame.frame-rose-gold {box-shadow: 0 0 4px 1px #fb7185, 0 0 8px 2px #f43f5e;}
+.message-avatar-wrap .avatar-frame.frame-mauve-glam {box-shadow: 0 0 4px 1px #e879f9, 0 0 8px 2px #d946ef;}
+.message-avatar-wrap .avatar-frame.frame-lavender-soft {box-shadow: 0 0 4px 1px #c4b5fd, 0 0 8px 2px #8b5cf6;}
+.message-avatar-wrap .avatar-frame.frame-deep-magenta {box-shadow: 0 0 4px 1px #be185d, 0 0 8px 2px #9d174d;}
+.message-avatar-wrap .avatar-frame.frame-peach-glow {box-shadow: 0 0 4px 1px #fb923c, 0 0 8px 2px #f97316;}
+.message-avatar-wrap .avatar-frame.frame-amethyst-crystal {box-shadow: 0 0 4px 1px #a855f7, 0 0 8px 2px #9333ea;}
+.message-avatar-wrap .avatar-frame.frame-cherry-pink {box-shadow: 0 0 4px 1px #f43f5e, 0 0 8px 2px #e11d48;}
+.message-avatar-wrap .avatar-frame.frame-silver-pearl {box-shadow: 0 0 4px 1px #ffffff, 0 0 8px 2px #9ca3af;}
+.message-avatar-wrap .avatar-frame.frame-coffee-gold {box-shadow: 0 0 4px 1px #92400e, 0 0 8px 2px #b45309;}
+.message-avatar-wrap .avatar-frame.frame-vivid-citrine {box-shadow: 0 0 4px 1px #eab308, 0 0 8px 2px #ca8a04;} }
 
-  .message-avatar-wrap .avatar-frame.frame-plasma-fire {
-    box-shadow: 0 0 4px 1px #ff4500, 0 0 8px 2px #ff7300;
-  }
-  .message-avatar-wrap .avatar-frame.frame-fiber-neon {
-    box-shadow: 0 0 4px 1px #00f0ff, 0 0 8px 2px #0072ff;
-  }
-  .message-avatar-wrap .avatar-frame.frame-aura-pulse {
-    box-shadow: 0 0 4px 1px #ffd700, 0 0 8px 2px #ffae00;
-  }
-  .message-avatar-wrap .avatar-frame.frame-electric-spark {
-    box-shadow: 0 0 4px 1px #b026ff, 0 0 7px 2px #7000ff;
-  }
-  .message-avatar-wrap .avatar-frame.frame-toxic-green {
-    box-shadow: 0 0 4px 1px #10b981, 0 0 8px 2px #059669;
-  }
-  .message-avatar-wrap .avatar-frame.frame-ruby-red {
-    box-shadow: 0 0 4px 1px #dc2626, 0 0 8px 2px #991b1b;
-  }
-  .message-avatar-wrap .avatar-frame.frame-cobalt-blue {
-    box-shadow: 0 0 4px 1px #1d4ed8, 0 0 8px 2px #1e40af;
-  }
-  .message-avatar-wrap .avatar-frame.frame-magenta-shock {
-    box-shadow: 0 0 4px 1px #db2777, 0 0 8px 2px #be185d;
-  }
-  .message-avatar-wrap .avatar-frame.frame-inferno-orange {
-    box-shadow: 0 0 4px 1px #ea580c, 0 0 8px 2px #c2410c;
-  }
-  .message-avatar-wrap .avatar-frame.frame-deep-teal {
-    box-shadow: 0 0 4px 1px #0d9488, 0 0 8px 2px #0f766e;
-  }
-  .message-avatar-wrap .avatar-frame.frame-royal-purple {
-    box-shadow: 0 0 4px 1px #7e22ce, 0 0 8px 2px #6b21a8;
-  }
-  .message-avatar-wrap .avatar-frame.frame-lime-charge {
-    box-shadow: 0 0 4px 1px #65a30d, 0 0 8px 2px #4d7c0f;
-  }
-  .message-avatar-wrap .avatar-frame.frame-noble-wine {
-    box-shadow: 0 0 4px 1px #9f1239, 0 0 8px 2px #881337;
-  }
-  .message-avatar-wrap .avatar-frame.frame-amber-gold {
-    box-shadow: 0 0 4px 1px #d97706, 0 0 8px 2px #b45309;
-  }
-  .message-avatar-wrap .avatar-frame.frame-sapphire-blue {
-    box-shadow: 0 0 4px 1px #0284c7, 0 0 8px 2px #0369a1;
-  }
-  .message-avatar-wrap .avatar-frame.frame-vibrant-coral {
-    box-shadow: 0 0 4px 1px #f43f5e, 0 0 8px 2px #e11d48;
-  }
-  .message-avatar-wrap .avatar-frame.frame-dark-emerald {
-    box-shadow: 0 0 4px 1px #047857, 0 0 8px 2px #065f46;
-  }
-  .message-avatar-wrap .avatar-frame.frame-indigo-night {
-    box-shadow: 0 0 4px 1px #4338ca, 0 0 8px 2px #3730a3;
-  }
-  .message-avatar-wrap .avatar-frame.frame-dark-chrome {
-    box-shadow: 0 0 4px 1px #374151, 0 0 8px 2px #1f2937;
-  }
-  .message-avatar-wrap .avatar-frame.frame-fuchsia-neon {
-    box-shadow: 0 0 4px 1px #ff00ff, 0 0 8px 2px #e600e6;
-  }
-  .message-avatar-wrap .avatar-frame.frame-bronze-earth {
-    box-shadow: 0 0 4px 1px #8b6f47, 0 0 8px 2px #6e4f30;
-  }
-  .message-avatar-wrap .avatar-frame.frame-beige-gold {
-    box-shadow: 0 0 4px 1px #d4ac6e, 0 0 8px 2px #b88d52;
-  }
-  .message-avatar-wrap .avatar-frame.frame-w3-gray {
-    box-shadow: 0 0 4px 1px #9e9e9e, 0 0 8px 2px #616161;
-  }
-  .message-avatar-wrap .avatar-frame.frame-soft-pink {
-    box-shadow: 0 0 4px 1px #f472b6, 0 0 8px 2px #ec4899;
-  }
-  .message-avatar-wrap .avatar-frame.frame-orchid-violet {
-    box-shadow: 0 0 4px 1px #c084fc, 0 0 8px 2px #a855f7;
-  }
-  .message-avatar-wrap .avatar-frame.frame-rose-gold {
-    box-shadow: 0 0 4px 1px #fb7185, 0 0 8px 2px #f43f5e;
-  }
-  .message-avatar-wrap .avatar-frame.frame-mauve-glam {
-    box-shadow: 0 0 4px 1px #e879f9, 0 0 8px 2px #d946ef;
-  }
-  .message-avatar-wrap .avatar-frame.frame-lavender-soft {
-    box-shadow: 0 0 4px 1px #c4b5fd, 0 0 8px 2px #8b5cf6;
-  }
-  .message-avatar-wrap .avatar-frame.frame-deep-magenta {
-    box-shadow: 0 0 4px 1px #be185d, 0 0 8px 2px #9d174d;
-  }
-  .message-avatar-wrap .avatar-frame.frame-peach-glow {
-    box-shadow: 0 0 4px 1px #fb923c, 0 0 8px 2px #f97316;
-  }
-  .message-avatar-wrap .avatar-frame.frame-amethyst-crystal {
-    box-shadow: 0 0 4px 1px #a855f7, 0 0 8px 2px #9333ea;
-  }
-  .message-avatar-wrap .avatar-frame.frame-cherry-pink {
-    box-shadow: 0 0 4px 1px #f43f5e, 0 0 8px 2px #e11d48;
-  }
-  .message-avatar-wrap .avatar-frame.frame-silver-pearl {
-    box-shadow: 0 0 4px 1px #ffffff, 0 0 8px 2px #9ca3af;
-  }
-  .message-avatar-wrap .avatar-frame.frame-coffee-gold {
-    box-shadow: 0 0 4px 1px #92400e, 0 0 8px 2px #b45309;
-  }
-  .message-avatar-wrap .avatar-frame.frame-vivid-citrine {
-    box-shadow: 0 0 4px 1px #eab308, 0 0 8px 2px #ca8a04;
-  }
-}
 /* ========================================================================= 
 DROPDOWNS E LISTAS INTERNAS MODERNAS DA SEÇÃO VIP
 ========================================================================= */
@@ -6540,7 +6192,7 @@ transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s eas
 /* Estado Ativo / Focado (Efeito sutil e elegante ao clicar) */
 .vip-custom-select-btn:focus {
 background-color: #ffffff;
-box-shadow: 0 0 0 2px #6f42c1, 0 4px 12px rgba(111, 66, 193, 0.12);
+box-shadow: 0 0 0 1px #abaaac, 0 4px 12px rgba(111, 66, 193, 0.12);
 /* Brilho e contorno elegante apenas ao clicar */
 }
 
@@ -6556,25 +6208,25 @@ transition: transform 0.2s ease;
 }
 
 
-
 .vip-custom-dropdown {
-position: relative;
-/* Mudado de absolute para relative para expandir e empurrar para baixo */
-margin-top: 8px;
-width: 100%;
-background: #ffffff;
-border: 1px solid #eee;
-border-radius: 14px;
-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
-/* Sombra interna mais sutil para o efeito de expansão */
-max-height: 140px;
-overflow-y: auto;
-padding: 6px;
-z-index: 5;
-touch-action: pan-y;
-overscroll-behavior: contain;
--webkit-overflow-scrolling: touch;
+  position: relative;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+  max-height: 150px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px;
+  z-index: 5;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
+
 .vip-dropdown-option {
 width: 100%;
 padding: 9px 12px;
@@ -6855,81 +6507,168 @@ background: #adadaf;
 color: #ffffff;
 }
 
-/* ESTRUTURA DOS 4 BOTÕES VIP (GRADE HORIZONTAL FIXA) */
-#profileVip .vip-buttons-grid {
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-gap: 8px;
-margin-top:2px;
-margin-bottom: 2px;
+
+
+/* ========================================================================= 
+   OTIMIZAÇÃO COMPACTA VIP (SEM !IMPORTANT)
+   ========================================================================= */
+
+/* 1. Grade dos 5 botões com margens enxutas */
+#profilePanel #profileVip .vip-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-top: 0;
+  margin-bottom: 6px;
 }
 
-#profileVip .vip-btn-card {
-width: 100%;
-min-height: 85px;
-background: #ffffff;
-border: 1px solid #f0f0f0;
-border-radius: 16px;
-padding: 4px 4px;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-gap: 6px;
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-cursor: pointer;
-transition: transform 0.15s ease, border-color 0.2s ease;
+/* 2. Redução na altura dos botões (de 85px para 68px) */
+#profilePanel #profileVip .vip-btn-card {
+  width: 100%;
+  min-height: 68px;
+  background: #ffffff;
+  border: 1px solid #eef2f6;
+  border-radius: 12px;
+  padding: 5px 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Ícone arredondado interno do botão VIP */
-#profileVip .vip-icon-box {
-width: 44px;
-height: 44px;
-border-radius: 14px;
-display: flex;
-align-items: center;
-justify-content: center;
-color: #ffffff;
-font-size: 20px;
+#profilePanel #profileVip .vip-btn-card.active {
+  border-color: #4304b95e;
+  background: #e2ebfc;
+  
 }
 
-#profileVip .vip-icon-box.bg-geo {
-background: linear-gradient(135deg, #10b981, #059669);
+/* 3. Ícones compactos e cores preservadas */
+#profilePanel #profileVip .vip-icon-box {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 16px;
 }
 
-#profileVip .vip-icon-box.bg-purple {
-background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+/* ========================================================================= 
+   BOTAO SALVAR VIP PREMIUM (CHAT-DF UX)
+   ========================================================================= */
+#profilePanel .vip-btn-save-custom {
+  width: 100%;
+  max-width: 210px;
+  min-height: 44px;
+  background-color: #020641;
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(2, 6, 65, 0.28);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
-#profileVip .vip-icon-box.bg-blue {
-background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+#profilePanel .vip-btn-save-custom i {
+  font-size: 17px;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
 }
 
-#profileVip .vip-icon-box.bg-orange {
-background: linear-gradient(135deg, #f97316, #ea580c);
+#profilePanel .vip-btn-save-custom:hover {
+  background-color: #050b5e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(2, 6, 65, 0.38);
 }
 
-#profileVip .vip-header-title {
-font-size: 11px;
-font-weight: 600;
-color: #3b82f6;
-text-align: center;
-line-height: 1.2;
-display: block;
+#profilePanel .vip-btn-save-custom:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 8px rgba(2, 6, 65, 0.2);
 }
 
-/* GAVETAS DE CONTEÚDO QUE EXPANDE ABAIXO DOS BOTÕES */
-#profileVip .vip-drawer-content {
-background: #ffffff;
-border-radius: 16px;
-border: 1px solid rgba(111, 66, 193, 0.2);
-padding: 12px;
-margin-bottom: 12px;
+
+
+
+#profilePanel #profileVip .vip-icon-box.bg-geo { background: linear-gradient(135deg, #10b981, #059669); }
+#profilePanel #profileVip .vip-icon-box.bg-purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+#profilePanel #profileVip .vip-icon-box.bg-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+#profilePanel #profileVip .vip-icon-box.bg-orange { background: linear-gradient(135deg, #f97316, #ea580c); }
+#profilePanel #profileVip .vip-icon-box.bg-gold { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+/* 4. Título em uma única linha */
+#profilePanel #profileVip .vip-header-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: #475569;
+  text-align: center;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: block;
 }
 
-#profileVip .vip-drawer-content.hidden {
-display: none;
+
+
+/* 5. Gaveta e Card interno sem padding excessivo */
+#profilePanel #profileVip .vip-drawer-content {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid rgba(111, 66, 193, 0.18);
+  padding: 8px 10px;
+  margin-bottom: 8px;
 }
+
+#profilePanel #profileVip .vip-drawer-content .vip-control-card {
+  padding: 0;
+  margin-bottom: 0;
+  border: none;
+  box-shadow: none;
+}
+
+/* 6. Espaçamento compacto nos selects e carrossel */
+#profilePanel #profileVip .vip-custom-select-btn {
+  min-height: 40px;
+  padding: 0 12px;
+  font-size: 13.5px;
+}
+
+#profilePanel #profileVip .vip-carousel-wrapper {
+  padding: 2px 0;
+}
+
+#profilePanel #profileVip .vip-carousel-wrapper .color-grid {
+  padding: 4px 2px;
+  gap: 8px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* ========================================================================= 
@@ -7926,4 +7665,80 @@ COMPACTAÇÃO TOTAL DE MENSAGENS EXCLUIDAS (SEM ESPAÇAMENTO) PARA EVITAR QUEBRA
   .chatdf-regional-highlight {
     text-align: left;
   }
+}
+
+
+
+/* ========================================================================= 
+   BOTÕES DE TOPO VIP & VOLTAR (CANTO SUPERIOR ESQUERDO)
+   ========================================================================= */
+.vip-top-btn,
+.vip-back-btn {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  height: 38px;
+  border: none;
+  background: rgba(0, 0, 0, 0.26);
+  border-radius: 999px;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 14px;
+  cursor: pointer;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+  transition: transform 0.15s ease, background-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.vip-back-btn {
+  width: 38px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+.vip-top-btn i {
+  color: #00d2ff;
+  font-size: 16px;
+}
+
+.vip-top-btn:hover,
+.vip-back-btn:hover {
+  background: rgba(0, 0, 0, 0.45);
+  transform: scale(1.04);
+}
+
+.vip-top-btn:active,
+.vip-back-btn:active {
+  transform: scale(0.95);
+}
+
+/* Painel VIP Isolado */
+.vip-standalone-panel {
+  display: block;
+  animation: profileFade 0.2s ease;
+}
+
+.vip-standalone-panel.d-none {
+  display: none !important;
+}
+
+/* Oculta botão VIP do topo quando estiver vendo perfil de outros */
+body.viewing-other-profile .vip-top-btn,
+body.viewing-other-profile .vip-back-btn {
+  display: none !important;
+}
+/* =============================================================
+Reposiciona a tag de expiração para não cobrir o botão voltar vip 
+=============================================================*/
+/* Reposiciona a tag de expiração VIP abaixo do botão voltar */
+#profilePanel .profile-cover #vipTopExpiryRow {
+  top: 20px;
+  left: 94px;
 }

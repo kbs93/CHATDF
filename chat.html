@@ -219,23 +219,36 @@
       <div class="profile-top-header">
         <!-- CAPA E TOPO PRINCIPAL UNIFICADO -->
         <div class="profile-cover position-relative">
-          <div id="vipTopExpiryRow" class="position-absolute top-0 start-0 m-2 d-none align-items-center gap-1.5 px-2.5 py-1 rounded-pill" style="background: rgba(15, 12, 32, 0.85); backdrop-filter: blur(4px); border: 1px solid rgba(255, 193, 7, 0.5); z-index: 15;">
+         <div id="vipTopExpiryRow" class="position-absolute d-none align-items-center gap-1.5 px-2.5 py-1 rounded-pill" style="background: rgba(15, 12, 32, 0.85); backdrop-filter: blur(4px); border: 1px solid rgba(255, 193, 7, 0.5); z-index: 15;">
             <i class="bi bi-gem text-warning" style="font-size: 11px;"></i>
             <span class="small m-0 text-white" style="font-size: 10px; font-weight: 600;">Expira em: <strong id="vipExpiryDays" class="text-warning">X dias</strong></span>
             <button id="btnRenewVip" class="btn btn-sm btn-link text-warning p-0 ms-1 text-decoration-none fw-bold" style="font-size: 10px;">(Renovar)</button>
           </div>
+
+<!-- CANTO ESQUERDO: Botão de Denúncia (Visitante) e Botão VIP / Voltar (Dono) -->
           <button id="reportUserBtn" type="button" aria-label="Denunciar usuário" style="display: none;">
             <i class="bi bi-flag-fill"></i>
           </button>
+          <button id="vipTopHeaderBtn" type="button" class="vip-top-btn" aria-label="Abrir Painel VIP">
+            <i class="bi bi-gem"></i> <span>VIP</span>
+          </button>
+          <button id="vipBackToProfileBtn" type="button" class="vip-back-btn d-none" aria-label="Voltar ao Perfil">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+
+          <!-- CANTO DIREITO: Lápis de Capa, Alterar Banner VIP e Fechar -->
           <div class="profile-header-actions profile-cover-actions">
             <button id="editProfileCoverBtn" type="button" aria-label="Editar cor da capa">
               <i class="bi bi-pencil-square"></i>
             </button>
-            <button id="vipHeaderActionBtn" type="button" class="d-none" aria-label="Ação VIP" style="width: 38px; height: 38px; border: none; background: rgba(0, 0, 0, 0.26); border-radius: 50%; color: #fff; font-size: 18px; cursor: pointer; display: none; place-items: center;">
+            <button id="vipHeaderActionBtn" type="button" class="d-none" aria-label="Ação VIP" style="width: 38px; height: 38px; border: none; background: rgba(0, 0, 0, 0.26); border-radius: 50%; color: #fff; font-size: 18px; cursor: pointer; place-items: center;">
               <i class="bi bi-image-fill" style="color: #fffefc;"></i>
             </button>
             <button id="closeProfilePanel" type="button" aria-label="Fechar painel">✕</button>
           </div>
+      
+
+
         </div>
         <!-- AVATAR COM CAMADA DE MOLDURA VIP -->
         <div class="profile-avatar-wrap">
@@ -250,25 +263,23 @@
           <span id="profileOnlineDot" class="profile-online-dot hidden"></span>
         </div>
 <!-- INFORMAÇÕES DO USUÁRIO + PRÉVIA DA MENSAGEM -->
-        <div class="profile-user-info">
+ <div class="profile-user-info">
           <div class="d-flex align-items-center justify-content-center gap-1">
             <h3 id="profileName">Usuário</h3>
             <span id="vipTopPreviewTag" class="d-none"><i class="bi bi-gem" style="font-size:18px;color: #01b1f7;"></i></span>
           </div>
-          <div id="vipTopMsgPreviewBox" class="d-none mt-2 px-3 py-2 rounded-3 border bg-light mx-auto" style="max-width: 90%;">
-            <span class="text-muted d-block mb-1 fw-bold" style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: left;">Previa da Mensagem no Chat </span>
-            <p id="vipTopPreviewText" class="m-0 fw-semibold" style="font-size: 13px; color: #333; line-height: 1.3; text-align: left;">Olá! mundo, Olha como fica bonita a minha mensagem, enviada no chat!</p>
+          <div id="vipTopMsgPreviewBox" class="d-none mt-1 px-3 py-1 rounded-pill mx-auto" style="max-width: fit-content; background: #f3f4f6; border: 1px solid #e5e7eb;">
+            <p id="vipTopPreviewText" class="m-0 fw-semibold" style="font-size: 14px; color: #333; line-height: 1.1;">Olá Pessoal! olha Prévia da minha mensagem.</p>
           </div>
         </div>
-      </div>
 
 
       <!---====================== 16-07-26 ADICIONANDO NOVO PAINEL VIP ===================---->
-      <div class="profile-tabs ">
-        <button class="profile-tab" data-tab="info" type="button">Info</button>
+<div class="profile-tabs" id="profileMainTabs">
+        <button class="profile-tab active" data-tab="info" type="button">Info</button>
         <button class="profile-tab" data-tab="edit" type="button">Editar perfil</button>
-        <button class="profile-tab" data-tab="vip" type="button"><i class="bi bi-gem" style="color: #33aeff; font-size: 22px;"></i> VIP</button>
       </div>
+
       <div class="profile-content px-3">
         <!-- INFORMAÇÃO -->
         <!-- INFO -->
@@ -318,7 +329,8 @@
             <span id="profileTelegramText" class="col-7 px-0 text-dark">-</span>
           </div>
         </div>
-        <!-- EDITAR -->
+
+<!-- EDITAR -->
         <div class="profile-section" id="profileEdit">
           <label class="profile-field">
             <i class="bi bi-person profile-field-icon"></i>
@@ -348,28 +360,13 @@
               <input type="text" id="editCity" placeholder="Digite sua cidade" maxlength="22">
             </span>
           </label>
-          
-
-         <!-------- NAO APAGAR POIS E O CAMPO DE RECADO DO USUARIO (FRASE FAVORITA) 16-07-26 -----
-              <label class="profile-field" style="align-items: flex-start; padding-top: 8px;">
-            <i class="bi bi-chat-square-text profile-field-icon"></i>
-            <span class="profile-field-body">
-              <span class="profile-field-label">Recado</span>
-              <textarea id="editMood" placeholder="Frase Favorita " maxlength="100" rows="3"></textarea>
-            </span>
-          </label>   ---------->
-
-
-
-          <!-- CAMPO DO INSTAGRAM -->
-       <label class="profile-field">
+          <label class="profile-field">
             <i class="bi bi-instagram profile-field-icon"></i>
             <span class="profile-field-body">
               <span class="profile-field-label py-2">Instagram</span>
               <input type="text" id="editInstagram" placeholder="Digite seu @usuario (Opcional)" maxlength="30">
             </span>
           </label>
-          <!-- CAMPO DO TELEGRAM -->
           <label class="profile-field">
             <i class="bi bi-telegram profile-field-icon"></i>
             <span class="profile-field-body">
@@ -380,12 +377,11 @@
           <div id="editTrackingState" data-capa-alterada="false" data-avatar-alterado="false" class="d-none"></div>
           <button id="saveProfileBtn" type="button" disabled style="opacity: 0.5; cursor: not-allowed;">Salvar</button>
         </div>
-        <!-- ================ SEÇÃO VIP TOTALMENTE MANTIDA E INTEGRADA AO ACORDEÃO ===============================-->
-        <!-- ===================================================================================================================================-->
-        <div class="profile-section d-none" id="profileVip">
-          <!-- CARD DO STATUS VIP & EXPIRAÇÃO -->
-<!-- OS 4 BOTÕES LADO A LADO EM GRADE -->
-            <div class="vip-buttons-grid">
+      </div> <!-- FECHAMENTO CORRETO DA DIV .profile-content -->
+
+      <!-- ================ NOVO PAINEL VIP ISOLADO (ESTRUTURA ORIGINAL PRESERVADA) ===============================-->
+      <div class="vip-standalone-panel d-none px-3" id="profileVip">
+<div class="vip-buttons-grid">
               <button type="button" class="vip-btn-card active" data-target="gaveta-nome">
                 <span class="vip-icon-box bg-purple">
                   <i class="bi bi-person-fill"></i>
@@ -408,428 +404,520 @@
                 <span class="vip-icon-box bg-orange">
                   <i class="bi bi-image"></i>
                 </span>
-                <span class="vip-header-title">Tema </span>
+                <span class="vip-header-title">Tema</span>
+              </button>
+              <button type="button" class="vip-btn-card" data-target="gaveta-renovar">
+                <span class="vip-icon-box bg-gold">
+                  <i class="bi bi-gem"></i>
+                </span>
+                <span class="vip-header-title">Renovar</span>
               </button>
             </div>
-<!-- PAINÉIS DE CONTEÚDO (EXPANDEM ABAIXO DOS BOTÕES) -->
-<div class="vip-content-panels">
-<!-- GAVETA 1: ESTILO DO SEU NOME -->
-<div id="gaveta-nome" class="vip-drawer-content">
-<div class="vip-control-card text-start border-0 rounded-0 m-0">
-<div class="mb-2 position-relative">
-<label class="small mb-1" style="font-size: 13px; font-weight: 600; color: #475569;">Cor do nome</label>
-<button type="button" id="btnVipNameColorType" class="vip-custom-select-btn">Cor Sólida Comum</button>
-<div id="listVipNameColorType" class="vip-custom-dropdown hidden">
-<div class="vip-dropdown-option active" data-value="solid">Cor Sólida Comum</div>
-<div class="vip-dropdown-option" data-value="gradient-blue-purple">1. Degradê Azul & Roxo</div>
-<div class="vip-dropdown-option" data-value="gradient-gold">2. Degradê Dourado de Elite</div>
-<div class="vip-dropdown-option" data-value="gradient-sunset">3. Degradê Pôr do Sol</div>
-<div class="vip-dropdown-option" data-value="gradient-ocean">4. Degradê Oceano Profundo</div>
-<div class="vip-dropdown-option" data-value="gradient-forest">5. Degradê Esmeralda Imperial</div>
-<div class="vip-dropdown-option" data-value="gradient-ruby">6. Degradê Rubi Real</div>
-<div class="vip-dropdown-option" data-value="gradient-cyberpunk">7. Degradê Cyberpunk 2077</div>
-<div class="vip-dropdown-option" data-value="gradient-cotton">8. Degradê Algodão Doce</div>
-<div class="vip-dropdown-option" data-value="gradient-lavender">9. Degradê Lavanda Suave</div>
-<div class="vip-dropdown-option" data-value="gradient-fire">10. Degradê Labareda de Fogo</div>
-<div class="vip-dropdown-option" data-value="gradient-platinum">11. Degradê Platina Cromada</div>
-<div class="vip-dropdown-option" data-value="gradient-vintage">12. Degradê Vintage Retrô</div>
-<div class="vip-dropdown-option" data-value="gradient-bubblegum">13. Degradê Chiclete Pop</div>
-<div class="vip-dropdown-option" data-value="gradient-galaxy">14. Degradê Nebulosa Espacial</div>
-<div class="vip-dropdown-option" data-value="gradient-mint">15. Degradê Hortelã Refrescante</div>
-<div class="vip-dropdown-option" data-value="glow-green">16. Brilho Neon Verde</div>
-<div class="vip-dropdown-option" data-value="glow-purple">17. Brilho Neon Roxo</div>
-<div class="vip-dropdown-option" data-value="glow-red">18. Brilho Neon Vermelho</div>
-<div class="vip-dropdown-option" data-value="glow-gold">19. Brilho Neon Dourado</div>
-<div class="vip-dropdown-option" data-value="glow-cyan">20. Brilho Neon Ciano</div>
-<div class="vip-dropdown-option" data-value="glow-pink">21. Brilho Neon Rosa</div>
-<div class="vip-dropdown-option" data-value="glow-blue">22. Brilho Neon Azul Cobalto</div>
-<div class="vip-dropdown-option" data-value="glow-orange">23. Brilho Neon Laranja Fogo</div>
-<div class="vip-dropdown-option" data-value="glow-emerald">24. Brilho Neon Verde Esmeralda</div>
-<div class="vip-dropdown-option" data-value="glow-wine">25. Brilho Neon Vinho Tinto</div>
-<div class="vip-dropdown-option" data-value="glow-amber">26. Brilho Neon Âmbar Nobre</div>
-<div class="vip-dropdown-option" data-value="glow-teal">27. Brilho Neon Turquesa Fechado</div>
-<div class="vip-dropdown-option" data-value="glow-indigo">28. Brilho Neon Índigo Profundo</div>
-<div class="vip-dropdown-option" data-value="glow-coral">29. Brilho Neon Coral Intenso</div>
-<div class="vip-dropdown-option" data-value="glow-silver">30. Brilho Neon Grafite Prata</div>
-<div class="vip-dropdown-option" data-value="glow-lime">31. Brilho Neon Verde Lima</div>
-<div class="vip-dropdown-option" data-value="gradient-royal-purple">32. Degradê Roxo Imperial</div>
-<div class="vip-dropdown-option" data-value="gradient-midnight-cyan">33. Degradê Meia-Noite Ciano</div>
-<div class="vip-dropdown-option" data-value="gradient-deep-ruby">34. Degradê Rubi Profundo</div>
-<div class="vip-dropdown-option" data-value="gradient-dark-emerald">35. Degradê Esmeralda Escuro</div>
-<div class="vip-dropdown-option" data-value="gradient-cosmic-violet">36. Degradê Violeta Cósmico</div>
-<div class="vip-dropdown-option" data-value="gradient-inferno-fire">37. Degradê Fogo Inferno</div>
-<div class="vip-dropdown-option" data-value="gradient-deep-sapphire">38. Degradê Safira Profunda</div>
-<div class="vip-dropdown-option" data-value="gradient-electric-magenta">39. Degradê Magenta Elétrico</div>
-<div class="vip-dropdown-option" data-value="gradient-poison-green">40. Degradê Verde Veneno</div>
-<div class="vip-dropdown-option" data-value="gradient-bronze-gold">41. Degradê Ouro Bronze</div>
-<div class="vip-dropdown-option" data-value="gradient-black-ocean">42. Degradê Oceano Negro</div>
-<div class="vip-dropdown-option" data-value="gradient-dark-magma">43. Degradê Magma Escuro</div>
-<div class="vip-dropdown-option" data-value="gradient-plum-berry">44. Degradê Ameixa & Framboesa</div>
-<div class="vip-dropdown-option" data-value="gradient-electric-petroleum">45. Degradê Petróleo Elétrico</div>
-<div class="vip-dropdown-option" data-value="gradient-carmine-pink">46. Degradê Carmim & Rosa Choque</div>
-<div class="vip-dropdown-option" data-value="gradient-deep-indigo">47. Degradê Índigo Profundo</div>
-<div class="vip-dropdown-option" data-value="gradient-coffee-amber">48. Degradê Café Âmbar</div>
-<div class="vip-dropdown-option" data-value="gradient-night-teal">49. Degradê Turquesa Noturno</div>
-<div class="vip-dropdown-option" data-value="gradient-cyber-red">50. Degradê Cyber Vermelho</div>
-<div class="vip-dropdown-option" data-value="gradient-dark-chrome">51. Degradê Platina Escura</div>
-<div class="vip-dropdown-option" data-value="gradient-neon">52. Degradê Neon Psicodélico (Animado)</div>
-<div class="vip-dropdown-option" data-value="anim-rainbow">53. Degradê Arco-Íris Infinito (Animado)</div>
-<div class="vip-dropdown-option" data-value="anim-aurora">54. Degradê Aurora Cósmica (Animado)</div>
-<div class="vip-dropdown-option" data-value="anim-magma">55. Degradê Magma Vulcânico (Animado)</div>
-<div class="vip-dropdown-option" data-value="anim-matrix">56. Degradê Linhas da Matrix (Animado)</div>
-<div class="vip-dropdown-option" data-value="anim-electric">57. Degradê Choque Elétrico (Animado)</div>
-<div class="vip-dropdown-option" data-value="anim-gold-flow">58. Degradê Ouro Líquido (Animado)</div>
-<div class="vip-dropdown-option" data-value="anim-ice">59. Degradê Gelo Glacial (Animado)</div>
-<div class="vip-dropdown-option" data-value="anim-vampire">60. Degradê Sangue de Vampiro (Animado)</div>
-<div class="vip-dropdown-option" data-value="anim-candy">61. Degradê Doce Mágico (Animado)</div>
-<div class="vip-dropdown-option" data-value="anim-toxic">62. Degradê Ácido Tóxico (Animado)</div>
-<div class="vip-dropdown-option" data-value="anim-miami">63. Degradê Miami Vice Wave (Animado)</div>
-<div class="vip-dropdown-option" data-value="anim-phoenix">64. Degradê Fênix Renascida (Animado)</div>
-</div>
 
-<select id="vipNameColorType" class="d-none">
-<option value="solid" selected>Cor Sólida Comum</option>
-<option value="gradient-blue-purple">Degradê Azul & Roxo</option>
-<option value="gradient-gold">Degradê Dourado de Elite</option>
-<option value="gradient-sunset">Degradê Pôr do Sol</option>
-<option value="gradient-ocean">Degradê Oceano Profundo</option>
-<option value="gradient-forest">Degradê Esmeralda Imperial</option>
-<option value="gradient-ruby">Degradê Rubi Real</option>
-<option value="gradient-cyberpunk">Degradê Cyberpunk 2077</option>
-<option value="gradient-cotton">Degradê Algodão Doce</option>
-<option value="gradient-lavender">Degradê Lavanda Suave</option>
-<option value="gradient-fire">Degradê Labareda de Fogo</option>
-<option value="gradient-platinum">Degradê Platina Cromada</option>
-<option value="gradient-vintage">Degradê Vintage Retrô</option>
-<option value="gradient-bubblegum">Degradê Chiclete Pop</option>
-<option value="gradient-galaxy">Degradê Nebulosa Espacial</option>
-<option value="gradient-mint">Degradê Hortelã Refrescante</option>
-<option value="glow-green">Brilho Neon Verde</option>
-<option value="glow-purple">Brilho Neon Roxo</option>
-<option value="glow-red">Brilho Neon Vermelho</option>
-<option value="glow-gold">Brilho Neon Dourado</option>
-<option value="glow-cyan">Brilho Neon Ciano</option>
-<option value="glow-pink">Brilho Neon Rosa</option>
-<option value="glow-blue">Brilho Neon Azul Cobalto</option>
-<option value="glow-orange">Brilho Neon Laranja Fogo</option>
-<option value="glow-emerald">Brilho Neon Verde Esmeralda</option>
-<option value="glow-wine">Brilho Neon Vinho Tinto</option>
-<option value="glow-amber">Brilho Neon Âmbar Nobre</option>
-<option value="glow-teal">Brilho Neon Turquesa Fechado</option>
-<option value="glow-indigo">Brilho Neon Índigo Profundo</option>
-<option value="glow-coral">Brilho Neon Coral Intenso</option>
-<option value="glow-silver">Brilho Neon Grafite Prata</option>
-<option value="glow-lime">Brilho Neon Verde Lima</option>
-<option value="gradient-royal-purple">Degradê Roxo Imperial</option>
-<option value="gradient-midnight-cyan">Degradê Meia-Noite Ciano</option>
-<option value="gradient-deep-ruby">Degradê Rubi Profundo</option>
-<option value="gradient-dark-emerald">Degradê Esmeralda Escuro</option>
-<option value="gradient-cosmic-violet">Degradê Violeta Cósmico</option>
-<option value="gradient-inferno-fire">Degradê Fogo Inferno</option>
-<option value="gradient-deep-sapphire">Degradê Safira Profunda</option>
-<option value="gradient-electric-magenta">Degradê Magenta Elétrico</option>
-<option value="gradient-poison-green">Degradê Verde Veneno</option>
-<option value="gradient-bronze-gold">Degradê Ouro Bronze</option>
-<option value="gradient-black-ocean">Degradê Oceano Negro</option>
-<option value="gradient-dark-magma">Degradê Magma Escuro</option>
-<option value="gradient-plum-berry">Degradê Ameixa & Framboesa</option>
-<option value="gradient-electric-petroleum">Degradê Petróleo Elétrico</option>
-<option value="gradient-carmine-pink">Degradê Carmim & Rosa Choque</option>
-<option value="gradient-deep-indigo">Degradê Índigo Profundo</option>
-<option value="gradient-coffee-amber">Degradê Café Âmbar</option>
-<option value="gradient-night-teal">Degradê Turquesa Noturno</option>
-<option value="gradient-cyber-red">Degradê Cyber Vermelho</option>
-<option value="gradient-dark-chrome">Degradê Platina Escura</option>
-<option value="gradient-neon">Degradê Neon Psicodélico (Animado)</option>
-<option value="anim-rainbow">Degradê Arco-Íris Infinito (Animado)</option>
-<option value="anim-aurora">Degradê Aurora Cósmica (Animado)</option>
-<option value="anim-magma">Degradê Magma Vulcânico (Animado)</option>
-<option value="anim-matrix">Degradê Linhas da Matrix (Animado)</option>
-<option value="anim-electric">Degradê Choque Elétrico (Animado)</option>
-<option value="anim-gold-flow">Degradê Ouro Líquido (Animado)</option>
-<option value="anim-ice">Degradê Gelo Glacial (Animado)</option>
-<option value="anim-vampire">Degradê Sangue de Vampiro (Animado)</option>
-<option value="anim-candy">Degradê Doce Mágico (Animado)</option>
-<option value="anim-toxic">Degradê Ácido Tóxico (Animado)</option>
-<option value="anim-miami">Degradê Miami Vice Wave (Animado)</option>
-<option value="anim-phoenix">Degradê Fênix Renascida (Animado)</option>
-</select>
-</div>
-<!-- FONTE DO NOME -->
-<div id="vipSolidColorWrapper" class="mb-2">
-<div class="vip-carousel-wrapper">
-<button type="button" class="carousel-arrow left" onclick="document.getElementById('vipNameColorGrid').scrollBy({left: -120, behavior: 'smooth'})">
-<i class="bi bi-chevron-left"></i>
-</button>
-<div class="color-grid" id="vipNameColorGrid"></div>
-<button type="button" class="carousel-arrow right" onclick="document.getElementById('vipNameColorGrid').scrollBy({left: 120, behavior: 'smooth'})">
-<i class="bi bi-chevron-right"></i>
-</button>
-</div>
-</div>
+        <div class="vip-content-panels">
+          <!-- GAVETA 1: NOME -->
+          <div id="gaveta-nome" class="vip-drawer-content">
+            <div class="vip-control-card text-start border-0 rounded-0 m-0">
+              <div class="mb-2 position-relative">
+                <label class="small mb-1" style="font-size: 13px; font-weight: 600; color: #475569;">Cor do nome</label>
+               <button type="button" id="btnVipNameColorType" class="vip-custom-select-btn">Escolha uma cor</button>
+                <div id="listVipNameColorType" class="vip-custom-dropdown hidden">
+                  <div class="vip-dropdown-option " data-value="solid">Cor Sólida Comum</div>
+                  <div class="vip-dropdown-option" data-value="gradient-blue-purple">1. Degradê Azul & Roxo</div>
+                  <div class="vip-dropdown-option" data-value="gradient-gold">2. Degradê Dourado de Elite</div>
+                  <div class="vip-dropdown-option" data-value="gradient-sunset">3. Degradê Pôr do Sol</div>
+                  <div class="vip-dropdown-option" data-value="gradient-ocean">4. Degradê Oceano Profundo</div>
+                  <div class="vip-dropdown-option" data-value="gradient-forest">5. Degradê Esmeralda Imperial</div>
+                  <div class="vip-dropdown-option" data-value="gradient-ruby">6. Degradê Rubi Real</div>
+                  <div class="vip-dropdown-option" data-value="gradient-cyberpunk">7. Degradê Cyberpunk 2077</div>
+                  <div class="vip-dropdown-option" data-value="gradient-cotton">8. Degradê Algodão Doce</div>
+                  <div class="vip-dropdown-option" data-value="gradient-lavender">9. Degradê Lavanda Suave</div>
+                  <div class="vip-dropdown-option" data-value="gradient-fire">10. Degradê Labareda de Fogo</div>
+                  <div class="vip-dropdown-option" data-value="gradient-platinum">11. Degradê Platina Cromada</div>
+                  <div class="vip-dropdown-option" data-value="gradient-vintage">12. Degradê Vintage Retrô</div>
+                  <div class="vip-dropdown-option" data-value="gradient-bubblegum">13. Degradê Chiclete Pop</div>
+                  <div class="vip-dropdown-option" data-value="gradient-galaxy">14. Degradê Nebulosa Espacial</div>
+                  <div class="vip-dropdown-option" data-value="gradient-mint">15. Degradê Hortelã Refrescante</div>
+                  <div class="vip-dropdown-option" data-value="glow-green">16. Brilho Neon Verde</div>
+                  <div class="vip-dropdown-option" data-value="glow-purple">17. Brilho Neon Roxo</div>
+                  <div class="vip-dropdown-option" data-value="glow-red">18. Brilho Neon Vermelho</div>
+                  <div class="vip-dropdown-option" data-value="glow-gold">19. Brilho Neon Dourado</div>
+                  <div class="vip-dropdown-option" data-value="glow-cyan">20. Brilho Neon Ciano</div>
+                  <div class="vip-dropdown-option" data-value="glow-pink">21. Brilho Neon Rosa</div>
+                  <div class="vip-dropdown-option" data-value="glow-blue">22. Brilho Neon Azul Cobalto</div>
+                  <div class="vip-dropdown-option" data-value="glow-orange">23. Brilho Neon Laranja Fogo</div>
+                  <div class="vip-dropdown-option" data-value="glow-emerald">24. Brilho Neon Verde Esmeralda</div>
+                  <div class="vip-dropdown-option" data-value="glow-wine">25. Brilho Neon Vinho Tinto</div>
+                  <div class="vip-dropdown-option" data-value="glow-amber">26. Brilho Neon Âmbar Nobre</div>
+                  <div class="vip-dropdown-option" data-value="glow-teal">27. Brilho Neon Turquesa Fechado</div>
+                  <div class="vip-dropdown-option" data-value="glow-indigo">28. Brilho Neon Índigo Profundo</div>
+                  <div class="vip-dropdown-option" data-value="glow-coral">29. Brilho Neon Coral Intenso</div>
+                  <div class="vip-dropdown-option" data-value="glow-silver">30. Brilho Neon Grafite Prata</div>
+                  <div class="vip-dropdown-option" data-value="glow-lime">31. Brilho Neon Verde Lima</div>
+                  <div class="vip-dropdown-option" data-value="gradient-royal-purple">32. Degradê Roxo Imperial</div>
+                  <div class="vip-dropdown-option" data-value="gradient-midnight-cyan">33. Degradê Meia-Noite Ciano</div>
+                  <div class="vip-dropdown-option" data-value="gradient-deep-ruby">34. Degradê Rubi Profundo</div>
+                  <div class="vip-dropdown-option" data-value="gradient-dark-emerald">35. Degradê Esmeralda Escuro</div>
+                  <div class="vip-dropdown-option" data-value="gradient-cosmic-violet">36. Degradê Violeta Cósmico</div>
+                  <div class="vip-dropdown-option" data-value="gradient-inferno-fire">37. Degradê Fogo Inferno</div>
+                  <div class="vip-dropdown-option" data-value="gradient-deep-sapphire">38. Degradê Safira Profunda</div>
+                  <div class="vip-dropdown-option" data-value="gradient-electric-magenta">39. Degradê Magenta Elétrico</div>
+                  <div class="vip-dropdown-option" data-value="gradient-poison-green">40. Degradê Verde Veneno</div>
+                  <div class="vip-dropdown-option" data-value="gradient-bronze-gold">41. Degradê Ouro Bronze</div>
+                  <div class="vip-dropdown-option" data-value="gradient-black-ocean">42. Degradê Oceano Negro</div>
+                  <div class="vip-dropdown-option" data-value="gradient-dark-magma">43. Degradê Magma Escuro</div>
+                  <div class="vip-dropdown-option" data-value="gradient-plum-berry">44. Degradê Ameixa & Framboesa</div>
+                  <div class="vip-dropdown-option" data-value="gradient-electric-petroleum">45. Degradê Petróleo Elétrico</div>
+                  <div class="vip-dropdown-option" data-value="gradient-carmine-pink">46. Degradê Carmim & Rosa Choque</div>
+                  <div class="vip-dropdown-option" data-value="gradient-deep-indigo">47. Degradê Índigo Profundo</div>
+                  <div class="vip-dropdown-option" data-value="gradient-coffee-amber">48. Degradê Café Âmbar</div>
+                  <div class="vip-dropdown-option" data-value="gradient-night-teal">49. Degradê Turquesa Noturno</div>
+                  <div class="vip-dropdown-option" data-value="gradient-cyber-red">50. Degradê Cyber Vermelho</div>
+                  <div class="vip-dropdown-option" data-value="gradient-dark-chrome">51. Degradê Platina Escura</div>
+                  <div class="vip-dropdown-option" data-value="gradient-neon">52. Degradê Neon Psicodélico (Animado)</div>
+                  <div class="vip-dropdown-option" data-value="anim-rainbow">53. Degradê Arco-Íris Infinito (Animado)</div>
+                  <div class="vip-dropdown-option" data-value="anim-aurora">54. Degradê Aurora Cósmica (Animado)</div>
+                  <div class="vip-dropdown-option" data-value="anim-magma">55. Degradê Magma Vulcânico (Animado)</div>
+                  <div class="vip-dropdown-option" data-value="anim-matrix">56. Degradê Linhas da Matrix (Animado)</div>
+                  <div class="vip-dropdown-option" data-value="anim-electric">57. Degradê Choque Elétrico (Animado)</div>
+                  <div class="vip-dropdown-option" data-value="anim-gold-flow">58. Degradê Ouro Líquido (Animado)</div>
+                  <div class="vip-dropdown-option" data-value="anim-ice">59. Degradê Gelo Glacial (Animado)</div>
+                  <div class="vip-dropdown-option" data-value="anim-vampire">60. Degradê Sangue de Vampiro (Animado)</div>
+                  <div class="vip-dropdown-option" data-value="anim-candy">61. Degradê Doce Mágico (Animado)</div>
+                  <div class="vip-dropdown-option" data-value="anim-toxic">62. Degradê Ácido Tóxico (Animado)</div>
+                  <div class="vip-dropdown-option" data-value="anim-miami">63. Degradê Miami Vice Wave (Animado)</div>
+                  <div class="vip-dropdown-option" data-value="anim-phoenix">64. Degradê Fênix Renascida (Animado)</div>
+                </div>
+                <select id="vipNameColorType" class="d-none">
+  <option value="none" selected>Escolha uma cor</option>
+  <option value="solid">Cor Sólida Comum</option>
+                  <option value="solid">Cor Sólida Comum</option>
+                  <option value="gradient-blue-purple">Degradê Azul & Roxo</option>
+                  <option value="gradient-gold">Degradê Dourado de Elite</option>
+                  <option value="gradient-sunset">Degradê Pôr do Sol</option>
+                  <option value="gradient-ocean">Degradê Oceano Profundo</option>
+                  <option value="gradient-forest">Degradê Esmeralda Imperial</option>
+                  <option value="gradient-ruby">Degradê Rubi Real</option>
+                  <option value="gradient-cyberpunk">Degradê Cyberpunk 2077</option>
+                  <option value="gradient-cotton">Degradê Algodão Doce</option>
+                  <option value="gradient-lavender">Degradê Lavanda Suave</option>
+                  <option value="gradient-fire">Degradê Labareda de Fogo</option>
+                  <option value="gradient-platinum">Degradê Platina Cromada</option>
+                  <option value="gradient-vintage">Degradê Vintage Retrô</option>
+                  <option value="gradient-bubblegum">Degradê Chiclete Pop</option>
+                  <option value="gradient-galaxy">Degradê Nebulosa Espacial</option>
+                  <option value="gradient-mint">Degradê Hortelã Refrescante</option>
+                  <option value="glow-green">Brilho Neon Verde</option>
+                  <option value="glow-purple">Brilho Neon Roxo</option>
+                  <option value="glow-red">Brilho Neon Vermelho</option>
+                  <option value="glow-gold">Brilho Neon Dourado</option>
+                  <option value="glow-cyan">Brilho Neon Ciano</option>
+                  <option value="glow-pink">Brilho Neon Rosa</option>
+                  <option value="glow-blue">Brilho Neon Azul Cobalto</option>
+                  <option value="glow-orange">Brilho Neon Laranja Fogo</option>
+                  <option value="glow-emerald">Brilho Neon Verde Esmeralda</option>
+                  <option value="glow-wine">Brilho Neon Vinho Tinto</option>
+                  <option value="glow-amber">Brilho Neon Âmbar Nobre</option>
+                  <option value="glow-teal">Brilho Neon Turquesa Fechado</option>
+                  <option value="glow-indigo">Brilho Neon Índigo Profundo</option>
+                  <option value="glow-coral">Brilho Neon Coral Intenso</option>
+                  <option value="glow-silver">Brilho Neon Grafite Prata</option>
+                  <option value="glow-lime">Brilho Neon Verde Lima</option>
+                  <option value="gradient-royal-purple">Degradê Roxo Imperial</option>
+                  <option value="gradient-midnight-cyan">Degradê Meia-Noite Ciano</option>
+                  <option value="gradient-deep-ruby">Degradê Rubi Profundo</option>
+                  <option value="gradient-dark-emerald">Degradê Esmeralda Escuro</option>
+                  <option value="gradient-cosmic-violet">Degradê Violeta Cósmico</option>
+                  <option value="gradient-inferno-fire">Degradê Fogo Inferno</option>
+                  <option value="gradient-deep-sapphire">Degradê Safira Profunda</option>
+                  <option value="gradient-electric-magenta">Degradê Magenta Elétrico</option>
+                  <option value="gradient-poison-green">Degradê Verde Veneno</option>
+                  <option value="gradient-bronze-gold">Degradê Ouro Bronze</option>
+                  <option value="gradient-black-ocean">Degradê Oceano Negro</option>
+                  <option value="gradient-dark-magma">Degradê Magma Escuro</option>
+                  <option value="gradient-plum-berry">Degradê Ameixa & Framboesa</option>
+                  <option value="gradient-electric-petroleum">Degradê Petróleo Elétrico</option>
+                  <option value="gradient-carmine-pink">Degradê Carmim & Rosa Choque</option>
+                  <option value="gradient-deep-indigo">Degradê Índigo Profundo</option>
+                  <option value="gradient-coffee-amber">Degradê Café Âmbar</option>
+                  <option value="gradient-night-teal">Degradê Turquesa Noturno</option>
+                  <option value="gradient-cyber-red">Degradê Cyber Vermelho</option>
+                  <option value="gradient-dark-chrome">Degradê Platina Escura</option>
+                  <option value="gradient-neon">Degradê Neon Psicodélico (Animado)</option>
+                  <option value="anim-rainbow">Degradê Arco-Íris Infinito (Animado)</option>
+                  <option value="anim-aurora">Degradê Aurora Cósmica (Animado)</option>
+                  <option value="anim-magma">Degradê Magma Vulcânico (Animado)</option>
+                  <option value="anim-matrix">Degradê Linhas da Matrix (Animado)</option>
+                  <option value="anim-electric">Degradê Choque Elétrico (Animado)</option>
+                  <option value="anim-gold-flow">Degradê Ouro Líquido (Animado)</option>
+                  <option value="anim-ice">Degradê Gelo Glacial (Animado)</option>
+                  <option value="anim-vampire">Degradê Sangue de Vampiro (Animado)</option>
+                  <option value="anim-candy">Degradê Doce Mágico (Animado)</option>
+                  <option value="anim-toxic">Degradê Ácido Tóxico (Animado)</option>
+                  <option value="anim-miami">Degradê Miami Vice Wave (Animado)</option>
+                  <option value="anim-phoenix">Degradê Fênix Renascida (Animado)</option>
+                </select>
+              </div>
 
-<div class="mb-0 position-relative">
-<label class="small mb-1" style="font-size: 13px; font-weight: 600; color: #475569;">Estilo da Fonte</label>
-<button type="button" id="btnVipNameFont" class="vip-custom-select-btn">Padrão do Chat</button>
-<div id="listVipNameFont" class="vip-custom-dropdown hidden">
-<div class="vip-dropdown-option active" data-value="default">Padrão do Chat</div>
-<div class="vip-dropdown-option" data-value="BebasNeue">1. Bebas Neue</div>
-<div class="vip-dropdown-option" data-value="RubikVinyl">2. Rubik Vinyl</div>
-<div class="vip-dropdown-option" data-value="Lobster">3. Lobster</div>
-<div class="vip-dropdown-option" data-value="Barrio">4. Barrio</div>
-<div class="vip-dropdown-option" data-value="BraahOne">5. Braah One</div>
-<div class="vip-dropdown-option" data-value="BungeeShade">6. Bungee Shade</div>
-<div class="vip-dropdown-option" data-value="CaesarDressing">7. CaesarDressing</div>
-<div class="vip-dropdown-option" data-value="Charm-Bold">8. Charm Bold</div>
-<div class="vip-dropdown-option" data-value="CherryBombOne">9. Cherry Bomb One</div>
-<div class="vip-dropdown-option" data-value="CinzelDecorative">10. Cinzel Decorative</div>
-<div class="vip-dropdown-option" data-value="Cuprum-Italic">11. Cuprum Italic</div>
-<div class="vip-dropdown-option" data-value="Urbanist-Italic">12. Urbanist Italic</div>
-<div class="vip-dropdown-option" data-value="EduAUVICWANTHand">13. Edu AUVICWANT Hand</div>
-<div class="vip-dropdown-option" data-value="GeostarFill">14. Geostar Fill</div>
-<div class="vip-dropdown-option" data-value="Kablammo">15. Kablammo</div>
-<div class="vip-dropdown-option" data-value="KumarOneOutline">16. Kumar One Outline</div>
-<div class="vip-dropdown-option" data-value="LibertinusKeyboard">17. Libertinus Keyboard</div>
-<div class="vip-dropdown-option" data-value="Limelight">18. Limelight</div>
-<div class="vip-dropdown-option" data-value="ManufacturingConsent">19. Manufacturing Consent</div>
-<div class="vip-dropdown-option" data-value="Matangi">20. Matangi</div>
-<div class="vip-dropdown-option" data-value="Matemasie">21. Matemasie</div>
-<div class="vip-dropdown-option" data-value="MeaCulpa">22. Mea Cupa</div>
-<div class="vip-dropdown-option" data-value="PlaywriteBEVLG">23. Playwrite BE VL G</div>
-<div class="vip-dropdown-option" data-value="Praise">24. Praise</div>
-<div class="vip-dropdown-option" data-value="Pridi">25. Pridi</div>
-<div class="vip-dropdown-option" data-value="Pridi-ExtraLight">26. Pridi Extra Light</div>
-<div class="vip-dropdown-option" data-value="Pridi-SemiBold">27. Pridi Semi Bold</div>
-<div class="vip-dropdown-option" data-value="RockSalt">28. Rock Salt</div>
-<div class="vip-dropdown-option" data-value="Tangerine">29. Tangerine</div>
-<div class="vip-dropdown-option" data-value="TASAExplorer">30. TASA Explorer</div>
-<div class="vip-dropdown-option" data-value="TiltPrism">31. Tilt Prism</div>
-<div class="vip-dropdown-option" data-value="UnifrakturMaguntia">32. Unifraktur Maguntia</div>
-</div>
-<select id="vipNameFont" class="d-none">
-<option value="default" selected>Padrão do Chat</option>
-<option value="BebasNeue">Bebas Neue</option>
-<option value="RubikVinyl">Rubik Vinyl</option>
-<option value="Lobster">Lobster</option>
-<option value="Barrio">Barrio</option>
-<option value="BraahOne">Braah One</option>
-<option value="BungeeShade">Bungee Shade</option>
-<option value="CaesarDressing">CaesarDressing</option>
-<option value="Charm-Bold">Charm Bold</option>
-<option value="CherryBombOne">Cherry Bomb One</option>
-<option value="CinzelDecorative">Cinzel Decorative</option>
-<option value="Cuprum-Italic">Cuprum Italic</option>
-<option value="Urbanist-Italic">Urbanist Italic</option>
-<option value="EduAUVICWANTHand">Edu AUVICWANT Hand</option>
-<option value="GeostarFill">Geostar Fill</option>
-<option value="Kablammo">Kablammo</option>
-<option value="KumarOneOutline">Kumar One Outline</option>
-<option value="LibertinusKeyboard">Libertinus Keyboard</option>
-<option value="Limelight">Limelight</option>
-<option value="ManufacturingConsent">Manufacturing Consent</option>
-<option value="Matangi">Matangi</option>
-<option value="Matemasie">Matemasie</option>
-<option value="MeaCulpa">Mea Cupa</option>
-<option value="PlaywriteBEVLG">Playwrite BE VL G</option>
-<option value="Praise">Praise</option>
-<option value="Pridi">Pridi</option>
-<option value="Pridi-ExtraLight">Pridi Extra Light</option>
-<option value="Pridi-SemiBold">Pridi Semi Bold</option>
-<option value="RockSalt">Rock Salt</option>
-<option value="Tangerine">Tangerine</option>
-<option value="TASAExplorer">TASA Explorer</option>
-<option value="TiltPrism">Tilt Prism</option>
-<option value="UnifrakturMaguntia">Unifraktur Maguntia</option>
-</select>
-</div>
-</div>
-</div>
+             <div id="vipSolidColorWrapper" class="mb-2 hidden">
+                <div class="vip-carousel-wrapper">
+                  <button type="button" class="carousel-arrow left" onclick="document.getElementById('vipNameColorGrid').scrollBy({left: -120, behavior: 'smooth'})">
+                    <i class="bi bi-chevron-left"></i>
+                  </button>
+                  <div class="color-grid" id="vipNameColorGrid"></div>
+                  <button type="button" class="carousel-arrow right" onclick="document.getElementById('vipNameColorGrid').scrollBy({left: 120, behavior: 'smooth'})">
+                    <i class="bi bi-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
 
-<!-- GAVETA 2: COR DO TEXTO DA MENSAGEM -->
-<div id="gaveta-texto" class="vip-drawer-content hidden">
-<div class="vip-control-card text-start border-0 rounded-0 m-0 ">
-<div class="mb-2">
-<span class="small text-dark fw-semibold d-block mb-1" style="font-size: 14px;">Cor da Mensagem </span>
-<span class="small text-muted d-block mb-2" style="font-size: 12.5px; line-height: 1.2;">Escolha uma das cores abaixo para o envio das suas mensagens.</span>
-</div>
-<div class="vip-carousel-wrapper">
-<button type="button" class="carousel-arrow left" onclick="document.getElementById('vipMsgColorGrid').scrollBy({left: -120, behavior: 'smooth'})">
-<i class="bi bi-chevron-left"></i>
-</button>
-<div class="color-grid" id="vipMsgColorGrid"></div>
-<button type="button" class="carousel-arrow right" onclick="document.getElementById('vipMsgColorGrid').scrollBy({left: 120, behavior: 'smooth'})">
-<i class="bi bi-chevron-right"></i>
-</button>
-</div>
-</div>
-</div>
-
-<!-- GAVETA 3: MOLDURA DE AVATAR -->
-<div id="gaveta-avatar" class="vip-drawer-content hidden">
-<div class="vip-control-card text-start border-0 rounded-0 m-0 ">
-<div class="position-relative">
-<button type="button" id="btnVipAvatarFrameSelect" class="vip-custom-select-btn">Nenhuma Moldura</button>
-<div id="listVipAvatarFrameSelect" class="vip-custom-dropdown hidden">
-<div class="vip-dropdown-option active" data-value="none">Nenhuma Moldura</div>
-<div class="vip-dropdown-option" data-value="frame-plasma-fire">1. Fogo Incandescente </div>
-<div class="vip-dropdown-option" data-value="frame-fiber-neon">2. Neon Fibra Óptica </div>
-<div class="vip-dropdown-option" data-value="frame-aura-pulse">3. Aura Pulsante </div>
-<div class="vip-dropdown-option" data-value="frame-electric-spark">4. Faíscas Elétricas </div>
-<div class="vip-dropdown-option" data-value="frame-toxic-green">5. Verde Veneno </div>
-<div class="vip-dropdown-option" data-value="frame-ruby-red">6. Vermelho Rubi </div>
-<div class="vip-dropdown-option" data-value="frame-cobalt-blue">7. Azul Cobalto </div>
-<div class="vip-dropdown-option" data-value="frame-magenta-shock">8. Rosa Choque </div>
-<div class="vip-dropdown-option" data-value="frame-inferno-orange">9. Laranja Inferno </div>
-<div class="vip-dropdown-option" data-value="frame-deep-teal">10. Turquesa Fechado </div>
-<div class="vip-dropdown-option" data-value="frame-royal-purple">11. Roxo Imperial </div>
-<div class="vip-dropdown-option" data-value="frame-lime-charge">12. Verde Lima </div>
-<div class="vip-dropdown-option" data-value="frame-noble-wine">13. Vinho Nobre </div>
-<div class="vip-dropdown-option" data-value="frame-amber-gold">14. Âmbar Dourado </div>
-<div class="vip-dropdown-option" data-value="frame-sapphire-blue">15. Azul Safira </div>
-<div class="vip-dropdown-option" data-value="frame-vibrant-coral">16. Coral Vivo </div>
-<div class="vip-dropdown-option" data-value="frame-dark-emerald">17. Esmeralda Escura </div>
-<div class="vip-dropdown-option" data-value="frame-dark-chrome">18. Grafite Platina </div>
-<div class="vip-dropdown-option" data-value="frame-fuchsia-neon">19. Fúcsia Neon </div>
-<div class="vip-dropdown-option" data-value="frame-bronze-earth">20. Bronze Terroso </div>
-<div class="vip-dropdown-option" data-value="frame-beige-gold">21. Bege Dourado </div>
-<div class="vip-dropdown-option" data-value="frame-w3-gray">22. Cinza Prata Elegante</div>
-<div class="vip-dropdown-option" data-value="frame-soft-pink">23. Rosa Bebê </div>
-<div class="vip-dropdown-option" data-value="frame-orchid-violet">24. Orquídea Violeta </div>
-<div class="vip-dropdown-option" data-value="frame-rose-gold">25. Ouro Rosé </div>
-<div class="vip-dropdown-option" data-value="frame-mauve-glam">26. Malva Glamour </div>
-<div class="vip-dropdown-option" data-value="frame-lavender-soft">27. Lilás Alfazema </div>
-<div class="vip-dropdown-option" data-value="frame-deep-magenta">28. Magenta Deep </div>
-<div class="vip-dropdown-option" data-value="frame-peach-glow">29. Pêssego Iluminado </div>
-<div class="vip-dropdown-option" data-value="frame-amethyst-crystal">30. Ametista Cristal</div>
-<div class="vip-dropdown-option" data-value="frame-cherry-pink">31. Rosa Cereja</div>
-<div class="vip-dropdown-option" data-value="frame-silver-pearl">32. Pérola Prata </div>
-<div class="vip-dropdown-option" data-value="frame-coffee-gold">33. Café Dourado </div>
-<div class="vip-dropdown-option" data-value="frame-vivid-citrine">34. Citrino Vivaz </div>
-</div>
-<select id="vipAvatarFrameSelect" class="d-none">
-<option value="none" selected>Nenhuma Moldura</option>
-<option value="frame-plasma-fire">Fogo Incandescente (Brasas de Plasma)</option>
-<option value="frame-fiber-neon">Neon Fibra Óptica (Luz Infinita)</option>
-<option value="frame-aura-pulse">Aura Pulsante (Luz Vital)</option>
-<option value="frame-electric-spark">Faíscas Elétricas (Alta Voltagem)</option>
-<option value="frame-toxic-green">Verde Veneno (Tóxico Radioativo)</option>
-<option value="frame-ruby-red">Vermelho Rubi (Sangue de Vampiro)</option>
-<option value="frame-cobalt-blue">Azul Cobalto (Tempestade Magnética)</option>
-<option value="frame-magenta-shock">Rosa Choque (Cyberpunk Magenta)</option>
-<option value="frame-inferno-orange">Laranja Inferno (Magma Vulcânico)</option>
-<option value="frame-deep-teal">Turquesa Fechado (Oceano Profundo)</option>
-<option value="frame-royal-purple">Roxo Imperial (Reino Sombrio)</option>
-<option value="frame-lime-charge">Verde Lima (Microchip Vital)</option>
-<option value="frame-noble-wine">Vinho Nobre (Sangue de Rubi)</option>
-<option value="frame-amber-gold">Âmbar Dourado (Ouro Negro)</option>
-<option value="frame-sapphire-blue">Azul Safira (Cristal Congelado)</option>
-<option value="frame-vibrant-coral">Coral Vivo (Energia Solar)</option>
-<option value="frame-dark-emerald">Esmeralda Escura (Floresta Encantada)</option>
-<option value="frame-dark-chrome">Grafite Platina (Metal Líquido Cromado)</option>
-<option value="frame-fuchsia-neon">Fúcsia Neon (Alta Intensidade #FF00FF)</option>
-<option value="frame-bronze-earth">Bronze Terroso (#8B6F47)</option>
-<option value="frame-beige-gold">Bege Dourado (#D4AC6E)</option>
-<option value="frame-w3-gray">Cinza Prata Elegante</option>
-<option value="frame-soft-pink">Rosa Bebê (Pink Glow)</option>
-<option value="frame-orchid-violet">Orquídea Violeta (Lilás Intenso)</option>
-<option value="frame-rose-gold">Ouro Rosé (Luxo Feminino)</option>
-<option value="frame-mauve-glam">Malva Glamour (Rosa Elegante)</option>
-<option value="frame-lavender-soft">Lilás Alfazema (Romântico)</option>
-<option value="frame-deep-magenta">Magenta Deep (Vinho Rosado)</option>
-<option value="frame-peach-glow">Pêssego Iluminado (Sunset)</option>
-<option value="frame-amethyst-crystal">Ametista Cristal (Roxo)</option>
-<option value="frame-cherry-pink">Rosa Cereja (Candy Neon)</option>
-<option value="frame-silver-pearl">Pérola Prata (Acetinado)</option>
-<option value="frame-coffee-gold">Café Dourado (Bronze Intenso)</option>
-<option value="frame-vivid-citrine">Citrino Vivaz (Amarelo)</option>
-</select>
-</div>
-<span class="small text-muted d-block mt-1.5" style="font-size: 1.5px; line-height: 1.2;">A moldura é exibida ao redor da sua foto no chat e no seu painel.</span>
-</div>
-</div>
+              <div class="mb-0 position-relative">
+                <label class="small mb-1" style="font-size: 13px; font-weight: 600; color: #475569;">Estilo da Fonte</label>
+                <button type="button" id="btnVipNameFont" class="vip-custom-select-btn">Padrão do Chat</button>
+                <div id="listVipNameFont" class="vip-custom-dropdown hidden">
+                  <div class="vip-dropdown-option active" data-value="default">Padrão do Chat</div>
+                  <div class="vip-dropdown-option" data-value="BebasNeue">1. Bebas Neue</div>
+                  <div class="vip-dropdown-option" data-value="RubikVinyl">2. Rubik Vinyl</div>
+                  <div class="vip-dropdown-option" data-value="Lobster">3. Lobster</div>
+                  <div class="vip-dropdown-option" data-value="Barrio">4. Barrio</div>
+                  <div class="vip-dropdown-option" data-value="BraahOne">5. Braah One</div>
+                  <div class="vip-dropdown-option" data-value="BungeeShade">6. Bungee Shade</div>
+                  <div class="vip-dropdown-option" data-value="CaesarDressing">7. CaesarDressing</div>
+                  <div class="vip-dropdown-option" data-value="Charm-Bold">8. Charm Bold</div>
+                  <div class="vip-dropdown-option" data-value="CherryBombOne">9. Cherry Bomb One</div>
+                  <div class="vip-dropdown-option" data-value="CinzelDecorative">10. Cinzel Decorative</div>
+                  <div class="vip-dropdown-option" data-value="Cuprum-Italic">11. Cuprum Italic</div>
+                  <div class="vip-dropdown-option" data-value="Urbanist-Italic">12. Urbanist Italic</div>
+                  <div class="vip-dropdown-option" data-value="EduAUVICWANTHand">13. Edu AUVICWANT Hand</div>
+                  <div class="vip-dropdown-option" data-value="GeostarFill">14. Geostar Fill</div>
+                  <div class="vip-dropdown-option" data-value="Kablammo">15. Kablammo</div>
+                  <div class="vip-dropdown-option" data-value="KumarOneOutline">16. Kumar One Outline</div>
+                  <div class="vip-dropdown-option" data-value="LibertinusKeyboard">17. Libertinus Keyboard</div>
+                  <div class="vip-dropdown-option" data-value="Limelight">18. Limelight</div>
+                  <div class="vip-dropdown-option" data-value="ManufacturingConsent">19. Manufacturing Consent</div>
+                  <div class="vip-dropdown-option" data-value="Matangi">20. Matangi</div>
+                  <div class="vip-dropdown-option" data-value="Matemasie">21. Matemasie</div>
+                  <div class="vip-dropdown-option" data-value="MeaCulpa">22. Mea Cupa</div>
+                  <div class="vip-dropdown-option" data-value="PlaywriteBEVLG">23. Playwrite BE VL G</div>
+                  <div class="vip-dropdown-option" data-value="Praise">24. Praise</div>
+                  <div class="vip-dropdown-option" data-value="Pridi">25. Pridi</div>
+                  <div class="vip-dropdown-option" data-value="Pridi-ExtraLight">26. Pridi Extra Light</div>
+                  <div class="vip-dropdown-option" data-value="Pridi-SemiBold">27. Pridi Semi Bold</div>
+                  <div class="vip-dropdown-option" data-value="RockSalt">28. Rock Salt</div>
+                  <div class="vip-dropdown-option" data-value="Tangerine">29. Tangerine</div>
+                  <div class="vip-dropdown-option" data-value="TASAExplorer">30. TASA Explorer</div>
+                  <div class="vip-dropdown-option" data-value="TiltPrism">31. Tilt Prism</div>
+                  <div class="vip-dropdown-option" data-value="UnifrakturMaguntia">32. Unifraktur Maguntia</div>
+                </div>
+                <select id="vipNameFont" class="d-none">
+                  <option value="default" selected>Padrão do Chat</option>
+                  <option value="BebasNeue">Bebas Neue</option>
+                  <option value="RubikVinyl">Rubik Vinyl</option>
+                  <option value="Lobster">Lobster</option>
+                  <option value="Barrio">Barrio</option>
+                  <option value="BraahOne">Braah One</option>
+                  <option value="BungeeShade">Bungee Shade</option>
+                  <option value="CaesarDressing">CaesarDressing</option>
+                  <option value="Charm-Bold">Charm Bold</option>
+                  <option value="CherryBombOne">Cherry Bomb One</option>
+                  <option value="CinzelDecorative">Cinzel Decorative</option>
+                  <option value="Cuprum-Italic">Cuprum Italic</option>
+                  <option value="Urbanist-Italic">Urbanist Italic</option>
+                  <option value="EduAUVICWANTHand">Edu AUVICWANT Hand</option>
+                  <option value="GeostarFill">Geostar Fill</option>
+                  <option value="Kablammo">Kablammo</option>
+                  <option value="KumarOneOutline">Kumar One Outline</option>
+                  <option value="LibertinusKeyboard">Libertinus Keyboard</option>
+                  <option value="Limelight">Limelight</option>
+                  <option value="ManufacturingConsent">Manufacturing Consent</option>
+                  <option value="Matangi">Matangi</option>
+                  <option value="Matemasie">Matemasie</option>
+                  <option value="MeaCulpa">Mea Cupa</option>
+                  <option value="PlaywriteBEVLG">Playwrite BE VL G</option>
+                  <option value="Praise">Praise</option>
+                  <option value="Pridi">Pridi</option>
+                  <option value="Pridi-ExtraLight">Pridi Extra Light</option>
+                  <option value="Pridi-SemiBold">Pridi Semi Bold</option>
+                  <option value="RockSalt">Rock Salt</option>
+                  <option value="Tangerine">Tangerine</option>
+                  <option value="TASAExplorer">TASA Explorer</option>
+                  <option value="TiltPrism">Tilt Prism</option>
+                  <option value="UnifrakturMaguntia">Unifraktur Maguntia</option>
+                </select>
+              </div>
+            </div>
+          </div>
 
 
 
-<!-- GAVETA 4: TEMA DE PERFIL -->
-<div id="gaveta-capa" class="vip-drawer-content hidden">
-<div class="vip-control-card text-start border-0 rounded-0 m-0">
-<div class="position-relative">
-<button type="button" id="btnVipProfileBannerSelect" class="vip-custom-select-btn">Padrão do Systema</button>
-<div id="listVipProfileBannerSelect" class="vip-custom-dropdown hidden">
-<div class="vip-dropdown-option active" data-value="default">Padrão do Sistema</div>
-<div class="vip-dropdown-option" data-value="banner-grad-purple">1. Degradê Roxo Espacial</div>
-<div class="vip-dropdown-option" data-value="banner-grad-gold">2. Degradê Ouro de Elite</div>
-<div class="vip-dropdown-option" data-value="banner-grad-sunset">3. Degradê Pôr do Sol</div>
-<div class="vip-dropdown-option" data-value="banner-grad-ocean">4. Degradê Oceano Profundo</div>
-<div class="vip-dropdown-option" data-value="banner-grad-emerald">5. Degradê Esmeralda Imperial</div>
-<div class="vip-dropdown-option" data-value="banner-grad-ruby">6. Degradê Rubi Real</div>
-<div class="vip-dropdown-option" data-value="banner-grad-cyberpunk">7. Degradê Cyberpunk </div>
-<div class="vip-dropdown-option" data-value="banner-grad-cotton">8. Degradê Algodão Doce</div>
-<div class="vip-dropdown-option" data-value="banner-grad-lavender">9. Degradê Lavanda Suave</div>
-<div class="vip-dropdown-option" data-value="banner-grad-fire">10. Degradê Labareda de Fogo</div>
-<div class="vip-dropdown-option" data-value="banner-grad-platinum">11. Degradê Platina Cromada</div>
-<div class="vip-dropdown-option" data-value="banner-grad-vintage">12. Degradê Vintage Retrô</div>
-<div class="vip-dropdown-option" data-value="banner-grad-bubblegum">13. Degradê Chiclete Pop</div>
-<div class="vip-dropdown-option" data-value="banner-grad-galaxy">14. Degradê Nebulosa Espacial</div>
-<div class="vip-dropdown-option" data-value="banner-grad-mint">15. Degradê Hortelã Refrescante</div>
-<div class="vip-dropdown-option" data-value="banner-anim-aurora">16. Aurora Boreal Cósmica (Animado)</div>
-<div class="vip-dropdown-option" data-value="banner-anim-neon">17. Neon Psicodélico (Animado)</div>
-<div class="vip-dropdown-option" data-value="banner-anim-rainbow">18. Arco-Íris Infinito (Animado)</div>
-<div class="vip-dropdown-option" data-value="banner-anim-magma">19. Magma Vulcânico (Animado)</div>
-<div class="vip-dropdown-option" data-value="banner-anim-matrix">20. Fluxo da Matrix (Animado)</div>
-<div class="vip-dropdown-option" data-value="banner-anim-electric">21. Choque Elétrico (Animado)</div>
-<div class="vip-dropdown-option" data-value="banner-anim-gold-flow">22. Ouro Líquido Premium (Animado)</div>
-<div class="vip-dropdown-option" data-value="banner-anim-ice">23. Gelo Glacial Cristal (Animado)</div>
-<div class="vip-dropdown-option" data-value="banner-anim-vampire">24. Sangue de Vampiro (Animado)</div>
-<div class="vip-dropdown-option" data-value="banner-anim-candy">25. Doce Mágico Encantado (Animado)</div>
-<div class="vip-dropdown-option" data-value="banner-anim-toxic">26. Ácido Tóxico Radioativo (Animado)</div>
-<div class="vip-dropdown-option" data-value="banner-anim-shadow">27. Sombra Sombria Dark (Animado)</div>
-<div class="vip-dropdown-option" data-value="banner-anim-miami">28. Miami Vice Wave Retro (Animado)</div>
-<div class="vip-dropdown-option" data-value="banner-anim-phoenix">29. Fênix Renascida (Animado)</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+
+          <!-- GAVETA 2: TEXTO -->
+          <div id="gaveta-texto" class="vip-drawer-content hidden">
+            <div class="vip-control-card text-start border-0 rounded-0 m-0">
+              <div class="mb-2">
+                <span class="small text-dark fw-semibold d-block mb-1" style="font-size: 14px;">Cor da Mensagem</span>
+                <span class="small text-muted d-block mb-2" style="font-size: 12.5px; line-height: 1.2;">Escolha uma das cores abaixo para o envio das suas mensagens.</span>
+              </div>
+              <div class="vip-carousel-wrapper">
+                <button type="button" class="carousel-arrow left" onclick="document.getElementById('vipMsgColorGrid').scrollBy({left: -120, behavior: 'smooth'})">
+                  <i class="bi bi-chevron-left"></i>
+                </button>
+                <div class="color-grid" id="vipMsgColorGrid"></div>
+                <button type="button" class="carousel-arrow right" onclick="document.getElementById('vipMsgColorGrid').scrollBy({left: 120, behavior: 'smooth'})">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- GAVETA 3: MOLDURA -->
+          <div id="gaveta-avatar" class="vip-drawer-content hidden">
+            <div class="vip-control-card text-start border-0 rounded-0 m-0">
+              <div class="position-relative">
+                <button type="button" id="btnVipAvatarFrameSelect" class="vip-custom-select-btn">Nenhuma Moldura</button>
+                <div id="listVipAvatarFrameSelect" class="vip-custom-dropdown hidden">
+                  <div class="vip-dropdown-option active" data-value="none">Nenhuma Moldura</div>
+                  <div class="vip-dropdown-option" data-value="frame-plasma-fire">1. Fogo Incandescente </div>
+                  <div class="vip-dropdown-option" data-value="frame-fiber-neon">2. Neon Fibra Óptica </div>
+                  <div class="vip-dropdown-option" data-value="frame-aura-pulse">3. Aura Pulsante </div>
+                  <div class="vip-dropdown-option" data-value="frame-electric-spark">4. Faíscas Elétricas </div>
+                  <div class="vip-dropdown-option" data-value="frame-toxic-green">5. Verde Veneno </div>
+                  <div class="vip-dropdown-option" data-value="frame-ruby-red">6. Vermelho Rubi </div>
+                  <div class="vip-dropdown-option" data-value="frame-cobalt-blue">7. Azul Cobalto </div>
+                  <div class="vip-dropdown-option" data-value="frame-magenta-shock">8. Rosa Choque </div>
+                  <div class="vip-dropdown-option" data-value="frame-inferno-orange">9. Laranja Inferno </div>
+                  <div class="vip-dropdown-option" data-value="frame-deep-teal">10. Turquesa Fechado </div>
+                  <div class="vip-dropdown-option" data-value="frame-royal-purple">11. Roxo Imperial </div>
+                  <div class="vip-dropdown-option" data-value="frame-lime-charge">12. Verde Lima </div>
+                  <div class="vip-dropdown-option" data-value="frame-noble-wine">13. Vinho Nobre </div>
+                  <div class="vip-dropdown-option" data-value="frame-amber-gold">14. Âmbar Dourado </div>
+                  <div class="vip-dropdown-option" data-value="frame-sapphire-blue">15. Azul Safira </div>
+                  <div class="vip-dropdown-option" data-value="frame-vibrant-coral">16. Coral Vivo </div>
+                  <div class="vip-dropdown-option" data-value="frame-dark-emerald">17. Esmeralda Escura </div>
+                  <div class="vip-dropdown-option" data-value="frame-dark-chrome">18. Grafite Platina </div>
+                  <div class="vip-dropdown-option" data-value="frame-fuchsia-neon">19. Fúcsia Neon </div>
+                  <div class="vip-dropdown-option" data-value="frame-bronze-earth">20. Bronze Terroso </div>
+                  <div class="vip-dropdown-option" data-value="frame-beige-gold">21. Bege Dourado </div>
+                  <div class="vip-dropdown-option" data-value="frame-w3-gray">22. Cinza Prata Elegante</div>
+                  <div class="vip-dropdown-option" data-value="frame-soft-pink">23. Rosa Bebê </div>
+                  <div class="vip-dropdown-option" data-value="frame-orchid-violet">24. Orquídea Violeta </div>
+                  <div class="vip-dropdown-option" data-value="frame-rose-gold">25. Ouro Rosé </div>
+                  <div class="vip-dropdown-option" data-value="frame-mauve-glam">26. Malva Glamour </div>
+                  <div class="vip-dropdown-option" data-value="frame-lavender-soft">27. Lilás Alfazema </div>
+                  <div class="vip-dropdown-option" data-value="frame-deep-magenta">28. Magenta Deep </div>
+                  <div class="vip-dropdown-option" data-value="frame-peach-glow">29. Pêssego Iluminado </div>
+                  <div class="vip-dropdown-option" data-value="frame-amethyst-crystal">30. Ametista Cristal</div>
+                  <div class="vip-dropdown-option" data-value="frame-cherry-pink">31. Rosa Cereja</div>
+                  <div class="vip-dropdown-option" data-value="frame-silver-pearl">32. Pérola Prata </div>
+                  <div class="vip-dropdown-option" data-value="frame-coffee-gold">33. Café Dourado </div>
+                  <div class="vip-dropdown-option" data-value="frame-vivid-citrine">34. Citrino Vivaz </div>
+                </div>
+                <select id="vipAvatarFrameSelect" class="d-none">
+                  <option value="none" selected>Nenhuma Moldura</option>
+                  <option value="frame-plasma-fire">Fogo Incandescente</option>
+                  <option value="frame-fiber-neon">Neon Fibra Óptica</option>
+                  <option value="frame-aura-pulse">Aura Pulsante</option>
+                  <option value="frame-electric-spark">Faíscas Elétricas</option>
+                  <option value="frame-toxic-green">Verde Veneno</option>
+                  <option value="frame-ruby-red">Vermelho Rubi</option>
+                  <option value="frame-cobalt-blue">Azul Cobalto</option>
+                  <option value="frame-magenta-shock">Rosa Choque</option>
+                  <option value="frame-inferno-orange">Laranja Inferno</option>
+                  <option value="frame-deep-teal">Turquesa Fechado</option>
+                  <option value="frame-royal-purple">Roxo Imperial</option>
+                  <option value="frame-lime-charge">Verde Lima</option>
+                  <option value="frame-noble-wine">Vinho Nobre</option>
+                  <option value="frame-amber-gold">Âmbar Dourado</option>
+                  <option value="frame-sapphire-blue">Azul Safira</option>
+                  <option value="frame-vibrant-coral">Coral Vivo</option>
+                  <option value="frame-dark-emerald">Esmeralda Escura</option>
+                  <option value="frame-dark-chrome">Grafite Platina</option>
+                  <option value="frame-fuchsia-neon">Fúcsia Neon</option>
+                  <option value="frame-bronze-earth">Bronze Terroso</option>
+                  <option value="frame-beige-gold">Bege Dourado</option>
+                  <option value="frame-w3-gray">Cinza Prata Elegante</option>
+                  <option value="frame-soft-pink">Rosa Bebê</option>
+                  <option value="frame-orchid-violet">Orquídea Violeta</option>
+                  <option value="frame-rose-gold">Ouro Rosé</option>
+                  <option value="frame-mauve-glam">Malva Glamour</option>
+                  <option value="frame-lavender-soft">Lilás Alfazema</option>
+                  <option value="frame-deep-magenta">Magenta Deep</option>
+                  <option value="frame-peach-glow">Pêssego Iluminado</option>
+                  <option value="frame-amethyst-crystal">Ametista Cristal</option>
+                  <option value="frame-cherry-pink">Rosa Cereja</option>
+                  <option value="frame-silver-pearl">Pérola Prata</option>
+                  <option value="frame-coffee-gold">Café Dourado</option>
+                  <option value="frame-vivid-citrine">Citrino Vivaz</option>
+                </select>
+              </div>
+              <span class="small text-muted d-block mt-1.5" style="font-size: 11px; line-height: 1.2;">A moldura é exibida ao redor da sua foto no chat e no seu painel.</span>
+            </div>
+          </div>
+
+          <!-- GAVETA 4: TEMA -->
+          <div id="gaveta-capa" class="vip-drawer-content hidden">
+            <div class="vip-control-card text-start border-0 rounded-0 m-0">
+              <div class="position-relative">
+                <button type="button" id="btnVipProfileBannerSelect" class="vip-custom-select-btn">Padrão do Sistema</button>
+                <div id="listVipProfileBannerSelect" class="vip-custom-dropdown hidden">
+                  <div class="vip-dropdown-option active" data-value="default">Padrão do Sistema</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-purple">1. Degradê Roxo Espacial</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-gold">2. Degradê Ouro de Elite</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-aurora">3. Degradê Aurora Cósmica</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-lavender-space">4. Degradê Lavanda Espacial</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-gold-light">5. Degradê Ouro Suave</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-sunset">6. Degradê Pôr do Sol</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-ocean">7. Degradê Oceano Profundo</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-emerald">8. Degradê Esmeralda Imperial</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-ruby">9. Degradê Rubi Real</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-cyberpunk">10. Degradê Cyberpunk</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-cotton">11. Degradê Algodão Doce</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-lavender">12. Degradê Lavanda Suave</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-fire">13. Degradê Labareda de Fogo</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-platinum">14. Degradê Platina Cromada</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-vintage">15. Degradê Vintage Retrô</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-bubblegum">16. Degradê Chiclete Pop</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-galaxy">17. Degradê Nebulosa Espacial</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-mint">18. Degradê Hortelã Refrescante</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-peach">19. Degradê Pêssego Tropical</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-citrus">20. Degradê Citrus Fresh</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-sky">21. Degradê Céu Azul</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-matcha">22. Degradê Verde Matcha</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-sand">23. Degradê Areia Neutra</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-aurora-static">24. Degradê Aurora Boreal</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-neon">25. Degradê Neon Tropical</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-rainbow">26. Degradê Arco-Íris</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-magma">27. Degradê Magma Coral</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-matrix">28. Degradê Matrix Digital</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-electric">29. Degradê Choque Elétrico</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-gold-flow">30. Degradê Ouro Fluido</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-glitch">31. Degradê Cyber Glitch</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-ice">32. Degradê Gelo Glacial</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-vampire">33. Degradê Rubi Vampiro</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-candy">34. Degradê Doce Mágico</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-toxic">35. Degradê Verde Tóxico</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-shadow">36. Degradê Sombra Prata</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-miami">37. Degradê Miami Breeze</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-phoenix">38. Degradê Fênix Suave</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-breeze">39. Degradê Brisa Suave</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-spring">40. Degradê Primavera Fresh</div>
+                  <div class="vip-dropdown-option" data-value="banner-anim-sunset-glow">41. Degradê Brilho do Entardecer</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-polar">42. Degradê Aurora Polar Suave</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-marshmallow">43. Degradê Marshmallow Doce</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-tropical">44. Degradê Frutas Tropicais</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-garden">45. Degradê Jardim Botânico</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-horizon">46. Degradê Horizonte do Oceano</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-twilight">47. Degradê Crepúsculo Lilás</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-sorbet">48. Degradê Sorvete de Pêssego</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-lagoon">49. Degradê Lago Sereno</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-quartz">50. Degradê Rosa Quartzo</div>
+                  <div class="vip-dropdown-option" data-value="banner-grad-dune">51. Degradê Areia Dourada</div>
+                </div>
+                <select id="vipProfileBannerSelect" class="d-none">
+                  <option value="default" selected>Padrão do Sistema</option>
+                  <option value="banner-grad-purple">Degradê Roxo Espacial</option>
+                  <option value="banner-grad-gold">Degradê Ouro de Elite</option>
+                  <option value="banner-anim-aurora">Degradê Aurora Cósmica</option>
+                  <option value="banner-grad-lavender-space">Degradê Lavanda Espacial</option>
+                  <option value="banner-grad-gold-light">Degradê Ouro Suave</option>
+                  <option value="banner-grad-sunset">Degradê Pôr do Sol</option>
+                  <option value="banner-grad-ocean">Degradê Oceano Profundo</option>
+                  <option value="banner-grad-emerald">Degradê Esmeralda Imperial</option>
+                  <option value="banner-grad-ruby">Degradê Rubi Real</option>
+                  <option value="banner-grad-cyberpunk">Degradê Cyberpunk</option>
+                  <option value="banner-grad-cotton">Degradê Algodão Doce</option>
+                  <option value="banner-grad-lavender">Degradê Lavanda Suave</option>
+                  <option value="banner-grad-fire">Degradê Labareda de Fogo</option>
+                  <option value="banner-grad-platinum">Degradê Platina Cromada</option>
+                  <option value="banner-grad-vintage">Degradê Vintage Retrô</option>
+                  <option value="banner-grad-bubblegum">Degradê Chiclete Pop</option>
+                  <option value="banner-grad-galaxy">Degradê Nebulosa Espacial</option>
+                  <option value="banner-grad-mint">Degradê Hortelã Refrescante</option>
+                  <option value="banner-grad-peach">Degradê Pêssego Tropical</option>
+                  <option value="banner-grad-citrus">Degradê Citrus Fresh</option>
+                  <option value="banner-grad-sky">Degradê Céu Azul</option>
+                  <option value="banner-grad-matcha">Degradê Verde Matcha</option>
+                  <option value="banner-grad-sand">Degradê Areia Neutra</option>
+                  <option value="banner-grad-aurora-static">Degradê Aurora Boreal</option>
+                  <option value="banner-anim-neon">Degradê Neon Tropical</option>
+                  <option value="banner-anim-rainbow">Degradê Arco-Íris</option>
+                  <option value="banner-anim-magma">Degradê Magma Coral</option>
+                  <option value="banner-anim-matrix">Degradê Matrix Digital</option>
+                  <option value="banner-anim-electric">Degradê Choque Elétrico</option>
+                  <option value="banner-anim-gold-flow">Degradê Ouro Fluido</option>
+                  <option value="banner-anim-glitch">Degradê Cyber Glitch</option>
+                  <option value="banner-anim-ice">Degradê Gelo Glacial</option>
+                  <option value="banner-anim-vampire">Degradê Rubi Vampiro</option>
+                  <option value="banner-anim-candy">Degradê Doce Mágico</option>
+                  <option value="banner-anim-toxic">Degradê Verde Tóxico</option>
+                  <option value="banner-anim-shadow">Degradê Sombra Prata</option>
+                  <option value="banner-anim-miami">Degradê Miami Breeze</option>
+                  <option value="banner-anim-phoenix">Degradê Fênix Suave</option>
+                  <option value="banner-anim-breeze">Degradê Brisa Suave</option>
+                  <option value="banner-anim-spring">Degradê Primavera Fresh</option>
+                  <option value="banner-anim-sunset-glow">Degradê Brilho do Entardecer</option>
+                  <option value="banner-grad-polar">Degradê Aurora Polar Suave</option>
+                  <option value="banner-grad-marshmallow">Degradê Marshmallow Doce</option>
+                  <option value="banner-grad-tropical">Degradê Frutas Tropicais</option>
+                  <option value="banner-grad-garden">Degradê Jardim Botânico</option>
+                  <option value="banner-grad-horizon">Degradê Horizonte do Oceano</option>
+                  <option value="banner-grad-twilight">Degradê Crepúsculo Lilás</option>
+                  <option value="banner-grad-sorbet">Degradê Sorvete de Pêssego</option>
+                  <option value="banner-grad-lagoon">Degradê Lago Sereno</option>
+                  <option value="banner-grad-quartz">Degradê Rosa Quartzo</option>
+                  <option value="banner-grad-dune">Degradê Areia Dourada</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <!-- GAVETA 5: RENOVAÇÃO VIP -->
+<div id="gaveta-renovar" class="vip-drawer-content hidden">
+  <div class="vip-control-card text-start border-0 rounded-0 m-0">
+    <div class="text-center py-2">
+      <div class="d-inline-flex align-items-center justify-content-center p-3 rounded-circle mb-2" style="background: rgba(255, 193, 7, 0.15);">
+        <i class="bi bi-gem text-warning" style="font-size: 28px;"></i>
+      </div>
+      <h6 class="fw-bold mb-1 text-dark" style="font-size: 15px;">Status do seu Plano VIP</h6>
+      <p class="text-muted small mb-3">Seu VIP expira em: <strong id="vipExpiryDays" class="text-warning fw-bold">X dias</strong></p>
+      
+      <button type="button" id="btnRenewVip" class="btn btn-warning w-100 fw-bold py-2 shadow-sm" style="border-radius: 12px; color: #1e1b4b;">
+        <i class="bi bi-arrow-repeat me-1"></i> Renovar assinatura VIP
+      </button>
+    </div>
+  </div>
 </div>
-<select id="vipProfileBannerSelect" class="d-none">
-<option value="default" selected>Padrão do Sistema</option>
-<option value="banner-grad-purple">Degradê Roxo Espacial</option>
-<option value="banner-grad-gold">Degradê Ouro de Elite</option>
-<option value="banner-grad-sunset">Degradê Pôr do Sol no DF</option>
-<option value="banner-grad-ocean">Degradê Oceano Profundo</option>
-<option value="banner-grad-emerald">Degradê Esmeralda Imperial</option>
-<option value="banner-grad-ruby">Degradê Rubi Real</option>
-<option value="banner-grad-cyberpunk">Degradê Cyberpunk 2077</option>
-<option value="banner-grad-cotton">Degradê Algodão Doce</option>
-<option value="banner-grad-lavender">Degradê Lavanda Suave</option>
-<option value="banner-grad-fire">Degradê Labareda de Fogo</option>
-<option value="banner-grad-platinum">Degradê Platina Cromada</option>
-<option value="banner-grad-vintage">Degradê Vintage Retrô</option>
-<option value="banner-grad-bubblegum">Degradê Chiclete Pop</option>
-<option value="banner-grad-galaxy">Degradê Nebulosa Espacial</option>
-<option value="banner-grad-mint">Degradê Hortelã Refrescante</option>
-<option value="banner-anim-aurora">Aurora Boreal Cósmica (Animado)</option>
-<option value="banner-anim-neon">Neon Psicodélico (Animado)</option>
-<option value="banner-anim-rainbow">Arco-Íris Infinito (Animado)</option>
-<option value="banner-anim-magma">Magma Vulcânico (Animado)</option>
-<option value="banner-anim-matrix">Fluxo da Matrix (Animado)</option>
-<option value="banner-anim-electric">Choque Elétrico (Animado)</option>
-<option value="banner-anim-gold-flow">Ouro Líquido Premium (Animado)</option>
-<option value="banner-anim-ice">Gelo Glacial Cristal (Animado)</option>
-<option value="banner-anim-vampire">Sangue de Vampiro (Animado)</option>
-<option value="banner-anim-candy">Doce Mágico Encantado (Animado)</option>
-<option value="banner-anim-toxic">Ácido Tóxico Radioativo (Animado)</option>
-<option value="banner-anim-shadow">Sombra Sombria Dark (Animado)</option>
-<option value="banner-anim-miami">Miami Vice Wave Retro (Animado)</option>
-<option value="banner-anim-phoenix">Fênix Renascida (Animado)</option>
-</select>
-</div>
-</div>
-</div>
-</div>
-<div class="d-flex justify-content-center">
-<button id="btnSaveVipSettings"
-style="border-radius: 10px; font-size: 16px; background: #020641; color: #f9f9f9; max-width: 200px; padding: 8px; margin-bottom: 15px; font-weight: 600;">
-Salvar VIP
-</button>
-</div>
-</div>
+  </div>
+
+  <div class="d-flex justify-content-center mt-2 pb-2">
+          <button type="button" id="btnSaveVipSettings" class="vip-btn-save-custom">
+            <span>Salvar VIP</span>
+          </button>
+        </div>
+
 </div>
 </div>
 </div>

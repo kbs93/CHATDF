@@ -13,10 +13,6 @@ const messageInput = document.getElementById("messageInput");
 const colorBtn = document.getElementById("colorBtn");
 const colorPanel = document.getElementById("colorPanel");
 const grid = document.getElementById("dynamicColors");
-// GARANTE PRETO INICIAL
-if (messageInput) {
-  messageInput.style.color = "#000000";
-}
 
 // PALETA de CORES 
 // na paleta de cores nao pode usar a cor preta pois ela e padrao do meu chat 
@@ -227,15 +223,15 @@ colorBtn?.addEventListener("click", (e) => {
 
 // RESTAURA COR SALVA
 // RESTAURA COR SALVA (Se não houver cor válida no storage, assume o grafite suave)
+// RESTAURA COR SALVA
 const storedColor = localStorage.getItem(USER_COLOR_KEY);
 if (storedColor) {
   selectedColor = storedColor;
   _secureColor = storedColor;
-  if (messageInput) messageInput.style.color = storedColor;
-} else {
-  selectedColor = "#1E293B";
-  _secureColor = "#1E293B";
-  if (messageInput) messageInput.style.color = "#1E293B";
+  if (messageInput) {
+    messageInput.style.color = storedColor;
+    messageInput.style.caretColor = storedColor;
+  }
 }
 
 // USADO PELO messages.js

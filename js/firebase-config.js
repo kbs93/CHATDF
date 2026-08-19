@@ -38,11 +38,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 
-/* 🔵 FIRESTORE (Com reconexão estável para evitar ERR_QUIC_PROTOCOL_ERROR) */
+/* 🔵 FIRESTORE (Com reconexão estável forçada para eliminar ERR_QUIC_PROTOCOL_ERROR) */
 const db = initializeFirestore(app, {
-  experimentalAutoDetectLongPolling: true
+  experimentalForceLongPolling: true
 });
-
 
 /* 🔵 REALTIME DATABASE (usuários online) */
 const rtdb = getDatabase(app);
