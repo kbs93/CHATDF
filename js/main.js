@@ -128,6 +128,8 @@ async function updateUserRoomPresence() {
     const userStatusRef = ref(rtdb, "status/" + user.uid);
     const connectedRef = ref(rtdb, ".info/connected");
 
+    const vipData = appState.currentUser?.vipData || {};
+
     onValue(connectedRef, async (snap) => {
       if (snap.val() === true) {
         await onDisconnect(userStatusRef).update({
@@ -141,7 +143,8 @@ async function updateUserRoomPresence() {
           avatar: appState.currentUser?.photoURL || "./img/avatar.png",
           online: true,
           sala: appState.currentRoom || "geral",
-          lastChanged: Date.now()
+          lastChanged: Date.now(),
+          ...vipData
         });
       }
     });
@@ -221,6 +224,16 @@ function handleUserReady(detail = {}) {
     appState.userCity = detail.userData.cidade;
   }
 
+  if (detail.userData) {
+    appState.currentUser.vipData = {
+      isVip: detail.userData.isVip || false,
+      vipNameColorType: detail.userData.vipNameColorType || "solid",
+      vipNameColorSolid: detail.userData.vipNameColorSolid || "#1E293B",
+      vipNameFont: detail.userData.vipNameFont || "default",
+      vipAvatarFrame: detail.userData.vipAvatarFrame || "none"
+    };
+  }
+
   if (isChatRoute) {
     if (detail.userData) {
       atualizarBloqueioCampoMensagem(detail.userData.perfilCompleto === true);
@@ -231,6 +244,7 @@ function handleUserReady(detail = {}) {
         input.style.caretColor = detail.userData.vipMsgColor;
       }
     }
+    updateUserRoomPresence();
   }
 }
 
@@ -1742,14 +1756,19 @@ saveProfileBtn?.addEventListener("click", async () => {
       await updateProfile(user, { photoURL: linkFotoFinal });
     }
 
-    const userStatusRef = ref(rtdb, "status/" + user.uid);
+const userStatusRef = ref(rtdb, "status/" + user.uid);
     await set(userStatusRef, {
       uid: user.uid,
       name: editName.value.trim() || "Usuário",
       avatar: linkFotoFinal || "./img/avatar.png",
       online: true,
       sala: appState.currentRoom || sala,
-      lastChanged: Date.now()
+      lastChanged: Date.now(),
+      isVip: data.isVip || false,
+      vipNameColorType: data.vipNameColorType || "solid",
+      vipNameColorSolid: data.vipNameColorSolid || "#1E293B",
+      vipNameFont: data.vipNameFont || "default",
+      vipAvatarFrame: data.vipAvatarFrame || "none"
     });
   
     document.getElementById("profileEditTooltip")?.classList.remove("show");

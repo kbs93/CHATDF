@@ -411,7 +411,7 @@ content = renderPlainMessage(msg);
 }
 
 /*====================================================================================================
-Aplica estilo visual diferenciado para mensagens de administradores
+Aplica estilo dos avatar dentro do chat fonte
 ======================================================================================================== */
 if (msg.user === "Kbsweb") {
 div.classList.add("admin-message");
@@ -423,10 +423,10 @@ div.innerHTML = `
   <img 
     src="${avatar}" 
     class="user-photo"
-    style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; margin: 0;"
+    style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; margin: 0;"
     onerror="this.src='./img/avatar.png'"
   >
-  <div class="avatar-frame position-absolute rounded-circle ${moldura !== 'none' ? moldura : 'd-none'}" style="top: -2px; left: -2px; width: 44px; height: 44px; pointer-events: none; z-index: 2;"></div>
+  <div class="avatar-frame position-absolute rounded-circle ${moldura !== 'none' ? moldura : 'd-none'}" style="top: 0; left: 0; width: 100%; height: 100%; box-sizing: border-box; pointer-events: none; z-index: 2;"></div>
 </div>
 
 <div class="message-user-info">

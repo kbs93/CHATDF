@@ -1,6 +1,9 @@
-import { auth, db } from "./firebase-config.js";
+
 import { showToast, textColorPalette } from "./ui.js";
 import { doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { auth, db, rtdb } from "./firebase-config.js";
+import { ref as rRef, update as rUpdate } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
 
 // Estado global do módulo VIP
 window.__vipMENSAGEM_COR_SELECIONADA = "#333333";
@@ -461,6 +464,14 @@ export function initVipEngine(isOwnerCallback) {
         vipAvatarFrame: document.getElementById("vipAvatarFrameSelect").value,
         vipProfileBanner: document.getElementById("vipProfileBannerSelect").value,
         vipBannerUrl: bannerUrlFinal
+      });
+      const userStatusRef = rRef(rtdb, "status/" + user.uid);
+      await rUpdate(userStatusRef, {
+        isVip: true,
+        vipNameColorType: document.getElementById("vipNameColorType").value,
+        vipNameColorSolid: window.__vipNOME_COR_SELECIONADA || "#6f42c1",
+        vipNameFont: document.getElementById("vipNameFont").value,
+        vipAvatarFrame: document.getElementById("vipAvatarFrameSelect").value
       });
 
       if (window.__currentProfileData) {

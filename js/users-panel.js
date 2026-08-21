@@ -6,6 +6,8 @@ import {
   ref,
   onValue
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { formatarAutorVipChat } from "./vip.js";
+
 
 // ========================= CACHE LOCAL ONLINE =========================
 const ONLINE_USERS_CACHE_KEY = "chatdf_online_users_cache";
@@ -27,23 +29,25 @@ function sanitizeAvatar(avatar) {
 
   return trimmed;
 }
-
 function saveOnlineUsersCache(users) {
   try {
-const safeUsers = users.map(user => ({
-  uid: user.uid || null,
-  name: user.name || "Usuário",
-  avatar: sanitizeAvatar(user.avatar),
-
-  idade: user.idade || "",
-  genero: user.genero || "",
-  cidade: user.cidade || "",
-  recado: user.recado || "",
-
-  online: !!user.online,
-  lastChanged: user.lastChanged || Date.now(),
-  membroDesde: user.membroDesde || null
-}));
+    const safeUsers = users.map(user => ({
+      uid: user.uid || null,
+      name: user.name || "Usuário",
+      avatar: sanitizeAvatar(user.avatar),
+      idade: user.idade || "",
+      genero: user.genero || "",
+      cidade: user.cidade || "",
+      recado: user.recado || "",
+      online: !!user.online,
+      lastChanged: user.lastChanged || Date.now(),
+      membroDesde: user.membroDesde || null,
+      isVip: user.isVip || false,
+      vipNameColorType: user.vipNameColorType || "solid",
+      vipNameColorSolid: user.vipNameColorSolid || "#1E293B",
+      vipNameFont: user.vipNameFont || "default",
+      vipAvatarFrame: user.vipAvatarFrame || "none"
+    }));
 
     localStorage.setItem(
       ONLINE_USERS_CACHE_KEY,
@@ -53,6 +57,7 @@ const safeUsers = users.map(user => ({
     console.warn("Erro ao salvar cache de usuários online:", err);
   }
 }
+
 
 function loadOnlineUsersCache() {
   try {
@@ -73,18 +78,29 @@ function buildOnlineUserItem(user) {
   const item = document.createElement("div");
   item.className = "online-user";
 
-const avatar = sanitizeAvatar(user.avatar);
+  const avatar = sanitizeAvatar(user.avatar);
   const name = user.name || "Usuário";
 
-  item.innerHTML = `
-    <div class="avatar-wrapper">
-      <img src="${avatar}" alt="" onerror="this.src='./img/avatar.png'">
+  const {
+    classeEfeito: classeEfeitoNome,
+    corInline: corInlineNome,
+    fonteInline: fonteInlineNome,
+    tagDiamante,
+    moldura
+  } = formatarAutorVipChat(user);
+
+item.innerHTML = `
+    <div class="message-avatar-wrap avatar-wrapper position-relative d-inline-flex align-items-center justify-content-center" style="width: 36px; height: 36px; min-width: 36px; min-height: 36px; flex-shrink: 0;">
+      <img src="${avatar}" alt="" onerror="this.src='./img/avatar.png'" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;">
+      <div class="avatar-frame position-absolute rounded-circle ${moldura && moldura !== 'none' ? moldura : 'd-none'}" style="top: 0; left: 0; width: 100%; height: 100%; box-sizing: border-box; pointer-events: none; z-index: 2;"></div>
       <span class="status-dot"></span>
     </div>
-    <span style="font-weight: 600; color: #000000; font-size: 16px; line-height: 1.5;">${name}</span>
+    <span class="message-author-name ${classeEfeitoNome}" style="font-weight: 600; font-size: 15px; line-height: 1.3; ${corInlineNome} ${fonteInlineNome} display: inline-flex; align-items: center; gap: 3px; max-width: calc(100% - 48px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+      ${name}${tagDiamante}
+    </span>
   `;
-  // 01-07-26  Adicionando evento de clique para abrir o painel de perfil do usuário
-item.addEventListener("click", () => {
+
+  item.addEventListener("click", () => {
     if (!user.uid) return;
 
     if (!auth.currentUser) {
@@ -95,11 +111,10 @@ item.addEventListener("click", () => {
     }
 
     if (typeof window.openMainProfilePanel === "function") {
-      // 01-07-26  Exibe o botão DENUNCIA DENTRO DO PAINEL USUARIO NO CHAT APARECE apenas se o perfil aberto não for o do próprio usuário logado
- const reportBtn = document.getElementById("reportUserBtn");
-if (reportBtn) {
-  reportBtn.setAttribute("data-target-uid", user.uid);
-}
+      const reportBtn = document.getElementById("reportUserBtn");
+      if (reportBtn) {
+        reportBtn.setAttribute("data-target-uid", user.uid);
+      }
       window.openMainProfilePanel(user.uid, {
         isOwner: false,
         userData: {
