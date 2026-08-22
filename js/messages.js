@@ -754,110 +754,100 @@ return rgb.replace("rgb(", "rgba(").replace(")", `, ${alpha})`);
 /*====================================================================================================
 Renderiza de forma assíncrona o trecho de prévia com a mensagem original quando citado em um reply
 ======================================================================================================== */
+/*====================================================================================================
+Renderiza de forma assíncrona o trecho de prévia com a mensagem original quando citado em um reply
+======================================================================================================== */
 async function renderReply(msg) {
-if (!msg.replyTo) return "";
-let d = replyCache.get(msg.replyTo);
-if (!d) {
-try {
-const salaDefinida = window.salaAtual || "geral";
-const msgDocRef = doc(db, "salas", salaDefinida, "messages", msg.replyTo);
+  if (!msg.replyTo) return "";
+  let d = replyCache.get(msg.replyTo);
+  if (!d) {
+    try {
+      const salaDefinida = window.salaAtual || "geral";
+      const msgDocRef = doc(db, "salas", salaDefinida, "messages", msg.replyTo);
 
-const repliedDoc = await getDoc(msgDocRef);
-if (!repliedDoc.exists()) return "";
+      const repliedDoc = await getDoc(msgDocRef);
+      if (!repliedDoc.exists()) return "";
 
-d = repliedDoc.data();
-replyCache.set(msg.replyTo, d);
-} catch (err) {
-console.warn("Erro carregar reply:", err);
-return "";
-}
-}
+      d = repliedDoc.data();
+      replyCache.set(msg.replyTo, d);
+    } catch (err) {
+      console.warn("Erro carregar reply:", err);
+      return "";
+    }
+  }
 
-let color = msg.replyUserColor || msg.replyColor || null;
-if (!color) {
-const messageEl = document.querySelector(`[data-id="${msg.replyTo}"]`);
-if (messageEl) {
-const nameEl = messageEl.querySelector(".user-name");
-if (nameEl) {
-color = getComputedStyle(nameEl).color;
-}
-}
-}
-if (!color) color = "#3f3f3f";
-let content = "";
-const idUnicoReplyLottie = "lottie-reply-" + Math.random().toString(36).substring(2, 11);
+  // Formatação VIP completa do autor citado no reply
+// Formatação VIP completa do autor citado no reply
+  const { 
+    classeEfeito: classeEfeitoReply, 
+    corInline: corInlineReply, 
+    fonteInline: fonteInlineReply 
+  } = formatarAutorVipChat(d);
 
-if (isSticker(d.text)) {
-if (d.text.trim().endsWith(".json")) {
-content = `<div id="${idUnicoReplyLottie}" class="sticker-img" style="width: 30px; height: 30px; display: inline-block;"></div>`;
-requestAnimationFrame(() => {
-if (typeof window.renderizarEmojiLottie === "function") {
-window.renderizarEmojiLottie(idUnicoReplyLottie, d.text.trim());
-}
-});
-} else {
-content = renderSticker(d.text);
-}
-} else {
-const ytId = extractYouTubeId(d.text);
-if (ytId) {
-const thumb = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
-content = `
-<div class="youtube-reply-thumb" data-video="${ytId}">
-<img src="${thumb}" alt="YouTube" class="youtube-thumb">
-</div>
-`;
-} else {
-const short = d.text.length > 200 ? d.text.slice(0, 190) + "..." : d.text;
-content = `<div class="quoted-text reply-text">${short}</div>`;
-}
-}
+  let color = d.vipNameColorSolid || d.color || msg.replyColor || "#3f3f3f";
+  let content = "";
+  const idUnicoReplyLottie = "lottie-reply-" + Math.random().toString(36).substring(2, 11);
 
+  if (isSticker(d.text)) {
+    if (d.text.trim().endsWith(".json")) {
+      content = `<div id="${idUnicoReplyLottie}" class="sticker-img" style="width: 30px; height: 30px; display: inline-block;"></div>`;
+      requestAnimationFrame(() => {
+        if (typeof window.renderizarEmojiLottie === "function") {
+          window.renderizarEmojiLottie(idUnicoReplyLottie, d.text.trim());
+        }
+      });
+    } else {
+      content = renderSticker(d.text);
+    }
+  } else {
+    const ytId = extractYouTubeId(d.text);
+    if (ytId) {
+      const thumb = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+      content = `
+        <div class="youtube-reply-thumb" data-video="${ytId}">
+          <img src="${thumb}" alt="YouTube" class="youtube-thumb">
+        </div>
+      `;
+    } else {
+      const short = d.text.length > 200 ? d.text.slice(0, 190) + "..." : d.text;
+      content = `<div class="quoted-text reply-text">${short}</div>`;
+    }
+  }
 
+  const safeRepliedAvatar = d.photo || d.avatar || "./img/avatar.png";
 
-// Tratamento da fonte VIP do autor citado no reply
-let fonteReplyInline = "";
-if (d.vipNameFont && d.vipNameFont !== "default") {
-  let herancaTipo = ["Courgette", "Lobster", "Bangers", "Pacifico", "Satisfy"].includes(d.vipNameFont) ? "cursive" : "sans-serif";
-  fonteReplyInline = `font-family: '${d.vipNameFont}', ${herancaTipo};`;
-}
-
-
-
-
-
-const bg = toRGBA(color, 0.17);
-const safeRepliedAvatar = d.photo || d.avatar || "./img/avatar.png";
-
-return `
-<div class="quoted-reply-box"
-style="
-border-left: 4px solid ${color};
-display: inline-flex;
-flex-direction: row;
-align-items: flex-start;
-gap: 10px;
-padding: 6px 10px;
-width: fit-content;
-max-width: 100%;
-border-radius: 6px;
-margin-bottom: 6px;
-">
-<img src="${safeRepliedAvatar}" class="reply-user-avatar" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 2px;" onerror="this.src='./img/avatar.png'">
-<div style="display: flex; flex-direction: column; overflow: hidden; flex-grow: 1; text-align: left;">
-
-<div class="quoted-header" style="color:${color}; ${fonteReplyInline} font-weight: 600; font-size: .97rem; text-align: left; width: 100%; margin-bottom: 2px;">
-${d.user}
-</div>
-
-<div style="display: flex; text-align: left; width: 100%;">
-${content}
-</div>
-</div>
-</div>
-`;
+  return `
+<div class="quoted-reply-box ${classeEfeitoReply}"
+      style="
+        ${classeEfeitoReply ? '' : `border-left: 4px solid ${color};`}
+        display: inline-flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 6px 10px;
+        width: fit-content;
+        max-width: 100%;
+        border-radius: 6px;
+        margin-bottom: 6px;
+      ">
+      <img src="${safeRepliedAvatar}" class="reply-user-avatar" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 2px;" onerror="this.src='./img/avatar.png'">
+  <div style="display: flex; flex-direction: column; overflow: hidden; flex-grow: 1; text-align: left;">
+        <div class="quoted-header ${classeEfeitoReply}" style="${classeEfeitoReply ? '' : corInlineReply} ${fonteInlineReply} font-weight: 600; font-size: .97rem; text-align: left; width: fit-content; margin-bottom: 2px;">
+          ${d.user}
+        </div>
+        <div style="display: flex; text-align: left; width: 100%;">
+          ${content}
+        </div>
+      </div>
+      </div>
+    </div>
+  `;
 }
 
+
+/*====================================================================================================
+QUANTIDADE DE MENSAGEM DENTRO DO CHAT PUXA DO FIREBASE
+======================================================================================================== */
 const MAX_MESSAGES_DESKTOP = 150;
 const MAX_MESSAGES_MOBILE = 100;
 
