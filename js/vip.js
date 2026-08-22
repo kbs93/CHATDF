@@ -260,17 +260,143 @@ if (topBanner) {
 }
 window.atualizarSimulacaoTopoVip = atualizarSimulacaoTopoVip;
 
-/* ========================================================================
-   INICIALIZAÇÃO DO PAINEL VIP (PALETAS E PRÉVIAS)
-===================================================================== */
-export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
-  const promoSec = document.getElementById("vipPromoSection");
-  const settingsSec = document.getElementById("vipSettingsSection");
-  const expiryRow = document.getElementById("vipExpiryRow");
 
-  if (promoSec) { promoSec.classList.add("d-none"); promoSec.style.setProperty("display", "none", "important"); }
-  if (settingsSec) { settingsSec.classList.remove("d-none"); settingsSec.style.setProperty("display", "block", "important"); }
-  if (expiryRow) { expiryRow.classList.remove("d-none"); expiryRow.style.setProperty("display", "block", "important"); }
+/* ========================================================================
+   INICIALIZACAO DO PAINEL VIP (COM CONTADOR E TRAVA COMPLETA DE BOTÕES)
+===================================================================== */
+/* ========================================================================
+   INICIALIZAÇÃO DO PAINEL VIP (COM CONTADOR E TRAVA COMPLETA DE BOTÕES)
+===================================================================== */
+let vipCountdownInterval = null;
+
+// Função auxiliar para formatar o tempo regressivo de forma limpa
+function formatarTempoRegressivoVip(msRestantes) {
+  if (msRestantes <= 0) return "VIP Expirado";
+
+  const totalSegundos = Math.floor(msRestantes / 1000);
+  const dias = Math.floor(totalSegundos / 86400);
+  const horas = Math.floor((totalSegundos % 86400) / 3600);
+  const minutos = Math.floor((totalSegundos % 3600) / 60);
+  const segundos = totalSegundos % 60;
+
+  const pad = (n) => String(n).padStart(2, "0");
+
+  if (dias > 0) {
+    return `${dias}d ${pad(horas)}h ${pad(minutos)}m`;
+  }
+  if (horas > 0) {
+    return `${pad(horas)}h ${pad(minutos)}m ${pad(segundos)}s`;
+  }
+  return `${pad(minutos)}m ${pad(segundos)}s`;
+}
+
+export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
+  if (vipCountdownInterval) {
+    clearInterval(vipCountdownInterval);
+    vipCountdownInterval = null;
+  }
+
+  const btnSaveVip = document.getElementById("btnSaveVipSettings");
+  const customCards = document.querySelectorAll('.vip-btn-card:not([data-target="gaveta-renovar"])');
+  const vipBannerHeaderBtn = document.getElementById("vipHeaderActionBtn");
+
+  const atualizarStatusInterfaceVip = () => {
+    const data = window.__currentProfileData || {};
+    const isVipAtivo = data.isVip === true;
+    const agora = Date.now();
+    const expiresAt = data.vipExpiresAt || 0;
+    const diffMs = expiresAt - agora;
+
+    const topExpiryDays = document.getElementById("vipTopExpiryDays");
+    const drawerExpiryDays = document.getElementById("vipDrawerExpiryDays");
+    const drawerBtnRenew = document.getElementById("btnDrawerRenewVip");
+
+    if (isVipAtivo && diffMs > 0) {
+      const tempoFormatado = formatarTempoRegressivoVip(diffMs);
+
+      if (topExpiryDays) topExpiryDays.textContent = tempoFormatado;
+      if (drawerExpiryDays) {
+        drawerExpiryDays.textContent = tempoFormatado;
+        drawerExpiryDays.className = "text-warning fw-bold font-monospace";
+      }
+      if (drawerBtnRenew) {
+        drawerBtnRenew.className = "btn btn-warning w-100 fw-bold py-2 shadow-sm";
+        drawerBtnRenew.innerHTML = `<i class="bi bi-arrow-repeat me-1"></i> Renovar assinatura VIP`;
+      }
+
+      // 1. OFUSCA E TRAVA O BOTÃO SALVAR VIP
+      if (btnSaveVip) {
+        btnSaveVip.setAttribute("disabled", "disabled");
+        btnSaveVip.style.opacity = "0.35";
+        btnSaveVip.style.cursor = "not-allowed";
+        btnSaveVip.style.pointerEvents = "none";
+      }
+
+      // 2. OFUSCA E TRAVA OS 4 BOTÕES DE CUSTOMIZAÇÃO (NOME, TEXTO, MOLDURA, TEMA)
+      customCards.forEach(card => {
+        card.setAttribute("disabled", "disabled");
+        card.style.opacity = "0.35";
+        card.style.cursor = "not-allowed";
+        card.style.pointerEvents = "none";
+      });
+
+      // 3. OFUSCA E TRAVA O BOTÃO DE IMAGEM/BANNER DO TOPO
+      if (vipBannerHeaderBtn) {
+        vipBannerHeaderBtn.setAttribute("disabled", "disabled");
+        vipBannerHeaderBtn.style.opacity = "0.35";
+        vipBannerHeaderBtn.style.cursor = "not-allowed";
+        vipBannerHeaderBtn.style.pointerEvents = "none";
+      }
+
+    } else {
+      // Quando o tempo zera ou o usuário não é VIP
+      if (topExpiryDays) topExpiryDays.textContent = `Expirado`;
+      if (drawerExpiryDays) {
+        drawerExpiryDays.textContent = `VIP Expirado`;
+        drawerExpiryDays.className = "text-danger fw-bold";
+      }
+      if (drawerBtnRenew) {
+        drawerBtnRenew.className = "btn btn-warning w-100 fw-bold py-2 shadow-sm text-dark";
+        drawerBtnRenew.innerHTML = `<i class="bi bi-gem me-1"></i> RENOVAR VIP`;
+      }
+
+      // LIBERA O BOTÃO SALVAR VIP
+      if (btnSaveVip) {
+        btnSaveVip.removeAttribute("disabled");
+        btnSaveVip.style.opacity = "1";
+        btnSaveVip.style.cursor = "pointer";
+        btnSaveVip.style.pointerEvents = "auto";
+      }
+
+      // LIBERA OS 4 BOTÕES DE CUSTOMIZAÇÃO
+      customCards.forEach(card => {
+        card.removeAttribute("disabled");
+        card.style.opacity = "1";
+        card.style.cursor = "pointer";
+        card.style.pointerEvents = "auto";
+      });
+
+      // LIBERA O BOTÃO DE IMAGEM/BANNER DO TOPO
+      if (vipBannerHeaderBtn) {
+        vipBannerHeaderBtn.removeAttribute("disabled");
+        vipBannerHeaderBtn.style.opacity = "1";
+        vipBannerHeaderBtn.style.cursor = "pointer";
+        vipBannerHeaderBtn.style.pointerEvents = "auto";
+      }
+
+      if (data.isVip === true && typeof window.verificarEExpiraVipUsuario === "function" && auth.currentUser) {
+        window.verificarEExpiraVipUsuario(auth.currentUser.uid, data);
+      }
+
+      if (vipCountdownInterval) {
+        clearInterval(vipCountdownInterval);
+        vipCountdownInterval = null;
+      }
+    }
+  };
+
+  atualizarStatusInterfaceVip();
+  vipCountdownInterval = setInterval(atualizarStatusInterfaceVip, 1000);
 
   const vipNameGrid = document.getElementById("vipNameColorGrid");
   if (vipNameGrid && vipNameGrid.children.length === 0) {
@@ -311,29 +437,29 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
       vipMsgGrid.appendChild(box);
     });
   }
-const previewName = document.getElementById("vipPreviewName");
+
+  const previewName = document.getElementById("vipPreviewName");
   const previewAvatar = document.getElementById("vipPreviewAvatar");
 
   if (previewName) previewName.textContent = editNameValue || "Usuário";
   if (previewAvatar) previewAvatar.src = selectedAvatar || "./img/avatar.png";
 
-  // Define o placeholder "Escolha uma cor" se o usuário não tiver degradê salvo
-// Define o placeholder "Escolha uma cor" se o usuário não tiver degradê salvo
   const data = window.__currentProfileData || {};
   const btnType = document.getElementById("btnVipNameColorType");
   if (btnType && (!data.vipNameColorType || data.vipNameColorType === "solid")) {
     btnType.textContent = "Escolha uma cor";
   }
 
-  // Garante que o carrossel comece sempre fechado
   const solidWrapper = document.getElementById("vipSolidColorWrapper");
   if (solidWrapper) {
     solidWrapper.classList.add("hidden");
   }
 
   vincularEventosPreviewVip();
-
 }
+
+
+
 
 function vincularEventosPreviewVip() {
   const typeSelect = document.getElementById("vipNameColorType");
@@ -394,7 +520,7 @@ export function initVipEngine(isOwnerCallback) {
     });
   });
 
-  // 2. Dropdowns Personalizados
+  //=============================== 2. Dropdowns Personalizados ===========================
   document.querySelectorAll('.vip-custom-dropdown').forEach(dropdown => {
     const wrapper = dropdown.parentElement;
     const btn = wrapper.querySelector('.vip-custom-select-btn');
@@ -441,22 +567,33 @@ export function initVipEngine(isOwnerCallback) {
     }
   });
 
-  // 3. Gravação das Configurações VIP
-// 3. Gravação das Configurações VIP
+ 
+// ====================================3. Gravação das Configurações VIP VERIFICACAO E RESET AUTOMÁTICO DO VIP EXPIRADO 
+//  RESETANDO O PAINEL VIP.. =============================
   document.getElementById("btnSaveVipSettings")?.addEventListener("click", async () => {
     const user = auth.currentUser;
     if (!user) return;
-
     try {
       showToast("Gravando configurações VIP...");
       const refUser = doc(db, "users", user.uid);
-
       const bannerUrlFinal = window.__vipBannerUrlTemp !== undefined 
         ? window.__vipBannerUrlTemp 
         : (window.__currentProfileData?.vipBannerUrl || "");
 
+/*  RESETANDO o original ,  const validadeVip = window.__currentProfileData?.vipExpiresAt || (Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+O trecho window.__currentProfileData?.vipExpiresAt preserva a data que o usuário já tinha caso ele esteja apenas editando/salvando as cores do VIP,
+e o fallback cria um prazo de 7 dias a partir do momento atual.
+Portanto, a premissa está correta.*/
+
+// TESTE 1 : Validade de apenas 1 minuto (60 segundos)  const validadeVip = Date.now() + 1 * 60 * 1000;
+// TESTE 2 : Validade de 3 horas  const validadeVip = Date.now() + 3 * 60 * 60 * 1000;
+// TESTE 3 : Validade de 3 dias   const validadeVip = Date.now() + 3 * 24 * 60 * 60 * 1000; 
+    
+      const validadeVip = Date.now() + 3 * 60 * 1000;
       await updateDoc(refUser, {
         isVip: true,
+        vipExpiresAt: validadeVip,
         vipNameColorType: document.getElementById("vipNameColorType").value,
         vipNameColorSolid: window.__vipNOME_COR_SELECIONADA || "#6f42c1",
         vipNameFont: document.getElementById("vipNameFont").value,
@@ -465,6 +602,8 @@ export function initVipEngine(isOwnerCallback) {
         vipProfileBanner: document.getElementById("vipProfileBannerSelect").value,
         vipBannerUrl: bannerUrlFinal
       });
+
+
       const userStatusRef = rRef(rtdb, "status/" + user.uid);
       await rUpdate(userStatusRef, {
         isVip: true,
@@ -500,7 +639,7 @@ export function initVipEngine(isOwnerCallback) {
     }
   });
 
-  // 4. Modal de Banner & Buscador Multi-Plataforma
+  //===============================  4. Modal de Banner & Buscador Multi-Plataforma ===================================
   initVipBannerModal(isOwnerCallback);
 }
 
@@ -728,7 +867,6 @@ export function abrirPainelVip() {
   const topMood = document.getElementById("profileMood");
   const topTag = document.getElementById("vipTopPreviewTag");
   const topMsgBox = document.getElementById("vipTopMsgPreviewBox");
-  const topExpiry = document.getElementById("vipTopExpiryRow");
 
   // 1. Alterna a visão das seções centrais
   if (mainTabs) mainTabs.classList.add("d-none");
@@ -749,7 +887,6 @@ export function abrirPainelVip() {
   if (topMood) topMood.style.display = "none";
   if (topTag) { topTag.classList.remove("d-none"); topTag.classList.add("d-inline-block"); }
   if (topMsgBox) { topMsgBox.classList.remove("d-none"); topMsgBox.classList.add("d-block"); }
-  
 
   // 4. Banner e simuladores
   const data = window.__currentProfileData || {};
@@ -757,6 +894,14 @@ export function abrirPainelVip() {
   if (profileCoverEl) {
     if (data.vipBannerUrl) {
       profileCoverEl.style.background = `url("${data.vipBannerUrl}") center/cover no-repeat`;
+    }
+  }
+
+  // Se o VIP estiver ativo, foca diretamente na aba Renovar
+  if (data.isVip === true) {
+    const btnRenovar = document.querySelector('.vip-btn-card[data-target="gaveta-renovar"]');
+    if (btnRenovar) {
+      btnRenovar.click();
     }
   }
 
@@ -831,8 +976,9 @@ export function formatarAutorVipChat(msg = {}) {
   let classeEfeito = "";
   let corInline = "";
   let fonteInline = "";
-const isVipMsg = (tipoEfeito !== "solid" && tipoEfeito !== "none") || fonte !== "default" || moldura !== "none";
-  const tagDiamante = isVipMsg ? `<i class="bi bi-gem" style="font-size: 13px; color: #01b1f7 !important; -webkit-text-fill-color: #01b1f7 !important; margin-left: 4px; vertical-align: middle; display: inline-block;"></i>` : "";
+
+const isVipMsg = msg.isVip === true || (tipoEfeito !== "solid" && tipoEfeito !== "none") || fonte !== "default" || moldura !== "none";
+const tagDiamante = isVipMsg ? `<i class="bi bi-gem" style="font-size: 13px; color: #01b1f7 !important; -webkit-text-fill-color: #01b1f7 !important; margin-left: 4px; vertical-align: middle; display: inline-block;"></i>` : "";
 
   if (tipoEfeito !== "solid" && tipoEfeito !== "none") {
     classeEfeito = `nick-${tipoEfeito}`;

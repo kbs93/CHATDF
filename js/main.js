@@ -32,6 +32,57 @@ import {
   fecharPainelVip
 } from "./vip.js";
 
+// ========================================================================
+// ROTINA DE VERIFICACAO E RESET AUTOMÁTICO DO VIP EXPIRADO
+// ========================================================================
+export async function verificarEExpiraVipUsuario(userId, userData) {
+  if (!userId || !userData) return userData;
+
+  if (userData.isVip === true) {
+    const agora = Date.now();
+    const expiresAt = userData.vipExpiresAt || 0;
+
+    // Se a validade for menor ou igual a agora, zera e reseta para usuário comum
+    if (expiresAt <= agora) {
+      try {
+        const refUser = doc(db, "users", userId);
+        const resetData = {
+          isVip: false,
+          vipExpiresAt: 0,
+          vipNameColorType: "none",
+          vipNameColorSolid: "#1E293B",
+          vipNameFont: "default",
+          vipMsgColor: "#333333",
+          vipAvatarFrame: "none",
+          vipProfileBanner: "default",
+          vipBannerUrl: ""
+        };
+
+        await updateDoc(refUser, resetData);
+
+        const userStatusRef = ref(rtdb, "status/" + userId);
+        await set(userStatusRef, {
+          uid: userId,
+          name: userData.nome || "Usuário",
+          avatar: userData.foto || "./img/avatar.png",
+          online: true,
+          sala: appState.currentRoom || sala,
+          lastChanged: Date.now(),
+          ...resetData
+        });
+
+        Object.assign(userData, resetData);
+      } catch (err) {
+        console.error("Erro ao expirar VIP do usuário:", err);
+      }
+    }
+  }
+  return userData;
+}
+
+// Torna a função acessível para o setInterval do vip.js
+window.verificarEExpiraVipUsuario = verificarEExpiraVipUsuario;
+
 let overlay;
 document.body.classList.add("chat-loading");
 
@@ -211,9 +262,14 @@ function mountChatIfNeeded() {
   setupChat();
 }
 
-function handleUserReady(detail = {}) {
+async function handleUserReady(detail = {}) {
   appState.userReady = true;
   appState.currentUser = detail.user || auth.currentUser || null;
+  
+  if (detail.userData && appState.currentUser) {
+    detail.userData = await verificarEExpiraVipUsuario(appState.currentUser.uid, detail.userData);
+  }
+
   if (detail.userData?.nome) {
     appState.currentUser.nome = detail.userData.nome;
     appState.currentUser.displayNameChat = detail.userData.nome;
@@ -470,11 +526,18 @@ function setupChat() {
     e.preventDefault();
   });
 
-  sendBtn.onclick = () => sendMessage(input);
+const dispararEnvioMensagem = async () => {
+    if (auth.currentUser && window.__currentProfileData) {
+      window.__currentProfileData = await verificarEExpiraVipUsuario(auth.currentUser.uid, window.__currentProfileData);
+    }
+    sendMessage(input);
+  };
+
+  sendBtn.onclick = dispararEnvioMensagem;
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      sendMessage(input);
+      dispararEnvioMensagem();
     }
   });
 
@@ -989,7 +1052,7 @@ window.openMainProfilePanel = async (userId) => {
     const refUser = doc(db, "users", userId);
     if (unsubscribeProfileListener) unsubscribeProfileListener();
 
-    unsubscribeProfileListener = onSnapshot(refUser, (snap) => {
+    unsubscribeProfileListener = onSnapshot(refUser, async (snap) => {
       if (requestToken !== profileRequestToken) return;
 
       if (!snap.exists()) {
@@ -1007,7 +1070,10 @@ window.openMainProfilePanel = async (userId) => {
         return;
       }
 
-      const data = snap.data();
+      let data = snap.data();
+      if (isOwner) {
+        data = await verificarEExpiraVipUsuario(userId, data);
+      }
       const statusRef = ref(rtdb, "status/" + userId);
 
       onValue(statusRef, (statusSnap) => {
