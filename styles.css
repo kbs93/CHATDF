@@ -1389,9 +1389,7 @@ body.chat-loading .message {
   border-left: 4px solid var(--reply-border-color, #353434);
   border-right: 4px solid var(--reply-border-color, #353434);
   border-radius: 12px;
-
   padding: 8px 9px 21px;
-  
   animation: slideUp 0.2s ease;
   width: fit-content;
   min-width: unset;
@@ -1579,16 +1577,6 @@ body.chat-loading .message {
   position: relative;
 }
 
-.quoted-reply-box {
-  background-color: #6969691c;
-  padding: 6px 10px;
-  border-radius: 6px;
-  margin-bottom: 6px;
-  display: inline-block;
-  max-width: 90%;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
 
 
 .quoted-text {
@@ -5923,6 +5911,21 @@ body.viewing-other-profile .profile-photo-upload-btn {
 
 
 /* ========================================================================= 
+   ISOLAMENTO DO ICONE DE DIAMANTE VIP (ESPECIFICIDADE LIMPA SEM !IMPORTANT)
+   ========================================================================= */
+.message-author-name[class*="nick-"] .bi-gem,
+#profileName[class*="nick-"] .bi-gem,
+.quoted-header[class*="nick-"] .bi-gem,
+.online-user span[class*="nick-"] .bi-gem,
+#vipTopPreviewTag .bi-gem {
+  text-shadow: none;
+  filter: none;
+  color: #01b1f7;
+  -webkit-text-fill-color: #01b1f7;
+  display: inline-block;
+}
+
+/* ========================================================================= 
    MÓDULO DE FONTES E DEGRADÊS - PERFIL, MENSAGEM E REPLY (SEM !IMPORTANT)
    ========================================================================= */
 
@@ -6027,84 +6030,101 @@ body.viewing-other-profile .profile-photo-upload-btn {
 }
 
 /* Borda lateral, do Reply herda degradê e neon quando o autor citado for VIP */
-.quoted-reply-box[class*="nick-gradient-"],
-.quoted-reply-box[class*="nick-anim-"] {
-  border-left: 5px solid transparent;
-  border-image-slice: 1;
-  
+/* ========================================================================= 
+   BARRINHA LATERAL ARREDONDADA DO REPLY (PADRÃO WHATSAPP / TELEGRAM)
+   ========================================================================= */
+.quoted-reply-box {
+  position: relative;
+  background-color: #6969691c;
+  padding: 6px 10px 6px 14px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  display: inline-block;
+  max-width: 90%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  overflow: hidden; /* <--- Adicione esta linha para prender a barra na curva */
 }
 
-.quoted-reply-box.nick-gradient-cotton { border-image-source: linear-gradient(135deg, #ff9a9e, #fecfef); }
-.quoted-reply-box.nick-gradient-blue-purple { border-image-source: linear-gradient(135deg, #0d6efd, #a020f0); }
-.quoted-reply-box.nick-gradient-gold { border-image-source: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); }
-.quoted-reply-box.nick-gradient-sunset { border-image-source: linear-gradient(135deg, #ff512f, #dd2476); }
-.quoted-reply-box.nick-gradient-ocean { border-image-source: linear-gradient(135deg, #02aab0, #00cdac); }
-.quoted-reply-box.nick-gradient-forest { border-image-source: linear-gradient(135deg, #11998e, #38ef7d); }
-.quoted-reply-box.nick-gradient-ruby { border-image-source: linear-gradient(135deg, #cb2d3e, #ef473a); }
-.quoted-reply-box.nick-gradient-cyberpunk { border-image-source: linear-gradient(135deg, #f12711, #f5af19); }
-.quoted-reply-box.nick-gradient-lavender { border-image-source: linear-gradient(135deg, #a18cd1, #fbc2eb); }
-.quoted-reply-box.nick-gradient-fire { border-image-source: linear-gradient(135deg, #ff0000, #ff7300, #ffcc00); }
-.quoted-reply-box.nick-gradient-platinum { border-image-source: linear-gradient(135deg, #434343, #d7dde8, #ffffff, #757f9a); }
-.quoted-reply-box.nick-gradient-vintage { border-image-source: linear-gradient(135deg, #ca7345, #735135); }
-.quoted-reply-box.nick-gradient-bubblegum { border-image-source: linear-gradient(135deg, #ff00cc, #333399); }
-.quoted-reply-box.nick-gradient-galaxy { border-image-source: linear-gradient(135deg, #654ea3, #eaafc8); }
-.quoted-reply-box.nick-gradient-mint { border-image-source: linear-gradient(135deg, #00c6ff, #0072ff); }
-.quoted-reply-box.nick-glow-green { border-left-color: #22c55e; }
-.quoted-reply-box.nick-glow-purple { border-left-color: #c084fc; }
-.quoted-reply-box.nick-glow-red { border-left-color: #ef4444; }
-.quoted-reply-box.nick-glow-gold { border-left-color: #eab308; }
-.quoted-reply-box.nick-glow-cyan { border-left-color: #38bdf8; }
-.quoted-reply-box.nick-glow-pink { border-left-color: #f43f5e; }
-.quoted-reply-box.nick-glow-blue { border-left-color: #60a5fa; }
-.quoted-reply-box.nick-glow-orange { border-left-color: #ff7426; }
-.quoted-reply-box.nick-glow-emerald { border-left-color: #34d399; }
-.quoted-reply-box.nick-glow-wine { border-left-color: #f43f5e; }
-.quoted-reply-box.nick-glow-amber { border-left-color: #fbbf24; }
-.quoted-reply-box.nick-glow-teal { border-left-color: #2dd4bf; }
-.quoted-reply-box.nick-glow-indigo { border-left-color: #818cf8; }
-.quoted-reply-box.nick-glow-coral { border-left-color: #ff6b81; }
-.quoted-reply-box.nick-glow-silver { border-left-color: #9ca3af; }
-.quoted-reply-box.nick-glow-lime { border-left-color: #84cc16; }
-.quoted-reply-box.nick-gradient-royal-purple { border-image-source: linear-gradient(135deg, #4b0082, #d80073); }
-.quoted-reply-box.nick-gradient-midnight-cyan { border-image-source: linear-gradient(135deg, #0f2027, #0083b0); }
-.quoted-reply-box.nick-gradient-deep-ruby { border-image-source: linear-gradient(135deg, #580000, #b91d73); }
-.quoted-reply-box.nick-gradient-dark-emerald { border-image-source: linear-gradient(135deg, #0b486b, #005c53); }
-.quoted-reply-box.nick-gradient-cosmic-violet { border-image-source: linear-gradient(135deg, #1f1c2c, #928dab); }
-.quoted-reply-box.nick-gradient-inferno-fire { border-image-source: linear-gradient(135deg, #870000, #190a05); }
-.quoted-reply-box.nick-gradient-deep-sapphire { border-image-source: linear-gradient(135deg, #06f7ff, #ff09ea); }
-.quoted-reply-box.nick-gradient-electric-magenta { border-image-source: linear-gradient(135deg, #61045f, #aa076b); }
-.quoted-reply-box.nick-gradient-poison-green { border-image-source: linear-gradient(135deg, #00ffbf, #6404ff); }
-.quoted-reply-box.nick-gradient-bronze-gold { border-image-source: linear-gradient(135deg, #362612, #8e6d32, #4a3410); }
-.quoted-reply-box.nick-gradient-black-ocean { border-image-source: linear-gradient(135deg, #120078, #BDB76B); }
-.quoted-reply-box.nick-gradient-dark-magma { border-image-source: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); }
-.quoted-reply-box.nick-gradient-plum-berry { border-image-source: linear-gradient(135deg, #3a1c71, #d76d77); }
-.quoted-reply-box.nick-gradient-electric-petroleum { border-image-source: linear-gradient(135deg, #003366, #00b4db); }
-.quoted-reply-box.nick-gradient-carmine-pink { border-image-source: linear-gradient(135deg, #fd0c0c, #26a337); }
-.quoted-reply-box.nick-gradient-deep-indigo { border-image-source: linear-gradient(135deg, #11002c, #480048); }
-.quoted-reply-box.nick-gradient-coffee-amber { border-image-source: linear-gradient(135deg, #2c1603, #e65c00); }
-.quoted-reply-box.nick-gradient-night-teal { border-image-source: linear-gradient(135deg, #00223e, #1d976c); }
-.quoted-reply-box.nick-gradient-cyber-red { border-image-source: linear-gradient(135deg, #430007, #c8102e, #4a00e0); }
-.quoted-reply-box.nick-gradient-dark-chrome { border-image-source: linear-gradient(135deg, #161616, #434343, #161616); }
-.quoted-reply-box.nick-gradient-neon { border-image-source: linear-gradient(90deg, #ff007f, #39ff14, #00f0ff, #ff007f); }
-.quoted-reply-box.nick-anim-rainbow { border-image-source: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet, red); }
-.quoted-reply-box.nick-anim-aurora { border-image-source: linear-gradient(90deg, #0575e6, #00f260, #0575e6); }
-.quoted-reply-box.nick-anim-magma { border-image-source: linear-gradient(90deg, #f12711, #f5af19, #f12711); }
-.quoted-reply-box.nick-anim-matrix { border-image-source: linear-gradient(90deg, #00FF00, #003300, #00FF00); }
-.quoted-reply-box.nick-anim-electric { border-image-source: linear-gradient(90deg, #00ffff, #ffffff, #0072ff, #00ffff); }
-.quoted-reply-box.nick-anim-gold-flow { border-image-source: linear-gradient(90deg, #bf953f, #aa771c, #fcf6ba, #bf953f); }
-.quoted-reply-box.nick-anim-ice { border-image-source: linear-gradient(90deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa); }
-.quoted-reply-box.nick-anim-vampire { border-image-source: linear-gradient(90deg, #4a0000, #ff0000, #4a0000); }
-.quoted-reply-box.nick-anim-candy { border-image-source: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c); }
-.quoted-reply-box.nick-anim-toxic { border-image-source: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f); }
-.quoted-reply-box.nick-anim-miami { border-image-source: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe); }
-.quoted-reply-box.nick-anim-phoenix { border-image-source: linear-gradient(90deg, #f857a6, #ff5858, #f857a6); }
+/* A barrinha lateral acompanhando a curvatura do reply */
+.quoted-reply-box::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+
+  background: var(--reply-bar-color, #3f3f3f);
+}
+
+/* Todos os degradês e efeitos VIP aplicados na barrinha */
+.quoted-reply-box.nick-gradient-cotton::before { background: linear-gradient(135deg, #ff9a9e, #fecfef);}
+.quoted-reply-box.nick-gradient-blue-purple::before { background: linear-gradient(135deg, #0d6efd, #a020f0);}
+.quoted-reply-box.nick-gradient-gold::before { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);}
+.quoted-reply-box.nick-gradient-sunset::before { background: linear-gradient(135deg, #ff512f, #dd2476);}
+.quoted-reply-box.nick-gradient-ocean::before { background: linear-gradient(135deg, #02aab0, #00cdac);}
+.quoted-reply-box.nick-gradient-forest::before { background: linear-gradient(135deg, #11998e, #38ef7d);}
+.quoted-reply-box.nick-gradient-ruby::before { background: linear-gradient(135deg, #cb2d3e, #ef473a);}
+.quoted-reply-box.nick-gradient-cyberpunk::before { background: linear-gradient(135deg, #f12711, #f5af19);}
+.quoted-reply-box.nick-gradient-lavender::before { background: linear-gradient(135deg, #a18cd1, #fbc2eb);}
+.quoted-reply-box.nick-gradient-fire::before { background: linear-gradient(135deg, #ff0000, #ff7300, #ffcc00);}
+.quoted-reply-box.nick-gradient-platinum::before { background: linear-gradient(135deg, #434343, #d7dde8, #ffffff, #757f9a);}
+.quoted-reply-box.nick-gradient-vintage::before { background: linear-gradient(135deg, #ca7345, #735135); }
+.quoted-reply-box.nick-gradient-bubblegum::before { background: linear-gradient(135deg, #ff00cc, #333399);}
+.quoted-reply-box.nick-gradient-galaxy::before { background: linear-gradient(135deg, #654ea3, #eaafc8);}
+.quoted-reply-box.nick-gradient-mint::before { background: linear-gradient(135deg, #00c6ff, #0072ff);}
+.quoted-reply-box.nick-glow-green::before { background: #22c55e;}
+.quoted-reply-box.nick-glow-purple::before { background: #c084fc;}
+.quoted-reply-box.nick-glow-red::before { background: #ef4444;}
+.quoted-reply-box.nick-glow-gold::before { background: #eab308;}
+.quoted-reply-box.nick-glow-cyan::before { background: #38bdf8;}
+.quoted-reply-box.nick-glow-pink::before { background: #f43f5e;}
+.quoted-reply-box.nick-glow-blue::before { background: #60a5fa;}
+.quoted-reply-box.nick-glow-orange::before { background: #ff7426;}
+.quoted-reply-box.nick-glow-emerald::before { background: #34d399;}
+.quoted-reply-box.nick-glow-wine::before { background: #f43f5e; }
+.quoted-reply-box.nick-glow-amber::before { background: #fbbf24;}
+.quoted-reply-box.nick-glow-teal::before { background: #2dd4bf;}
+.quoted-reply-box.nick-glow-indigo::before { background: #818cf8;}
+.quoted-reply-box.nick-glow-coral::before { background: #ff6b81;}
+.quoted-reply-box.nick-glow-silver::before { background: #9ca3af;}
+.quoted-reply-box.nick-glow-lime::before { background: #84cc16;}
+.quoted-reply-box.nick-gradient-royal-purple::before { background: linear-gradient(135deg, #4b0082, #d80073);}
+.quoted-reply-box.nick-gradient-midnight-cyan::before { background: linear-gradient(135deg, #0f2027, #0083b0);}
+.quoted-reply-box.nick-gradient-deep-ruby::before { background: linear-gradient(135deg, #580000, #b91d73); }
+.quoted-reply-box.nick-gradient-dark-emerald::before { background: linear-gradient(135deg, #0b486b, #005c53);}
+.quoted-reply-box.nick-gradient-cosmic-violet::before { background: linear-gradient(135deg, #1f1c2c, #928dab);}
+.quoted-reply-box.nick-gradient-inferno-fire::before { background: linear-gradient(135deg, #870000, #190a05);}
+.quoted-reply-box.nick-gradient-deep-sapphire::before { background: linear-gradient(135deg, #06f7ff, #ff09ea);}
+.quoted-reply-box.nick-gradient-electric-magenta::before { background: linear-gradient(135deg, #61045f, #aa076b);}
+.quoted-reply-box.nick-gradient-poison-green::before { background: linear-gradient(135deg, #00ffbf, #6404ff);}
+.quoted-reply-box.nick-gradient-bronze-gold::before { background: linear-gradient(135deg, #362612, #8e6d32, #4a3410);}
+.quoted-reply-box.nick-gradient-black-ocean::before { background: linear-gradient(135deg, #120078, #BDB76B);}
+.quoted-reply-box.nick-gradient-dark-magma::before { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);}
+.quoted-reply-box.nick-gradient-plum-berry::before { background: linear-gradient(135deg, #3a1c71, #d76d77);}
+.quoted-reply-box.nick-gradient-electric-petroleum::before { background: linear-gradient(135deg, #003366, #00b4db);}
+.quoted-reply-box.nick-gradient-carmine-pink::before { background: linear-gradient(135deg, #fd0c0c, #26a337);}
+.quoted-reply-box.nick-gradient-deep-indigo::before { background: linear-gradient(135deg, #11002c, #480048);}
+.quoted-reply-box.nick-gradient-coffee-amber::before { background: linear-gradient(135deg, #2c1603, #e65c00);}
+.quoted-reply-box.nick-gradient-night-teal::before { background: linear-gradient(135deg, #00223e, #1d976c);}
+.quoted-reply-box.nick-gradient-cyber-red::before { background: linear-gradient(135deg, #430007, #c8102e, #4a00e0);}
+.quoted-reply-box.nick-gradient-dark-chrome::before { background: linear-gradient(135deg, #161616, #434343, #161616);}
+.quoted-reply-box.nick-gradient-neon::before { background: linear-gradient(90deg, #ff007f, #39ff14, #00f0ff, #ff007f);}
+.quoted-reply-box.nick-anim-rainbow::before { background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet, red);}
+.quoted-reply-box.nick-anim-aurora::before { background: linear-gradient(90deg, #0575e6, #00f260, #0575e6); }
+.quoted-reply-box.nick-anim-magma::before { background: linear-gradient(90deg, #f12711, #f5af19, #f12711); }
+.quoted-reply-box.nick-anim-matrix::before { background: linear-gradient(90deg, #00FF00, #003300, #00FF00); }
+.quoted-reply-box.nick-anim-electric::before { background: linear-gradient(90deg, #00ffff, #ffffff, #0072ff, #00ffff);}
+.quoted-reply-box.nick-anim-gold-flow::before { background: linear-gradient(90deg, #bf953f, #aa771c, #fcf6ba, #bf953f);}
+.quoted-reply-box.nick-anim-ice::before { background: linear-gradient(90deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa);}
+.quoted-reply-box.nick-anim-vampire::before { background: linear-gradient(90deg, #4a0000, #ff0000, #4a0000);}
+.quoted-reply-box.nick-anim-candy::before { background: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c);}
+.quoted-reply-box.nick-anim-toxic::before { background: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f);}
+.quoted-reply-box.nick-anim-miami::before { background: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe);}
+.quoted-reply-box.nick-anim-phoenix::before { background: linear-gradient(90deg, #f857a6, #ff5858, #f857a6);}
 
 
-
-
-/* ========================================================================= 
-   TEMA DE PERFIL VIP (SUPORTE PARA PERFIL REAL E MINI-PREVIEW)
-   ========================================================================= */
 /* ========================================================================= 
    TEMA DE PERFIL VIP (SUPORTE PARA PERFIL REAL E MINI-PREVIEW)
    ========================================================================= */
@@ -6175,11 +6195,14 @@ body.viewing-other-profile .profile-photo-upload-btn {
 /*8*/#profileName.nick-gradient-cyberpunk, .message-author-name.nick-gradient-cyberpunk { background-image: linear-gradient(135deg, #f12711, #f5af19); }
 /*9*/#profileName.nick-gradient-lavender, .message-author-name.nick-gradient-lavender { background-image: linear-gradient(135deg, #a18cd1, #fbc2eb); }
 /*10*/#profileName.nick-gradient-fire, .message-author-name.nick-gradient-fire { background-image: linear-gradient(135deg, #ff0000, #ff7300, #ffcc00); }
-/*11*/#profileName.nick-gradient-platinum, .message-author-name.nick-gradient-platinum { background-image: linear-gradient(135deg, #434343, #d7dde8, #ffffff, #757f9a); }
+/*11*/#profileName.nick-gradient-platinum, .message-author-name.nick-gradient-platinum { background-image: linear-gradient(135deg, #434343, #045cff, #343338, #757f9a); }
 /*12*/#profileName.nick-gradient-vintage, .message-author-name.nick-gradient-vintage { background-image: linear-gradient(135deg, #ca7345, #735135); }
 /*13*/#profileName.nick-gradient-bubblegum, .message-author-name.nick-gradient-bubblegum { background-image: linear-gradient(135deg, #ff00cc, #333399); }
 /*14*/#profileName.nick-gradient-galaxy, .message-author-name.nick-gradient-galaxy { background-image: linear-gradient(135deg, #654ea3, #eaafc8); }
 /*15*/#profileName.nick-gradient-mint, .message-author-name.nick-gradient-mint { background-image: linear-gradient(135deg, #00c6ff, #0072ff); }
+
+
+
 /*16*/#profileName.nick-glow-green, .message-author-name.nick-glow-green { color: #15803d; text-shadow: 0 0 2px #22c55e, 0 0 8px rgba(34, 197, 94, 0.55); }
 /*17*/#profileName.nick-glow-purple, .message-author-name.nick-glow-purple { color: #6b21a8; text-shadow: 0 0 2px #c084fc, 0 0 8px rgba(192, 132, 252, 0.55); }
 /*18*/#profileName.nick-glow-red, .message-author-name.nick-glow-red { color: #b91c1c; text-shadow: 0 0 2px #ef4444, 0 0 8px rgba(239, 68, 68, 0.55); }
@@ -6196,6 +6219,8 @@ body.viewing-other-profile .profile-photo-upload-btn {
 /*29*/#profileName.nick-glow-coral, .message-author-name.nick-glow-coral { color: #9f1239; text-shadow: 0 0 2px #ff6b81, 0 0 8px rgba(255, 107, 129, 0.55); }
 /*30*/#profileName.nick-glow-silver, .message-author-name.nick-glow-silver { color: #1f2937; text-shadow: 0 0 2px #9ca3af, 0 0 8px rgba(156, 163, 175, 0.55); }
 /*31*/#profileName.nick-glow-lime, .message-author-name.nick-glow-lime { color: #3f6212; text-shadow: 0 0 2px #84cc16, 0 0 8px rgba(132, 204, 22, 0.6); }
+
+
 /*32*/#profileName.nick-gradient-royal-purple, .message-author-name.nick-gradient-royal-purple { background-image: linear-gradient(135deg, #4b0082, #d80073); }
 /*33*/#profileName.nick-gradient-midnight-cyan, .message-author-name.nick-gradient-midnight-cyan { background-image: linear-gradient(135deg, #0f2027, #0083b0); }
 /*34*/#profileName.nick-gradient-deep-ruby, .message-author-name.nick-gradient-deep-ruby { background-image: linear-gradient(135deg, #580000, #b91d73); }

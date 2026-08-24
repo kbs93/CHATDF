@@ -1230,9 +1230,9 @@ function applyProfileMode(isOwner) {
     document.body.classList.remove("viewing-other-profile");
     if (reportBtn) reportBtn.style.display = "none";
 
-    const activeTab = document.querySelector('.profile-tab.active')?.dataset.tab || "info";
+    const isVipAberto = !document.getElementById("profileVip")?.classList.contains("d-none");
     if (editProfileCoverBtn) {
-      editProfileCoverBtn.style.display = (activeTab === "vip") ? "none" : "grid";
+      editProfileCoverBtn.style.display = isVipAberto ? "none" : "grid";
     }
 
     if (vipTabBtn) {

@@ -600,7 +600,7 @@ Portanto, a premissa está correta.*/
 // TESTE 2 : Validade de 3 horas  const validadeVip = Date.now() + 3 * 60 * 60 * 1000;
 // TESTE 3 : Validade de 3 dias   const validadeVip = Date.now() + 3 * 24 * 60 * 60 * 1000; 
     
-      const validadeVip = Date.now() + 3 * 60 * 1000;
+      const validadeVip = Date.now() + 1 * 60 * 1000;
       await updateDoc(refUser, {
         isVip: true,
         vipExpiresAt: validadeVip,
@@ -638,6 +638,19 @@ Portanto, a premissa está correta.*/
       }
 
       //showToast("Vantagens VIP salvas e aplicadas com sucesso!");
+ // 1. Fecha imediatamente todos os dropdowns/accordions abertos
+      document.querySelectorAll('.vip-custom-dropdown').forEach(d => d.classList.add('hidden'));
+
+      // 2. Transfere a visualização para a gaveta "Renovar" (Status do Plano)
+      const btnRenovar = document.querySelector('.vip-btn-card[data-target="gaveta-renovar"]');
+      if (btnRenovar) {
+        document.querySelectorAll(".vip-drawer-content").forEach(drawer => drawer.classList.add("hidden"));
+        document.querySelectorAll(".vip-btn-card").forEach(btn => btn.classList.remove("active"));
+        document.getElementById("gaveta-renovar")?.classList.remove("hidden");
+        btnRenovar.classList.add("active");
+      }
+
+      // 3. Atualiza os dados e trava os botões pelo tempo VIP
       const editName = document.getElementById("editName");
       const profileAvatar = document.getElementById("profileAvatar");
       inicializarPainelVipDinamico(editName?.value, profileAvatar?.src);
@@ -886,7 +899,7 @@ export function abrirPainelVip() {
   // 2. Troca os botões do cabeçalho
   if (vipBtn) vipBtn.classList.add("d-none");
   if (backBtn) backBtn.classList.remove("d-none");
-  if (editCoverBtn) editCoverBtn.style.display = "none";
+ if (editCoverBtn) editCoverBtn.style.setProperty("display", "none", "important");
   if (vipHeaderActionBtn) {
     vipHeaderActionBtn.classList.remove("d-none");
     vipHeaderActionBtn.style.display = "grid";
@@ -947,7 +960,7 @@ export function fecharPainelVip() {
   // 3. Restaura os botões do cabeçalho
   if (vipBtn) vipBtn.classList.remove("d-none");
   if (backBtn) backBtn.classList.add("d-none");
-  if (editCoverBtn) editCoverBtn.style.display = "grid";
+  if (editCoverBtn) editCoverBtn.style.setProperty("display", "grid", "important");
   if (vipHeaderActionBtn) {
     vipHeaderActionBtn.classList.add("d-none");
     vipHeaderActionBtn.style.display = "none";
@@ -988,7 +1001,7 @@ export function formatarAutorVipChat(msg = {}) {
   let fonteInline = "";
 
 const isVipMsg = msg.isVip === true || (tipoEfeito !== "solid" && tipoEfeito !== "none") || fonte !== "default" || moldura !== "none";
-const tagDiamante = isVipMsg ? `<i class="bi bi-gem" style="font-size: 13px; color: #01b1f7 !important; -webkit-text-fill-color: #01b1f7 !important; margin-left: 4px; vertical-align: middle; display: inline-block;"></i>` : "";
+const tagDiamante = isVipMsg ? `<i class="bi bi-gem" style="font-size: 13px; color: #01b1f7; -webkit-text-fill-color: #01b1f7; margin-left: 4px; vertical-align: middle; display: inline-block;"></i>` : "";
 
   if (tipoEfeito !== "solid" && tipoEfeito !== "none") {
     classeEfeito = `nick-${tipoEfeito}`;

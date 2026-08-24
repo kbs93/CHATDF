@@ -816,29 +816,25 @@ async function renderReply(msg) {
 
   const safeRepliedAvatar = d.photo || d.avatar || "./img/avatar.png";
 // borda lateral
-  return `
-<div class="quoted-reply-box ${classeEfeitoReply}"
+return `
+    <div class="quoted-reply-box ${classeEfeitoReply}"
       style="
-        ${classeEfeitoReply ? '' : `border-left: 4px solid ${color};`}
+        --reply-bar-color: ${color};
         display: inline-flex;
         flex-direction: row;
         align-items: flex-start;
         gap: 10px;
-        padding: 6px 10px;
         width: fit-content;
         max-width: 100%;
-        border-radius: 6px;
-        margin-bottom: 6px;
       ">
       <img src="${safeRepliedAvatar}" class="reply-user-avatar" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 2px;" onerror="this.src='./img/avatar.png'">
-  <div style="display: flex; flex-direction: column; overflow: hidden; flex-grow: 1; text-align: left;">
+      <div style="display: flex; flex-direction: column; overflow: hidden; flex-grow: 1; text-align: left;">
         <div class="quoted-header ${classeEfeitoReply}" style="${classeEfeitoReply ? '' : corInlineReply} ${fonteInlineReply} font-weight: 600; font-size: .97rem; text-align: left; width: fit-content; margin-bottom: 2px;">
           ${d.user}
         </div>
         <div style="display: flex; text-align: left; width: 100%;">
           ${content}
         </div>
-      </div>
       </div>
     </div>
   `;
