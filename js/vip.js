@@ -9,6 +9,22 @@ import { ref as rRef, update as rUpdate } from "https://www.gstatic.com/firebase
 window.__vipMENSAGEM_COR_SELECIONADA = "#333333";
 window.__vipNOME_COR_SELECIONADA = "#6f42c1";
 
+// Função auxiliar de fallback cirúrgico para evitar quebras em mobile
+function obterFallbackFonteVip(fonte) {
+  const cursivas = [
+    "Charm-Bold", "CherryBombOne", "EduAUVICWANTHand", "MeaCulpa", 
+    "PlaywriteBEVLG", "Praise", "RockSalt", "Tangerine", "Courgette", 
+    "Lobster", "Bangers", "Pacifico", "Satisfy"
+  ];
+  const serifadas = ["CinzelDecorative", "CaesarDressing", "Pridi", "Pridi-ExtraLight", "Pridi-SemiBold", "UnifrakturMaguntia"];
+
+  if (cursivas.includes(fonte)) return "cursive";
+  if (serifadas.includes(fonte)) return "serif";
+  return "sans-serif";
+}
+
+
+
 /* ========================================================================
    APLICAÇÃO VISUAL VIP (INFO / VISUALIZAÇÃO)
 ===================================================================== */
@@ -49,13 +65,10 @@ export function aplicarVisualVipCompleto(data = {}) {
     topName.style.color = data.vipNameColorSolid;
   }
 
-  // 2. Fonte
+// 2. Fonte
   if (temFonte) {
-    let herancaTipo = "sans-serif";
-    if (["Courgette", "Lobster", "Bangers", "Pacifico", "Satisfy"].includes(data.vipNameFont)) {
-      herancaTipo = "cursive";
-    }
-    topName.style.fontFamily = `'${data.vipNameFont}', ${herancaTipo}`;
+    const fallback = obterFallbackFonteVip(data.vipNameFont);
+    topName.style.fontFamily = `'${data.vipNameFont}', ${fallback}`;
   }
 
   // 3. Moldura
@@ -209,13 +222,10 @@ const valorEfeito = typeSelect ? typeSelect.value : "none";
     }
   }
 
-  if (fontSelect) {
+if (fontSelect) {
     if (fontSelect.value !== "default") {
-      let herancaTipo = "sans-serif";
-      if (["Courgette", "Lobster", "Bangers", "Pacifico", "Satisfy"].includes(fontSelect.value)) {
-        herancaTipo = "cursive";
-      }
-      topName.style.fontFamily = `'${fontSelect.value}', ${herancaTipo}`;
+      const fallback = obterFallbackFonteVip(fontSelect.value);
+      topName.style.fontFamily = `'${fontSelect.value}', ${fallback}`;
     } else {
       topName.style.fontFamily = "";
     }
@@ -986,9 +996,9 @@ const tagDiamante = isVipMsg ? `<i class="bi bi-gem" style="font-size: 13px; col
     corInline = `color: ${corSolida};`;
   }
 
-  if (fonte !== "default") {
-    let herancaTipo = ["Courgette", "Lobster", "Bangers", "Pacifico", "Satisfy"].includes(fonte) ? "cursive" : "sans-serif";
-    fonteInline = `font-family: '${fonte}', ${herancaTipo};`;
+if (fonte !== "default") {
+    const fallback = obterFallbackFonteVip(fonte);
+    fonteInline = `font-family: '${fonte}', ${fallback};`;
   }
 
   return { classeEfeito, corInline, fonteInline, tagDiamante, moldura };

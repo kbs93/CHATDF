@@ -815,7 +815,7 @@ async function renderReply(msg) {
   }
 
   const safeRepliedAvatar = d.photo || d.avatar || "./img/avatar.png";
-
+// borda lateral
   return `
 <div class="quoted-reply-box ${classeEfeitoReply}"
       style="

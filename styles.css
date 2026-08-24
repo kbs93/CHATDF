@@ -57,39 +57,174 @@ body.chat-loading .message {
 /* ========================================================================= 
    MAPEAMENTO DE FONTES LOCAIS EXCLUSIVAS VIP (MÉTODO LOCAL SEGURO)
    ========================================================================= */
-@font-face {font-family: 'BebasNeue';src: url('./fonts/BebasNeue-Regular.ttf') format('truetype');}
-@font-face {font-family: 'RubikVinyl';src: url('./fonts/RubikVinyl-Regular.ttf') format('truetype');}
-@font-face {font-family: 'Lobster';src: url('./fonts/Lobster-Regular.ttf') format('truetype');}
-@font-face {font-family: 'Barrio';src: url('./fonts/Barrio-Regular.ttf') format('truetype');}
-@font-face {font-family: 'BraahOne';src: url('./fonts/BraahOne-Regular.ttf') format('truetype');}
-@font-face {font-family: 'BungeeShade';src: url('./fonts/BungeeShade-Regular.ttf') format('truetype');}
-@font-face {font-family: 'CaesarDressing';src: url('./fonts/CaesarDressing-Regular.ttf') format('truetype');}
-@font-face {font-family: 'Charm-Bold';src: url('./fonts/Charm-Bold.ttf') format('truetype');}
-@font-face {font-family: 'CherryBombOne';src: url('./fonts/CherryBombOne-Regular.ttf') format('truetype');}
-@font-face {font-family: 'CinzelDecorative';src: url('./fonts/CinzelDecorative-Regular.ttf') format('truetype');}
-@font-face {font-family: 'Cuprum-Italic';src: url('./fonts/Cuprum-Italic-VariableFont_wght.ttf') format('truetype');}
-@font-face {font-family: 'EduAUVICWANTHand';src: url('./fonts/EduAUVICWANTHand-VariableFont_wght.ttf') format('truetype');}
-@font-face {font-family: 'FasterOne';src: url('./fonts/FasterOne-Regular.ttf') format('truetype');}
-@font-face {font-family: 'GeostarFill';src: url('./fonts/GeostarFill-Regular.ttf') format('truetype');}
-@font-face {font-family: 'Kablammo';src: url('./fonts/Kablammo-Regular-VariableFont_MORF.ttf') format('truetype');}
-@font-face {font-family: 'KumarOneOutline';src: url('./fonts/KumarOneOutline-Regular.ttf') format('truetype');}
-@font-face {font-family: 'LibertinusKeyboard';src: url('./fonts/LibertinusKeyboard-VariableFont_wght.ttf') format('truetype');}
-@font-face {font-family: 'Limelight';src: url('./fonts/Limelight-Regular.ttf') format('truetype');}
-@font-face {font-family: 'ManufacturingConsent';src: url('./fonts/ManufacturingConsent-Regular.ttf') format('truetype');}
-@font-face {font-family: 'Matangi';src: url('./fonts/Matangi-VariableFont_wght.ttf') format('truetype');}
-@font-face {font-family: 'Matemasie';src: url('./fonts/Matemasie-Regular.ttf') format('truetype');}
-@font-face {font-family: 'MeaCulpa';src: url('./fonts/MeaCulpa-Regular.ttf') format('truetype');}
-@font-face {font-family: 'PlaywriteBEVLG';src: url('./fonts/PlaywriteBEVLG-VariableFont_wght.ttf') format('truetype');}
-@font-face {font-family: 'Praise';src: url('./fonts/Praise-Regular.ttf') format('truetype');}
-@font-face {font-family: 'Pridi';src: url('./fonts/Pridi-Medium.ttf') format('truetype');}
-@font-face {font-family: 'Pridi-ExtraLight';src: url('./fonts/Pridi-ExtraLight.ttf') format('truetype');}
-@font-face {font-family: 'Pridi-SemiBold';src: url('./fonts/Pridi-SemiBold.ttf') format('truetype');}
-@font-face {font-family: 'RockSalt';src: url('./fonts/RockSalt-Regular.ttf') format('truetype');}
-@font-face {font-family: 'Tangerine';src: url('./fonts/Tangerine-Bold.ttf') format('truetype');}
-@font-face {font-family: 'TASAExplorer';src: url('./fonts/TASAExplorer-VariableFont_wght.ttf') format('truetype');}
-@font-face {font-family: 'TiltPrism';src: url('./fonts/TiltPrism-Regular-VariableFont_XROT,YROT.ttf') format('truetype');}
-@font-face {font-family: 'UnifrakturMaguntia';src: url('./fonts/UnifrakturMaguntia-Regular.ttf') format('truetype');}
-@font-face {font-family: 'Urbanist-Italic';src: url('./fonts/Urbanist-Italic-VariableFont_wght.ttf') format('truetype');}
+/* ========================================================================= 
+   MAPEAMENTO DE FONTES LOCAIS EXCLUSIVAS VIP (COM FONT-DISPLAY SWAP)
+   ========================================================================= */
+@font-face {
+  font-family: 'BebasNeue';
+  src: url('./fonts/BebasNeue-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'RubikVinyl';
+  src: url('./fonts/RubikVinyl-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gamaa';
+  src: url('./fonts/GaMaamli-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Barrio';
+  src: url('./fonts/Barrio-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'BraahOne';
+  src: url('./fonts/BraahOne-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'BungeeShade';
+  src: url('./fonts/BungeeShade-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'CaesarDressing';
+  src: url('./fonts/CaesarDressing-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Charm-Bold';
+  src: url('./fonts/Charm-Bold.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'CherryBombOne';
+  src: url('./fonts/CherryBombOne-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'CinzelDecorative';
+  src: url('./fonts/CinzelDecorative-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cuprum-Italic';
+  src: url('./fonts/Cuprum-Italic-VariableFont_wght.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EduAUVICWANTHand';
+  src: url('./fonts/EduAUVICWANTHand-VariableFont_wght.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'FasterOne';
+  src: url('./fonts/FasterOne-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GeostarFill';
+  src: url('./fonts/GeostarFill-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Kablammo';
+  src: url('./fonts/Kablammo-Regular-VariableFont_MORF.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'KumarOneOutline';
+  src: url('./fonts/KumarOneOutline-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'LibertinusKeyboard';
+  src: url('./fonts/LibertinusKeyboard-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Limelight';
+  src: url('./fonts/Limelight-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ManufacturingConsent';
+  src: url('./fonts/ManufacturingConsent-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Matangi';
+  src: url('./fonts/Matangi-VariableFont_wght.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Matemasie';
+  src: url('./fonts/Matemasie-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'MeaCulpa';
+  src: url('./fonts/MeaCulpa-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'PlaywriteBEVLG';
+  src: url('./fonts/PlaywriteBEVLG-VariableFont_wght.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Praise';
+  src: url('./fonts/Praise-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pridi';
+  src: url('./fonts/Pridi-Medium.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pridi-ExtraLight';
+  src: url('./fonts/Pridi-ExtraLight.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pridi-SemiBold';
+  src: url('./fonts/Pridi-SemiBold.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'RockSalt';
+  src: url('./fonts/RockSalt-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Tangerine';
+  src: url('./fonts/Tangerine-Bold.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'TASAExplorer';
+  src: url('./fonts/TASAExplorer-VariableFont_wght.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'TiltPrism';
+  src: url('./fonts/TiltPrism-Regular-VariableFont_XROT,YROT.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'UnifrakturMaguntia';
+  src: url('./fonts/UnifrakturMaguntia-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Urbanist-Italic';
+  src: url('./fonts/Urbanist-Italic-VariableFont_wght.ttf') format('truetype');
+  font-display: swap;
+}
 
 /* ================== HERO =================== */
 #background-animation {
@@ -5868,19 +6003,19 @@ body.viewing-other-profile .profile-photo-upload-btn {
 /*49*/ #profileName.nick-gradient-night-teal, .message-author-name.nick-gradient-night-teal, .quoted-header.nick-gradient-night-teal { background-image: linear-gradient(135deg, #00223e, #1d976c); }
 /*50*/ #profileName.nick-gradient-cyber-red, .message-author-name.nick-gradient-cyber-red, .quoted-header.nick-gradient-cyber-red { background-image: linear-gradient(135deg, #430007, #c8102e, #4a00e0); }
 /*51*/ #profileName.nick-gradient-dark-chrome, .message-author-name.nick-gradient-dark-chrome, .quoted-header.nick-gradient-dark-chrome { background-image: linear-gradient(135deg, #161616, #434343, #161616); font-weight: bold; }
-/*52*/ #profileName.nick-gradient-neon, .message-author-name.nick-gradient-neon, .quoted-header.nick-gradient-neon { background-image: linear-gradient(90deg, #ff007f, #39ff14, #00f0ff, #ff007f); background-size: 300% 100%; animation: nameFlowAnim 10s linear infinite; filter: drop-shadow(0px 0px 3px rgba(57, 255, 20, 0.6)); }
-/*53*/ #profileName.nick-anim-rainbow, .message-author-name.nick-anim-rainbow, .quoted-header.nick-anim-rainbow { background-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet, red); background-size: 300% 100%; animation: nameFlowAnim 8s linear infinite; filter: drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.5)); }
-/*54*/ #profileName.nick-anim-aurora, .message-author-name.nick-anim-aurora, .quoted-header.nick-anim-aurora { background-image: linear-gradient(90deg, #0575e6, #00f260, #0575e6); background-size: 200% 100%; animation: nameFlowAnim 5s ease infinite; filter: drop-shadow(0px 0px 3px rgba(0, 242, 96, 0.5)); }
-/*55*/ #profileName.nick-anim-magma, .message-author-name.nick-anim-magma, .quoted-header.nick-anim-magma { background-image: linear-gradient(90deg, #f12711, #f5af19, #f12711); background-size: 200% 100%; animation: nameFlowAnim 5s ease infinite; filter: drop-shadow(0px 0px 3px rgba(241, 39, 17, 0.7)); }
-/*56*/ #profileName.nick-anim-matrix, .message-author-name.nick-anim-matrix, .quoted-header.nick-anim-matrix { background-image: linear-gradient(90deg, #00FF00, #003300, #00FF00); background-size: 200% 100%; animation: nameFlowAnim 4s linear infinite; -webkit-text-stroke: 0.5px #003300; }
-/*57*/ #profileName.nick-anim-electric, .message-author-name.nick-anim-electric, .quoted-header.nick-anim-electric { background-image: linear-gradient(90deg, #00ffff, #ffffff, #0072ff, #00ffff); background-size: 300% 100%; animation: nameFlowAnim 5s linear infinite; filter: drop-shadow(0px 0px 4px rgba(0, 240, 255, 0.8)); }
-/*58*/ #profileName.nick-anim-gold-flow, .message-author-name.nick-anim-gold-flow, .quoted-header.nick-anim-gold-flow { background-image: linear-gradient(90deg, #bf953f, #aa771c, #fcf6ba, #bf953f); background-size: 300% 100%; animation: nameFlowAnim 5s linear infinite; font-weight: bold; -webkit-text-stroke: 0.3px #543d0c; }
-/*59*/ #profileName.nick-anim-ice, .message-author-name.nick-anim-ice, .quoted-header.nick-anim-ice { background-image: linear-gradient(90deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa); background-size: 300% 100%; animation: nameFlowAnim 4s ease infinite; filter: drop-shadow(0px 0px 3px rgba(128, 222, 234, 0.6)); }
-/*60*/ #profileName.nick-anim-vampire, .message-author-name.nick-anim-vampire, .quoted-header.nick-anim-vampire { background-image: linear-gradient(90deg, #4a0000, #ff0000, #4a0000); background-size: 200% 100%; animation: nameFlowAnim 5s ease-in-out infinite; -webkit-text-stroke: 0.5px #110000; }
-/*61*/ #profileName.nick-anim-candy, .message-author-name.nick-anim-candy, .quoted-header.nick-anim-candy { background-image: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c); background-size: 200% 100%; animation: nameFlowAnim 3s linear infinite; filter: drop-shadow(0px 0px 3px rgba(255, 126, 179, 0.6)); }
-/*62*/ #profileName.nick-anim-toxic, .message-author-name.nick-anim-toxic, .quoted-header.nick-anim-toxic { background-image: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f); background-size: 200% 100%; animation: nameFlowAnim 5s linear infinite; filter: drop-shadow(0px 0px 4px rgba(168, 255, 120, 0.7)); }
-/*63*/ #profileName.nick-anim-miami, .message-author-name.nick-anim-miami, .quoted-header.nick-anim-miami { background-image: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe); background-size: 200% 100%; animation: nameFlowAnim 5s ease-in-out infinite; filter: drop-shadow(0px 0px 3px rgba(0, 242, 254, 0.6)); }
-/*64*/ #profileName.nick-anim-phoenix, .message-author-name.nick-anim-phoenix, .quoted-header.nick-anim-phoenix { background-image: linear-gradient(90deg, #f857a6, #ff5858, #f857a6); background-size: 200% 100%; animation: nameFlowAnim 2.5s ease infinite; filter: drop-shadow(0px 0px 4px rgba(255, 88, 88, 0.6)); }
+/*52*/ #profileName.nick-gradient-neon, .message-author-name.nick-gradient-neon, .quoted-header.nick-gradient-neon { background-image: linear-gradient(90deg, #ff007f, #39ff14, #00f0ff, #ff007f); background-size: 300% 100%; }
+/*53*/ #profileName.nick-anim-rainbow, .message-author-name.nick-anim-rainbow, .quoted-header.nick-anim-rainbow { background-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet, red); background-size: 300% 100%;}
+/*54*/ #profileName.nick-anim-aurora, .message-author-name.nick-anim-aurora, .quoted-header.nick-anim-aurora { background-image: linear-gradient(90deg, #0575e6, #00f260, #0575e6); background-size: 200% 100%;}
+/*55*/ #profileName.nick-anim-magma, .message-author-name.nick-anim-magma, .quoted-header.nick-anim-magma { background-image: linear-gradient(90deg, #f12711, #f5af19, #f12711); background-size: 200% 100%;}
+/*56*/ #profileName.nick-anim-matrix, .message-author-name.nick-anim-matrix, .quoted-header.nick-anim-matrix { background-image: linear-gradient(90deg, #00FF00, #003300, #00FF00); background-size: 200% 100%;}
+/*57*/ #profileName.nick-anim-electric, .message-author-name.nick-anim-electric, .quoted-header.nick-anim-electric { background-image: linear-gradient(90deg, #00ffff, #ffffff, #0072ff, #00ffff); background-size: 300% 100%; }
+/*58*/ #profileName.nick-anim-gold-flow, .message-author-name.nick-anim-gold-flow, .quoted-header.nick-anim-gold-flow { background-image: linear-gradient(90deg, #bf953f, #aa771c, #fcf6ba, #bf953f); background-size: 300% 100%;}
+/*59*/ #profileName.nick-anim-ice, .message-author-name.nick-anim-ice, .quoted-header.nick-anim-ice { background-image: linear-gradient(90deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa); background-size: 300% 100%;}
+/*60*/ #profileName.nick-anim-vampire, .message-author-name.nick-anim-vampire, .quoted-header.nick-anim-vampire { background-image: linear-gradient(90deg, #4a0000, #ff0000, #4a0000); background-size: 200% 100%;}
+/*61*/ #profileName.nick-anim-candy, .message-author-name.nick-anim-candy, .quoted-header.nick-anim-candy { background-image: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c); background-size: 200% 100%; }
+/*62*/ #profileName.nick-anim-toxic, .message-author-name.nick-anim-toxic, .quoted-header.nick-anim-toxic { background-image: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f); background-size: 200% 100%; }
+/*63*/ #profileName.nick-anim-miami, .message-author-name.nick-anim-miami, .quoted-header.nick-anim-miami { background-image: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe); background-size: 200% 100%; }
+/*64*/ #profileName.nick-anim-phoenix, .message-author-name.nick-anim-phoenix, .quoted-header.nick-anim-phoenix { background-image: linear-gradient(90deg, #f857a6, #ff5858, #f857a6); background-size: 200% 100%; }
 
 @keyframes nameFlowAnim {
   0% {background-position: 0% 50%;}
@@ -5891,11 +6026,12 @@ body.viewing-other-profile .profile-photo-upload-btn {
   display: inline-block;
 }
 
-/* Borda do Reply herda degradê e neon quando o autor citado for VIP */
+/* Borda lateral, do Reply herda degradê e neon quando o autor citado for VIP */
 .quoted-reply-box[class*="nick-gradient-"],
 .quoted-reply-box[class*="nick-anim-"] {
-  border-left: 4px solid transparent;
+  border-left: 5px solid transparent;
   border-image-slice: 1;
+  
 }
 
 .quoted-reply-box.nick-gradient-cotton { border-image-source: linear-gradient(135deg, #ff9a9e, #fecfef); }
@@ -5962,24 +6098,6 @@ body.viewing-other-profile .profile-photo-upload-btn {
 .quoted-reply-box.nick-anim-toxic { border-image-source: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f); }
 .quoted-reply-box.nick-anim-miami { border-image-source: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe); }
 .quoted-reply-box.nick-anim-phoenix { border-image-source: linear-gradient(90deg, #f857a6, #ff5858, #f857a6); }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -6098,19 +6216,19 @@ body.viewing-other-profile .profile-photo-upload-btn {
 /*49*/#profileName.nick-gradient-night-teal, .message-author-name.nick-gradient-night-teal { background-image: linear-gradient(135deg, #00223e, #1d976c); }
 /*50*/#profileName.nick-gradient-cyber-red, .message-author-name.nick-gradient-cyber-red { background-image: linear-gradient(135deg, #430007, #c8102e, #4a00e0); }
 /*51*/#profileName.nick-gradient-dark-chrome, .message-author-name.nick-gradient-dark-chrome { background-image: linear-gradient(135deg, #161616, #434343, #161616); font-weight: bold; }
-/*52*/#profileName.nick-gradient-neon, .message-author-name.nick-gradient-neon { background-image: linear-gradient(90deg, #ff007f, #39ff14, #00f0ff, #ff007f); background-size: 300% 100%; animation: nameFlowAnim 10s linear infinite; filter: drop-shadow(0px 0px 3px rgba(57, 255, 20, 0.6)); }
-/*53*/#profileName.nick-anim-rainbow, .message-author-name.nick-anim-rainbow { background-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet, red); background-size: 300% 100%; animation: nameFlowAnim 8s linear infinite; filter: drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.5)); }
-/*54*/#profileName.nick-anim-aurora, .message-author-name.nick-anim-aurora { background-image: linear-gradient(90deg, #0575e6, #00f260, #0575e6); background-size: 200% 100%; animation: nameFlowAnim 5s ease infinite; filter: drop-shadow(0px 0px 3px rgba(0, 242, 96, 0.5)); }
-/*55*/#profileName.nick-anim-magma, .message-author-name.nick-anim-magma { background-image: linear-gradient(90deg, #f12711, #f5af19, #f12711); background-size: 200% 100%; animation: nameFlowAnim 5s ease infinite; filter: drop-shadow(0px 0px 3px rgba(241, 39, 17, 0.7)); }
-/*56*/#profileName.nick-anim-matrix, .message-author-name.nick-anim-matrix { background-image: linear-gradient(90deg, #00FF00, #003300, #00FF00); background-size: 200% 100%; animation: nameFlowAnim 4s linear infinite; -webkit-text-stroke: 0.5px #003300; }
-/*57*/#profileName.nick-anim-electric, .message-author-name.nick-anim-electric { background-image: linear-gradient(90deg, #00ffff, #ffffff, #0072ff, #00ffff); background-size: 300% 100%; animation: nameFlowAnim 5s linear infinite; filter: drop-shadow(0px 0px 4px rgba(0, 240, 255, 0.8)); }
-/*58*/#profileName.nick-anim-gold-flow, .message-author-name.nick-anim-gold-flow { background-image: linear-gradient(90deg, #bf953f, #aa771c, #fcf6ba, #bf953f); background-size: 300% 100%; animation: nameFlowAnim 5s linear infinite; font-weight: bold; -webkit-text-stroke: 0.3px #543d0c; }
-/*59*/#profileName.nick-anim-ice, .message-author-name.nick-anim-ice { background-image: linear-gradient(90deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa); background-size: 300% 100%; animation: nameFlowAnim 4s ease infinite; filter: drop-shadow(0px 0px 3px rgba(128, 222, 234, 0.6)); }
-/*60*/#profileName.nick-anim-vampire, .message-author-name.nick-anim-vampire { background-image: linear-gradient(90deg, #4a0000, #ff0000, #4a0000); background-size: 200% 100%; animation: nameFlowAnim 5s ease-in-out infinite; -webkit-text-stroke: 0.5px #110000; }
-/*61*/#profileName.nick-anim-candy, .message-author-name.nick-anim-candy { background-image: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c); background-size: 200% 100%; animation: nameFlowAnim 3s linear infinite; filter: drop-shadow(0px 0px 3px rgba(255, 126, 179, 0.6)); }
-/*62*/#profileName.nick-anim-toxic, .message-author-name.nick-anim-toxic { background-image: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f); background-size: 200% 100%; animation: nameFlowAnim 5s linear infinite; filter: drop-shadow(0px 0px 4px rgba(168, 255, 120, 0.7)); }
-/*63*/#profileName.nick-anim-miami, .message-author-name.nick-anim-miami { background-image: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe); background-size: 200% 100%; animation: nameFlowAnim 5s ease-in-out infinite; filter: drop-shadow(0px 0px 3px rgba(0, 242, 254, 0.6)); }
-/*64*/#profileName.nick-anim-phoenix, .message-author-name.nick-anim-phoenix { background-image: linear-gradient(90deg, #f857a6, #ff5858, #f857a6); background-size: 200% 100%; animation: nameFlowAnim 2.5s ease infinite; filter: drop-shadow(0px 0px 4px rgba(255, 88, 88, 0.6)); }
+/*52*/#profileName.nick-gradient-neon, .message-author-name.nick-gradient-neon { background-image: linear-gradient(90deg, #ff007f, #39ff14, #00f0ff, #ff007f); background-size: 300% 100%; }
+/*53*/#profileName.nick-anim-rainbow, .message-author-name.nick-anim-rainbow { background-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet, red); background-size: 300% 100%;}
+/*54*/#profileName.nick-anim-aurora, .message-author-name.nick-anim-aurora { background-image: linear-gradient(90deg, #0575e6, #00f260, #0575e6); background-size: 200% 100%;filter: drop-shadow(0px 0px 3px rgba(0, 242, 96, 0.5)); }
+/*55*/#profileName.nick-anim-magma, .message-author-name.nick-anim-magma { background-image: linear-gradient(90deg, #f12711, #f5af19, #f12711); background-size: 200% 100%;filter: drop-shadow(0px 0px 3px rgba(241, 39, 17, 0.7)); }
+/*56*/#profileName.nick-anim-matrix, .message-author-name.nick-anim-matrix { background-image: linear-gradient(90deg, #00FF00, #003300, #00FF00); background-size: 200% 100%; -webkit-text-stroke: 0.5px #003300; }
+/*57*/#profileName.nick-anim-electric, .message-author-name.nick-anim-electric { background-image: linear-gradient(90deg, #00ffff, #ffffff, #0072ff, #00ffff); background-size: 300% 100%; }
+/*58*/#profileName.nick-anim-gold-flow, .message-author-name.nick-anim-gold-flow { background-image: linear-gradient(90deg, #bf953f, #aa771c, #fcf6ba, #bf953f); background-size: 300% 100%; font-weight: bold; -webkit-text-stroke: 0.3px #543d0c; }
+/*59*/#profileName.nick-anim-ice, .message-author-name.nick-anim-ice { background-image: linear-gradient(90deg, #e0f7fa, #80deea, #00bcd4, #e0f7fa); background-size: 300% 100%;}
+/*60*/#profileName.nick-anim-vampire, .message-author-name.nick-anim-vampire { background-image: linear-gradient(90deg, #4a0000, #ff0000, #4a0000); background-size: 200% 100%; -webkit-text-stroke: 0.5px #110000; }
+/*61*/#profileName.nick-anim-candy, .message-author-name.nick-anim-candy { background-image: linear-gradient(90deg, #ff758c, #ff7eb3, #ff758c); background-size: 200% 100%;}
+/*62*/#profileName.nick-anim-toxic, .message-author-name.nick-anim-toxic { background-image: linear-gradient(90deg, #56ab2f, #a8ff78, #56ab2f); background-size: 200% 100%;}
+/*63*/#profileName.nick-anim-miami, .message-author-name.nick-anim-miami { background-image: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe); background-size: 200% 100%;}
+/*64*/#profileName.nick-anim-phoenix, .message-author-name.nick-anim-phoenix { background-image: linear-gradient(90deg, #f857a6, #ff5858, #f857a6); background-size: 200% 100%;}
 
 /* MOTOR DE RENDERIZAÇÃO E MOVIMENTO DOS DEGRADÊS ANIMADOS VIP */
 @keyframes bannerMoveEngine {
