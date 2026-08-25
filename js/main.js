@@ -111,9 +111,13 @@ function closeAllPanels() {
   overlay?.classList.remove("open");
 }
 
-const attachmentActions = {
+  const attachmentActions = {
   users: () => {
     openPanel("users");
+  },
+  rooms: () => {
+    const modal = document.getElementById("roomsModal");
+    modal?.classList.remove("hidden");
   },
   profile: async () => {
     const user = auth.currentUser;
@@ -638,6 +642,29 @@ const feedbackText = document.getElementById("feedbackText");
 document.getElementById("cancelFeedback")?.addEventListener("click", () => {
   document.getElementById("feedbackModal")?.classList.add("hidden");
 });
+// Troca de Salas rapida
+document.getElementById("closeRoomsModal")?.addEventListener("click", () => {
+  document.getElementById("roomsModal")?.classList.add("hidden");
+});
+
+document.querySelectorAll(".btn-change-room").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const targetRoom = btn.getAttribute("data-room");
+    if (!targetRoom) return;
+
+    if (appState.currentRoom && appState.currentRoom.toLowerCase() === targetRoom.toLowerCase()) {
+      showToast("Você já está nesta sala.");
+      document.getElementById("roomsModal")?.classList.add("hidden");
+      return;
+    }
+
+    window.location.href = `chat.html?sala=${encodeURIComponent(targetRoom)}`;
+  });
+});
+
+
+
+
 
 document.getElementById("sendFeedback")?.addEventListener("click", async () => {
   const text = feedbackText.value.trim();

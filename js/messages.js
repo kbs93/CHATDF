@@ -45,7 +45,9 @@ const ROOM_ALIASES = {
 "Lugares para sair": "lugares",
 "Futebol": "futebol",
 "Eventos": "eventos",
-"Entretenimento": "entretenimento"
+"Entretenimento": "entretenimento",
+"Games":"games",
+"Consurso Publico":"concurso",
 };
 
 /*====================================================================================================
