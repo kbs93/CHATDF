@@ -4684,8 +4684,8 @@ do botao lapis
   .profile-editor-avatar-grid {
     height: 300px;
     overflow-y: auto;
-    grid-template-columns: repeat(4, 68px);
-    gap: 10px 14px;
+    grid-template-columns: repeat(5, 60px);
+    gap: 10px 10px;
   }
 
   .profile-editor-avatar-grid img {
@@ -4698,6 +4698,16 @@ do botao lapis
     min-width: 90px;
     flex-shrink: 0;
   }
+}
+
+@media (max-width: 450px) {
+    .profile-editor-avatar-grid {
+    height: 300px;
+    overflow-y: auto;
+    grid-template-columns: repeat(5, 60px);
+    gap: 10px 10px;
+  }
+
 }
 
 /*==================================================================================*/

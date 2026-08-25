@@ -1136,6 +1136,10 @@ window.openMainProfilePanel = async (userId) => {
             profileCoverEl.style.background = bannerColor;
           }
         }
+        // Garante que o botão do lápis apareça imediatamente ao carregar o perfil do dono
+        if (isOwner && editProfileCoverBtn) {
+          editProfileCoverBtn.style.display = "grid";
+        }
       }
 
       if (profileEditorBannerPreview) profileEditorBannerPreview.style.background = bannerColor;
@@ -1262,11 +1266,13 @@ function applyProfileMode(isOwner) {
       editCity?.removeAttribute("disabled");
     } else {
       if (uploadPhotoBtn) {
-        uploadPhotoBtn.style.opacity = "0.01";
+        uploadPhotoBtn.classList.remove("hidden");
+        uploadPhotoBtn.style.opacity = "0.45";
         uploadPhotoBtn.style.cursor = "not-allowed";
       }
       if (editProfileCoverBtn) {
-        editProfileCoverBtn.style.opacity = "0.01";
+        editProfileCoverBtn.style.display = "grid";
+        editProfileCoverBtn.style.opacity = "0.45";
         editProfileCoverBtn.style.cursor = "not-allowed";
       }
     }
@@ -1522,7 +1528,7 @@ openAvatarPickerBtn?.addEventListener("click", (e) => {
   profileEditorBannerPreview?.classList.add("hidden");
   profileEditorBannerColors?.classList.add("hidden");
   profileEditorAvatarArea?.classList.remove("hidden");
-  carregarCategoria("eles");
+  carregarCategoria("aleatorios");
 });
 
 // Motor Multiavatar
@@ -1662,7 +1668,7 @@ document.querySelectorAll(".profile-avatar-cat").forEach(botao => {
 });
 
 window.renderProfileAvatarGrid = function () {
-  carregarCategoria("eles");
+  carregarCategoria("aleatorios");
 };
 
 function perfilEstaCompleto() {
