@@ -7,7 +7,7 @@ import { initStickerPanel } from "./stickers-panel.js";
 import { auth, db, rtdb } from "./firebase-config.js";
 import { initUsersPanel } from "./users-panel.js";
 import { updateProfile } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { animations } from "./animations.js";
+
 import { ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
@@ -442,7 +442,7 @@ function setupChat() {
   const sendBtn = document.getElementById("sendBtn");
   const emojiBtn = document.getElementById("emojiBtn");
   const stickerBtn = document.getElementById("stickerBtn");
-  const animBtn = document.getElementById("animBtn");
+
   const attachBtn = document.getElementById("attachBtn");
   const openOnlineUsersBtn = document.getElementById("openOnlineUsers");
   overlay = document.getElementById("onlineOverlay");
@@ -485,12 +485,7 @@ function setupChat() {
     }
   });
 
-  animBtn?.addEventListener("click", () => {
-    if (window.innerWidth <= 768) {
-      openUIPanel("animations");
-      return;
-    }
-  });
+
 
   attachBtn?.addEventListener("click", (e) => {
     e.preventDefault();
@@ -2010,19 +2005,7 @@ window.addEventListener("load", () => {
   if (heroAnimation) createPhotoGrid();
 });
 
-window.renderizarEmojiLottie = function (containerId, caminhoJson) {
-  if (typeof lottie === "undefined") {
-    console.warn("Biblioteca Lottie não carregada no HTML.");
-    return;
-  }
-  lottie.loadAnimation({
-    container: document.getElementById(containerId),
-    renderer: 'svg',
-    loop: true,
-    autoplay: true,
-    path: caminhoJson
-  });
-};
+
 
 // ========================== CROP & ZOOM FOTO DE PERFIL ==========================
 window.blobFotoTemporaria = null;

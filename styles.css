@@ -2133,7 +2133,7 @@ emoji-picker {
 
 /* edita sticker Figurinhas no chat */
 .sticker-img {
-  width: 65px;
+  width: 38px;
   max-width: 35vw;
   border-radius: 12px;
   display: block;
@@ -2449,122 +2449,7 @@ emoji-picker {
   }
 }
 
-/* ================================ categoria do painel de animação dentro do sticker ==================================*/
-.anim-panel {
-  height: 320px;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
 
-.anim-categories {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  white-space: nowrap;
-  scroll-behavior: smooth;
-  padding-bottom: 6px;
-  flex-shrink: 0;
-  -webkit-overflow-scrolling: touch;
-}
-
-.anim-cat {
-  border: none;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  background: #4c03f71f;
-  cursor: pointer;
-  flex-shrink: 0;
-  min-height: 30px;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.anim-cat.active {
-  background: #4c03f7;
-  color: #fff;
-}
-
-#animList .sticker-img:hover {
-  transform: scale(1.08);
-}
-
-/*LISTA DE ANIMAÇÕES */
-#animList {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 48px);
-  gap: 10px;
-  justify-content: center;
-  padding: 8px 10px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  min-height: 0;
-  -webkit-overflow-scrolling: touch;
-}
-
-/*edita a largura e altura dos stickers no chat*/
-#animList .sticker-img {
-  display: inline-block;
-  width: 46px;
-  height: 46px;
-  margin: 0;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  object-fit: cover;
-}
-
-#animList .sticker-img:hover {
-  transform: scale(1.08);
-}
-
-/* SCROLL DA ABA ANIMAÇÕES */
-#animList::-webkit-scrollbar {
-  width: 4px;
-}
-
-#animList::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-#animList::-webkit-scrollbar-thumb {
-  background: #6d34f13d;
-  border-radius: 10px;
-}
-
-#animList::-webkit-scrollbar-thumb:hover {
-  background: #2f00c8;
-}
-
-/* ===================== CONTROLE CORRETO DAS CATEGORIAS ===================== */
-.sticker-categories {
-  display: none;
-}
-
-.expr-tab[data-mode="sticker"].active~.sticker-categories:not(.anim-categories),
-.expr-tab[data-mode="anim"].active~.sticker-categories.anim-categories {
-  display: flex;
-}
-
-/* ===================== AJUSTES FINOS – MOBILE (SEM QUEBRAR SCROLL) ===================== */
-@media (max-width: 480px) {
-
-  #anim-Panel,
-  .anim-panel {
-    height: 45vh;
-    max-height: 280px;
-  }
-
-  #animList img {
-    width: 57px;
-    height: 57px;
-  }
-
-  #animList {
-    grid-template-columns: repeat(auto-fit, 57px);
-  }
-}
 
 /* ================ ============================== PRÉVIA DE VÍDEOS YOUTUBE ===================================== */
 .youtube-preview {

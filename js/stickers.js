@@ -1,71 +1,71 @@
-// stickers.js — lista de figurinhas estáticas (sem GIFs)
+// stickers.js — lista de figurinhas estáticas servidas via CDN jsDelivr
+const BASE_CDN = "https://cdn.jsdelivr.net/gh/kbs93/chat-emoji@main/emojis";
+
 export const stickers = {
-
-
   Teste1: [
-      "stickers/d1.webp",
-      "stickers/d2.webp",
-      "stickers/d3.webp",
-      "stickers/d4.webp",
-      "stickers/d5.webp",
-      
+    `${BASE_CDN}/e1.png`,
+    `${BASE_CDN}/e2.png`,
+    `${BASE_CDN}/e3.png`,
+    `${BASE_CDN}/e4.png`,
+    `${BASE_CDN}/e5.png`,
+    `${BASE_CDN}/e6.png`,
+    `${BASE_CDN}/e7.png`,
+    `${BASE_CDN}/e8.png`,
+    `${BASE_CDN}/e9.png`,
+    `${BASE_CDN}/e10.png`,
+    `${BASE_CDN}/e11.png`,
+    `${BASE_CDN}/e12.png`,
+    `${BASE_CDN}/e13.png`,
+    `${BASE_CDN}/e14.png`,
+    `${BASE_CDN}/e15.png`,
+    `${BASE_CDN}/e16.png`,
+    `${BASE_CDN}/e17.png`,
+    `${BASE_CDN}/e18.png`,
+    `${BASE_CDN}/e19.png`,
+    `${BASE_CDN}/e20.png`,
+    `${BASE_CDN}/e21.png`,
+    `${BASE_CDN}/e22.png`,
+    `${BASE_CDN}/e23.png`,
+    `${BASE_CDN}/e24.png`,
+    `${BASE_CDN}/e25.png`,
+    `${BASE_CDN}/e26.png`,
+    `${BASE_CDN}/e27.png`,
+    `${BASE_CDN}/e28.png`,
+    `${BASE_CDN}/e29.png`,
+    `${BASE_CDN}/e30.png`,
+    `${BASE_CDN}/e31.png`,
+    `${BASE_CDN}/e32.png`,
+    `${BASE_CDN}/e33.png`,
+    `${BASE_CDN}/e34.png`,
+    `${BASE_CDN}/e35.png`,
+    
   ],
 
   Teste2: [
-    "stickers/chaves.webp",
-    "stickers/d6.webp",
-    "stickers/d7.webp",
-    "stickers/d8.webp",
-    "stickers/d9.webp",
-    "stickers/d10.webp",
-  
-
+    `${BASE_CDN}/.png`,
+    `${BASE_CDN}/.png`,
+    `${BASE_CDN}/.png`,
+    `${BASE_CDN}/.png`,
+    `${BASE_CDN}/.png`
   ],
 
   Teste3: [
-    "stickers/seu.webp",
-    "stickers/d11.webp",
-    "stickers/d12.webp",
-    "stickers/d13.webp",
-    "stickers/d14.webp",
-    "stickers/d15.webp",
+    `${BASE_CDN}/.png`,
+    `${BASE_CDN}/.png`,
+    `${BASE_CDN}/.png`,
+    `${BASE_CDN}/.png`,
+    `${BASE_CDN}/.png`
   ],
-    Teste4: [
-    "stickers/seu2.webp",
-    "stickers/d16.webp",
-    "stickers/d17.webp",
-    "stickers/d18.webp",
-    "stickers/d19.webp",
-    "stickers/d20.webp",
+
+  Teste4: [
+    `${BASE_CDN}/.png`,
+    `${BASE_CDN}/.png`,
+    `${BASE_CDN}/.png`,
+    `${BASE_CDN}/.png`,
+    `${BASE_CDN}/.png`,
   ],
-    Teste5: [
-      "stickers/d21.webp",
-      "stickers/d22.webp",
-      "stickers/d23.webp",
-      "stickers/d24.webp",
-      "stickers/d25.webp",
-  ],
-   Teste6: [
-      "stickers/d26.webp",
-      "stickers/d27.webp",
-      "stickers/d28.webp",
-      "stickers/d29.webp",
-      "stickers/d30.webp",
-  ],
- Teste7: [
-      "stickers/d31.webp",
-      "stickers/d32.webp",
-      "stickers/d33.webp",
-      "stickers/d34.webp",
-      "stickers/d35.webp",
-  ],
- Teste8: [
-      "stickers/d36.webp",
-      "stickers/d37.webp",
-      "stickers/d38.webp",
-      "stickers/d39.webp",
-      "stickers/d40.webp",
-  ],
+
+
 
 
 };

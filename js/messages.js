@@ -175,30 +175,11 @@ function bindMessageReplyClick(div, msgId, msg) {
 Se não houver uma resposta pendente no momento, ativa a caixa de prévia do reply
 ======================================================================================================== */
 if (!window.replyingTo) {
-const ehLottie = !isOcultada && typeof msgAtualizada.text === "string" && msgAtualizada.text.trim().endsWith(".json");
-const idLottiePreview = "lottie-preview-" + Math.random().toString(36).substring(2, 11);
-
 const textoPassado = isOcultada
-? `<span class="msg-hidden" style="font-style: italic; font-size: 1rem; font-weight: 400;"><i class="bi bi-emoji-frown"> Mensagem ocultada..</i></span>`
-: (ehLottie 
-? `<div id="${idLottiePreview}" style="width: 32px; height: 32px; display: inline-block; vertical-align: middle;"></div>` 
-: msgAtualizada.text);
+  ? `<span class="msg-hidden" style="font-style: italic; font-size: 1rem; font-weight: 400;"><i class="bi bi-emoji-frown"> Mensagem ocultada..</i></span>`
+  : msgAtualizada.text;
 
 showReplyPreview(msgId, textoPassado, msg.user, msg.photo || msg.avatar);
-
-/*====================================================================================================
-Renderiza animação Lottie na prévia de resposta caso a mensagem seja uma figurinha animada .json
-======================================================================================================== */
-if (ehLottie) {
-requestAnimationFrame(() => {
-/*====================================================================================================
-Verifica a existência da função global de renderização de emojis Lottie antes da chamada
-======================================================================================================== */
-if (typeof window.renderizarEmojiLottie === "function") {
-window.renderizarEmojiLottie(idLottiePreview, msg.text.trim());
-}
-});
-}
 
 const preview = document.getElementById("replyPreview");
 
@@ -398,14 +379,7 @@ content = `
 } else if (msg.denunciasContador && msg.denunciasContador >= 1) {
 content = renderPlainMessage(msg);
 } else if (isSticker(msg.text)) {
-/*====================================================================================================
-Diferencia a criação da div entre figurinha animada (.json) e figurinha estática (imagem)
-======================================================================================================== */
-if (msg.text.trim().endsWith(".json")) {
-content = `<div id="${idUnicoLottie}" class="sticker-img" style="width: 30px; height: 30px; display: inline-block;" draggable="false"></div>`;
-} else {
-content = renderSticker(msg.text);
-}
+  content = renderSticker(msg.text);
 } else if (ytId) {
 content = renderYouTube(ytId);
 } else {
@@ -450,16 +424,7 @@ ${cidade ? `<span class="user-city"><i class="icon-cidade bi bi-geo-alt"></i> ${
 /*====================================================================================================
 Agenda a inicialização da animação Lottie para figurinhas após a injeção da estrutura no DOM
 ======================================================================================================== */
-if (isSticker(msg.text) && msg.text.trim().endsWith(".json") && !msg.deleted && !(msg.denunciasContador && msg.denunciasContador >= 1)) {
-requestAnimationFrame(() => {
-/*====================================================================================================
-Executa a renderização do Lottie através da janela global caso o método esteja disponível
-======================================================================================================== */
-if (typeof window.renderizarEmojiLottie === "function") {
-window.renderizarEmojiLottie(idUnicoLottie, msg.text.trim());
-}
-});
-}
+
 
 bindMessageReplyClick(div, msgId, msg);
 
@@ -671,7 +636,7 @@ const rand = Math.random().toString(36).substring(2, 8);
 return `${localISO}_BRT_${rand}`;
 }
 
-const isSticker = (text = "") => /\.(png|webp|jpg|jpeg|gif|json)$/i.test(String(text).trim());
+const isSticker = (text = "") => /\.(png|webp|jpg|jpeg|gif)$/i.test(String(text).trim());
 
 /*====================================================================================================
 Extrai o ID único de 11 caracteres de URLs válidas de vídeos do YouTube
@@ -722,7 +687,8 @@ return `<span style="white-space:pre-wrap;color:${color};">${msg.text}</span>`;
 Gera a tag HTML de imagem para exibição de figurinhas estáticas na conversa
 ======================================================================================================== */
 function renderSticker(url) {
-return `<img src="${url.trim()}" alt="sticker" class="sticker-img" draggable="false">`;
+  const cleanUrl = String(url).trim().replace(/[\r\n\t]/g, "");
+  return `<img src="${cleanUrl}" alt="sticker" class="sticker-img" draggable="false" onerror="this.style.display='none'">`;
 }
 
 /*====================================================================================================
@@ -790,18 +756,9 @@ async function renderReply(msg) {
   let content = "";
   const idUnicoReplyLottie = "lottie-reply-" + Math.random().toString(36).substring(2, 11);
 
-  if (isSticker(d.text)) {
-    if (d.text.trim().endsWith(".json")) {
-      content = `<div id="${idUnicoReplyLottie}" class="sticker-img" style="width: 30px; height: 30px; display: inline-block;"></div>`;
-      requestAnimationFrame(() => {
-        if (typeof window.renderizarEmojiLottie === "function") {
-          window.renderizarEmojiLottie(idUnicoReplyLottie, d.text.trim());
-        }
-      });
-    } else {
-      content = renderSticker(d.text);
-    }
-  } else {
+ if (isSticker(d.text)) {
+  content = renderSticker(d.text);
+}else {
     const ytId = extractYouTubeId(d.text);
     if (ytId) {
       const thumb = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
@@ -1273,9 +1230,12 @@ cleanupMessageListeners();
 /*====================================================================================================
 Envia a mensagem digitada pelo usuário realizando sanitização, bloqueios e gravação no Firestore
 ======================================================================================================== */
+
 export async function sendMessage(input) {
-let text = input.value.trim();
+let text = (typeof input === "object" && input.value !== undefined) ? input.value.trim() : (input?.value || "").trim();
 if (!text) return;
+
+const ehStickerMsg = isSticker(text);
 
 /*====================================================================================================
 Bloqueia o envio contínuo de mensagens caso a contagem de flood atinja o limite estabelecido
@@ -1326,6 +1286,18 @@ document.dispatchEvent(new CustomEvent("chatdf:open-profile"));
 return;
 }
 
+/*====================================================================================================
+Identifica se a mensagem contém formatos de número de telefone usando padrões de expressões regulares
+======================================================================================================== */
+function bloqueiaTelefone(val) {
+const nums = val.replace(/\D/g, "");
+if (/^9\d{8}$/.test(nums)) return true;
+if (/^\d{2}9\d{8}$/.test(nums)) return true;
+const padrao = /(\+?55)?\s*\(?\d{0,2}\)?\s*9\d{4}[-\s]?\d{4}/;
+return padrao.test(val);
+}
+
+if (!ehStickerMsg) {
 text = text.replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\b/gi, "***");
 text = text.replace(/(\+?55)?\s*\(?\d{2}\)?\s*9?\d{4}[-\s]?\d{4}/g, "***");
 text = text.replace(/\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/g, "***");
@@ -1340,21 +1312,11 @@ text = text.replace(/\d/g, "*");
 }
 
 /*====================================================================================================
-Identifica se a mensagem contém formatos de número de telefone usando padrões de expressões regulares
-======================================================================================================== */
-function bloqueiaTelefone(text) {
-const nums = text.replace(/\D/g, "");
-if (/^9\d{8}$/.test(nums)) return true;
-if (/^\d{2}9\d{8}$/.test(nums)) return true;
-const padrao = /(\+?55)?\s*\(?\d{0,2}\)?\s*9\d{4}[-\s]?\d{4}/;
-return padrao.test(text);
-}
-
-/*====================================================================================================
 Mascara os números do texto caso o validador de telefones retorne positivo
 ======================================================================================================== */
 if (bloqueiaTelefone(text)) {
 text = text.replace(/\d/g, "*");
+}
 }
 
 const dangerousPatterns = [
@@ -1395,7 +1357,7 @@ const youtubeId = extractYouTubeId(text);
 /*====================================================================================================
 Verifica se a mensagem contém links genéricos HTTP/HTTPS não autorizados (diferentes do YouTube)
 ======================================================================================================== */
-if (/https?:\/\//.test(text) && !youtubeId) {
+if (/https?:\/\//.test(text) && !youtubeId && !ehStickerMsg) {
 showToast("Apenas links do YouTube são permitidos.");
 return;
 }
@@ -1524,6 +1486,9 @@ console.error(err);
 showToast("Erro ao enviar: " + err.message);
 }
 }
+
+
+
 
 // ================= EVENTOS =================
 /*====================================================================================================
