@@ -487,202 +487,89 @@ export function openUIPanel(type) {
   const sheet = ensureBottomSheet();
   const title = sheet.querySelector(".bottom-sheet-title");
   const content = sheet.querySelector(".bottom-sheet-content");
+  
   bottomSheetState.open = true;
   bottomSheetState.type = type;
   title.textContent = getBottomSheetTitle(type);
 
-  // conteúdo real será injetado depois
+  // limpa conteúdo anterior
   content.innerHTML = "";
 
-//   ANEXOS (MOBILE) 
-if (type === "attach") {
-  const grid = document.createElement("div");
-  grid.className = "bottom-sheet-attachments";
+  // 1. ANEXOS (MOBILE)
+  if (type === "attach") {
+    const grid = document.createElement("div");
+    grid.className = "bottom-sheet-attachments";
 
-  const actions = [
-    { key: "gallery", label: "Galeria" },
-    { key: "camera", label: "Câmera" },
-    { key: "documento", label: "Documento" },
-    { key: "location", label: "Localização" },
-    { key: "contact", label: "Contato" },
-    { key: "audio", label: "Áudio" },
-    { key: "poll", label: "Enquete" },
-    { key: "event", label: "Evento" },
-    { key: "ai", label: "IA" }
-  ];
+    const actions = [
+      { key: "gallery", label: "Galeria" },
+      { key: "camera", label: "Câmera" },
+      { key: "documento", label: "Documento" },
+      { key: "location", label: "Localização" },
+      { key: "contact", label: "Contato" },
+      { key: "audio", label: "Áudio" },
+      { key: "poll", label: "Enquete" },
+      { key: "event", label: "Evento" },
+      { key: "ai", label: "IA" }
+    ];
 
-  actions.forEach(({ key, label }) => {
-    const btn = document.createElement("button");
-    btn.textContent = label;
-    btn.onclick = () => {
-      closeBottomSheet();
-      window.attachmentActions?.[key]?.();
-    };
-    grid.appendChild(btn);
-  });
-  content.appendChild(grid);
-  return;
-}
-  sheet.classList.remove("hidden");
-  sheet.classList.add("open");
+    actions.forEach(({ key, label }) => {
+      const btn = document.createElement("button");
+      btn.textContent = label;
+      btn.onclick = () => {
+        closeBottomSheet();
+        window.attachmentActions?.[key]?.();
+      };
+      grid.appendChild(btn);
+    });
+    content.appendChild(grid);
 
-//  INJETAR CONTEÚDO (MOBILE) 
-if (type === "emoji") {
-  // cria container de emojis no bottom sheet
-  const emojiContainer = document.createElement("div");
-  emojiContainer.id = "bottomEmojiList";
-  emojiContainer.className = "emoji-list";
-  content.appendChild(emojiContainer);
-  // chama renderEmojis do painel existente
-  if (window.renderEmojis) {
-    window.renderEmojis(emojiContainer);
+    sheet.classList.remove("hidden");
+    sheet.classList.add("open");
+    return;
   }
-}
 
-// STICKERS (MOBILE) 
-if (type === "stickers") {
-  const stickerContainer = document.createElement("div");
-  stickerContainer.id = "bottomStickerList";
-  stickerContainer.className = "sticker-list";
-  content.appendChild(stickerContainer);
-  if (window.renderStickers) {
-    window.renderStickers("all", stickerContainer);
-  }
-}
-
-//  CONTEÚDO DO BOTTOM SHEET (MOBILE)
-content.innerHTML = "";
-// cria seletor interno
-const selector = document.createElement("div");
-selector.className = "bottom-sheet-selector";
-
-
-const btnEmoji = document.createElement("button");
-btnEmoji.textContent = "Emojis";
-
-const btnSticker = document.createElement("button");
-btnSticker.textContent = "Stickers";
-
-const btnAnim = document.createElement("button");
-btnAnim.textContent = "Animações";
-
-// 📱 Mobile → não adiciona Emoji
-if (window.innerWidth <= 768) {
-  selector.append(btnSticker, btnAnim);
-} else {
-  selector.append(btnEmoji, btnSticker, btnAnim);
-}
-
-
-
-
-content.appendChild(selector);
-// container de conteúdo
-const body = document.createElement("div");
-body.className = "bottom-sheet-body"; // 🔥 separação real
-content.appendChild(body);
-// helper para trocar conteúdo
-function setActive(activeBtn) {
-  [btnEmoji, btnSticker, btnAnim].forEach(b =>
-    b.classList.toggle("active", b === activeBtn)
-  );
-}
-// ações
-btnEmoji.onclick = () => {
-  setActive(btnEmoji);
-  body.classList.remove("bottom-sheet-grid");
-  body.innerHTML = "";
-  if (window.renderEmojis) window.renderEmojis(body);
-};
-btnSticker.onclick = () => {
-  setActive(btnSticker);
-  body.classList.add("bottom-sheet-grid");
-  body.innerHTML = "";
-  if (window.renderStickers) window.renderStickers("all", body);
-};
-btnAnim.onclick = () => {
-  setActive(btnAnim);
-  body.classList.add("bottom-sheet-grid");
-  body.innerHTML = "";
-  if (window.renderAnimations) window.renderAnimations("all", body);
-};
-// ocultando escondendo o emoji no modo mobile 12-05-26 
-if (window.innerWidth <= 768) {
-  btnSticker.onclick();
-} else {
-  if (type === "stickers") btnSticker.onclick();
-  else if (type === "animations") btnAnim.onclick();
-  else btnEmoji.onclick();
-}
-
-//  container de categorias (recriado conforme o modo)  CATEGORIA 
-let categoriesBar = null;
-function mountCategories(categories, onSelect) {
-  if (categoriesBar) categoriesBar.remove();
-  categoriesBar = document.createElement("div");
+  // 2. CATEGORIAS E STICKERS DIRETOS (SEM A BARRA AZUL)
+  const categoriesBar = document.createElement("div");
   categoriesBar.className = "bottom-sheet-categories";
-  categories.forEach((cat, idx) => {
+
+  const body = document.createElement("div");
+  body.className = "bottom-sheet-body bottom-sheet-grid";
+
+  // Reaproveita as categorias de stickers existentes
+  const stickerCats = Array.from(document.querySelectorAll(".sticker-cat"))
+    .map(btn => ({ label: btn.textContent, value: btn.dataset.cat }));
+
+  stickerCats.forEach((cat, idx) => {
     const btn = document.createElement("button");
     btn.textContent = cat.label;
     btn.classList.toggle("active", idx === 0);
     btn.onclick = () => {
       [...categoriesBar.children].forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-      onSelect(cat.value);
+      body.innerHTML = "";
+      window.renderStickers?.(cat.value, body);
     };
     categoriesBar.appendChild(btn);
   });
-  content.insertBefore(categoriesBar, body);
-}
 
-btnEmoji.onclick = () => {
-  setActive(btnEmoji);
-  if (categoriesBar) categoriesBar.remove();
-  body.classList.remove("bottom-sheet-grid");
-  body.innerHTML = "";
-  window.renderEmojis?.(body);
-};
-btnSticker.onclick = () => {
-  setActive(btnSticker);
-  body.classList.add("bottom-sheet-grid");
-  body.innerHTML = "";
+  content.appendChild(categoriesBar);
+  content.appendChild(body);
 
-  // categorias de stickers (reaproveita as existentes)
-  const stickerCats = Array.from(document.querySelectorAll(".sticker-cat"))
-    .map(btn => ({ label: btn.textContent, value: btn.dataset.cat }));
-  mountCategories(stickerCats, (cat) => {
-    body.innerHTML = "";
-    window.renderStickers?.(cat, body);
-  });
+  // Renderiza a lista inicial
   window.renderStickers?.("all", body);
-};
 
-btnAnim.onclick = () => {
-  setActive(btnAnim);
-  body.classList.add("bottom-sheet-grid");
-  body.innerHTML = "";
-  // categorias de animações (reaproveita as existentes)
-  const animCats = Array.from(document.querySelectorAll(".anim-cat"))
-    .map(btn => ({ label: btn.textContent, value: btn.dataset.cat }));
-  mountCategories(animCats, (cat) => {
-    body.innerHTML = "";
-    window.renderAnimations?.(cat, body);
+  // Abre e exibe o Bottom Sheet
+  sheet.classList.remove("hidden");
+  sheet.classList.add("open");
+
+  /* UX: garante que o usuário veja o sheet abaixo do input */
+  requestAnimationFrame(() => {
+    sheet.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
   });
-  window.renderAnimations?.("all", body);
-};
-
-
-/* UX: garante que o usuário veja o sheet abaixo do input */
-requestAnimationFrame(() => {
-  sheet.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-});
-
-} // FIM DA function export function openUIPanel
-
-
+}
 
 
 // fecha bottom botao sheet
@@ -699,11 +586,11 @@ function closeBottomSheet() {
 }
 
 // títulos por tipo
+// títulos por tipo
 function getBottomSheetTitle(type) {
   switch (type) {
     case "emoji": return "Figurinhas";
     case "stickers": return "Stickers";
-    case "animations": return "Animações";
     case "color": return "Cor do texto";
     case "attach": return "Anexo";
     case "profile": return "Meu perfil";

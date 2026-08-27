@@ -1448,8 +1448,8 @@ body.chat-loading .message {
 
 /* IMAGEM / STICKER */
 .reply-preview img {
-  width: 55px;
-  height: 55px;
+  width: 40px;
+  height: 40px;
   border-radius: 10px;
   object-fit: cover;
   flex-shrink: 0;
@@ -1535,10 +1535,7 @@ body.chat-loading .message {
     border-radius: 10px;
   }
 /*STICKER */
-  .reply-preview img {
-    width: 56px;
-    height: 56px;
-  }
+
 /*edita o espacamento do nome do usuario dentro do campo de menção 03-08-26 */
   .reply-preview .reply-author {
     font-size: 1.1rem;
@@ -2133,7 +2130,7 @@ emoji-picker {
 
 /* edita sticker Figurinhas no chat */
 .sticker-img {
-  width: 38px;
+  width: 33px;
   max-width: 35vw;
   border-radius: 12px;
   display: block;
@@ -2284,11 +2281,11 @@ emoji-picker {
     width: 40px;
     height: 40px;
   }
-
-  .sticker-img {
+/*  .sticker-img {
     width: 56px;
     height: 56px;
-  }
+  }*/
+
 }
 
 
@@ -3359,7 +3356,7 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
 /* BOTTOM SHEET – GRID REAL PARA STICKERS / ANIMAÇÕES */
 .bottom-sheet-content .bottom-sheet-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(66px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
   gap: 8px;
   align-items: center;
 }

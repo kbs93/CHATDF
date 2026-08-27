@@ -100,6 +100,10 @@ export function initStickerPanel() {
           if (typeof closeBtn !== "undefined" && closeBtn) {
             closeBtn.click();
           }
+          // NOVO: Fecha o bottom sheet no modo mobile
+          if (window.closeBottomSheet) {
+            window.closeBottomSheet();
+          }
         };
 
         target.appendChild(img);
