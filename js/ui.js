@@ -429,8 +429,6 @@ function isMobileMode() {
   return window.innerWidth <= 768;
 }
 
-
-
 // garante existência do bottom sheet
 function ensureBottomSheet() {
   let sheet = document.getElementById("bottomSheet");
@@ -463,21 +461,19 @@ function ensureBottomSheet() {
 // FUNCIONA MESMO SE O SHEET COBRIR O INPUT
 // ===========================================================
 
-document.addEventListener(
-  "focusin",
-  (e) => {
-    if (!isMobileMode()) return;
+document.addEventListener("focusin", (e) => {
+  if (!isMobileMode()) return;
 
-    const sheet = document.getElementById("bottomSheet");
-    if (!sheet || sheet.classList.contains("hidden")) return;
+  const sheet = document.getElementById("bottomSheet");
+  if (!sheet || sheet.classList.contains("hidden")) return;
 
-    if (e.target && e.target.id === "messageInput") {
-      closeBottomSheet();
-    }
-  },
-  true
-);
-
+  if (e.target && e.target.id === "messageInput") {
+    bottomSheetState.open = false;
+    bottomSheetState.type = null;
+    sheet.classList.remove("open");
+    sheet.classList.add("hidden");
+  }
+});
 //===========================================================================================
 // =============================  BOTAO SHEET  ==============================================
 //===========================================================================================
@@ -558,19 +554,19 @@ export function openUIPanel(type) {
   // Renderiza a lista inicial
   window.renderStickers?.("all", body);
 
-  // Abre e exibe o Bottom Sheet
+// Abre e exibe o Bottom Sheet
   sheet.classList.remove("hidden");
   sheet.classList.add("open");
 
-  /* UX: garante que o usuário veja o sheet abaixo do input */
-  requestAnimationFrame(() => {
-    sheet.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  });
+  /* Rola o chat para baixo mostrando as mensagens recentes */
+  const chatContainer = document.getElementById("chat-container");
+  if (chatContainer) {
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+    setTimeout(() => {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }, 150);
+  }
 }
-
 
 // fecha bottom botao sheet
 function closeBottomSheet() {
@@ -584,6 +580,17 @@ function closeBottomSheet() {
   sheet.classList.add("hidden");
   document.body.style.overflow = "";
 }
+
+
+
+
+
+
+
+
+
+
+
 
 // títulos por tipo
 // títulos por tipo
@@ -674,19 +681,20 @@ clone.addEventListener("click", (e) => {
   }
 });
 
-
-
-
-  sheet.classList.remove("hidden");
+sheet.classList.remove("hidden");
   sheet.classList.add("open");
 
-  /* UX: garante que o usuário veja o sheet abaixo do input */
-sheet.scrollIntoView({
-  behavior: "smooth",
-  block: "start"
-});
+  /* Rola o chat para baixo mostrando as mensagens recentes */
+  const chatContainer = document.getElementById("chat-container");
+  if (chatContainer) {
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+    setTimeout(() => {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }, 150);
+  }
 
 }// fim da export function openAttachmentSheet
+
 
 
 // padronizando 17-03-26 

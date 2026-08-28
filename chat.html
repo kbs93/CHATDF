@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
   <title>O Chat</title>
 
   <!-- Bootstrap -->
@@ -75,14 +75,20 @@
           Entre, complete seu perfil para conversar.
         </div>
         <div id="message-input-area">
+         
           <div class="attachment-wrapper">
             <button id="attachBtn" title="Anexar" class="btn-attach" aria-expanded="false">
               <i class="bi bi-paperclip"></i>
             </button>
 
+            <!-- Backdrop Global para fechamento ao clicar fora -->
+            <div id="chatPanelsBackdrop" class="chat-panels-backdrop hidden"></div>
+
             <!-- Painel de Anexos -->
-            <div id="attachmentOverlay" class="online-overlay"></div>
+          <!-- Painel de Anexos -->
             <div id="attachmentPanel" class="attachment-panel floating-panel">
+              <button type="button" id="closeAttachmentPanel" class="attachment-close-btn" aria-label="Fechar painel de anexos">✕</button>
+
               <div class="attachment-grid">
                 <button class="attachment-item" data-action="profile">
                   <span class="attachment-icon icon-event">
@@ -113,6 +119,7 @@
                   </span>
                   <span class="attachment-label">Trocar Sala</span>
                 </button>
+                <!----------------
                 <button class="attachment-item" data-action="camera">
                   <span class="attachment-icon icon-camera"><i class="bi bi-camera-fill"></i></span>
                   <span class="attachment-label">rascunho</span>
@@ -132,7 +139,7 @@
                 <button class="attachment-item" data-action="poll">
                   <span class="attachment-icon icon-poll"><i class="bi bi-bar-chart-line-fill"></i></span>
                   <span class="attachment-label">rascunho</span>
-                </button>
+                </button> ---------->
               </div>
             </div>
             
@@ -283,7 +290,10 @@
             <button class="sticker-cat" data-cat="smiles">smiles</button>
             <button class="sticker-cat" data-cat="pessoas">pessoas</button>
             <button class="sticker-cat" data-cat="animais">animais</button>
-            <button class="sticker-cat" data-cat="objetos">objetos</button>       
+            <button class="sticker-cat" data-cat="objetos">objetos</button> 
+            
+            
+                  
           </div>   
         </div>
       </div>

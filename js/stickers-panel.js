@@ -44,7 +44,7 @@ export function initStickerPanel() {
       span.textContent = e;
       span.className = "emoji-item";
 
-      span.onclick = () => {
+    span.onclick = () => {
         const input = window.messageInput;
         if (!input) return;
 
@@ -58,9 +58,14 @@ export function initStickerPanel() {
 
         const novaPosicao = start + e.length;
         input.setSelectionRange(novaPosicao, novaPosicao);
+
+        // Fecha o painel de emojis no mesmo milissegundo
+        if (typeof window.closeAllPanels === "function") {
+          window.closeAllPanels();
+        }
+
         input.focus();
       };
-
       target.appendChild(span);
     });
   }
@@ -95,15 +100,20 @@ export function initStickerPanel() {
         img.style.cursor = "pointer";
         img.loading = "lazy";
 
-        img.onclick = async () => {
-          await sendMessage({ value: url });
-          if (typeof closeBtn !== "undefined" && closeBtn) {
-            closeBtn.click();
+     img.onclick = async () => {
+          // 1. Fecha o painel imediatamente no clique (sem esperar o servidor)
+          if (typeof window.closeAllPanels === "function") {
+            window.closeAllPanels();
+          } else {
+            panel.classList.remove("show");
           }
-          // NOVO: Fecha o bottom sheet no modo mobile
+
           if (window.closeBottomSheet) {
             window.closeBottomSheet();
           }
+
+          // 2. Dispara o envio da imagem em segundo plano
+          await sendMessage({ value: url });
         };
 
         target.appendChild(img);
@@ -168,46 +178,46 @@ export function initStickerPanel() {
   });
 
   // ============================= CATEGORIAS (STICKER) =============================
+// ============================= CATEGORIAS (STICKER) =============================
   catButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
       catButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
-      btn.scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "nearest"
-      });
+      // Rola apenas a barra interna de categorias, sem empurrar a janela do chat
+      if (categories) {
+        const scrollLeft = btn.offsetLeft - (categories.clientWidth / 2) + (btn.clientWidth / 2);
+        categories.scrollTo({ left: scrollLeft, behavior: "smooth" });
+      }
 
       renderCategory(btn.dataset.cat);
     });
   });
 
   // ============================= ABRIR / FECHAR PAINEL =============================
-  const emojiBtn = document.getElementById("emojiBtn");
-  if (emojiBtn) {
-    emojiBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (window.isMobileUI?.() || window.innerWidth <= 768) return;
-      panel.classList.toggle("show");
-    });
-  }
-
+// ============================= FECHAR PAINEL =============================
   closeBtn.addEventListener("click", () => {
-    panel.classList.remove("show");
+    if (typeof window.closeAllPanels === "function") {
+      window.closeAllPanels();
+    } else {
+      panel.classList.remove("show");
+    }
   });
 
-  // Inicialização padrão
-  renderEmojis();
+  // Inicialização padrão padronizada para Mobile e Desktop
+// Inicialização responsiva: no mobile abre em 'sticker' (Emojis full) e no desktop em 'emoji'
   renderCategory("all");
-
   if (window.innerWidth <= 768) {
     setMode("sticker");
   } else {
+    renderEmojis();
     setMode("emoji");
   }
 
   panel.classList.remove("show");
+
+
 
   // Exposição global para o Bottom Sheet (Mobile)
   window.renderEmojis = renderEmojis;

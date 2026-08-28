@@ -1494,10 +1494,7 @@ showToast("Erro ao enviar: " + err.message);
 /*====================================================================================================
 Escuta o evento de redimensionamento de janela (resize) para ajustar unidades CSS dinâmicas (--vh)
 ======================================================================================================== */
-window.addEventListener("resize", () => {
-const vh = window.innerHeight * 0.01;
-document.body.style.setProperty("--vh", `${vh}px`);
-});
+
 
 /*====================================================================================================
 Salva as mensagens no cache local antes do descarregamento ou fechamento da aba no navegador

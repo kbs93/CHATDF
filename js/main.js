@@ -87,16 +87,29 @@ let overlay;
 document.body.classList.add("chat-loading");
 
 // ================= GERENCIADOR DE PAINÉIS padronizando mobile e desktop =================
+// ================= GERENCIADOR DE PAINÉIS padronizando mobile e desktop =================
 let currentPanel = null;
 function openPanel(panelName) {
+  const isAlreadyOpen = currentPanel === panelName;
   closeAllPanels();
+  
+  if (isAlreadyOpen) return;
+
   currentPanel = panelName;
+  const backdrop = document.getElementById("chatPanelsBackdrop");
+
   if (panelName === "users") {
     document.getElementById("onlineUsersPanel")?.classList.add("open");
     overlay?.classList.add("open");
   }
   if (panelName === "attachments") {
     attachmentPanel?.classList.add("show");
+    if (window.innerWidth <= 768) backdrop?.classList.remove("hidden");
+  }
+  if (panelName === "emojis") {
+    const stickerPanel = document.getElementById("stickerPanel");
+    stickerPanel?.classList.add("show");
+    if (window.innerWidth <= 768) backdrop?.classList.remove("hidden");
   }
 }
 
@@ -105,6 +118,7 @@ function closeAllPanels() {
   document.getElementById("onlineUsersPanel")?.classList.remove("open");
   attachmentPanel?.classList.remove("show");
   document.getElementById("stickerPanel")?.classList.remove("show");
+  document.getElementById("chatPanelsBackdrop")?.classList.add("hidden");
   if (window.closeColorPanel) {
     window.closeColorPanel();
   }
@@ -471,31 +485,50 @@ function setupChat() {
     }
   }, { passive: true });
 
-  emojiBtn?.addEventListener("click", () => {
+// Evita que o clique no botão tire o foco antes do evento 'click' rodar
+  emojiBtn?.addEventListener("mousedown", (e) => e.preventDefault());
+  attachBtn?.addEventListener("mousedown", (e) => e.preventDefault());
+
+  // Fechar painéis ao focar no campo de digitação
+  input.addEventListener("focus", () => {
     closeAllPanels();
-    if (window.innerWidth <= 768) {
-      openUIPanel("emoji");
-    }
   });
 
-  stickerBtn?.addEventListener("click", () => {
-    if (window.innerWidth <= 768) {
-      openUIPanel("stickers");
-      return;
+  // Abertura instantânea no 1º clique
+// Abertura instantânea e fechamento forçado do teclado mobile
+// Abertura suave sem flash/piscada ao recolher o teclado mobile
+  const abrirPainelSemFlashTeclado = (nomePainel) => {
+    const tecladoEstavaAberto = document.activeElement === input || window.innerHeight < 500;
+    
+    if (input) input.blur();
+    if (document.activeElement && typeof document.activeElement.blur === "function") {
+      document.activeElement.blur();
     }
+
+    if (tecladoEstavaAberto && window.innerWidth <= 768) {
+      setTimeout(() => {
+        openPanel(nomePainel);
+      }, 100);
+    } else {
+      openPanel(nomePainel);
+    }
+  };
+
+  emojiBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    abrirPainelSemFlashTeclado("emojis");
   });
-
-
 
   attachBtn?.addEventListener("click", (e) => {
     e.preventDefault();
-    e.stopImmediatePropagation();
+    e.stopPropagation();
+    abrirPainelSemFlashTeclado("attachments");
+  });
+
+  // Fechamento via Backdrop ao clicar fora
+  document.getElementById("chatPanelsBackdrop")?.addEventListener("click", () => {
     closeAllPanels();
-    if (window.innerWidth <= 768) {
-      openAttachmentSheet();
-      return;
-    }
-    openPanel("attachments");
   });
 
   openOnlineUsersBtn?.addEventListener("click", (e) => {
@@ -566,6 +599,17 @@ const dispararEnvioMensagem = async () => {
 
   messageInput.addEventListener("input", autoResize);
   initStickerPanel();
+
+// Fechar painel de anexos pelo botão X
+  document.getElementById("closeAttachmentPanel")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    closeAllPanels();
+  });
+
+
+
+
 }
 
 export function resetMessageInput() {

@@ -1864,40 +1864,50 @@ body.chat-loading .message {
 }
 
 
-/* ===================================== IMPORTANTE BASE DOS PAINÉIS FLUTUANTES 24-02-26 ==================== */
+/* ===================================== IMPORTANTE BASE DOS PAINEIS FLUTUANTES 24-02-26 ==================== */
+
 .floating-panel {
   position: absolute;
   bottom: 100%;
   margin-bottom: 8px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-  display: none;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
+  display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: fadeInUp 0.2s ease forwards;
-  opacity: 0;
-  transform: translateY(10px) scale(0.98);
-  pointer-events: none;
   max-width: calc(100vw - 20px);
+  z-index: 1200; /* Camada superior a todas as mensagens */
+  
+  /* Estado Inicial Oculto sem quebrar a transição */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: 
+    opacity 0.22s ease, 
+    transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), 
+    visibility 0.22s;
+  will-change: transform, opacity;
 }
 
-
 .floating-panel.show {
-  display: flex;
   opacity: 1;
-  transform: translateY(0) scale(1);
+  visibility: visible;
   pointer-events: auto;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transform: translateY(0);
 }
 
 .floating-panel.hide {
   opacity: 0;
-  transform: translateY(10px) scale(0.98);
+  visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transform: translateY(8px);
+  transition: 
+    opacity 0.16s ease, 
+    transform 0.16s ease, 
+    visibility 0.16s;
 }
-
 /* MOBILE (PADRÃO PARA TODOS) */
 @media (max-width: 768px) {
   .floating-panel {
@@ -2063,10 +2073,10 @@ emoji-picker {
 #message-input-wrapper {
   position: relative;
 }
-
 #stickerPanel {
-  right: 90px;
-  width: 370px;
+  right: 12px;
+  left: auto;
+  width: min(370px, calc(100vw - 24px));
   height: 45vh;
   max-height: 380px;
   min-height: 260px;
@@ -2074,6 +2084,7 @@ emoji-picker {
   padding: 10px;
   overflow: hidden;
   padding-top: 0.1rem;
+  z-index: 1200; /* Garante que o painel fique acima de qualquer avatar ou texto do chat */
 }
 
 #stickerPanel.show {
@@ -2159,14 +2170,14 @@ emoji-picker {
   margin: 4px 0;
 }
 
-/* HEADER */
+/* HEADER do painel do emoji */
 .sticker-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 2px 8px;
   border-bottom: 1px solid #eaeaea;
-  background: #f8f8f8;
+
   order: 1;
   min-height: 40px;
   flex-shrink: 0;
@@ -2183,8 +2194,9 @@ emoji-picker {
   padding-bottom: 6px;
   flex-shrink: 0;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain; /* Trava a rolagem horizontal apenas dentro da lista */
+  touch-action: pan-x;
 }
-
 .sticker-categories::-webkit-scrollbar {
   height: 6px;
 }
@@ -2196,18 +2208,54 @@ emoji-picker {
 #expressionContent {
   order: 3;
 }
-
-#stickerClose {
+/*BOTAO X dentro do painel do emoji*/
+#stickerClose,
+.attachment-close-btn {
   position: absolute;
   top: 8px;
-  right: 8px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
   border: none;
-  background: transparent;
-  font-size: 18px;
+  background: rgba(71, 70, 70, 0.075);
+  color: #555555;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
   cursor: pointer;
-  z-index: 10;
-  min-width: 34px;
-  min-height: 34px;
+  z-index: 20;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+#stickerClose:hover,
+.attachment-close-btn:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  color: #111111;
+}
+
+#stickerClose:active,
+.attachment-close-btn:active {
+  transform: scale(0.92);
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+/*BOTAO X dentro do painel do emoji MOBILE*/
+@media (max-width: 768px) {
+  #stickerClose,
+  .attachment-close-btn {
+    top: 6px;
+    right: 8px;
+    width: 38px;
+    height: 38px;
+    font-size: 25px;
+  }
 }
 
 .sticker-cat {
@@ -2446,7 +2494,12 @@ emoji-picker {
   }
 }
 
-
+@media (max-width: 768px) {
+  /* Oculta a aba de emojis comuns no mobile */
+  .expr-tab[data-mode="emoji"] {
+    display: none !important;
+  }
+}
 
 /* ================ ============================== PRÉVIA DE VÍDEOS YOUTUBE ===================================== */
 .youtube-preview {
@@ -2928,22 +2981,23 @@ NES Anexos estilo WhatsApp zap EDITA O BOTAO SHEET TAMBEM 27-02-26
   outline-offset: 2px;
   color: #0dfd35;
 }
+
+
 #attachmentPanel {
   position: absolute;
   left: 0;
-  background: #fff;
+  bottom: calc(72px + env(safe-area-inset-bottom));
+  width: 390px;
+  max-width: calc(100vw - 20px);
+  max-height: 65vh;
+  background: #ffffff;
   border: 1px solid #edf0f5;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
   border-radius: 18px;
-  padding: 12px;
-  min-width: 390px;
-  max-width: 420px;
-  max-height: 65vh;
+  padding: 14px 12px 12px 12px;
   overflow-y: auto;
   overscroll-behavior: contain;
-  display: none;
   z-index: 1200;
-  bottom: calc(72px + env(safe-area-inset-bottom));
   -webkit-overflow-scrolling: touch;
 }
 
@@ -2957,17 +3011,108 @@ NES Anexos estilo WhatsApp zap EDITA O BOTAO SHEET TAMBEM 27-02-26
     opacity: 0;
     transform: translateY(8px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
+/* Botão X perfeitamente isolado e posicionado no canto */
+#attachmentPanel #closeAttachmentPanel {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: rgba(73, 72, 72, 0.082);
+  color: #666666;
+  font-size: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 20;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+#attachmentPanel #closeAttachmentPanel:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  color: #111111;
+}
+
+#attachmentPanel #closeAttachmentPanel:active {
+  transform: scale(0.92);
+}
+
+/* Grade de 4 colunas restaurada */
+#attachmentPanel .attachment-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  width: 100%;
+  padding-top: 26px; /* Abre espaço confortável abaixo do X */
+  box-sizing: border-box;
+}
+
+/* Reseta qualquer largura quebrada nos botões de itens */
+#attachmentPanel .attachment-item {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* BOTAO X fixo no topo direito DENTRO DO PAINEL CLIPE */
+.attachment-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: rgba(71, 70, 70, 0.075);
+  color: #666;
+  font-size: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.attachment-close-btn:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  color: #111;
+}
+
+.attachment-close-btn:active {
+  transform: scale(0.92);
+}
+
 .attachment-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(82px, 1fr));
   gap: 12px;
+  padding-top: 26px; /* Espaço para não cobrir o X */
 }
+
+
+
+
+
+
+
 .attachment-label {
   font-size: 0.82rem;
   font-weight: 700;
@@ -3256,6 +3401,7 @@ NES Anexos estilo WhatsApp zap EDITA O BOTAO SHEET TAMBEM 27-02-26
 }
 
 
+
 /* ============================================== 26-02-2026=======
 BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
 ===================================================== */
@@ -3426,10 +3572,10 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
 } */
 
 
-/*EDIAR OS BOTAO ZAP a altura no modo mobile*/
+/*EDIAR OS BOTAO sheet ZAP a altura no modo mobile*/
 @media (max-width: 420px) {
   .bottom-sheet {
-    height: 42vh;
+    height: 36vh;
     max-height: 68vh;
   }
 
@@ -3455,7 +3601,7 @@ BOTTOM SHEET – MOBILE (BASE) NÃO ALTERA LAYOUT EXISTENTE
 }
 
 
-/*-------------- modo tablet -----------*/
+/*-------------- modo tablet botao sheet -----------*/
 @media (min-width: 521px) and (max-width: 1024px) {
   #attachmentPanel {
     left: 0;
@@ -8010,3 +8156,7 @@ Reposiciona a tag de expiração para não cobrir o botão voltar vip
 #roomsModal .btn-change-room:hover .arrow-icon {
   color: #5b21b6;
 }
+
+
+
+
