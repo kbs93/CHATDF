@@ -206,10 +206,17 @@ async function updateUserRoomPresence() {
           lastChanged: Date.now()
         });
 
+    const fotoReal = 
+          appState.currentUser?.foto || 
+          appState.currentUser?.avatar || 
+          window.__currentProfileData?.foto || 
+          appState.currentUser?.photoURL || 
+          "./img/avatar.png";
+
         await set(userStatusRef, {
           uid: user.uid,
           name: appState.currentUser?.nome || appState.currentUser?.displayNameChat || user.displayName || "Usuário",
-          avatar: appState.currentUser?.photoURL || "./img/avatar.png",
+          avatar: fotoReal,
           online: true,
           sala: appState.currentRoom || "geral",
           lastChanged: Date.now(),
@@ -288,9 +295,14 @@ async function handleUserReady(detail = {}) {
     detail.userData = await verificarEExpiraVipUsuario(appState.currentUser.uid, detail.userData);
   }
 
-  if (detail.userData?.nome) {
+if (detail.userData?.nome) {
     appState.currentUser.nome = detail.userData.nome;
     appState.currentUser.displayNameChat = detail.userData.nome;
+  }
+
+  if (detail.userData?.foto) {
+    appState.currentUser.foto = detail.userData.foto;
+    appState.currentUser.avatar = detail.userData.foto;
   }
 
   appState.userCity = null;

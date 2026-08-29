@@ -54,6 +54,23 @@ body.chat-loading .message {
   transform: none !important;
 }
 
+
+/* Trava de pull-to-refresh no painel de emojis/stickers */
+#stickerPanel,
+#expressionContent,
+#stickerList,
+#emojiList {
+  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Trava o refresh da página inteira enquanto qualquer painel flutuante estiver visível */
+body.panel-open {
+  overscroll-behavior-y: none;
+}
+
 /* ========================================================================= 
    MAPEAMENTO DE FONTES LOCAIS EXCLUSIVAS VIP (MÉTODO LOCAL SEGURO)
    ========================================================================= */
@@ -2211,6 +2228,61 @@ emoji-picker {
 #expressionContent {
   order: 3;
 }
+
+
+
+
+/* Cabeçalho do painel troca de salas E O  BOTAO X  */
+.rooms-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.rooms-modal-title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  color: #1e1b4b;
+}
+
+#closeRoomsModal.rooms-modal-close-btn,
+.rooms-modal-close-btn {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  border: none;
+   background: rgba(71, 70, 70, 0.075); /* <--- Defina a cor de fundo desejada aqui */
+  color: #666666;
+  font-size: 18px;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+#closeRoomsModal.rooms-modal-close-btn:hover,
+.rooms-modal-close-btn:hover {
+  background-color: rgba(0, 0, 0, 0.12);
+  color: #111111;
+}
+
+#closeRoomsModal.rooms-modal-close-btn:active,
+.rooms-modal-close-btn:active {
+  transform: scale(0.92);
+}
+
+
+
+
 /*BOTAO X dentro do painel do emoji*/
 #stickerClose,
 .attachment-close-btn {
@@ -2391,27 +2463,39 @@ emoji-picker {
 }
 @media (max-width: 480px) {
   #stickerPanel {
-    height: 45vh;
-    max-height: 320px;
+    height: 38vh;
+    max-height: 380px;
+    min-height: 280px;
   }
 
   #expressionContent {
-    padding-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    padding-bottom: 6px;
+  }
+
+  #stickerList {
+    padding-bottom: 24px; /* Garante que a última fileira de figurinhas apareça 100% */
   }
 
   #stickerList img {
-    width: 57px;
-    height: 57px;
+    width: 54px;
+    height: 54px;
   }
 
   #emojiList {
-    grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
-    gap: 1px;
+    grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+    gap: 4px;
     font-size: 20px;
+    padding-bottom: 2px; /* Espaço para a última linha de emojis rolar livremente sem corte */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .emoji-item {
-    padding: 10px;
+    padding: 6px;
     font-size: 24px;
     justify-content: center;
   }
@@ -4605,22 +4689,40 @@ body.index-page .profile-panel.open {
   color: #fff;
 }
 
+/* BOTAO X DENTRO DO BOTAO LAPIS  */
 #closeProfileEditorBtn {
   margin-left: auto;
-  border: 0;
-  background: transparent;
-  color: #111;
-  font-size: 28px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  border: none;
+  background-color: rgba(71, 70, 70, 0.08);
+  color: #666666;
+  font-size: 18px;
+  font-weight: 500;
   line-height: 1;
-  cursor: pointer;
-  padding: 4px 8px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
+  cursor: pointer;
   flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
 }
 
 #closeProfileEditorBtn:hover {
-  background: #f1f1f1;
+  background-color: rgba(0, 0, 0, 0.12);
+  color: #111111;
 }
+
+#closeProfileEditorBtn:active {
+  transform: scale(0.92);
+}
+
+
 
 @media (max-width: 768px) {
   .profile-editor-avatar-grid {
