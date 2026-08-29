@@ -387,7 +387,7 @@ content = renderPlainMessage(msg);
 }
 
 /*====================================================================================================
-Aplica estilo dos avatar dentro do chat fonte
+Aplica estilo dos avatar dentro do chat fonte TAMANHO DO AVATAR DENTRO DO CHAT 
 ======================================================================================================== */
 if (msg.user === "Kbsweb") {
 div.classList.add("admin-message");

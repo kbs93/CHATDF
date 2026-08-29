@@ -1659,11 +1659,17 @@ body.chat-loading .message {
   overflow-wrap: anywhere;
 }
 
-/*tamanho do texto no chat e o espaçamento do texto*/
+/*tamanho do texto do chat e o espaçamento do texto*/
 .message span {
-  font-size: 1em;
+  font-size: 0.95em;
   line-height: 1.7em;
 
+}
+/*tamanho do texto do nome no chat e o espaçamento do texto*/
+.message-author-name {
+  font-size: 15px; 
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /*editar o Botao de sair*/
@@ -1705,11 +1711,8 @@ body.chat-loading .message {
   max-width: 100%;
 }
 
-.message-author-name {
-  cursor: pointer;
-  font-weight: 700;
-  -webkit-tap-highlight-color: transparent;
-}
+
+
 
 .message-more-btn {
   display: none;
