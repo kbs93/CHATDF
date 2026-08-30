@@ -1214,9 +1214,10 @@ window.openMainProfilePanel = async (userId) => {
             profileCoverEl.style.background = bannerColor;
           }
         }
-        // Garante que o botão do lápis apareça imediatamente ao carregar o perfil do dono
+   // Garante que o botão do lápis só apareça se a aba ativa for "Editar perfil"
         if (isOwner && editProfileCoverBtn) {
-          editProfileCoverBtn.style.display = "grid";
+          const abaAtivaAtual = document.querySelector('.profile-tab.active')?.dataset.tab || "info";
+          editProfileCoverBtn.style.display = (abaAtivaAtual === "edit") ? "grid" : "none";
         }
       }
 
@@ -1312,9 +1313,16 @@ function applyProfileMode(isOwner) {
     document.body.classList.remove("viewing-other-profile");
     if (reportBtn) reportBtn.style.display = "none";
 
-    const isVipAberto = !document.getElementById("profileVip")?.classList.contains("d-none");
-    if (editProfileCoverBtn) {
-      editProfileCoverBtn.style.display = isVipAberto ? "none" : "grid";
+const abaAtual = document.querySelector('.profile-tab.active')?.dataset.tab || "info";
+    const isEditAba = (abaAtual === "edit");
+    const vipTopBtn = document.getElementById("vipTopHeaderBtn");
+    
+    // VIP, Lápis e Câmera iniciam com base estrita na aba ativa
+    if (editProfileCoverBtn) editProfileCoverBtn.style.display = isEditAba ? "grid" : "none";
+    if (vipTopBtn) vipTopBtn.style.display = isEditAba ? "inline-flex" : "none";
+    if (uploadPhotoBtn) {
+      uploadPhotoBtn.classList.toggle("hidden", !isEditAba);
+      uploadPhotoBtn.style.display = isEditAba ? "flex" : "none";
     }
 
     if (vipTabBtn) {
@@ -1332,7 +1340,6 @@ function applyProfileMode(isOwner) {
 
     if (!isLocked) {
       if (uploadPhotoBtn) {
-        uploadPhotoBtn.classList.remove("hidden");
         uploadPhotoBtn.style.opacity = "1";
         uploadPhotoBtn.style.cursor = "pointer";
       }
@@ -1344,12 +1351,10 @@ function applyProfileMode(isOwner) {
       editCity?.removeAttribute("disabled");
     } else {
       if (uploadPhotoBtn) {
-        uploadPhotoBtn.classList.remove("hidden");
         uploadPhotoBtn.style.opacity = "0.45";
         uploadPhotoBtn.style.cursor = "not-allowed";
       }
       if (editProfileCoverBtn) {
-        editProfileCoverBtn.style.display = "grid";
         editProfileCoverBtn.style.opacity = "0.45";
         editProfileCoverBtn.style.cursor = "not-allowed";
       }
@@ -1420,16 +1425,29 @@ tabs.forEach(tab => {
       topMood.style.display = isVip ? "none" : "block";
     }
 
-    const editBtn = document.getElementById("editProfileCoverBtn");
+      const editBtn = document.getElementById("editProfileCoverBtn");
     const vipBtn = document.getElementById("vipHeaderActionBtn");
+    const vipTopBtn = document.getElementById("vipTopHeaderBtn");
+    const uploadPhotoBtn = document.getElementById("btnUploadPhoto");
 
     if (currentProfileIsOwner) {
-      if (editBtn) editBtn.style.display = isVip ? "none" : "grid";
+      const isEdit = (target === "edit");
+
+      // VIP, Lápis e Câmera aparecem EXCLUSIVAMENTE na aba Editar perfil
+      if (editBtn) editBtn.style.display = isEdit ? "grid" : "none";
+      if (vipTopBtn) vipTopBtn.style.display = isEdit ? "inline-flex" : "none";
+      if (uploadPhotoBtn) {
+        uploadPhotoBtn.classList.toggle("hidden", !isEdit);
+        uploadPhotoBtn.style.display = isEdit ? "flex" : "none";
+      }
+
       if (vipBtn) {
         vipBtn.style.display = isVip ? "grid" : "none";
         vipBtn.classList.toggle("d-none", !isVip);
       }
     }
+
+
 
     const topExpiry = document.getElementById("vipTopExpiryRow");
     if (topExpiry) {

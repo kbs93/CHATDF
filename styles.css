@@ -4725,12 +4725,7 @@ body.index-page .profile-panel.open {
   }
 }
 
-/* MOBILE - TAMANHO DO PAINEL PERFIL EDITAR CAPA/AVATAR dentro
-do botao lapis 
-*/
-/* MOBILE - TAMANHO DO PAINEL PERFIL EDITAR CAPA/AVATAR dentro
-do botao lapis 
-*/
+/* MOBILE - TAMANHO DO PAINEL PERFIL EDITAR CAPA/AVATAR dentrodo botao lapis */
 @media (max-width: 768px) {
   .profile-editor-modal {
     padding: 10px;
@@ -7048,15 +7043,12 @@ color: #ffffff;
 }
 
 
-
-
-
-
-
-
-
-
-
+/* ========================================================================= 
+   VISITANTE: Oculta a barra de abas quando visualizar o perfil de outro usuario
+   ========================================================================= */
+body.viewing-other-profile #profilePanel .profile-tabs {
+  display: none;
+}
 
 
 
@@ -8243,6 +8235,7 @@ Reposiciona a tag de expiração para não cobrir o botão voltar vip
 #roomsModal .btn-change-room:hover .arrow-icon {
   color: #5b21b6;
 }
+
 
 
 
