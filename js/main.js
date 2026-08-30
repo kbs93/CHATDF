@@ -1587,33 +1587,50 @@ profileEditorModal?.addEventListener("click", (e) => {
   if (e.target === profileEditorModal) closeProfileEditor();
 });
 
+let paletteRendered = false;
+let avatarGridRendered = false;
+
 showBannerEditorBtn?.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
+  if (showBannerEditorBtn.classList.contains("active")) return;
+
   showBannerEditorBtn.classList.add("active");
   openAvatarPickerBtn?.classList.remove("active");
   profileEditorBannerPreview?.classList.remove("hidden");
   profileEditorBannerColors?.classList.remove("hidden");
   profileEditorAvatarArea?.classList.add("hidden");
-  renderProfileEditorBannerPalette();
+
+  if (!paletteRendered) {
+    renderProfileEditorBannerPalette();
+    paletteRendered = true;
+  }
 });
 
 openAvatarPickerBtn?.addEventListener("click", (e) => {
   e.preventDefault();
   e.stopPropagation();
+  if (openAvatarPickerBtn.classList.contains("active")) return;
+
   openAvatarPickerBtn.classList.add("active");
   showBannerEditorBtn?.classList.remove("active");
   profileEditorBannerPreview?.classList.add("hidden");
   profileEditorBannerColors?.classList.add("hidden");
   profileEditorAvatarArea?.classList.remove("hidden");
-  carregarCategoria("aleatorios");
+
+  if (!avatarGridRendered) {
+    carregarCategoria("aleatorios");
+    avatarGridRendered = true;
+  }
 });
+
+
 
 // Motor Multiavatar
 let listaAtual = [];
 let avataresRenderizados = 0;
-const LOTE_TAMANHO = 15;
-let categoriaAtual = "eles";
+const LOTE_TAMANHO = 60; // Carrega 60 avatares de imediato para liberar a barra vertical completa
+let categoriaAtual = "aleatorios";
 let partesDna = { ambiente: 0, roupas: 0, cabeca: 0, boca: 0, olhos: 0, cabelo: 0 };
 
 function gerarAvatarDnaUri(dna12Digitos) {
@@ -1634,13 +1651,13 @@ function renderizarLote() {
   for (let i = avataresRenderizados; i < limite; i++) {
     let codigo;
     if (categoriaAtual === "aleatorios") {
-      codigo = Math.random().toString(36).substring(7);
+      codigo = Math.random().toString(36).substring(7) + "_" + i;
     } else {
       if (i >= listaAtual.length) break;
       codigo = listaAtual[i];
     }
     let imagemUri = gerarAvatarUri(codigo);
-    html += `<img src="${imagemUri}" class="avatar-option" data-uri="${imagemUri}" style="width: 65px; height: 65px; cursor: pointer; border-radius: 50%; border: 3px solid transparent;" />`;
+    html += `<img src="${imagemUri}" class="avatar-option" data-uri="${imagemUri}" style="width: 58px; height: 58px; cursor: pointer; border-radius: 50%; border: 3px solid transparent;" />`;
   }
 
   profileEditorAvatarGrid.insertAdjacentHTML("beforeend", html);
@@ -1672,6 +1689,12 @@ function carregarCategoria(categoria) {
   renderizarLote();
 }
 
+// Escuta a rolagem e carrega mais avatares automaticamente sem travar
+profileEditorAvatarGrid?.addEventListener("scroll", function () {
+  if (categoriaAtual !== "criar" && this.scrollTop + this.clientHeight >= this.scrollHeight - 80) {
+    renderizarLote();
+  }
+});
 function padDoisDigitos(val) {
   return String(val).padStart(2, "0");
 }
@@ -1718,11 +1741,7 @@ VincularAcaoParte("prevBoca", "nextBoca", "boca");
 VincularAcaoParte("prevOlhos", "nextOlhos", "olhos");
 VincularAcaoParte("prevCabelo", "nextCabelo", "cabelo");
 
-profileEditorAvatarGrid?.addEventListener("scroll", function () {
-  if (categoriaAtual !== "criar" && this.scrollTop + this.clientHeight >= this.scrollHeight - 15) {
-    renderizarLote();
-  }
-});
+
 
 profileEditorAvatarGrid?.addEventListener("click", (e) => {
   if (e.target.tagName === "IMG" && e.target.classList.contains("avatar-option")) {
