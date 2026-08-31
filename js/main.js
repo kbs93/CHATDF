@@ -31,6 +31,13 @@ import {
   abrirPainelVip,
   fecharPainelVip
 } from "./vip.js";
+// Importação do Módulo de Curtidas & Interesses Isolado tag 30-08-26
+import {
+  renderProfileInterests,
+  renderEditInterestsSelector,
+  setSelectedInterests,
+  selectedInterests
+} from "./curtidas.js";
 
 // ========================================================================
 // ROTINA DE VERIFICACAO E RESET AUTOMÁTICO DO VIP EXPIRADO
@@ -1278,13 +1285,20 @@ window.openMainProfilePanel = async (userId) => {
 
       if (editTelegram) editTelegram.value = teleUser ? `@${teleUser}` : "";
 
-      if (profileTelegramText) {
+if (profileTelegramText) {
         if (teleUser !== "") {
           profileTelegramText.innerHTML = `<a href="https://t.me/${teleUser}" target="_blank" rel="noopener noreferrer" style="color: #161616dc; font-weight: 600; text-decoration: none;">@${teleUser}</a>`;
         } else {
           profileTelegramText.textContent = "-";
         }
       }
+
+      // Carrega e renderiza os interesses do usuario (Aba Info e Aba Editar) tag
+      const interessesData = Array.isArray(data.interesses) ? data.interesses : [];
+      setSelectedInterests(interessesData.map(i => (typeof i === "string" ? i : i.id)));
+      renderProfileInterests(interessesData, userId, isOwner);
+      renderEditInterestsSelector();
+
       criarListaCidadesPerfil();
       criarListaGeneroPerfil();
       setTimeout(perfilEstaCompleto, 200);
@@ -1925,8 +1939,7 @@ saveProfileBtn?.addEventListener("click", async () => {
     rawTele = rawTele.split("?")[0].split("#")[0].split("/")[0];
     if (rawTele.startsWith("@")) rawTele = rawTele.substring(1);
     const teleUser = rawTele.replace(/[^a-zA-Z0-9_.]/g, "").toLowerCase();
-
-    await updateDoc(refUser, {
+await updateDoc(refUser, {
       nome: editName.value.trim(),
       cidade: cidadeSelecionada,
       idade: editAge.value.trim(),
@@ -1935,6 +1948,7 @@ saveProfileBtn?.addEventListener("click", async () => {
       telegram: teleUser,
       foto: linkFotoFinal,
       bannerColor: selectedBannerColor,
+      interesses: selectedInterests,//curtidas tags 30-08-26
       perfilCompleto: true,
       lastProfileEditAt: Date.now()
     });

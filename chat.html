@@ -430,6 +430,17 @@
             </span>
             <span id="profileTelegramText" class="col-7 px-0 text-dark">-</span>
           </div>
+
+          <!-- SECAO DE TAGS & HOBBIES DO DF -->
+          <div class="profile-tags-container mt-3 pb-2">
+            <div class="d-flex align-items-center gap-2 mb-2 text-secondary">
+              <i class="bi bi-tags-fill fs-6 text-primary"></i>
+              <strong style="font-size: 13.5px; color: #555;">Gostos & Hobbies:</strong>
+            </div>
+            <div id="profileInterestsList" class="profile-interests-pills">
+              <!-- Renderizado dinamicamente via JS -->
+            </div>
+          </div>
         </div>
 
 <!-- EDITAR -->
@@ -476,6 +487,16 @@
               <input type="text" id="editTelegram" placeholder=" Digite seu @usuario(Opcional)" maxlength="30">
             </span>
           </label>
+          <!-- SELETOR DE TAGS NO EDITAR PERFIL -->
+          <div class="profile-edit-interests-wrapper mt-3 mb-2">
+            <label class="profile-field-label d-flex justify-content-between align-items-center">
+              <span>Selecione até 5 gostos & hobbies:</span>
+              <small id="selectedInterestsCount" class="text-muted fw-bold">0/5</small>
+            </label>
+            <div id="editInterestsSelectorGrid" class="interests-selector-grid">
+              <!-- Renderizado dinamicamente via JS -->
+            </div>
+          </div>
           <div id="editTrackingState" data-capa-alterada="false" data-avatar-alterado="false" class="d-none"></div>
           <button id="saveProfileBtn" type="button" disabled style="opacity: 0.5; cursor: not-allowed;">Salvar</button>
         </div>
