@@ -4216,7 +4216,7 @@ body.index-page .profile-panel.open {
 .profile-cover {
   position: relative;
   width: 100%;
-  min-height: 220px;
+  min-height: 200px;
   background: #00000063;
   flex-shrink: 0;
 }
@@ -8244,29 +8244,43 @@ Reposiciona a tag de expiração para não cobrir o botão voltar vip
 .profile-tags-container {
   width: 100%;
 }
-
 .profile-interests-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .interest-pill {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
+  min-height: 30px;
   background: #f1f5f9;
   border: 1px solid #cbd5e1;
   border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 13px;
+  
+  font-size: 11.5px;
   font-weight: 600;
   color: #334155;
   cursor: pointer;
   user-select: none;
+  box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.interest-pill span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1;
+  text-align: center;
 }
 
 .interest-pill:hover {
