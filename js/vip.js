@@ -899,7 +899,7 @@ export function abrirPainelVip() {
   // 2. Troca os botões do cabeçalho
   if (vipBtn) vipBtn.classList.add("d-none");
   if (backBtn) backBtn.classList.remove("d-none");
- if (editCoverBtn) editCoverBtn.style.setProperty("display", "none", "important");
+ if (editCoverBtn) editCoverBtn.style.display = "none";
   if (vipHeaderActionBtn) {
     vipHeaderActionBtn.classList.remove("d-none");
     vipHeaderActionBtn.style.display = "grid";
@@ -960,7 +960,7 @@ export function fecharPainelVip() {
   // 3. Restaura os botões do cabeçalho
   if (vipBtn) vipBtn.classList.remove("d-none");
   if (backBtn) backBtn.classList.add("d-none");
-  if (editCoverBtn) editCoverBtn.style.setProperty("display", "grid", "important");
+  if (editCoverBtn) editCoverBtn.style.display = "grid";
   if (vipHeaderActionBtn) {
     vipHeaderActionBtn.classList.add("d-none");
     vipHeaderActionBtn.style.display = "none";

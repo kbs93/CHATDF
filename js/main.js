@@ -1119,8 +1119,13 @@ window.openMainProfilePanel = async (userId) => {
   profileRequestToken += 1;
   const requestToken = profileRequestToken;
 
-  if (!isPanelOpen) {
+
+if (!isPanelOpen) {
+    if (typeof fecharPainelVip === "function") {
+      fecharPainelVip();
+    }
     openProfilePanel();
+    document.querySelector('.profile-tab[data-tab="info"]')?.click();
   }
 
   if (profileAvatar) {
@@ -1130,6 +1135,7 @@ window.openMainProfilePanel = async (userId) => {
   renderProfileBannerPalette();
   document.body.classList.toggle("viewing-other-profile", !isOwner);
   applyProfileMode(isOwner);
+
 
   await new Promise(resolve => requestAnimationFrame(resolve));
 
@@ -1519,6 +1525,12 @@ function openProfilePanel() {
 
 function closeProfilePanel(force = false) {
   if (!profilePanel) return;
+
+  // Garante que o painel VIP seja completamente resetado ao fechar o modal
+  if (typeof fecharPainelVip === "function") {
+    fecharPainelVip();
+  }
+
   profilePanel.classList.remove("open");
   profilePanel.classList.remove("dragging");
   profilePanel.style.transform = "";

@@ -5,57 +5,94 @@
 import { auth, db } from "./firebase-config.js";
 import { showToast } from "./ui.js";
 import {
-  serverTimestamp,
   setDoc,
   doc,
   getDoc,
-  deleteDoc,
-  increment,
+  arrayUnion,
+  arrayRemove,
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-
 // Lista base dos Interesses do DF
 export const LISTA_INTERESSES_DF = [
-   { id: "parquedacidade", nome: "ParqueDaCidade" },
-  { id: "pontao", nome: "Pontão" },
-  { id: "eixao", nome: "Eixão" },
-  { id: "feirasdf", nome: "FeirasDF" },
-   { id: "lagoparanoa", nome: "LagoParanoa" },
-   { id: "shopping", nome: "Shopping" },
-   { id: "feiradorolo", nome: "FeiraDoRolo" },
-  { id: "sertanejo", nome: "Sertanejo" },
-  { id: "rock", nome: "Rock" },
-  { id: "mpb", nome: "MPB" },
-   { id: "funk", nome: "Funk" },
-   { id: "raptrap", nome: "RapTrap" },
-   { id: "hiphop", nome: "HipHop" },
-   { id: "flashback", nome: "FlashBack" },
-   { id: "pagode", nome: "Pagode" },
-   { id: "samba", nome: "Samba" },
-   { id: "gospel", nome: "Gospel" },
-   { id: "reggae", nome: "Reggae" },
-   { id: "forro", nome: "Forró" },
-   { id: "axe", nome: "Axe" },
-   { id: "jazzblues", nome: "JazzBlues" },
-   { id: "classicas", nome: "Classicas" },
-   { id: "pop", nome: "Pop" },
-  { id: "eletronica", nome: "Eletrônica" },
-  { id: "roles", nome: "Roles" },
-   { id: "cinema", nome: "Cinema" },
-  { id: "concurseiro", nome: "Concurseiro(a)" },
-  { id: "futebol", nome: "Futebol" },
-  { id: "gamers", nome: "Gamers" },
-  { id: "cafe", nome: "Café" },
-  { id: "pets", nome: "Pets" },
-  { id: "natureza", nome: "Natureza" },
-   { id: "trilhas", nome: "Trilhas" },
-   { id: "pesca", nome: "Pescaria" },
-   { id: "cristao", nome: "Cristão" },
-   { id: "evangelico", nome: "Evangelico" },
-   { id: "ateu", nome: "Ateu" },
-   { id: "memes", nome: "Memes" },
+  // Lugares do DF (Verde Esmeralda)
+  { id: "parquedacidade", nome: "ParqueDaCidade", categoria: "lugares" },
+  { id: "pontao", nome: "Pontão", categoria: "lugares" },
+  { id: "eixao", nome: "Eixão", categoria: "lugares" },
+  { id: "feirasdf", nome: "FeirasDF", categoria: "lugares" },
+  { id: "lagoparanoa", nome: "LagoParanoa", categoria: "lugares" },
+  { id: "shopping", nome: "Shopping", categoria: "lugares" },
+  { id: "feiradorolo", nome: "FeiraDoRolo", categoria: "lugares" },
+  { id: "natureza", nome: "Natureza", categoria: "lugares" },
+  { id: "trilhas", nome: "Trilhas", categoria: "lugares" },
+  { id: "taguaparque", nome: "TaguaParque", categoria: "lugares" },
+  { id: "torredetv", nome: "TorreDeTV", categoria: "lugares" },
+  { id: "torredetvdigital", nome: "TorreDeTvDigital", categoria: "lugares" },
+  { id: "pontejk", nome: "PonteJK", categoria: "lugares" },
+
+  // Música (Roxo / Índigo)
+  { id: "sertanejo", nome: "Sertanejo", categoria: "musica" },
+  { id: "rock", nome: "Rock", categoria: "musica" },
+  { id: "mpb", nome: "MPB", categoria: "musica" },
+  { id: "funk", nome: "Funk", categoria: "musica" },
+  { id: "raptrap", nome: "RapTrap", categoria: "musica" },
+  { id: "hiphop", nome: "HipHop", categoria: "musica" },
+  { id: "flashback", nome: "FlashBack", categoria: "musica" },
+  { id: "pagode", nome: "Pagode", categoria: "musica" },
+  { id: "samba", nome: "Samba", categoria: "musica" },
+  { id: "gospel", nome: "Gospel", categoria: "musica" },
+  { id: "reggae", nome: "Reggae", categoria: "musica" },
+  { id: "forro", nome: "Forró", categoria: "musica" },
+  { id: "axe", nome: "Axe", categoria: "musica" },
+  { id: "jazzblues", nome: "JazzBlues", categoria: "musica" },
+  { id: "classicas", nome: "Classicas", categoria: "musica" },
+  { id: "pop", nome: "Pop", categoria: "musica" },
+  { id: "eletronica", nome: "Eletrônica", categoria: "musica" },
+
+  // Hobbies / Jogos / Estudo / Estilo de Vida (Azul Cobalto & Âmbar)
+  { id: "roles", nome: "Roles", categoria: "hobbies" },
+  { id: "cinema", nome: "Cinema", categoria: "hobbies" },
+  { id: "concurseiro", nome: "Concurseiro(a)", categoria: "hobbies" },
+  { id: "futebol", nome: "Futebol", categoria: "hobbies" },
+  { id: "gamers", nome: "Gamers", categoria: "hobbies" },
+  { id: "cafe", nome: "Café", categoria: "hobbies" },
+  { id: "pets", nome: "Pets", categoria: "hobbies" },
+  { id: "pesca", nome: "Pescaria", categoria: "hobbies" },
+  { id: "memes", nome: "Memes", categoria: "hobbies" },
+  { id: "pedal", nome: "Pedal", categoria: "hobbies" },
+  { id: "bicicleta", nome: "Bicicleta", categoria: "hobbies" },
+  { id: "patins", nome: "Patins", categoria: "hobbies" },
+  { id: "skate", nome: "Skate", categoria: "hobbies" },
+
+  // Religião
+  { id: "cristao", nome: "Cristão", categoria: "religiao" },
+  { id: "evangelico", nome: "Evangelico", categoria: "religiao" },
+  { id: "ateu", nome: "Ateu", categoria: "religiao" },
+  { id: "candomble", nome: "Candomblé", categoria: "religiao" },
+  { id: "umbanda", nome: "Umbanda", categoria: "religiao" },
   
+  // Artes Marciais / Lutas
+  { id: "boxe", nome: "Boxe", categoria: "luta" },
+  { id: "muaythai", nome: "MuayThai", categoria: "luta" },
+  { id: "kickboxing", nome: "Kickboxing", categoria: "luta" },
+  { id: "carater", nome: "Caratê", categoria: "luta" },
+  { id: "taekwondo", nome: "Taekwondo", categoria: "luta" },
+  { id: "kungfu", nome: "KungFu", categoria: "luta" },
+  { id: "capoeira", nome: "Capoeira", categoria: "luta" },
+  { id: "jiujitsu", nome: "JiuJitsu", categoria: "luta" },
+  { id: "judo", nome: "Judô", categoria: "luta" },
+  { id: "mma", nome: "MMA", categoria: "luta" }
 ];
+
+// Gera chave legível e curta para o documento: NomeSemAcentos_Primeiros5DigitosUID
+export function obterDocIdTotais(targetUid) {
+  const nomeBruto = document.getElementById("profileName")?.textContent?.trim() || "Usuario";
+  const nomeLimpo = nomeBruto
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9]/g, "");
+  const prefixoId = String(targetUid || "").slice(0, 5);
+  return `${nomeLimpo || "Usuario"}_${prefixoId}`;
+}
 
 export let selectedInterests = [];
 export function setSelectedInterests(novosInteresses) {
@@ -65,8 +102,7 @@ export function setSelectedInterests(novosInteresses) {
 let unsubscribeTotalsListener = null;
 let unsubscribeUserLikesListener = [];
 
-// Renderiza as tags na aba Info com apenas 1 leitura de documento de resumo
-// Renderiza as tags na aba Info com normalização automática para perfis antigos e novos
+// Renderiza as tags na aba Info
 export function renderProfileInterests(userInterests = [], targetUid, isOwner) {
   const container = document.getElementById("profileInterestsList");
   if (!container) return;
@@ -97,37 +133,29 @@ export function renderProfileInterests(userInterests = [], targetUid, isOwner) {
     return String(item);
   }).filter(Boolean);
 
-  // 1. Cria os botões das tags no DOM
+  const targetDocKey = obterDocIdTotais(targetUid);
+
+// 1. Cria os botões das tags no DOM
   sanitizedInterests.forEach(tagId => {
     const meta = LISTA_INTERESSES_DF.find(i => i.id === tagId) || {
       id: tagId,
       nome: tagId,
-      icone: "#"
+      categoria: ""
     };
 
-const pill = document.createElement("button");
+    const pill = document.createElement("button");
     pill.type = "button";
     pill.id = `pill-interest-${tagId}`;
-    pill.className = `interest-pill ${isOwner ? "owner-view" : ""}`;
- pill.innerHTML = `
+    const catClass = meta.categoria ? `tag-cat-${meta.categoria}` : "";
+    pill.className = `interest-pill ${catClass} ${isOwner ? "owner-view" : ""}`;
+    pill.innerHTML = `
       <span>${meta.nome}</span>
       ${!isOwner ? '<i class="bi bi-heart interest-like-icon"></i>' : ''}
       <span class="interest-like-badge">0</span>
     `;
 
-    // 2. Trava de Like Único para o visitante
-    if (!isOwner && currentUserId) {
-      const myLikeDocRef = doc(db, "curtidas_tags", `${targetUid}_${tagId}_${currentUserId}`);
-      const unsubLike = onSnapshot(myLikeDocRef, (snap) => {
-        const isLiked = snap.exists();
-        const icon = pill.querySelector(".interest-like-icon");
-        if (icon) {
-          icon.className = `bi ${isLiked ? "bi-heart-fill" : "bi-heart"} interest-like-icon`;
-        }
-        pill.classList.toggle("liked", isLiked);
-      });
-      unsubscribeUserLikesListener.push(unsubLike);
-
+    // Evento de clique para visitante
+    if (!isOwner) {
       pill.addEventListener("click", async (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -145,33 +173,34 @@ const pill = document.createElement("button");
     container.appendChild(pill);
   });
 
-  // 3. Ouvinte dos totais agregados
-// 3. Ouvinte dos totais agregados
-  const totalsDocRef = doc(db, "totais_tags", targetUid);
+  // 2. Ouvinte ÚNICO em tempo real para Contagem e Trava de Like (via Array)
+  const totalsDocRef = doc(db, "totais_tags", targetDocKey);
   unsubscribeTotalsListener = onSnapshot(totalsDocRef, (snap) => {
-    const totalsData = snap.exists() ? snap.data() : {};
-
-    // Normaliza todas as chaves do banco para minúsculas
-    const normalizedTotals = {};
-    Object.keys(totalsData).forEach(k => {
-      normalizedTotals[k.toLowerCase()] = totalsData[k];
-    });
+    const data = snap.exists() ? snap.data() : {};
 
     sanitizedInterests.forEach(tagId => {
-      const cleanId = String(tagId).toLowerCase();
       const pill = document.getElementById(`pill-interest-${tagId}`);
-      if (pill) {
-        const badge = pill.querySelector(".interest-like-badge");
-        const rawCount = normalizedTotals[cleanId] ?? totalsData[tagId] ?? 0;
-        const count = typeof rawCount === "number" ? rawCount : (parseInt(rawCount, 10) || 0);
-        if (badge) badge.textContent = Math.max(0, count);
+      if (!pill) return;
+
+      const arrayCurtidas = Array.isArray(data[`curtidas_${tagId}`]) ? data[`curtidas_${tagId}`] : [];
+      const count = arrayCurtidas.length;
+      const isLiked = currentUserId ? arrayCurtidas.includes(currentUserId) : false;
+
+      const badge = pill.querySelector(".interest-like-badge");
+      const icon = pill.querySelector(".interest-like-icon");
+
+      if (badge) badge.textContent = count;
+      if (icon) {
+        icon.className = `bi ${isLiked ? "bi-heart-fill" : "bi-heart"} interest-like-icon`;
       }
+      pill.classList.toggle("liked", isLiked);
     });
   });
 }
 
-// Alterna o like usando atomic increment (+1 / -1)
-// Alterna o like com atualização instantânea na interface e persistência atômica
+
+
+// Alterna o like de forma atômica no array do documento principal
 export async function toggleInterestLike(targetUid, tagId) {
   const currentUserId = auth.currentUser?.uid || window.appState?.currentUser?.uid;
   if (!currentUserId || !targetUid) return;
@@ -180,11 +209,10 @@ export async function toggleInterestLike(targetUid, tagId) {
   const badge = pill?.querySelector(".interest-like-badge");
   const icon = pill?.querySelector(".interest-like-icon");
 
-  // Leitura visual imediata da tela
   let currentCount = badge ? (parseInt(badge.textContent, 10) || 0) : 0;
   const isCurrentlyLiked = pill?.classList.contains("liked");
 
-  // --- ATUALIZAÇÃO OTIMISTA IMEDIATA NA INTERFACE ---
+  // Atualização otimista imediata na interface
   if (isCurrentlyLiked) {
     if (pill) pill.classList.remove("liked");
     if (icon) icon.className = "bi bi-heart interest-like-icon";
@@ -196,41 +224,27 @@ export async function toggleInterestLike(targetUid, tagId) {
   }
 
   try {
-    const likeDocId = `${targetUid}_${tagId}_${currentUserId}`;
-    const likeDocRef = doc(db, "curtidas_tags", likeDocId);
-    const totalsDocRef = doc(db, "totais_tags", targetUid);
+    const targetDocKey = obterDocIdTotais(targetUid);
+    const totalsDocRef = doc(db, "totais_tags", targetDocKey);
+    const snap = await getDoc(totalsDocRef);
+    const data = snap.exists() ? snap.data() : {};
+    const arrayCurtidas = Array.isArray(data[`curtidas_${tagId}`]) ? data[`curtidas_${tagId}`] : [];
 
-    const snap = await getDoc(likeDocRef);
-
-    if (snap.exists()) {
-      // 1. Descurtir: apaga a trava e decrementa
-      await deleteDoc(likeDocRef);
-      await setDoc(totalsDocRef, { [tagId]: increment(-1) }, { merge: true });
+    if (arrayCurtidas.includes(currentUserId)) {
+      // Descurtir: remove o UID do array
+      await setDoc(totalsDocRef, {
+        [`curtidas_${tagId}`]: arrayRemove(currentUserId)
+      }, { merge: true });
     } else {
-      // 2. Curtiu: cria a trava do visitante com dados de auditoria
-      const visitorName =
-        auth.currentUser?.displayName ||
-        window.appState?.currentUser?.nome ||
-        "Usuário";
-
-      const targetName = document.getElementById("profileName")?.textContent?.trim() || "Usuário";
-
-      await setDoc(likeDocRef, {
-        targetUid: targetUid,
-        targetName: targetName,
-        tagId: tagId,
-        visitorUid: currentUserId,
-        visitorName: visitorName,
-        createdAt: serverTimestamp()
-      });
-
-      // 3. Incrementa no documento de totais
-      await setDoc(totalsDocRef, { [tagId]: increment(1) }, { merge: true });
+      // Curtiu: adiciona o UID ao array
+      await setDoc(totalsDocRef, {
+        [`curtidas_${tagId}`]: arrayUnion(currentUserId)
+      }, { merge: true });
     }
   } catch (err) {
     console.error("Erro ao processar curtida no Firestore:", err);
 
-    // Reverte visualmente caso a gravação falhe
+    // Reverte interface se falhar
     if (pill) {
       pill.classList.toggle("liked", isCurrentlyLiked);
       if (icon) {
@@ -258,7 +272,7 @@ export function renderEditInterestsSelector() {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = `interest-toggle-btn ${isSelected ? "selected" : ""}`;
-   btn.textContent = item.nome;
+    btn.textContent = item.nome;
 
     btn.addEventListener("click", (e) => {
       e.preventDefault();

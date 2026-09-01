@@ -70,6 +70,10 @@ body.chat-loading .message {
 body.panel-open {
   overscroll-behavior-y: none;
 }
+/* Oculta o botão do lapis de editar capa quando o painel VIP estiver aberto */
+body #profilePanel.vip-mode-active .profile-cover-actions #editProfileCoverBtn {
+  display: none;
+}
 
 /* ========================================================================= 
    MAPEAMENTO DE FONTES LOCAIS EXCLUSIVAS VIP (MÉTODO LOCAL SEGURO)
@@ -8374,3 +8378,60 @@ Reposiciona a tag de expiração para não cobrir o botão voltar vip
 }
 
 
+/* ========================================================================= 
+   CORES PASTEL TEMÁTICAS POR CATEGORIA (TAGS GOSTOS & HOBBIES)
+   ========================================================================= */
+
+/* 1. Lugares do DF (Verde Esmeralda Suave) */
+.interest-pill.tag-cat-lugares {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #065f46;
+}
+.interest-pill.tag-cat-lugares:hover {
+  background: #d1fae5;
+  border-color: #6ee7b7;
+}
+
+/* 2. Música (Roxo / Índigo Suave) */
+.interest-pill.tag-cat-musica {
+  background: #f5f3ff;
+  border-color: #ddd6fe;
+  color: #5b21b6;
+}
+.interest-pill.tag-cat-musica:hover {
+  background: #ede9fe;
+  border-color: #c4b5fd;
+}
+
+/* 3. Hobbies, Jogos e Estudo (Azul Cobalto Suave) */
+.interest-pill.tag-cat-hobbies {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e40af;
+}
+.interest-pill.tag-cat-hobbies:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+/* 4. Religião & Fé (Âmbar / Dourado Espiritual Suave) */
+.interest-pill.tag-cat-religiao {
+  background: #fefce8;
+  border-color: #fef08a;
+  color: #854d0e;
+}
+.interest-pill.tag-cat-religiao:hover {
+  background: #fef9c3;
+  border-color: #fde047;
+}
+
+/* 5. Artes Marciais & Lutas (Terracota / Coral Suave) */
+.interest-pill.tag-cat-luta {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  color: #9f1239;
+}
+.interest-pill.tag-cat-luta:hover {
+  background: #ffe4e6;
+  border-color: #fda4af;
+}
