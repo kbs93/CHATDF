@@ -1,5 +1,6 @@
 // auth.js
 import { auth, provider, signOutUser, onAuthChange, db, rtdb } from "./firebase-config.js";
+import { verificarUsuarioBloqueado } from "./bloqueio.js";
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -22,6 +23,9 @@ import {
   updateDoc,
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+
+
 export let currentUser = null;
 let googleLoginInProgress = false;
 let unsubscribeUserAreaProfileListener = null; // 03-05-26 
@@ -292,6 +296,10 @@ export function initAuth(showToast) {
   onAuthChange(async (user) => {
 if (user) {
   currentUser = user;
+
+  // VERIFICAÇÃO DE BLOQUEIO / BANIMENTO
+  const isBloqueado = await verificarUsuarioBloqueado(user);
+  if (isBloqueado) return; // Se estiver banido, interrompe o carregamento e desloga
 
 // ===================== CRIAR / ATUALIZAR USUÁRIO (FIRESTORE) ====================== 18-03-26
 // ===================== CRIAR / ATUALIZAR USUÁRIO (FIRESTORE) ======================

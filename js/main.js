@@ -6,6 +6,7 @@ import { showToast, openAttachmentSheet, openUIPanel, textColorPalette } from ".
 import { initStickerPanel } from "./stickers-panel.js";
 import { auth, db, rtdb } from "./firebase-config.js";
 import { initUsersPanel } from "./users-panel.js";
+import { initDenuncias } from "./bloqueio.js";
 import { updateProfile } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
 import { ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
@@ -447,6 +448,10 @@ document.addEventListener("click", (e) => {
 document.addEventListener("DOMContentLoaded", () => {
   initNavbarCollapse();
   initVipEngine(() => currentProfileIsOwner);
+initDenuncias(); // <--- Adicionado aqui 01-09-2026
+
+
+  
 
   // Vincular Abertura e Retorno do VIP
   document.getElementById("vipTopHeaderBtn")?.addEventListener("click", (e) => {
@@ -804,6 +809,10 @@ document.getElementById("contextReportBtn")?.addEventListener("click", (e) => {
   }
 
   menu.classList.add("hidden");
+
+  // Abre o modal de denúncia na tela
+  reportUserModal.classList.remove("hidden");
+  reportUserModal.style.display = "flex";
 });
 
 document.getElementById("cancelReport")?.addEventListener("click", () => {
