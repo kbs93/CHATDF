@@ -175,9 +175,9 @@ function bindMessageReplyClick(div, msgId, msg) {
 Se não houver uma resposta pendente no momento, ativa a caixa de prévia do reply
 ======================================================================================================== */
 if (!window.replyingTo) {
-  // Bloqueia reply para quem não completou o perfil ou não está logado
-  const perfilAtual = window.__currentProfileData;
-  if (!currentUser || !perfilAtual || perfilAtual.perfilCompleto !== true) {
+  // Bloqueia reply caso o input do usuário esteja com a trava de perfil ativo
+  const inputTravado = document.getElementById("message-input-wrapper")?.classList.contains("profile-locked");
+  if (!currentUser || inputTravado) {
     showToast("Complete seu perfil para responder mensagens.");
     document.dispatchEvent(new CustomEvent("chatdf:open-profile"));
     return;
@@ -447,15 +447,17 @@ if (clickArea) {
 clickArea.addEventListener("click", (e) => {
 e.stopPropagation();
 
-// Bloqueia a ação caso o usuário não esteja logado ou não tenha o cadastro completo
-const perfilAtual = window.__currentProfileData;
-if (!currentUser || !perfilAtual || perfilAtual.perfilCompleto !== true) {
+// Bloqueia a ação caso o usuário não esteja logado ou esteja com perfil travado
+const inputTravado = document.getElementById("message-input-wrapper")?.classList.contains("profile-locked");
+if (!currentUser || inputTravado) {
   showToast("Complete seu perfil para interagir com os usuários.");
   document.dispatchEvent(new CustomEvent("chatdf:open-profile"));
   return;
 }
 
 const menu = document.getElementById("messageContextMenu");
+
+
 if (!menu) return;
 
 const rect = clickArea.getBoundingClientRect();

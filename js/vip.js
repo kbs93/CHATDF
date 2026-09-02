@@ -6,7 +6,8 @@ import { ref as rRef, update as rUpdate } from "https://www.gstatic.com/firebase
 
 
 // Estado global do módulo VIP
-window.__vipMENSAGEM_COR_SELECIONADA = "#333333";
+// Estado global do módulo VIP
+window.__vipMENSAGEM_COR_SELECIONADA = null;
 window.__vipNOME_COR_SELECIONADA = "#6f42c1";
 
 // Função auxiliar de fallback cirúrgico para evitar quebras em mobile
@@ -182,8 +183,8 @@ if (btnType) btnType.textContent = "Escolha uma cor";
     dropdown.classList.add('hidden');
   });
 
-  window.__vipNOME_COR_SELECIONADA = "#6f42c1";
-  window.__vipMENSAGEM_COR_SELECIONADA = "#333333";
+ window.__vipNOME_COR_SELECIONADA = "#6f42c1";
+  window.__vipMENSAGEM_COR_SELECIONADA = null;
 }
 
 /* ========================================================================
@@ -580,15 +581,60 @@ export function initVipEngine(isOwnerCallback) {
  
 // ====================================3. Gravação das Configurações VIP VERIFICACAO E RESET AUTOMÁTICO DO VIP EXPIRADO 
 //  RESETANDO O PAINEL VIP.. =============================
-  document.getElementById("btnSaveVipSettings")?.addEventListener("click", async () => {
+
+document.getElementById("btnSaveVipSettings")?.addEventListener("click", async () => {
     const user = auth.currentUser;
     if (!user) return;
+
+    // Captura os valores dos 6 campos VIP
+    const tipoNome = document.getElementById("vipNameColorType")?.value || "none";
+    const fonteNome = document.getElementById("vipNameFont")?.value || "default";
+    const corMsg = window.__vipMENSAGEM_COR_SELECIONADA;
+    const moldura = document.getElementById("vipAvatarFrameSelect")?.value || "none";
+    const tema = document.getElementById("vipProfileBannerSelect")?.value || "default";
+    const bannerUrlFinal = window.__vipBannerUrlTemp !== undefined 
+      ? window.__vipBannerUrlTemp 
+      : (window.__currentProfileData?.vipBannerUrl || "");
+
+    // 1. Estilo do nome
+    if (!tipoNome || tipoNome === "none") {
+      showToast("Por favor, selecione o Estilo do nome.");
+      return;
+    }
+
+    // 2. Fonte do nome
+    if (!fonteNome || fonteNome === "default") {
+      showToast("Por favor, selecione a Fonte do nome.");
+      return;
+    }
+
+    // 3. Cor do texto (agora valida corretamente porque inicia como null)
+    if (!corMsg) {
+      showToast("Por favor, selecione a Cor do texto.");
+      return;
+    }
+
+    // 4. Moldura
+    if (!moldura || moldura === "none") {
+      showToast("Por favor, selecione uma Moldura.");
+      return;
+    }
+
+    // 5. Tema
+    if (!tema || tema === "default") {
+      showToast("Por favor, selecione um Tema de perfil.");
+      return;
+    }
+
+    // 6. Capa/Banner do topo
+    if (!bannerUrlFinal || bannerUrlFinal.trim() === "") {
+      showToast("Por favor, selecione uma Imagem para o Banner da capa.");
+      return;
+    }
+
     try {
       showToast("Gravando configurações VIP...");
       const refUser = doc(db, "users", user.uid);
-      const bannerUrlFinal = window.__vipBannerUrlTemp !== undefined 
-        ? window.__vipBannerUrlTemp 
-        : (window.__currentProfileData?.vipBannerUrl || "");
 
 /*  RESETANDO o original ,  const validadeVip = window.__currentProfileData?.vipExpiresAt || (Date.now() + 7 * 24 * 60 * 60 * 1000);
 
@@ -663,8 +709,27 @@ Portanto, a premissa está correta.*/
   });
 
   //===============================  4. Modal de Banner & Buscador Multi-Plataforma ===================================
+ 
   initVipBannerModal(isOwnerCallback);
+
+  //===============================  5. Abertura do Modal Pix para Renovação VIP ===================================
+//===============================  5. Abertura do Modal Pix para Renovação VIP ===================================
+  const acionarModalPix = (e) => {
+    e.preventDefault();
+    if (typeof window.solicitarPixVip === "function") {
+      window.solicitarPixVip(15.00, "VIP Diamante - 30 Dias");
+    } else if (typeof window.abrirModalPix === "function") {
+      window.abrirModalPix({
+        titulo: "VIP Diamante - 30 Dias",
+        valor: "R$ 15,00"
+      });
+    }
+  };
+
+  document.getElementById("btnDrawerRenewVip")?.addEventListener("click", acionarModalPix);
+  document.getElementById("btnTopRenewVip")?.addEventListener("click", acionarModalPix);
 }
+
 
 function initVipBannerModal(isOwnerCallback) {
   const vipHeaderBtn = document.getElementById("vipHeaderActionBtn");

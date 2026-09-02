@@ -1344,15 +1344,18 @@ function applyProfileMode(isOwner) {
 
 const abaAtual = document.querySelector('.profile-tab.active')?.dataset.tab || "info";
     const isEditAba = (abaAtual === "edit");
+    const isInfoAba = (abaAtual === "info");
     const vipTopBtn = document.getElementById("vipTopHeaderBtn");
     
-    // VIP, Lápis e Câmera iniciam com base estrita na aba ativa
+    // Lápis e Câmera na aba Editar; Botão VIP exibido na aba Info
     if (editProfileCoverBtn) editProfileCoverBtn.style.display = isEditAba ? "grid" : "none";
-    if (vipTopBtn) vipTopBtn.style.display = isEditAba ? "inline-flex" : "none";
+    if (vipTopBtn) vipTopBtn.style.display = isInfoAba ? "inline-flex" : "none";
     if (uploadPhotoBtn) {
       uploadPhotoBtn.classList.toggle("hidden", !isEditAba);
       uploadPhotoBtn.style.display = isEditAba ? "flex" : "none";
     }
+
+
 
     if (vipTabBtn) {
       vipTabBtn.hidden = false;
@@ -1459,12 +1462,13 @@ tabs.forEach(tab => {
     const vipTopBtn = document.getElementById("vipTopHeaderBtn");
     const uploadPhotoBtn = document.getElementById("btnUploadPhoto");
 
-    if (currentProfileIsOwner) {
+if (currentProfileIsOwner) {
       const isEdit = (target === "edit");
+      const isInfo = (target === "info");
 
-      // VIP, Lápis e Câmera aparecem EXCLUSIVAMENTE na aba Editar perfil
+      // Lápis e Câmera na aba Editar perfil; Botão VIP na aba Info
       if (editBtn) editBtn.style.display = isEdit ? "grid" : "none";
-      if (vipTopBtn) vipTopBtn.style.display = isEdit ? "inline-flex" : "none";
+      if (vipTopBtn) vipTopBtn.style.display = isInfo ? "inline-flex" : "none";
       if (uploadPhotoBtn) {
         uploadPhotoBtn.classList.toggle("hidden", !isEdit);
         uploadPhotoBtn.style.display = isEdit ? "flex" : "none";
