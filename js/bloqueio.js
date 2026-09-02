@@ -165,7 +165,7 @@ export function initDenuncias() {
     }
 
     try {
-      showToast("Enviando denúncia...");
+      //showToast("Enviando denúncia...");
 
       // 1. Busca os dados do autor da denúncia
       const reporterProfileRef = doc(db, "users", auth.currentUser.uid);
@@ -204,7 +204,7 @@ export function initDenuncias() {
         ultimoUsuarioDenunciado: targetUid
       }, { merge: true });
 
-      showToast("Denúncia enviada à moderação!");
+      showToast("Denúncia enviada");
       fecharModal();
 
       if (reportBtn) reportBtn.style.opacity = "0.5";
