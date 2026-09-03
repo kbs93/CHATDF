@@ -212,17 +212,19 @@
         <div class="pix-value" id="pixPlanPrice">R$ 15,00</div>
 
         <!-- Área onde entra o QR Code do Mercado Pago -->
+   <!-- Área onde entra o QR Code do Mercado Pago -->
         <div class="pix-qrcode-box">
-          <img id="pixQrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=ExemploPixCopiaECola" alt="QR Code Pix">
+          <img id="pixQrCodeImg" src="" alt="Aguardando QR Code..." style="display: none;">
         </div>
 
         <!-- Linha Copia e Cola -->
         <div class="pix-copy-area">
-          <input type="text" id="pixCopyInput" class="pix-code-input" readonly value="00020126580014br.gov.bcb.pix0136123e4567-e89b-12d3-a456-4266141740005204000053039865802BR5913ChatDF VIP6008BRASILIA62070503***6304E2CA">
+          <input type="text" id="pixCopyInput" class="pix-code-input" readonly value="Aguardando código Pix...">
           <button type="button" id="pixCopyBtn" class="pix-btn-copy">
             <i class="bi bi-clipboard"></i> Copiar
           </button>
         </div>
+
 
         <!-- Status de espera -->
         <div class="pix-status-indicator">
@@ -268,10 +270,20 @@ copyBtn.addEventListener("click", async () => {
   });
 
   // 4. INTERFACE GLOBAL PARA ABRIR O MODAL DE QUALQUER LUGAR
+// 4. INTERFACE GLOBAL PARA ABRIR O MODAL DE QUALQUER LUGAR
   window.abrirModalPix = function ({ titulo = "Plano 30 Dias", valor = "R$ 15,00", qrCodeBase64 = "", copiaECola = "" } = {}) {
     if (titulo) document.getElementById("pixPlanTitle").textContent = titulo;
     if (valor) document.getElementById("pixPlanPrice").textContent = valor;
-    if (qrCodeBase64) document.getElementById("pixQrCodeImg").src = qrCodeBase64;
+    
+    const imgEl = document.getElementById("pixQrCodeImg");
+    if (qrCodeBase64) {
+      imgEl.src = qrCodeBase64;
+      imgEl.style.display = "block";
+    } else {
+      imgEl.src = "";
+      imgEl.style.display = "none";
+    }
+
     if (copiaECola) copyInput.value = copiaECola;
 
     overlay.classList.add("open");
