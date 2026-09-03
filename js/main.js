@@ -4,12 +4,14 @@ import { initAuth } from "./auth.js";
 import { initMessages, sendMessage } from './messages.js?v=2';
 import { showToast, openAttachmentSheet, openUIPanel, textColorPalette } from "./ui.js";
 import { initStickerPanel } from "./stickers-panel.js";
-import { auth, db, rtdb } from "./firebase-config.js";
+
+import { auth, db } from "./firebase-config.js";
 import { initUsersPanel } from "./users-panel.js";
 import { initDenuncias } from "./bloqueio.js";
 import { updateProfile } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { setUserStatus, listenUserOnlineStatus, trackUserRoomPresence } from "./presence.js";
 
-import { ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
 import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
 import {
@@ -68,14 +70,11 @@ export async function verificarEExpiraVipUsuario(userId, userData) {
 
         await updateDoc(refUser, resetData);
 
-        const userStatusRef = ref(rtdb, "status/" + userId);
-        await set(userStatusRef, {
-          uid: userId,
+        await setUserStatus(userId, {
           name: userData.nome || "Usuário",
           avatar: userData.foto || "./img/avatar.png",
           online: true,
           sala: appState.currentRoom || sala,
-          lastChanged: Date.now(),
           ...resetData
         });
 
@@ -196,46 +195,10 @@ const appState = {
 };
 window.appState = appState;
 
-async function updateUserRoomPresence() {
+function updateUserRoomPresence() {
   const user = auth.currentUser;
   if (!user) return;
-  try {
-    const { set, onDisconnect } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js");
-    
-    const userStatusRef = ref(rtdb, "status/" + user.uid);
-    const connectedRef = ref(rtdb, ".info/connected");
-
-    const vipData = appState.currentUser?.vipData || {};
-
-    onValue(connectedRef, async (snap) => {
-      if (snap.val() === true) {
-        await onDisconnect(userStatusRef).update({
-          online: false,
-          lastChanged: Date.now()
-        });
-
-    const fotoReal = 
-          appState.currentUser?.foto || 
-          appState.currentUser?.avatar || 
-          window.__currentProfileData?.foto || 
-          appState.currentUser?.photoURL || 
-          "./img/avatar.png";
-
-        await set(userStatusRef, {
-          uid: user.uid,
-          name: appState.currentUser?.nome || appState.currentUser?.displayNameChat || user.displayName || "Usuário",
-          avatar: fotoReal,
-          online: true,
-          sala: appState.currentRoom || "geral",
-          lastChanged: Date.now(),
-          ...vipData
-        });
-      }
-    });
-
-  } catch (err) {
-    console.error("Erro ao atualizar presença da sala:", err);
-  }
+  trackUserRoomPresence(user, appState, sala);
 }
 
 window.addEventListener("online", () => {
@@ -1174,11 +1137,7 @@ if (!isPanelOpen) {
       if (isOwner) {
         data = await verificarEExpiraVipUsuario(userId, data);
       }
-      const statusRef = ref(rtdb, "status/" + userId);
-
-      onValue(statusRef, (statusSnap) => {
-        const statusData = statusSnap.val();
-        const isOnline = statusData?.online === true;
+      listenUserOnlineStatus(userId, (isOnline) => {
         if (profileOnlineDot) profileOnlineDot.classList.toggle("hidden", !isOnline);
       });
 
@@ -1982,14 +1941,11 @@ await updateDoc(refUser, {
       await updateProfile(user, { photoURL: linkFotoFinal });
     }
 
-const userStatusRef = ref(rtdb, "status/" + user.uid);
-    await set(userStatusRef, {
-      uid: user.uid,
+await setUserStatus(user.uid, {
       name: editName.value.trim() || "Usuário",
       avatar: linkFotoFinal || "./img/avatar.png",
       online: true,
       sala: appState.currentRoom || sala,
-      lastChanged: Date.now(),
       isVip: data.isVip || false,
       vipNameColorType: data.vipNameColorType || "solid",
       vipNameColorSolid: data.vipNameColorSolid || "#1E293B",
