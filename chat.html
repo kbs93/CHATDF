@@ -151,14 +151,24 @@
   <button id="closeRoomsModal" type="button" class="rooms-modal-close-btn">✕</button>
 </div>
 
-    <div class="rooms-list-grid">
+
+
+
+
+
+
+
+<div class="rooms-list-grid">
       <!-- 1. Bate papo Geral -->
       <button type="button" class="btn-change-room" data-room="geral">
         <div class="room-btn-content">
           <div class="room-btn-icon"><i class="bi bi-chat-dots"></i></div>
           <div class="room-btn-text"><strong>Bate papo Geral</strong></div>
         </div>
-        <i class="bi bi-chevron-right arrow-icon"></i>
+        <div class="room-btn-right">
+          <span class="room-online-badge" id="modal-online-geral">0</span>
+          <i class="bi bi-chevron-right arrow-icon"></i>
+        </div>
       </button>
 
       <!-- 2. Religião e Fé -->
@@ -167,7 +177,10 @@
           <div class="room-btn-icon"><i class="bi bi-house-heart"></i></div>
           <div class="room-btn-text"><strong>Religião e Fé</strong></div>
         </div>
-        <i class="bi bi-chevron-right arrow-icon"></i>
+        <div class="room-btn-right">
+          <span class="room-online-badge" id="modal-online-religiao">0 online</span>
+          <i class="bi bi-chevron-right arrow-icon"></i>
+        </div>
       </button>
 
       <!-- 3. Politica -->
@@ -176,7 +189,10 @@
           <div class="room-btn-icon"><i class="bi bi-megaphone"></i></div>
           <div class="room-btn-text"><strong>Politica</strong></div>
         </div>
-        <i class="bi bi-chevron-right arrow-icon"></i>
+        <div class="room-btn-right">
+          <span class="room-online-badge" id="modal-online-politica">0 online</span>
+          <i class="bi bi-chevron-right arrow-icon"></i>
+        </div>
       </button>
 
       <!-- 4. Trânsito e Transporte -->
@@ -185,7 +201,10 @@
           <div class="room-btn-icon"><i class="bi bi-sign-stop"></i></div>
           <div class="room-btn-text"><strong>Trânsito e Transporte</strong></div>
         </div>
-        <i class="bi bi-chevron-right arrow-icon"></i>
+        <div class="room-btn-right">
+          <span class="room-online-badge" id="modal-online-transito">0 online</span>
+          <i class="bi bi-chevron-right arrow-icon"></i>
+        </div>
       </button>
 
       <!-- 5. Lugares para sair -->
@@ -194,7 +213,10 @@
           <div class="room-btn-icon"><i class="bi bi-cup-hot"></i></div>
           <div class="room-btn-text"><strong>Lugares para sair</strong></div>
         </div>
-        <i class="bi bi-chevron-right arrow-icon"></i>
+        <div class="room-btn-right">
+          <span class="room-online-badge" id="modal-online-lugares">0 online</span>
+          <i class="bi bi-chevron-right arrow-icon"></i>
+        </div>
       </button>
 
       <!-- 6. Futebol e Esportes -->
@@ -203,7 +225,10 @@
           <div class="room-btn-icon"><i class="bi bi-trophy"></i></div>
           <div class="room-btn-text"><strong>Futebol e Esportes</strong></div>
         </div>
-        <i class="bi bi-chevron-right arrow-icon"></i>
+        <div class="room-btn-right">
+          <span class="room-online-badge" id="modal-online-futebol">0 online</span>
+          <i class="bi bi-chevron-right arrow-icon"></i>
+        </div>
       </button>
 
       <!-- 7. Eventos e Shows -->
@@ -212,7 +237,10 @@
           <div class="room-btn-icon"><i class="bi bi-calendar-event"></i></div>
           <div class="room-btn-text"><strong>Eventos e Shows</strong></div>
         </div>
-        <i class="bi bi-chevron-right arrow-icon"></i>
+        <div class="room-btn-right">
+          <span class="room-online-badge" id="modal-online-eventos">0 online</span>
+          <i class="bi bi-chevron-right arrow-icon"></i>
+        </div>
       </button>
 
       <!-- 8. Entretenimento -->
@@ -221,7 +249,10 @@
           <div class="room-btn-icon"><i class="bi bi-chat-square-heart"></i></div>
           <div class="room-btn-text"><strong>Entretenimento</strong></div>
         </div>
-        <i class="bi bi-chevron-right arrow-icon"></i>
+        <div class="room-btn-right">
+          <span class="room-online-badge" id="modal-online-entretenimento">0 online</span>
+          <i class="bi bi-chevron-right arrow-icon"></i>
+        </div>
       </button>
 
       <!-- 9. Games -->
@@ -230,16 +261,22 @@
           <div class="room-btn-icon"><i class="bi bi-controller"></i></div>
           <div class="room-btn-text"><strong>Games</strong></div>
         </div>
-        <i class="bi bi-chevron-right arrow-icon"></i>
+        <div class="room-btn-right">
+          <span class="room-online-badge" id="modal-online-games">0 online</span>
+          <i class="bi bi-chevron-right arrow-icon"></i>
+        </div>
       </button>
 
       <!-- 10. Concurso Público -->
-      <button type="button" class="btn-change-room" data-room="concursos">
+      <button type="button" class="btn-change-room" data-room="concurso">
         <div class="room-btn-content">
           <div class="room-btn-icon"><i class="bi bi-journal-bookmark"></i></div>
           <div class="room-btn-text"><strong>Concurso Público</strong></div>
         </div>
-        <i class="bi bi-chevron-right arrow-icon"></i>
+        <div class="room-btn-right">
+          <span class="room-online-badge" id="modal-online-concurso">0 online</span>
+          <i class="bi bi-chevron-right arrow-icon"></i>
+        </div>
       </button>
     </div>
   </div>

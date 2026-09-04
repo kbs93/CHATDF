@@ -8435,3 +8435,35 @@ Reposiciona a tag de expiração para não cobrir o botão voltar vip
   background: #ffe4e6;
   border-color: #fda4af;
 }
+
+
+
+/* USUARIO de Online no Modal de Troca de Sala */
+#roomsModal .room-btn-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+#roomsModal .room-online-badge {
+  background: #ecfdf3;
+  color: #0a7a31;
+  border: 1px solid #d4f5df;
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 26px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+#roomsModal .room-online-badge.lotada {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fca5a5;
+}

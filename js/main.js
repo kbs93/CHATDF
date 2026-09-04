@@ -5,7 +5,8 @@ import { initMessages, sendMessage } from './messages.js?v=2';
 import { showToast, openAttachmentSheet, openUIPanel, textColorPalette } from "./ui.js";
 import { initStickerPanel } from "./stickers-panel.js";
 
-import { auth, db } from "./firebase-config.js";
+import { auth, db, rtdb } from "./firebase-config.js";
+import { ref as dbRef, onValue as dbOnValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 import { initUsersPanel } from "./users-panel.js";
 import { initDenuncias } from "./bloqueio.js";
 import { updateProfile } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -669,9 +670,56 @@ document.getElementById("cancelFeedback")?.addEventListener("click", () => {
   document.getElementById("feedbackModal")?.classList.add("hidden");
 });
 // Troca de Salas rapida
+// Troca de Salas rapida com contagem em tempo real e catraca
 document.getElementById("closeRoomsModal")?.addEventListener("click", () => {
   document.getElementById("roomsModal")?.classList.add("hidden");
 });
+
+const MAX_USERS_PER_ROOM_MODAL = 5;
+const modalRoomCounts = {};
+const listaSalasIds = ["geral", "religiao", "politica", "transito", "lugares", "futebol", "eventos", "entretenimento", "games", "concurso"];
+
+// Listener do Realtime Database para atualizar contagem de cada sala no modal
+if (isChatRoute) {
+  const statusRefModal = dbRef(rtdb, "status");
+  const agoraLimite = 120000;
+
+  dbOnValue(statusRefModal, (snapshot) => {
+    const statusData = snapshot.val() || {};
+    const agora = Date.now();
+
+    // 1. Zera as contagens
+    listaSalasIds.forEach((id) => {
+      modalRoomCounts[id] = 0;
+    });
+
+    // 2. Soma os usuários conectados e ativos por sala
+    Object.values(statusData).forEach((user) => {
+      if (!user || user.online !== true) return;
+      if (user.lastChanged && (agora - user.lastChanged > agoraLimite)) return;
+
+      const salaUser = user.sala ? user.sala.toLowerCase() : "";
+      if (modalRoomCounts[salaUser] !== undefined) {
+        modalRoomCounts[salaUser]++;
+      }
+    });
+
+    // 3. Atualiza os badges no modal
+    listaSalasIds.forEach((id) => {
+      const badge = document.getElementById(`modal-online-${id}`);
+      if (!badge) return;
+
+      const total = modalRoomCounts[id] || 0;
+    if (total >= MAX_USERS_PER_ROOM_MODAL) {
+        badge.textContent = `${total}`;
+        badge.classList.add("lotada");
+      } else {
+        badge.textContent = `${total}`;
+        badge.classList.remove("lotada");
+      }
+    });
+  });
+}
 
 document.querySelectorAll(".btn-change-room").forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -681,6 +729,13 @@ document.querySelectorAll(".btn-change-room").forEach((btn) => {
     if (appState.currentRoom && appState.currentRoom.toLowerCase() === targetRoom.toLowerCase()) {
       showToast("Você já está nesta sala.");
       document.getElementById("roomsModal")?.classList.add("hidden");
+      return;
+    }
+
+    // Catraca no modal: bloqueia sala cheia
+    const totalNaSala = modalRoomCounts[targetRoom.toLowerCase()] || 0;
+    if (totalNaSala >= MAX_USERS_PER_ROOM_MODAL) {
+      showToast(`A sala está cheia no momento (${MAX_USERS_PER_ROOM_MODAL}/${MAX_USERS_PER_ROOM_MODAL}). Aguarde alguns instantes!`);
       return;
     }
 
