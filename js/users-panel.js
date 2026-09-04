@@ -175,13 +175,15 @@ if (cachedUsers.length) {
 }
   
 // Tolerância para quedas rápidas de conexão (evita piscar a bolinha verde)
-  const TOLERANCIA_OFFLINE_MS = 0; // 10 segundos de margem
+// Limite de 2 minutos (120000ms) sem pulso para descartar conexões mortas/fantasmas
+  const LIMITE_INATIVIDADE_MS = 120000;
 
   onValue(statusRef, (snapshot) => {
     if (!onlineUsersList) return;
 
     const data = snapshot.val();
     const agora = Date.now();
+    const salaAtual = window.appState?.currentRoom || "geral";
 
     if (!data || typeof data !== "object") {
       const fallbackUsers = loadOnlineUsersCache();
@@ -194,8 +196,6 @@ if (cachedUsers.length) {
       return;
     }
 
-    // Mantém o usuário visualmente online se ele esteve ativo nos últimos segundos,
-    // evitando que uma queda momentânea remova a bolinha verde da tela de imediato.
     const users = Object.entries(data)
       .map(([uid, user]) => {
         if (!user || typeof user !== "object") return null;
@@ -204,10 +204,17 @@ if (cachedUsers.length) {
       .filter(user => {
         if (!user || !user.uid) return false;
         
-        const isOnline = user.online === true || user.online === "true";
-        const recente = user.lastChanged && (agora - user.lastChanged < TOLERANCIA_OFFLINE_MS);
+        // 1. Filtra para exibir apenas usuários que pertencem à mesma sala aberta
+        const mesmaSala = !user.sala || user.sala.toLowerCase() === salaAtual.toLowerCase();
+        if (!mesmaSala) return false;
 
-        return isOnline || recente;
+        // 2. Se for explicitamente offline no Firebase, descarta imediatamente
+        if (user.online === false || user.online === "false") return false;
+
+        // 3. Valida se o heartbeat do usuário respondeu nos últimos 2 minutos
+        const sinalValido = !user.lastChanged || (agora - user.lastChanged < LIMITE_INATIVIDADE_MS);
+
+        return (user.online === true || user.online === "true") && sinalValido;
       });
 
     renderOnlineUsers(onlineUsersList, onlineCount, users);
@@ -218,6 +225,7 @@ if (cachedUsers.length) {
       window.__onlineFirstPaintDone = true;
     }
   });
+
 }
 
 
