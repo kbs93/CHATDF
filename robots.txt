@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /js/
+
+Sitemap: https://chatdf.com.br/sitemap.xml
