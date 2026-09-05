@@ -897,7 +897,7 @@ const editGender = document.getElementById("editGender");
 const saveProfileBtn = document.getElementById("saveProfileBtn");
 
 const CIDADES_DF = [
-  "Águas Claras", "Arniqueira", "Asa Norte", "Asa Sul", "Brazlândia", "Candangolândia", "Ceilândia", "Cruzeiro", "Fercal", "Gama",
+  "Águas Claras", "Arniqueira", "Asa Norte", "Asa Sul", "Brazlândia", "Candangolândia", "Ceilândia","Ceilândia S","Ceilândia N", "Cruzeiro", "Fercal", "Gama",
   "Guará", "Guará II", "Itapoã", "Jardim Botânico", "Lago Norte", "Lago Sul", "Núcleo Bandeirante", "Paranoá", "Park Way", "Planaltina",
   "Plano Piloto", "Recanto das Emas", "Riacho Fundo", "Riacho Fundo II", "Samambaia N", "Samambaia S", "Santa Maria", "São Sebastião",
   "Estrutural", "SIA", "Sobradinho", "Sobradinho II", "Sol Nascente", "Pôr do Sol", "Sudoeste", "Octogonal", "Taguatinga", "Taguatinga N",

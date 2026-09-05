@@ -656,7 +656,13 @@ const rand = Math.random().toString(36).substring(2, 8);
 return `${localISO}_BRT_${rand}`;
 }
 
-const isSticker = (text = "") => /\.(png|webp|jpg|jpeg|gif)$/i.test(String(text).trim());
+const isSticker = (text = "") => {
+  const str = String(text).trim();
+  // Só considera figurinha válida se começar com http://, https:// ou ./
+  const ehUrlValida = /^(https?:\/\/|\.\/)/i.test(str);
+  const temExtensaoImg = /\.(png|webp|jpg|jpeg|gif)$/i.test(str);
+  return ehUrlValida && temExtensaoImg;
+};
 
 /*====================================================================================================
 Extrai o ID único de 11 caracteres de URLs válidas de vídeos do YouTube

@@ -8130,16 +8130,16 @@ Reposiciona a tag de expiração para não cobrir o botão voltar vip
 
 
 /* ========================================================
-   MODAL DE SELEÇÃO RÁPIDA DE SALAS (CHAT-DF UX)
+   MODAL DE SELEÇÃO TROCA DE SALAS (CHAT-DF UX)
    ======================================================== */
 /* ========================================================
-   MODAL DE SELEÇÃO RÁPIDA DE SALAS (ALINHAMENTO PERFEITO)
+   MODAL DE SELEÇÃO TROCADE SALAS (ALINHAMENTO PERFEITO)
    ======================================================== */
 #roomsModal .rooms-list-grid {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 360px;
+  max-height: 470px;
   overflow-y: auto;
   padding: 4px 6px 4px 2px;
   width: 100%;
