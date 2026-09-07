@@ -8,7 +8,7 @@ import { initStickerPanel } from "./stickers-panel.js";
 import { auth, db, rtdb } from "./firebase-config.js";
 import { ref as dbRef, onValue as dbOnValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 import { initUsersPanel } from "./users-panel.js";
-import { initDenuncias } from "./bloqueio.js";
+import { initDenuncias, usuarioJaFoiDenunciado } from "./bloqueio.js";
 import { updateProfile } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import { setUserStatus, listenUserOnlineStatus, trackUserRoomPresence } from "./presence.js";
 
@@ -807,11 +807,11 @@ document.getElementById("contextProfileBtn")?.addEventListener("click", async (e
     await window.openMainProfilePanel(userId);
   }
 });
-
-document.getElementById("contextReportBtn")?.addEventListener("click", (e) => {
+// DENUNCIA DE USUARIO  
+document.getElementById("contextReportBtn")?.addEventListener("click", async (e) => {
   e.preventDefault();
   const menu = document.getElementById("messageContextMenu");
-  const reportUserModal = document.getElementById("reportUserModal");
+  const reportUserModal = document.getElementById("reportUserModal") || document.getElementById("reportModal");
   const reportUserBtn = document.getElementById("reportUserBtn");
 
   if (!menu || !reportUserModal) return;
@@ -822,16 +822,32 @@ document.getElementById("contextReportBtn")?.addEventListener("click", (e) => {
     return;
   }
 
+  menu.classList.add("hidden");
+
+  if (auth.currentUser && auth.currentUser.uid === targetUid) {
+    showToast("Você não pode denunciar a si mesmo.");
+    return;
+  }
+
+  // Trava de denúncia já realizada
+  const jaDenunciou = await usuarioJaFoiDenunciado(targetUid);
+  if (jaDenunciou) {
+    showToast("Você já denúnciou este usuário.");
+    return;
+  }
+
   if (reportUserBtn) {
     reportUserBtn.setAttribute("data-target-uid", targetUid);
   }
-
-  menu.classList.add("hidden");
 
   // Abre o modal de denúncia na tela
   reportUserModal.classList.remove("hidden");
   reportUserModal.style.display = "flex";
 });
+
+
+
+
 
 document.getElementById("cancelReport")?.addEventListener("click", () => {
   document.getElementById("reportModal")?.classList.add("hidden");

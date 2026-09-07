@@ -122,6 +122,40 @@ function exibirModalContaSuspensa(motivo) {
  * Inicializa a escuta dos modais de denúncia existentes no chat.html e index.html.
  * Centralizado e compatível com as regras de 'denuncias_usuarios'.
  */
+
+
+/**
+ * Verifica se o usuário autenticado já denunciou o alvo anteriormente
+ */
+export async function usuarioJaFoiDenunciado(targetUid) {
+  if (!auth.currentUser || !targetUid) return false;
+
+  // 1. Checagem rápida em cache local
+  try {
+    const localList = JSON.parse(localStorage.getItem(`denunciados_${auth.currentUser.uid}`) || "[]");
+    if (localList.includes(targetUid)) return true;
+  } catch (e) {}
+
+  // 2. Checagem direta na conta do usuário no Firestore
+  try {
+    const userSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
+    if (userSnap.exists()) {
+      const lista = userSnap.data().denunciadosList || [];
+      if (lista.includes(targetUid)) {
+        // Atualiza cache local
+        try {
+          localStorage.setItem(`denunciados_${auth.currentUser.uid}`, JSON.stringify(lista));
+        } catch (e) {}
+        return true;
+      }
+    }
+  } catch (err) {
+    console.warn("Erro ao verificar histórico de denúncia:", err);
+  }
+
+  return false;
+}
+
 export function initDenuncias() {
   const modalDenuncia = document.getElementById("reportUserModal") || document.getElementById("reportModal");
   const btnSubmit = document.getElementById("submitReportBtn");
@@ -136,6 +170,40 @@ export function initDenuncias() {
       modalDenuncia.classList.add("hidden");
     }
   };
+
+  // Trava de abertura pelo botão de bandeira do modal de perfil
+  reportBtn?.addEventListener("click", async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!auth.currentUser) {
+      showToast("Você precisa estar logado para denunciar.");
+      return;
+    }
+
+    const targetUid = reportBtn.getAttribute("data-target-uid") || window.appState?.currentViewedProfileId;
+
+    if (!targetUid) {
+      showToast("Não foi possível identificar o usuário denunciado.");
+      return;
+    }
+
+    if (auth.currentUser.uid === targetUid) {
+      showToast("Você não pode denunciar o seu próprio perfil.");
+      return;
+    }
+
+    const jaDenunciou = await usuarioJaFoiDenunciado(targetUid);
+    if (jaDenunciou) {
+      showToast("Você já enviou uma denúncia contra este usuário.");
+      return;
+    }
+
+    if (modalDenuncia) {
+      modalDenuncia.classList.remove("hidden");
+      modalDenuncia.style.display = "flex";
+    }
+  });
 
   btnCancel?.addEventListener("click", fecharModal);
   btnCloseX?.addEventListener("click", fecharModal);
@@ -164,47 +232,63 @@ export function initDenuncias() {
       return;
     }
 
-    try {
-      //showToast("Enviando denúncia...");
+    const jaDenunciou = await usuarioJaFoiDenunciado(targetUid);
+    if (jaDenunciou) {
+      showToast("Você já denúnciou este usuário.");
+      fecharModal();
+      return;
+    }
 
+    try {
       // 1. Busca os dados do autor da denúncia
       const reporterProfileRef = doc(db, "users", auth.currentUser.uid);
       const reporterSnap = await getDoc(reporterProfileRef);
       const reporterData = reporterSnap.exists() ? reporterSnap.data() : {};
       const reporterName = reporterData.nome || auth.currentUser.displayName || "Usuário";
 
-      // 2. Busca os dados do usuário denunciado
+// 2. Busca os dados do denunciado (nome e e-mail)
       const targetProfileRef = doc(db, "users", targetUid);
       const targetSnap = await getDoc(targetProfileRef);
       const targetData = targetSnap.exists() ? targetSnap.data() : {};
       const targetName = targetData.nome || window.__currentProfileData?.nome || "Usuário";
+      const targetEmail = targetData.email || "Sem e-mail cadastrado";
 
-      // 3. Monta o ID idêntico ao seu banco: user_Nome_AAAA-MM-DD_HH-MM-SS
+      // 3. Monta o ID idêntico ao padrão
+   // 3. Monta o ID usando o nome do DENUNCIADO (facilita moderação e contagem visual)
       const agora = new Date();
       const pad = (n) => String(n).padStart(2, "0");
       const dataId = `${agora.getFullYear()}-${pad(agora.getMonth() + 1)}-${pad(agora.getDate())}_${pad(agora.getHours())}-${pad(agora.getMinutes())}-${pad(agora.getSeconds())}`;
-      const nomeLimpo = reporterName.trim().replace(/\s+/g, "_").replace(/[^\wÀ-ÿ_-]/g, "");
-      const docId = `user_${nomeLimpo}_${dataId}`;
+      const nomeLimpoDenunciado = targetName.trim().replace(/\s+/g, "_").replace(/[^\wÀ-ÿ_-]/g, "");
+      const docId = `denunciado_${nomeLimpoDenunciado}_${dataId}`;
 
-      // 4. Salva com os exatos 6 campos validados pela sua regra do Firebase
+      // 4. Salva a denúncia na coleção incluindo o e-mail do infrator
       await setDoc(doc(db, "denuncias_usuarios", docId), {
         reportedUid: targetUid,
         reportedName: targetName,
+        reportedEmail: targetEmail,
         reporterUid: auth.currentUser.uid,
         reporterName: reporterName,
         reason: motivo,
         createdAt: serverTimestamp()
       });
 
-      // 5. Injeta a trava de 2 minutos no perfil do denunciante
-      const tempoLimiteMs = 2 * 60 * 1000;
-      const horarioLiberacao = Date.now() + tempoLimiteMs;
+      // 5. Grava no perfil do denunciante para NUNCA mais abrir para esta pessoa
+      const listaAtual = Array.isArray(reporterData.denunciadosList) ? reporterData.denunciadosList : [];
+      if (!listaAtual.includes(targetUid)) {
+        listaAtual.push(targetUid);
+      }
+
       await setDoc(reporterProfileRef, {
-        travaDenunciaAtiva: horarioLiberacao,
+        denunciadosList: listaAtual,
         ultimoUsuarioDenunciado: targetUid
       }, { merge: true });
 
-      showToast("Denúncia enviada");
+      // Atualiza o cache local
+      try {
+        localStorage.setItem(`denunciados_${auth.currentUser.uid}`, JSON.stringify(listaAtual));
+      } catch (e) {}
+
+      showToast("Denúncia enviada com sucesso.");
       fecharModal();
 
       if (reportBtn) reportBtn.style.opacity = "0.5";
