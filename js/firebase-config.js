@@ -23,7 +23,7 @@ import {
 // ------- CREDENCIAIS DO FIREBASE ----------
 const firebaseConfig = {
   apiKey: "AIzaSyA5ApoFDkyW9nyxrgCjzbWGiuAwP2ldUD0",
-  authDomain: "chatdf-4102025.firebaseapp.com",
+authDomain: "chatdf.com.br",
   projectId: "chatdf-4102025",
   storageBucket: "chatdf-4102025.firebasestorage.app",
   messagingSenderId: "74233540933",

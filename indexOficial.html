@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,25 +15,22 @@
 <!------fonte pra textos-->
 <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
+<!-- Carga de Fontes de Elite para Customização VIP do Chat-DF -->
+<!-- Importação de Fontes VIP Corrigida e Mapeada para o Chat-DF -->
+  
 <link href="https://fonts.googleapis.com/css2?family=Tinos:ital,wght@1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
-<link href="styles.css" rel="stylesheet">
-
+<link href="styles.css?v=2" rel="stylesheet">
 <!-- Caminhos RELATIVOS corretos -->
 <script type="module" src="./js/salas.js"></script>
 <script type="module" src="./js/modal.js"></script>
 <script type="module" src="./js/main.js"></script>
 <script type="module" src="./js/contato.js"></script>
 </head>
-
 <body class="index-page">
 <!-- 🔹 NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-3">
 <div class="container">
- 
-
 <!--- BOTÃO ☰ -- EDITA O BOTA DO MENU PRINCIPAL -->
 <button class="navbar-toggler" type="button"
 data-bs-toggle="collapse"
@@ -52,19 +48,16 @@ aria-expanded="false">
 <ul class="navbar-nav align-items-center gap-lg-2">
 <li class="nav-item"><a class="nav-link" href="#categorias">Categorias</a></li>
 <li class="nav-item"><a class="nav-link" href="#salas">Salas</a></li>
-<li class="nav-item"><a class="nav-link" href="#sobre">Quem Somos</a></li>
-<li class="nav-item"><a class="nav-link" href="#contato">Contato</a></li>
+<li class="nav-item"><a class="nav-link" href="./uso/somos.html">Quem Somos</a></li>
+<li class="nav-item"><a class="nav-link" href="contato.html">Contato</a></li>
 </ul>
 </div>
-
 <!-- nome e botao de sair -->
 <div id="userArea" class="d-flex align-items-center me-3">
 <a class="open-login btn-sair" id="btnLogin" href="#"></a>
 </div>
-
 </div>
 </nav>
-
   <div id="toast" class="toast-container"></div>
   <!-- 🔹 HERO (100% ORIGINAL - NÃO MEXIDO) -->
 <header class="hero ">
@@ -93,7 +86,10 @@ aria-expanded="false">
             <a href="#" class="btn btn-outline-light btn-lg fw-bold open-login">Faça login</a>
           </div>
 
+
+          #020641;
 ------------------>
+
 <section id="salas" class="home-main-section">
   <div class="container">
     <div class="home-main-wrapper">
@@ -101,12 +97,9 @@ aria-expanded="false">
         <div class="col-12">
           <div class="chat-rooms">
               <div>
-                <h2 class="section-title display-5 fw-bold">
+                <h2 class="section-title display-5 fw-bold" style="color: #020641; text-align: center;" >
                   Escolha uma sala e converse agora
                 </h2>
-                <p class="text-sub">
-                  Salas públicas ativas para conversar em tempo real.
-                </p>
               </div>
             <div class="row justify-content-center salas-container" id="salas-lista">
             </div>
@@ -118,7 +111,7 @@ aria-expanded="false">
 </section>
 
 <!-------------------------- TRENDING ---------------------------------------------->
-<!-------------------------- 🔹 TRENDING (Reativado e Modernizado com UX Pills) -------------------------->
+<!-------------------------- 🔹 TRENDING (Reativado e Modernizado com UX Pills) --------------------------
 <section class="py-4 border-top border-bottom bg-white">
   <div class="container">
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
@@ -126,93 +119,101 @@ aria-expanded="false">
         <h5 class="fw-bold m-0">Assuntos em alta agora:</h5>
       </div>
       <div class="trending-tags d-flex flex-wrap gap-2 justify-content-center">
-        <a href="#salas" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Futebol</a>
-        <a href="#salas" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Conversa Livre</a>
-        <a href="#salas" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Relacionamento</a>
-        <a href="#salas" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Música</a>
-        <a href="#salas" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Games</a>
-        <a href="#salas" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Eventos</a>
-        <a href="#salas" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Filmes</a>
-        <a href="#salas" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Politica</a>
+        <a href="#" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Futebol</a>
+        <a href="#" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Conversa Livre</a>
+        <a href="#" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Relacionamento</a>
+        <a href="#" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Música</a>
+        <a href="#" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Games</a>
+        <a href="#" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Eventos</a>
+        <a href="#" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Filmes</a>
+        <a href="#" class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary">#Politica</a>
       </div>
     </div>
   </div>
-</section>
+</section>-------------------------->
 
 <!----------------==============================================================
-    🔹 SEÇÃO DE ILUSTRAÇÕES, VANTAGENS E TEXTOS ADICIONADOS (ESTILO 321CHAT)
+    🔹 SEÇÃO DE VANTAGENS E SOBRE O CHAT-DF (CSS PRÓPRIO - SEM BOOTSTRAP)
 ----------------================================================================-->
-<section class="py-5 bg-white border-top">
-  <div class="container">
+<!----------------==============================================================
+    🔹 SEÇÃO DE VANTAGENS E SOBRE O CHAT-DF (CSS PRÓPRIO - SEM BOOTSTRAP)
+----------------================================================================-->
+<section id="sobre" class="chatdf-features-section">
+  <div class="chatdf-features-container">
     
-    <!-- Bloco de Ilustração 1 -->
-    <div class="row align-items-center g-5 mb-5 py-3">
-      <div class="col-lg-5 text-center">
-        <img src="img/usu3.png" alt="Converse Grátis" class="img-fluid" style="max-height: 200px; filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.08));">
+    <!-- Tópico 1: Acesso Livre e Instantâneo -->
+    <div class="chatdf-feature-block">
+      <div class="chatdf-feature-visual">
+        <div class="chatdf-image-card">
+          <img src="img/simbolo2.png" alt="Converse Grátis">
+        </div>
       </div>
-      <div class="col-lg-7 text-center text-lg-start">
-        <h3 class="fw-bold display-6 mb-3">Chat Público Gratuito e Sem Complicação</h3>
-        <p class="text-muted fs-5">No ChatDF você encontra salas de bate-papo públicas totalmente grátis para interagir com milhares de pessoas de todas as Regiões Administrativas. Faça novos amigos, compartilhe ideias, debata temas locais e divirta-se sem precisar baixar nenhum aplicativo.</p>
-        <div class="mt-3 text-primary fw-medium">
-          <i class="bi bi-check-circle-fill me-2 text-success"></i> 100% Baseado no Navegador <span class="mx-2">|</span>
-          <i class="bi bi-check-circle-fill me-2 text-success"></i> Conexão Segura e Veloz
+      <div class="chatdf-feature-info">
+        <span class="chatdf-pill pill-blue">100% Gratuito & Direto</span>
+        <h3 class="chatdf-feature-title">Chat Público Instantâneo e Sem Burocracia</h3>
+        <p class="chatdf-feature-text">
+          O <strong>ChatDF</strong> foi desenvolvido para quem busca rapidez e liberdade na hora de conversar. Aqui você não perde tempo com formulários extensos ou downloads desnecessários: basta abrir a plataforma no navegador do seu celular ou computador e começar a interagir em tempo real com pessoas de Brasília e Região Integrada.
+        </p>
+        <p class="chatdf-feature-subtext">
+          Nossa estrutura de transmissão garante o envio e recebimento imediato de mensagens com estabilidade, baixo consumo de dados móveis e navegação fluida em qualquer conexão.
+        </p>
+        <div class="chatdf-feature-tags">
+          <span class="chatdf-tag-item"><i class="bi bi-browser-chrome"></i> Direto no Navegador</span>
+          <span class="chatdf-tag-item"><i class="bi bi-shield-check"></i> Sem Download de Aplicativo</span>
+          <span class="chatdf-tag-item"><i class="bi bi-lightning-charge-fill"></i> Conexão Rápida</span>
         </div>
       </div>
     </div>
 
-    <hr class="my-5 opacity-25">
-
-    <!-- Bloco de Ilustração 2 -->
-    <div class="row align-items-center g-5 mb-5 py-3 flex-column-reverse flex-lg-row">
-      <div class="col-lg-7 text-center text-lg-start">
-        <h3 class="fw-bold display-6 mb-3">Milhares de Pessoas Online Todos os Dias</h3>
-        <p class="text-muted fs-5">Participe de conversas públicas dinâmicas em salas temáticas sobre futebol, música, jogos ou simplesmente para passar o tempo jogando conversa fora. Nossa comunidade pública preza pelo respeito mútuo, diversão garantida e facilidade de acesso de qualquer dispositivo móvel ou computador.</p>
-        <p class="text-muted small">Exemplo de salas públicas populares: Ceilândia, Taguatinga, Plano Piloto, Guará, Samambaia e muito mais assuntos em alta.</p>
+    <!-- Tópico 2: Comunidade e Regiões do DF -->
+    <div class="chatdf-feature-block reverse">
+      <div class="chatdf-feature-visual">
+        <div class="chatdf-image-card">
+          <img src="img/jucelino1.png" alt="Pessoas Online">
+        </div>
       </div>
-      <div class="col-lg-5 text-center">
-        <img src="img/sorrir.png" alt="Pessoas Online" class="img-fluid" style="max-height: 200px; filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.08));">
-      </div>
-    </div>
-
-    <hr class="my-5 opacity-25">
-
-    <!-- Bloco de Ilustração 3 (NOVA ADIÇÃO VISUAL) -->
-    <div class="row align-items-center g-5 mb-4 py-3">
-      <div class="col-lg-5 text-center">
-        <img src="img/usu5.png" alt="Salas Temáticas e Diversão" class="img-fluid" style="max-height: 200px; filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.08));">
-      </div>
-      <div class="col-lg-7 text-center text-lg-start">
-        <h3 class="fw-bold display-6 mb-3">Salas Temáticas de Acordo com Seus Interesses</h3>
-        <p class="text-muted fs-5">Nossa plataforma organiza as salas para que você encontre exatamente o tipo de conversa que procura. Desde debates sobre a política local até grupos focados em jogos e entretenimento em geral. Entre como convidado ou crie seu perfil completo para salvar suas preferências.</p>
-        <div class="mt-3 text-secondary small">
-          <i class="bi bi-chat-square-heart-fill me-2 text-danger"></i> Salas Públicas <span class="mx-2">•</span>
-          <i class="bi bi-star-fill me-2 text-warning"></i> Ambientes Livres e Moderados <span class="mx-2">•</span>
-          <i class="bi bi-lightning-fill me-2 text-info"></i> Sem Instalação
+      <div class="chatdf-feature-info">
+        <span class="chatdf-pill pill-blue">Comunidade Ativa & Local</span>
+        <h3 class="chatdf-feature-title">Conectando Todas as Regiões Administrativas</h3>
+        <p class="chatdf-feature-text">
+          Milhares de moradores do Distrito Federal acessam as salas diariamente para compartilhar opiniões sobre a rotina da cidade, eventos locais, oportunidades e amizades. Criamos um ponto de encontro acolhedor para aproximar quem vive no Plano Piloto e em todas as cidades satélites que formam a nossa capital.
+        </p>
+        <p class="chatdf-feature-text">
+          Aqui, a conversa sobre o fluxo do trânsito na EPTG e na Estrutural se cruza com programações culturais, dicas de lazer e debates de interesse coletivo. É um canal direto para debater soluções para as comunidades e valorizar a identidade regional do quadradinho.
+        </p>
+        <div class="chatdf-regional-highlight">
+          <i class="bi bi-geo-alt-fill"></i>
+          <span>Cidades do nosso quadradinho: <strong>Ceilândia</strong>, <strong>Taguatinga</strong>, <strong>Plano Piloto</strong>, <strong>Guará</strong>, <strong>Samambaia</strong>, <strong>Águas Claras</strong>, <strong>Gama</strong>, 
+            <strong>Varjão</strong>, <strong>Recanto das Emas</strong>, <strong>Candangolândia</strong>, <strong>Núcleo Bandeirante</strong>, <strong>Riacho Fundo</strong>, <strong>Santa Maria</strong>, <strong>Sobradinho</strong>, <strong>Planaltina</strong>, 
+            <strong>Brazlândia</strong>, <strong>São Sebastião</strong> e região.</span>
+        </div>
+        <div class="chatdf-feature-tags">
+          <span class="chatdf-tag-item"><i class="bi bi-people-fill"></i> Bate-Papo Local</span>
+          <span class="chatdf-tag-item"><i class="bi bi-chat-heart-fill"></i> Novas Amizades</span>
         </div>
       </div>
     </div>
 
-    <!-- Bloco 4: Grid de Recursos / Recursos Visuais Rápidos -->
-    <div class="row g-4 text-center mt-5">
-      <div class="col-md-4">
-        <div class="p-4 border rounded-3 bg-light h-100 shadow-sm">
-          <div class="fs-1 text-primary mb-3"><i class="bi bi-shield-lock-fill text-success"></i></div>
-          <h5 class="fw-bold">Ambiente Moderado</h5>
-          <p class="text-muted small mb-0">Nossa equipe de moderação trabalha constantemente para manter as diretrizes e regras públicas ativas contra conteúdos impróprios ou ofensivos.</p>
+    <!-- Tópico 3: Organização, Moderação e Temas -->
+    <div class="chatdf-feature-block">
+      <div class="chatdf-feature-visual">
+        <div class="chatdf-image-card">
+          <img src="img/vetor.jfif" alt="Salas Temáticas">
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="p-4 border rounded-3 bg-light h-100 shadow-sm">
-          <div class="fs-1 text-primary mb-3"><i class="bi bi-lightning-charge-fill text-warning"></i></div>
-          <h5 class="fw-bold">Mensagens Instantâneas</h5>
-          <p class="text-muted small mb-0">Tecnologia em tempo real. Suas mensagens são enviadas e recebidas instantaneamente por todos os usuários presentes na sala.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="p-4 border rounded-3 bg-light h-100 shadow-sm">
-          <div class="fs-1 text-primary mb-3"><i class="bi bi-phone-vibrate text-info"></i></div>
-          <h5 class="fw-bold">Focado no Mobile UX</h5>
-          <p class="text-muted small mb-0">Layout leve desenvolvido inteiramente pensado para que você possa digitar confortavelmente direto pelo seu smartphone ou tablet.</p>
+      <div class="chatdf-feature-info">
+        <span class="chatdf-pill pill-blue">Salas Organizadas por Assunto</span>
+        <h3 class="chatdf-feature-title">Ambiente Seguro, Moderado e Temático</h3>
+        <p class="chatdf-feature-text">
+          Encontre os assuntos que mais combinam com o seu perfil. Nossas salas são divididas em categorias focadas: Futebol, Política, Jogos, Concursos Públicos, Religião e Bate-Papo Livre. O acesso pode ser feito com segurança através da sua Conta Google ou com o seu e-mail de preferência, permitindo ainda a personalização estética do perfil com recursos visuais exclusivos.
+        </p>
+        <p class="chatdf-feature-subtext">
+          Para garantir tranquilidade a todos, mantemos diretrizes ativas de moderação, ferramentas nativas de denúncia e tolerância zero com assédio, preconceito e mensagens ofensivas.
+        </p>
+        <div class="chatdf-feature-tags">
+          <span class="chatdf-tag-item"><i class="bi bi-shield-lock-fill"></i> Diretrizes Rígidas</span>
+          <span class="chatdf-tag-item"><i class="bi bi-phone-fill"></i> Compatível com Mobile</span>
+          <span class="chatdf-tag-item"><i class="bi bi-grid-fill"></i> Personalização e Temas Variados</span>
         </div>
       </div>
     </div>
@@ -220,119 +221,15 @@ aria-expanded="false">
   </div>
 </section>
 
-<!-------------------------- CATEGORIAS (Ajustado com margem py-5 para UX) -------------->
-<section id="categorias" class="categories-section py-5">
-  <div class="container">
-    <div class="text-center categories-header mb-5">
-      <span class="section-badge">
-        Salas populares
-      </span>
-      <h2 class="section-title display-5 fw-bold">
-        Escolha uma categoria
-      </h2>
-      <p class="section-subtitle">
-        Entre em salas públicas e converse com pessoas online agora.
-      </p>
-    </div>
-    <div class="row g-4 justify-content-center">
-      <div class="col-md-6 col-lg-3">
-        <div class="category-card h-100 shadow-sm border p-3 rounded-3 bg-white">
-          <div class="category-icon mb-3">
-            <img src="img/usu3.png" alt="Comunidades">
-          </div>
-          <h4 class="fw-bold">
-            Comunidades
-          </h4>
-          <p class="text-muted">
-            Salas públicas abertas para conversar.
-          </p>
-          <a href="#salas" class="btn btn-primary w-100 mt-auto">
-            Entrar
-          </a>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-3">
-        <div class="category-card h-100 shadow-sm border p-3 rounded-3 bg-white">
-          <div class="category-icon mb-3">
-            <img src="img/sorrir.png" alt="Diversão">
-          </div>
-          <h4 class="fw-bold">
-            Diversão
-          </h4>
-          <p class="text-muted">
-            Conversas leves e amizade.
-          </p>
-          <a href="#salas" class="btn btn-outline-primary w-100 mt-auto">
-            Explorar
-          </a>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-3">
-        <div class="category-card h-100 shadow-sm border p-3 rounded-3 bg-white">
-          <div class="category-icon mb-3">
-            <img src="img/usu5.png" alt="Temas">
-          </div>
-          <h4 class="fw-bold">
-            Temas
-          </h4>
-          <p class="text-muted">
-            Games, filmes, esportes e tecnologia.
-          </p>
-          <a href="#salas" class="btn btn-primary w-100 mt-auto">
-            Ver temas
-          </a>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-3">
-        <div class="category-card h-100 shadow-sm border p-3 rounded-3 bg-white">
-          <div class="category-icon mb-3">
-            <img src="img/avatar1.png" alt="Privados">
-          </div>
-          <h4 class="fw-bold">
-            Privados
-          </h4>
-          <p class="text-muted">
-            Crie salas privadas com amigos.
-          </p>
-          <a href="#salas" class="btn btn-outline-primary w-100 mt-auto">
-            Criar grupo
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- 🔹 CONTATO (Ajustado com margem superior e inferior py-5 perfeita para UX) -->
-   <!-- 🔹 CONTATO -->
-  <section id="contato" class="bg-light py-5">
-    <div class="container">
-      <div class="row g-4 align-items-center">
-        <div class="col-lg-5">
-          <h2 class="section-title">Contato</h2>
-          <p class="text-muted">Precisa de ajuda, quer sugerir uma nova sala ou denunciar algum comportamento? Fale conosco.</p>
-          <ul class="list-unstyled text-muted">
-            <li class="mb-2">• Suporte rápido via equipe online</li>
-            <li class="mb-2">• Resposta em até 24h úteis</li>
-            <li class="mb-0">• Segurança e privacidade em primeiro lugar</li>
-          </ul>
-        </div>
-        <div class="col-lg-7">
-          <form class="col-md-11 mx-auto bg-white p-4 rounded-4 shadow-sm">
-            <div class="mb-3"><input type="text" class="form-control" placeholder="Nome"></div>
-            <div class="mb-3"><input type="email" class="form-control" placeholder="E-mail "></div>
-            <div class="mb-3"><input type="tel" id="telefone"class="form-control"placeholder="( ) Telefone opcional"
-              inputmode="numeric"autocomplete="tel"></div>
-            <div class="mb-3"><textarea class="form-control" rows="4" placeholder="Escreva sua mensagem..."></textarea>
-            </div>
-            <button type="submit" style="background-color: #0d6efd; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; justify-content: center;">
-              <i class="bi bi-send-fill"></i> Enviar Mensagem
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
+
+
+
+
+
+
+
+
 
 
 
@@ -345,14 +242,14 @@ aria-expanded="false">
     <div id="registerMessage" class="register-message"></div>
 
     <div class="modal-reset">
-      <div class="modal-login-box">
+      <div class="modal-login-box"><!---edita todo modal de login----->
         <button type="button" class="back-login hidden" id="backToLoginTop" title="Voltar">voltar</button>
         <button type="button" class="close-login">×</button>
         <div class="login-left">
           <img src="img/astronauta.jpg" alt="Imagem Login">
         </div>
         <div class="login-right">
-          <!-- ================= LOGIN ================= -->
+          <!------------------- LOGIN ----------------------->
           <div id="loginView">
             <h1 style="text-align: center;">Olá</h1>
 
@@ -387,7 +284,7 @@ aria-expanded="false">
             </p>
           </div>
 
-          <!-- ================= CADASTRO ================= -->
+          <!----------------- CADASTRO ----------------- -->
           <div id="registerView" class="hidden">
             <h1>Olá</h1>
             <p style="margin-top:10px;font-weight:600">
@@ -436,19 +333,15 @@ aria-expanded="false">
       <div class="modal-reset">
         <div class="modal-login-box" style="max-width: 700px; flex-direction: column; padding: 30px; overflow-y: auto; max-height: 85vh;">
           <button type="button" id="closePrivacyModalBtn" class="close-login" style="top: 15px; right: 20px;">×</button>
-          
           <h2 style="color: #4f46e5; font-size: 22px; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px;">
             Política de Privacidade e Diretrizes de Comunidade
-          </h2>
-          
+          </h2>         
           <div style="overflow-y: auto; padding-right: 10px; color: #4b5563; font-size: 13px; line-height: 1.6; text-align: justify;">
             <p>Seja bem-vindo ao nosso Chat. Esta página define as regras fundamentais de convivência, respeito e a transparência sobre o uso da nossa plataforma de conversação pública.</p>
-
             <h3 style="color: #1e1b4b; font-size: 15px; margin-top: 15px; border-left: 4px solid #4f46e5; padding-left: 8px;">1. Privacidade e Coleta de Dados</h3>
             <div style="background-color: #f0fdf4; border-left: 4px solid #22c55e; padding: 12px; margin: 10px 0; border-radius: 4px; color: #166534; font-weight: 500;">
               COMPROMISSO COM A PRIVACIDADE: Nós não coletamos, não vendemos e não rastreamos nenhuma informação pessoal identificável ou dados sensíveis dos usuários. Todos os dados inseridos no seu painel servem exclusivamente para a personalização visual do seu perfil dentro das salas.
             </div>
-
             <h3 style="color: #1e1b4b; font-size: 15px; margin-top: 15px; border-left: 4px solid #4f46e5; padding-left: 8px;">2. Diretrizes de Respeito e Mensagens Inapropriadas</h3>
             <p>Para garantir um ambiente saudável e acolhedor para todos, é expressamente proibido enviar mensagens ou mídias que contenham:</p>
             <ul style="padding-left: 20px;">
@@ -457,19 +350,16 @@ aria-expanded="false">
               <li><strong>Preconceito e Discriminação:</strong> Qualquer manifestação de homofobia, racismo, intolerância religiosa ou xenofobia.</li>
               <li><strong>Assédio e Perseguição (Stalking):</strong> Insistir em interações indesejadas ou ameaçar participantes.</li>
             </ul>
-
             <h3 style="color: #1e1b4b; font-size: 15px; margin-top: 15px; border-left: 4px solid #4f46e5; padding-left: 8px;">3. Moderação e Penalidades</h3>
             <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 12px; margin: 10px 0; border-radius: 4px; color: #991b1b; font-weight: 500;">
               AVISO DE BANIMENTO: O descumprimento das regras de respeito resultará na remoção instantânea do conteúdo, expulsão das salas e o bloqueio definitivo do acesso do dispositivo à nossa plataforma.
             </div>
           </div>
-
           <button type="button" id="agreePrivacyBtn" class="social1" style="background:#040794; color:#fff; margin-top: 20px; max-width: 200px; align-self: center; border-radius: 45px; border: 2px solid #010261;">Fechar e Voltar</button>
         </div>
       </div>
     </div>
   </div>
-
 <!-- ================= PERFIL DO USUÁRIO ================= -->
 <div id="profileOverlay" class="hidden"></div>
 <div id="profilePanel" class="profile-panel hidden">
@@ -490,9 +380,11 @@ aria-expanded="false">
       </div>
     </div>
     <!-- mudança 13-07-2026 ---->
+    <!-- mudança 13-07-2026 ---->
 <div class="profile-avatar-wrap">
-  <div class="profile-avatar">
+  <div class="profile-avatar position-relative">
     <img id="profileAvatar" src="img/avatar.png" alt="Avatar do usuário">
+    <div id="vipTopPreviewFrame" class="position-absolute top-0 start-0 w-100 h-100 rounded-circle d-none" style="pointer-events: none; box-sizing: border-box;"></div>
   </div>
   <!-- Botão de Upload agora fica do lado de fora da máscara de corte -->
   <label id="btnUploadPhoto" class="profile-photo-upload-btn hidden" title="Adicionar foto de perfil">
@@ -503,26 +395,80 @@ aria-expanded="false">
   <span id="profileOnlineDot" class="profile-online-dot hidden"></span>
 </div>
 
-   <div class="profile-user-info">
+<div class="profile-user-info">
       <h3 id="profileName">Usuário</h3>
-      <p id="profileMood">Deixe uma Frase.</p>
-      
-    
     </div>
 
-    <div class="profile-tabs">
-      <button class="profile-tab active" data-tab="info" type="button">Info</button>
+<!---====================== 16-07-26 ADICIONANDO NOVO PAINEL VIP ===================---->
+<div class="profile-tabs">
+      <button class="profile-tab" data-tab="info" type="button">Info</button>
       <button class="profile-tab" data-tab="edit" type="button">Editar perfil</button>
-    </div>
-    <div class="profile-content">
+    </div>   
+    <div class="profile-content px-3">
       <!-- INFO -->
-    <div class="profile-section active" id="profileInfo">
-  <p><strong>Cidade:</strong> <span id="profileCity">-</span></p>
-  <p><strong>Idade:</strong> <span id="profileAge">-</span></p>
-  <p><strong>Gênero:</strong> <span id="profileGender">-</span></p>
-  <p><strong>Membro desde:</strong> <span id="profileMemberSince">-</span></p>
-</div>
+  <!-- INFO -->
+<div class="profile-section active" id="profileInfo">
+  <!-- Cidade -->
+  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+    <span class="col-6 d-flex align-items-center gap-2 px-0">
+      <i class="bi bi-geo-alt text-secondary fs-5"></i>
+      <span class="text-secondary fw-medium">Cidade</span>
+    </span>
+    <span id="profileCity" class="col-6 ps-3 text-start text-secondary">-</span>
+  </div>
+  <!-- Idade -->
+  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+    <span class="col-6 d-flex align-items-center gap-2 px-0">
+      <i class="bi bi-calendar-heart text-secondary fs-5"></i>
+      <span class="text-secondary fw-medium">Idade</span>
+    </span>
+    <span id="profileAge" class="col-6 ps-3 text-start text-secondary">-</span>
+  </div>
+  <!-- Gênero -->
+  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+    <span class="col-6 d-flex align-items-center gap-2 px-0">
+      <i class="bi bi-gender-ambiguous text-secondary fs-5"></i>
+      <span class="text-secondary fw-medium">Gênero</span>
+    </span>
+    <span id="profileGender" class="col-6 ps-3 text-start text-secondary">-</span>
+  </div>
+  <!-- Membro desde -->
+  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+    <span class="col-6 d-flex align-items-center gap-2 px-0">
+      <i class="bi bi-person-check text-secondary fs-5"></i>
+      <span class="text-secondary fw-medium">Membro desde</span>
+    </span>
+    <span id="profileMemberSince" class="col-6 ps-3 text-start text-secondary">-</span>
+  </div>
+  <!-- Instagram -->
+  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+    <span class="col-6 d-flex align-items-center gap-2 px-0">
+      <i class="bi bi-instagram fs-5"></i>
+      <span class="text-secondary fw-medium">Instagram</span>
+    </span>
+    <span id="profileInstagramText" class="col-6 ps-3 text-start text-secondary">-</span>
+  </div>
+  <!-- Telegram -->
+  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0 ">
+    <span class="col-6 d-flex align-items-center gap-2 px-0">
+      <i class="bi bi-telegram"></i>
+      <span class=" fw-medium">Telegram</span>
+    </span>
+    <span id="profileTelegramText" class="col-6 ps-3 text-start text-secondary">-</span>
+  </div>
 
+   <!-- SECAO DE TAGS & HOBBIES DO DF -->
+          <div class="profile-tags-container mt-3 pb-2">
+            <div class="d-flex align-items-center gap-2 mb-2 text-secondary">
+              <i class="bi bi-tags-fill fs-6 text-primary"></i>
+              <strong style="font-size: 13.5px; color: #555;">Gostos & Hobbies:</strong>
+            </div>
+            <div id="profileInterestsList" class="profile-interests-pills">
+              <!-- Renderizado dinamicamente via JS -->
+            </div>
+          </div>
+</div>
+</div>
       <!-- EDITAR -->
 <div class="profile-section" id="profileEdit">
   <label class="profile-field">
@@ -553,6 +499,7 @@ aria-expanded="false">
       <input type="text" id="editCity" placeholder="Digite sua cidade"maxlength="22">
     </span>
   </label>
+<!-------- NAO APAGAR POIS E O CAMPO DE RECADO DO USUARIO (FRASE FAVORITA) 16-07-26 -----
 <label class="profile-field" style="align-items: flex-start; padding-top: 8px;">
   <i class="bi bi-chat-square-text profile-field-icon"></i>
   <span class="profile-field-body">
@@ -560,6 +507,35 @@ aria-expanded="false">
     <textarea id="editMood" placeholder="Frase Favorita " maxlength="100" rows="3"></textarea>
   </span>
 </label>
+-------------------->
+
+
+ <!-- CAMPO DO INSTAGRAM -->
+       <label class="profile-field">
+            <i class="bi bi-instagram profile-field-icon"></i>
+            <span class="profile-field-body">
+              <span class="profile-field-label">Instagram</span>
+              <input type="text" id="editInstagram" placeholder="Digite seu @usuario(Opcional)" maxlength="30">
+            </span>
+          </label>
+          <!-- CAMPO DO TELEGRAM -->
+          <label class="profile-field">
+            <i class="bi bi-telegram profile-field-icon"></i>
+            <span class="profile-field-body">
+              <span class="profile-field-label">Telegram</span>
+              <input type="text" id="editTelegram" placeholder="Digite seu @usuario(Opcional)" maxlength="30">
+            </span>
+          </label>
+          <!-- SELETOR DE TAGS NO EDITAR PERFIL -->
+          <div class="profile-edit-interests-wrapper mt-3 mb-2">
+            <label class="profile-field-label d-flex justify-content-between align-items-center">
+              <span>Selecione até 6 gostos & hobbies:</span>
+              <small id="selectedInterestsCount" class="text-muted fw-bold">0/5</small>
+            </label>
+            <div id="editInterestsSelectorGrid" class="interests-selector-grid">
+              <!-- Renderizado dinamicamente via JS -->
+            </div>
+          </div>
   <div id="editTrackingState" data-capa-alterada="false" data-avatar-alterado="false" class="d-none"></div>
   <button id="saveProfileBtn" type="button" disabled style="opacity: 0.5; cursor: not-allowed;">Salvar</button>
 </div>
@@ -579,29 +555,17 @@ aria-expanded="false">
 </div>
     <div id="profileEditorBannerPreview" class="profile-editor-banner-preview"></div>
     <div id="profileEditorBannerColors" class="profile-editor-banner-colors"></div>
-
-<!-- ÁREA DE AVATARES -->
-<div id="profileEditorAvatarArea" class="profile-editor-avatar-area hidden">
-      <div class="profile-editor-avatar-cats">
-        <button class="profile-avatar-cat active" data-cat="eles" type="button">Eles</button>
+<!-- ÁREA DE AVATARES
+     <button class="profile-avatar-cat active" data-cat="eles" type="button">Eles</button>
         <button class="profile-avatar-cat" data-cat="elas" type="button">Elas</button>
-        <button class="profile-avatar-cat" data-cat="unissex" type="button">Unissex</button>
-        <button class="profile-avatar-cat" data-cat="aleatorios" type="button">Aleatórios</button>
-      </div>
-      <div id="profileEditorAvatarGrid" class="profile-editor-avatar-grid" style="overflow-y: auto; max-height: 280px; display: grid; gap: 10px;">
-      </div>
+        <button class="profile-avatar-cat" data-cat="unissex" type="button">Unissex</button> 
+-->
+<div id="profileEditorAvatarArea" class="profile-editor-avatar-area hidden">
+  <div id="profileEditorAvatarGrid" class="profile-editor-avatar-grid" style="overflow-y: auto; max-height: 200px; display: grid; gap: 10px;"></div>
     </div>
-    
    <button id="saveProfileEditorBtn" type="button">Confirmar</button>
   </div>
 </div>
-
-
-
-
-
-
-
 <!-- 01-07-26 MODAL DE DENÚNCIA dentro do painel do Usuário  Estrutura do Modal dentro do painel do Usuario de Denúncia (CHAT-DF UX) -->
 <div id="reportModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 9999;">
   <div style="background: #ffffff; width: 90%; max-width: 450px; padding: 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; font-family: sans-serif;">
@@ -614,12 +578,15 @@ aria-expanded="false">
       Please only submit actionable offences. Abuse or false reporting may lead to action taken against your own account. Select the reason to report this content.
     </p>
     <label style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Reason</label>
+    <!-- Lista de denuncia que expande para baixo -->
     <select id="reportReasonSelect" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; background: #f9f9f9; outline: none; margin-bottom: 24px;">
-      <option value="">Select reason</option>
-      <option value="spam">Spam / Inundação de Chat</option>
-      <option value="harassment">Assédio / Ofensas</option>
-      <option value="inappropriate">Conteúdo Inadequado</option>
-      <option value="fake">Perfil Falso / Fake</option>
+    <option value="Preconceito e mensagem racista">Preconceito / racismo</option>
+    <option value="Assédio e praticando ofensas">Assédio / Ofensas</option>
+    <option value="Palavras inapropriadas e xingamento">Palavras inapropriadas</option>
+    <option value="Causando discordia no chat">Causando discordia</option>
+    <option value="Discurso de Ódio contra os membros">Discurso de Ódio</option>
+    <option value="Citação Sexual">Citação Sexual</option>
+
     </select>
     <div style="display: flex; gap: 12px; justify-content: flex-end;">
       <button id="cancelReportBtn" type="button" style="padding: 12px 24px; border: none; background: #212121; color: #fff; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancela</button>
@@ -627,96 +594,82 @@ aria-expanded="false">
     </div>
   </div>
 </div>
-
-
 <!-------============================= 14-07-2026 =========================================--->
 <!-- 14-07-26 Modal de Corte de Imagem Nativo (Feito do Zero) -->
 <div id="cropModal" class="crop-modal hidden">
   <div class="crop-modal-content">
     <span id="closeCropModal" class="crop-close">&times;</span>
-    
     <!-- Recipiente onde a imagem carregada vai se mover -->
     <div class="crop-container-box">
       <div class="crop-mask-circle"></div>
       <img id="cropPreviewImg" src="" alt="Prévia" style="display: none;" />
     </div>
-    
     <!-- Controle de Zoom Nativo com - e + -->
     <div class="crop-zoom-wrapper">
       <button id="btnZoomOut" class="zoom-btn" type="button">—</button>
       <input type="range" id="cropZoomSlider" min="1" max="3" step="0.01" value="1" />
       <button id="btnZoomIn" class="zoom-btn" type="button">+</button>
     </div>
-    
     <!-- Botões de Comando Inferiores -->
     <div class="crop-buttons-container">
       <button id="btnSelectCropFile" class="btn-crop-select" type="button">Seleciona</button>
       <button id="btnSaveCropPhoto" class="btn-crop-save" type="button">Salvar</button>
     </div>
-    
     <!-- Input oculto que abre o gerenciador de arquivos do celular/PC -->
     <input type="file" id="cropInputFile" accept="image/jpeg, image/png, image/webp" style="display: none;" />
   </div>
 </div>
-
-
-
   <!-- 🔹 RODAPÉ -->
 <!-- 🔹 RODAPÉ (Organizado em colunas profissionais para melhor UX e navegação) -->
-<footer class="bg-primary text-white pt-5 pb-3 border-top border-white border-opacity-10">
-  <div class="container">
-    <div class="row g-4 mb-4 text-center text-md-start">
-      
+<!-- 🔹 RODAPÉ (CSS Próprio - Fundo Branco e Tons Grafite/Cinza) -->
+<footer class="custom-footer">
+  <div class="footer-container">
+    <div class="footer-grid">
       <!-- Coluna 1: Sobre e Redes Sociais -->
-      <div class="col-md-4">
-        <h5 class="fw-bold text-uppercase mb-3" style="letter-spacing: 1px; font-size: 1.1rem;">ChatDF</h5>
-        <p class="small opacity-75 mb-3" style="line-height: 1.6;">O chat público oficial do Distrito Federal. Conectando pessoas de todas as Regiões Administrativas em tempo real com segurança e respeito.</p>
-        <!-- Ícones de Redes Sociais do Chat -->
-        <div class="d-flex justify-content-center justify-content-md-start gap-3 fs-5">
-          <a href="#" class="text-white opacity-75 opacity-100-hover transition-all" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-          <a href="#" class="text-white opacity-75 opacity-100-hover transition-all" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-          <a href="#" class="text-white opacity-75 opacity-100-hover transition-all" aria-label="Twitter-X"><i class="bi bi-twitter-x"></i></a>
-          <a href="#" class="text-white opacity-75 opacity-100-hover transition-all" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+      <div>
+        <h5 class="footer-title">ChatDF</h5>
+        <p class="footer-description">O chat público oficial do Distrito Federal. Conectando pessoas de todas as Regiões Administrativas em tempo real com segurança e respeito.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" aria-label="Twitter-X"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
         </div>
       </div>
 
-      <!-- Coluna 2: Mapa do Site & Utilidades -->
-      <div class="col-md-4 ps-md-5">
-        <h5 class="fw-bold text-uppercase mb-3" style="letter-spacing: 1px; font-size: 1rem;">Navegação</h5>
-        <ul class="list-unstyled d-flex flex-column gap-2 small">
-          <li><a href="#salas" class="text-white text-decoration-none opacity-75 opacity-100-hover"><i class="bi bi-chevron-right me-1 small"></i> Salas Ativas</a></li>
-          <li><a href="#categorias" class="text-white text-decoration-none opacity-75 opacity-100-hover"><i class="bi bi-chevron-right me-1 small"></i> Categorias Populares</a></li>
-          <li><a href="#sobre" class="text-white text-decoration-none opacity-75 opacity-100-hover"><i class="bi bi-chevron-right me-1 small"></i> Quem Somos</a></li>
-          <li><a href="#contato" class="text-white text-decoration-none opacity-75 opacity-100-hover"><i class="bi bi-chevron-right me-1 small"></i> Central de Ajuda</a></li>
-        </ul>
-      </div>
+      <!-- Coluna 2: Navegação -->
+ <div>
+  <h5 class="footer-title">Navegação</h5>
+  <ul class="footer-links">
+    <li><a href="#salas"><i class="bi bi-chevron-right"></i> Salas Ativas</a></li>
+    <li><a href="uso/somos.html"><i class="bi bi-chevron-right"></i> Quem Somos</a></li>
+    <li><a href="contato.html"><i class="bi bi-chevron-right"></i> Fale Conosco</a></li>
+    <li><a href="uso/termos.html"><i class="bi bi-chevron-right"></i> Regras da Comunidade</a></li>
+  </ul>
+</div>
 
-      <!-- Coluna 3: Links de Acesso & Termos Legais -->
-      <div class="col-md-4">
-        <h5 class="fw-bold text-uppercase mb-3" style="letter-spacing: 1px; font-size: 1rem;">Termos e Acesso</h5>
-        <ul class="list-unstyled d-flex flex-column gap-2 small">
-          <li><a href="#" class="open-login text-white text-decoration-none opacity-75 opacity-100-hover"><i class="bi bi-box-arrow-in-right me-1 small"></i> Entrar / Registrar conta</a></li>
-          <li><a href="#" class="openPrivacyModalBtn text-white text-decoration-none opacity-75 opacity-100-hover"><i class="bi bi-shield-check me-1 small"></i> Política de Privacidade</a></li>
-          <li><a href="#" class="openPrivacyModalBtn text-white text-decoration-none opacity-75 opacity-100-hover"><i class="bi bi-journal-text me-1 small"></i> Diretrizes da Comunidade</a></li>
-        </ul>
-      </div>
-
+      <!-- Coluna 3: Termos e Acesso -->
+    <!-- Coluna 3: Termos e Acesso -->
+<div>
+  <h5 class="footer-title">Termos e Acesso</h5>
+  <ul class="footer-links">
+    <li><a href="#" class="open-login"><i class="bi bi-box-arrow-in-right"></i> Entrar / Login</a></li>
+    <li><a href="uso/privacidade.html"><i class="bi bi-shield-check"></i> Política de Privacidade</a></li>
+    <li><a href="uso/termos.html"><i class="bi bi-journal-text"></i> Termos de Uso</a></li>
+  </ul>
+</div>
     </div>
 
     <!-- Linha Divisória de Direitos Autorais -->
-    <hr class="bg-white opacity-25 my-4">
+    <hr class="footer-divider">
 
-    <div class="row align-items-center text-center small opacity-75">
-      <div class="col-12">
-        <p class="mb-0">&copy; kbsweb - 2025 Todos os direitos reservados | Animações <a href="https://googlefonts.github.io/noto-emoji-animation/" class="text-white text-decoration-underline opacity-100">Animated Emoji</a></p>
-      </div>
+    <div class="footer-bottom">
+      <p>&copy; kbsweb - 2025 Todos os direitos reservados | Animações <a href="https://googlefonts.github.io/noto-emoji-animation/">Animated Emoji</a></p>
     </div>
-
   </div>
 </footer>
   <!-- BOOTSTRAP -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@multiavatar/multiavatar/multiavatar.min.js"></script>
 </body>
-
 </html>
