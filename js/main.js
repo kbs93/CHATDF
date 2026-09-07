@@ -2101,52 +2101,6 @@ profileOverlay?.addEventListener("click", () => {
   closeProfilePanel();
 });
 
-// Animações Hero & Lottie
-const heroAnimation = document.getElementById("heroAnimation");
-const images = [
-  "img/1.png", "img/2.png", "img/3.png", "img/4.png", "img/5.png", "img/6.png",
-  "img/7.png", "img/8.png", "img/9.png", "img/10.png", "img/11.png", "img/12.png"
-];
-let imageIndex = 0;
-
-function createImg() {
-  const img = document.createElement("img");
-  img.src = images[imageIndex];
-  imageIndex = (imageIndex + 1) % images.length;
-  img.alt = "";
-  img.loading = "eager";
-  img.decoding = "async";
-  return img;
-}
-
-function createPhotoGrid() {
-  const wall = document.createElement("div");
-  wall.classList.add("photo-wall");
-  const gridOne = document.createElement("div");
-  const gridTwo = document.createElement("div");
-
-  gridOne.classList.add("photo-grid");
-  gridTwo.classList.add("photo-grid");
-
-  for (let i = 0; i < 70; i++) {
-    const img1 = createImg();
-    const img2 = img1.cloneNode(true);
-    gridOne.appendChild(img1);
-    gridTwo.appendChild(img2);
-  }
-
-  wall.appendChild(gridOne);
-  wall.appendChild(gridTwo);
-  heroAnimation.appendChild(wall);
-
-  setTimeout(() => {
-    wall.classList.add("ready");
-  }, 100);
-}
-
-window.addEventListener("load", () => {
-  if (heroAnimation) createPhotoGrid();
-});
 
 
 

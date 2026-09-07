@@ -31,7 +31,7 @@ let googleLoginInProgress = false;
 let unsubscribeUserAreaProfileListener = null; // 03-05-26 
 let profileTooltipAlreadyShown = false;//11-05-2026 
 const USER_AREA_CACHE_KEY = "chatdf_user_area_cache";
-const DEFAULT_AVATAR = "./img/avatar.png";
+
 
 // ================= SALA ATUAL ================= 18-05-26 
 // Pega o ID da sala da URL, ou usa "geral" como padrão
@@ -46,6 +46,9 @@ const currentRoom =
     ? (urlParams.get("sala") || "geral")
     : null;
 
+// AJUSTADO (Detecta automaticamente se está na subpasta /uso/):
+const isSubfolder = window.location.pathname.includes("/uso/");
+const DEFAULT_AVATAR = isSubfolder ? "../img/avatar.png" : "./img/avatar.png";
 
 function sanitizeAvatarUrl(photo) {
   if (!photo || typeof photo !== "string") {
@@ -61,8 +64,16 @@ function sanitizeAvatarUrl(photo) {
     return DEFAULT_AVATAR;
   }
 
+  // Se a foto gravada for o caminho relativo padrão antigo, ajusta para a pasta correta
+  if (trimmed === "./img/avatar.png" || trimmed === "img/avatar.png") {
+    return DEFAULT_AVATAR;
+  }
+
   return trimmed;
 }
+
+
+
 function saveUserAreaCache(data) {
   try {
     localStorage.setItem(USER_AREA_CACHE_KEY, JSON.stringify(data));
@@ -173,10 +184,10 @@ userArea.innerHTML = `
 
   <button id="userMenuBtn" class="user-menu-btn">
 
-    <img 
-      src="${profilePhoto || './img/avatar.png'}"
+  <img 
+      src="${profilePhoto || DEFAULT_AVATAR}"
       class="user-menu-avatar"
-      onerror="this.src='./img/avatar.png'"
+      onerror="this.src='${DEFAULT_AVATAR}'"
     >
 
     <span class="user-menu-name">
