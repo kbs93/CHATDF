@@ -1207,6 +1207,10 @@
 MODAL DO BANNER VIP
 ================================================================================-->
 <!-- Modal de Banner VIP (Buscador Multi-Plataforma: GIPHY / Pexels / Pixabay) -->
+
+<!---========================== 08-09-26 ========================================================
+MODAL DO BANNER VIP - UPLOAD NATIVO (CÂMERA / GALERIA) COM MODERAÇÃO CHAT-DF
+================================================================================-->
   <div id="vipBannerModal" class="gif-banner-modal hidden">
     <div class="gif-banner-modal-content">
       <span id="closeVipBannerModal" class="gif-banner-close">&times;</span>
@@ -1215,46 +1219,28 @@ MODAL DO BANNER VIP
       <!-- Área do Banner (Container Visual de Prévia) -->
       <div id="vipBannerPreviewBox" class="gif-banner-preview-box"></div>
 
-      <!-- Buscador de Mídias Integrado -->
-      <div class="w-100 mb-2">
-        <!-- Abas de Seleção da Fonte da Mídia -->
-        <div class="media-tabs-wrapper mb-2">
-          <button type="button" class="media-tab-btn active" data-source="giphy">GIF</button>
-          <button type="button" class="media-tab-btn" data-source="pexels">imagem </button>
-          <button type="button" class="media-tab-btn" data-source="pixabay">imagembay</button>
-        </div>
+      <!-- Caixa de Alerta Legal de Moderação VIP -->
+      <div class="vip-banner-warning-box">
+        <i class="bi bi-shield-fill-exclamation"></i>
+        <span>
+          <strong>Aviso de Moderação VIP:</strong> Para evitar o cancelamento imediato e banimento definitivo da sua conta sem reembolso, é estritamente proibido o envio de imagens com nudez, pornografia, drogas, armas, apologia a crimes ou conteúdos ofensivos.
+        </span>
+      </div>
 
-    <!-- Campo de Busca botao de buscar Giphy -->
-<div class="chat-input-group">
-  <input type="text" id="giphySearchInput" class="chat-input" placeholder="Pesq palavras chave: neon, flores, por do sol...">
-  <button id="btnSearchGiphy" class="chat-btn-search" type="button">
-    <i class="bi bi-search" style="font-size: 18px;"></i>
-  </button>
-</div>
+      <!-- Botão de Abertura da Câmera / Galeria do Celular -->
+      <label for="vipBannerFileInput" class="vip-banner-upload-btn">
+        <i class="bi bi-camera-fill"></i>
+        <span>Escolher da Galeria</span>
+      </label>
+      <input type="file" id="vipBannerFileInput" accept="image/jpeg, image/png, image/webp" style="display: none;">
 
-<!-- Grade de resultados -->
-<div id="giphyResultsGrid" class="giphy-results-grid hidden"></div>
-
-<!-- Selo de Crédito Obrigatório -->
-<div class="chat-attribution">
-  <span id="mediaAttributionLabel">GIPHY</span>
-</div>
-
-<!-- Campo de Entrada (Input de Link Direto) -->
-<div class="chat-field-container">
-  <label class="chat-label" for="vipBannerUrlInput">Ou cole o link direto da imagem/GIF:</label>
-  <input type="text" id="vipBannerUrlInput" class="chat-input" placeholder="https://exemplo.com/imagem.gif">
-</div>
-
-      <!-- Botão de Ação -->
-  <!-- Botões de Ação (Salvar e Limpar) -->
+      <!-- Botões de Ação (Limpar e Salvar) -->
       <div class="d-flex gap-2 w-100 mt-2">
-        <button id="btnClearVipBannerUrl" type="button" class="btn btn-dark  w-50 fw-bold" style="border-radius: 10px; font-size: 15px;background: #020641;">Limpar</button>
+        <button id="btnClearVipBannerUrl" type="button" class="btn btn-dark w-50 fw-bold" style="border-radius: 10px; font-size: 15px; background: #020641;">Limpar</button>
         <button id="btnSaveVipBannerUrl" type="button" class="btn btn-dark w-50 fw-bold" style="border-radius: 10px; font-size: 15px; background: #020641;">Salvar</button>
       </div>
     </div>
   </div>
-
 
 
 

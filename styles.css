@@ -2564,47 +2564,28 @@ MODAL E CONTAINER DO BANNER VIP (GIF/IMAGEM)
 .gif-banner-preview-box { width: 100%; height: 150px; min-height: 120px; border-radius: 14px; background-color: #e2e8f0; background-size: cover; background-position: center; background-repeat: no-repeat; margin-bottom: 10px; border: 1px solid #cbd5e1; flex-shrink: 0; }
 
 /* ABAS DE SELEÇÃO DE PLATAFORMA (GIPHY / PEXELS / PIXABAY) */
-#vipBannerModal .media-tabs-wrapper { display: flex; gap: 6px; width: 100%; }
+/* ========================================================================= 08-09-26
+   MODAL BANNER VIP - AVISO DE MODERAÇÃO E BOTÃO DE UPLOAD NATIVO (CHAT-DF UX)
+   ========================================================================= */
 
-#vipBannerModal .media-tab-btn { flex: 1; padding: 6px 4px; border: 1px solid #cbd5e1; background: #f1f5f9; color: #475569; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.vip-banner-warning-box { width: 100%; background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 9px; box-sizing: border-box; }
 
-#vipBannerModal .media-tab-btn.active { background: #020641; color: #fff; border-color: #020641; }
+.vip-banner-warning-box i { font-size: 20px; color: #dc2626; line-height: 1; margin-top: 1px; flex-shrink: 0; }
 
-/* GRADE DE IMAGENS E GIFS ORGANIZADA */
-#vipBannerModal .giphy-results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-height: 180px; overflow-y: auto; background: #f8fafc; padding: 8px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 6px; box-sizing: border-box; }
+.vip-banner-warning-box span { font-size: 12px; color: #991b1b; line-height: 1.45; word-break: break-word; }
 
-#vipBannerModal .giphy-results-grid img { width: 100%; height: 75px; object-fit: cover; border-radius: 8px; cursor: pointer; transition: transform 0.15s ease,border-color 0.15s ease; border: 2px solid transparent; display: block; }
+.vip-banner-warning-box strong { color: #7f1d1d; font-weight: 700; }
 
-#vipBannerModal .giphy-results-grid img:hover { transform: scale(1.04); border-color: #020641; }
+.vip-banner-upload-btn { width: 100%; min-height: 46px; background: #020641; color: #fff; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; font-size: 14.5px; font-weight: 600; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; transition: background-color 0.2s ease,transform 0.15s ease,box-shadow 0.2s ease; margin-bottom: 6px; box-sizing: border-box; }
 
-/* Container do grupo de busca */
-.chat-input-group { display: flex; width: 100%; margin-bottom: 4px; }
+.vip-banner-upload-btn:hover { background: #050b5e; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(2, 6, 65, 0.25); }
 
-/* Estilo geral dos inputs */
-.chat-input { width: 100%; padding: 10px 14px; font-size: 14px; color: #333; background-color: #fff; border: 1px solid #dcdfe6; border-radius: 8px; outline: none; transition: all 0.2s ease-in-out; border-top-right-radius: 28px; border-bottom-right-radius: 28px; border-bottom-left-radius: 28px; border-top-left-radius: 28px; }
+.vip-banner-upload-btn:active { transform: scale(0.98); }
 
-/* Unifica o input com o botão de busca */
-.chat-input-group .chat-input { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: none; }
+.vip-banner-upload-btn i { font-size: 18px; color: #38bdf8; }
 
-/* Efeito de foco profissional nos inputs */
-.chat-input:focus { border-color: #0052cc; box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.15); }
 
-/* Botão de Busca */
-.chat-btn-search { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 18px; font-size: 14px; font-weight: 600; color: #fff; background-color: #0052cc; border: 1px solid #0052cc; border-top-right-radius: 20px; border-bottom-right-radius: 20px; cursor: pointer; transition: background-color 0.2s ease,transform 0.1s ease; white-space: nowrap; }
 
-.chat-btn-search:hover { background-color: #003d99; border-color: #003d99; }
-
-.chat-btn-search:active { transform: scale(0.98); }
-
-/* Atribuição/Crédito GIPHY */
-.chat-attribution { text-align: right; margin-top: 4px; margin-bottom: 12px; font-size: 11px; color: #8c8c8c; }
-
-.chat-attribution span { font-weight: 700; letter-spacing: 0.5px; }
-
-/* Container para label e input direto */
-.chat-field-container { width: 100%; margin-top: 12px; margin-bottom: 16px; }
-
-.chat-label { display: block; font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 6px; }
 
 /* ===========================================================================
 BORDA DO MODAL DO USUARIO VIP Aplica o Tema/Gradiente na borda externa do Modal inteiro 

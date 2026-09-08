@@ -1,8 +1,9 @@
-
 import { showToast, textColorPalette } from "./ui.js";
 import { doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 import { auth, db, rtdb } from "./firebase-config.js";
 import { ref as rRef, update as rUpdate } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
+
 
 
 // Estado global do módulo VIP
@@ -731,212 +732,167 @@ Portanto, a premissa está correta.*/
 }
 
 
+
 function initVipBannerModal(isOwnerCallback) {
   const vipHeaderBtn = document.getElementById("vipHeaderActionBtn");
   const bannerModal = document.getElementById("vipBannerModal");
   const closeBannerModal = document.getElementById("closeVipBannerModal");
-  const urlInput = document.getElementById("vipBannerUrlInput");
   const previewBox = document.getElementById("vipBannerPreviewBox");
+  const fileInput = document.getElementById("vipBannerFileInput");
   const saveBannerBtn = document.getElementById("btnSaveVipBannerUrl");
+  const clearBannerBtn = document.getElementById("btnClearVipBannerUrl");
 
-  const mediaInput = document.getElementById("giphySearchInput");
-  const btnSearchMedia = document.getElementById("btnSearchGiphy");
-  const mediaGrid = document.getElementById("giphyResultsGrid");
-  const attributionLabel = document.getElementById("mediaAttributionLabel");
-  const mediaTabBtns = document.querySelectorAll(".media-tab-btn");
+  let blobBannerComprimido = null;
+  let urlTemporariaPreview = "";
+  let solicitouRemoverBanner = false;
 
-  const GIPHY_API_KEY = "bmd1luYYvD3dGiycldIl3W1bUovionrR"; 
-  const PIXABAY_API_KEY = "56897614-e2f814aca2c37034dcc515af2";
-  const PEXELS_API_KEY = "4MoHwhHC16imBbdA7sGO13i5HDbAQtfNDcQGNsNZ3LWuHpB1sExnbNHH";
-
-  let currentSource = "giphy";
-  let currentQuery = "";
-  let currentPage = 1;
-  let currentOffset = 0;
-  const LIMIT_PER_PAGE = 18;
-  let isLoadingMedia = false;
-  let hasMoreMedia = true;
-
-  mediaTabBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      mediaTabBtns.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      currentSource = btn.dataset.source;
-
-      if (attributionLabel) {
-        if (currentSource === "giphy") attributionLabel.textContent = "GIPHY";
-        if (currentSource === "pexels") attributionLabel.textContent = "Pexels";
-        if (currentSource === "pixabay") attributionLabel.textContent = "Pixabay";
-      }
-      if (currentQuery) fetchMedia(true);
-    });
-  });
-
-  const renderImageItem = (thumbUrl, fullUrl) => {
-    const img = document.createElement("img");
-    img.src = thumbUrl;
-    img.alt = "Mídia";
-    img.addEventListener("click", () => {
-      if (urlInput) urlInput.value = fullUrl;
-      if (previewBox) previewBox.style.backgroundImage = `url("${fullUrl}")`;
-    });
-    mediaGrid?.appendChild(img);
-  };
-
-  const fetchGiphy = async (isNewSearch) => {
-    const response = await fetch(`https://api.giphy.com/v1/gifs/search?q=${encodeURIComponent(currentQuery)}&limit=${LIMIT_PER_PAGE}&offset=${currentOffset}&api_key=${GIPHY_API_KEY}`);
-    const data = await response.json();
-    if (!data.data || data.data.length === 0) {
-      if (isNewSearch && mediaGrid) mediaGrid.innerHTML = `<span class="small text-muted p-2 w-100 text-center d-block">Nenhum GIF encontrado.</span>`;
-      hasMoreMedia = false;
-      return;
-    }
-    data.data.forEach(item => renderImageItem(item.images.fixed_height_small.url, item.images.original.url));
-    currentOffset += data.data.length;
-    if (data.data.length < LIMIT_PER_PAGE) hasMoreMedia = false;
-  };
-
-  const fetchPexels = async (isNewSearch) => {
-    const response = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(currentQuery)}&per_page=${LIMIT_PER_PAGE}&page=${currentPage}`, {
-      headers: { Authorization: PEXELS_API_KEY }
-    });
-    const data = await response.json();
-    if (!data.photos || data.photos.length === 0) {
-      if (isNewSearch && mediaGrid) mediaGrid.innerHTML = `<span class="small text-muted p-2 w-100 text-center d-block">Nenhuma foto encontrada.</span>`;
-      hasMoreMedia = false;
-      return;
-    }
-    data.photos.forEach(photo => renderImageItem(photo.src.tiny, photo.src.large));
-    currentPage++;
-    if (data.photos.length < LIMIT_PER_PAGE) hasMoreMedia = false;
-  };
-
-  const fetchPixabay = async (isNewSearch) => {
-    const response = await fetch(`https://pixabay.com/api/?key=${PIXABAY_API_KEY}&q=${encodeURIComponent(currentQuery)}&image_type=photo&per_page=${LIMIT_PER_PAGE}&page=${currentPage}`);
-    const data = await response.json();
-    if (!data.hits || data.hits.length === 0) {
-      if (isNewSearch && mediaGrid) mediaGrid.innerHTML = `<span class="small text-muted p-2 w-100 text-center d-block">Nenhuma foto encontrada.</span>`;
-      hasMoreMedia = false;
-      return;
-    }
-    data.hits.forEach(hit => renderImageItem(hit.previewURL, hit.largeImageURL));
-    currentPage++;
-    if (data.hits.length < LIMIT_PER_PAGE) hasMoreMedia = false;
-  };
-
-  const fetchMedia = async (isNewSearch = false) => {
-    if (isLoadingMedia || !currentQuery) return;
-
-    if (isNewSearch) {
-      currentOffset = 0;
-      currentPage = 1;
-      hasMoreMedia = true;
-      if (mediaGrid) {
-        mediaGrid.innerHTML = `<span class="small text-muted p-2 w-100 text-center d-block">Carregando...</span>`;
-        mediaGrid.classList.remove("hidden");
-      }
-    }
-
-    if (!hasMoreMedia) return;
-    isLoadingMedia = true;
-
-    try {
-      if (isNewSearch && mediaGrid) mediaGrid.innerHTML = "";
-      if (currentSource === "giphy") await fetchGiphy(isNewSearch);
-      else if (currentSource === "pexels") await fetchPexels(isNewSearch);
-      else if (currentSource === "pixabay") await fetchPixabay(isNewSearch);
-    } catch (err) {
-      console.error("Erro na busca de mídias:", err);
-      if (isNewSearch && mediaGrid) mediaGrid.innerHTML = `<span class="small text-danger p-2 w-100 text-center d-block">Erro ao carregar resultados.</span>`;
-    } finally {
-      isLoadingMedia = false;
-    }
-  };
-
-  const dispararNovaBusca = () => {
-    const termo = mediaInput?.value.trim() || "";
-    if (!termo) return;
-    currentQuery = termo;
-    fetchMedia(true);
-  };
-
-  btnSearchMedia?.addEventListener("click", dispararNovaBusca);
-  mediaInput?.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      dispararNovaBusca();
-    }
-  });
-
-  mediaGrid?.addEventListener("scroll", () => {
-    if (!mediaGrid || isLoadingMedia || !hasMoreMedia) return;
-    if (mediaGrid.scrollTop + mediaGrid.clientHeight >= mediaGrid.scrollHeight - 30) {
-      fetchMedia(false);
-    }
-  });
-
+  // 1. Abrir Modal de Banner
   vipHeaderBtn?.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (!isOwnerCallback()) return;
 
     const data = window.__currentProfileData || {};
-    const linkAtual = data.vipBannerUrl || "";
+    const linkAtual = window.__vipBannerUrlTemp !== undefined ? window.__vipBannerUrlTemp : (data.vipBannerUrl || "");
 
-    if (urlInput) urlInput.value = linkAtual;
-    if (previewBox) previewBox.style.backgroundImage = linkAtual ? `url("${linkAtual}")` : "none";
+    blobBannerComprimido = null;
+    solicitouRemoverBanner = false;
+    urlTemporariaPreview = linkAtual;
 
-    if (mediaGrid) {
-      mediaGrid.innerHTML = "";
-      mediaGrid.classList.add("hidden");
+    if (previewBox) {
+      previewBox.style.backgroundImage = linkAtual ? `url("${linkAtual}")` : "none";
     }
-    if (mediaInput) mediaInput.value = "";
-
-    currentQuery = "";
-    currentOffset = 0;
-    currentPage = 1;
-    hasMoreMedia = true;
+    if (fileInput) fileInput.value = "";
 
     bannerModal?.classList.remove("hidden");
   });
 
-  closeBannerModal?.addEventListener("click", () => bannerModal?.classList.add("hidden"));
+  // 2. Fechar Modal
+  closeBannerModal?.addEventListener("click", () => {
+    bannerModal?.classList.add("hidden");
+  });
 
-  document.getElementById("btnClearVipBannerUrl")?.addEventListener("click", () => {
-    if (urlInput) urlInput.value = "";
+  // 3. Captura e Compressão via Canvas (Redimensionamento para 800px no formato Capa)
+  fileInput?.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      showToast("Por favor, selecione um arquivo de imagem válido.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Limita a largura máxima em 800px preservando a proporção exata
+        const MAX_WIDTH = 800;
+        let targetWidth = img.naturalWidth;
+        let targetHeight = img.naturalHeight;
+
+        if (targetWidth > MAX_WIDTH) {
+          const ratio = MAX_WIDTH / targetWidth;
+          targetWidth = MAX_WIDTH;
+          targetHeight = Math.round(targetHeight * ratio);
+        }
+
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+        // Converte para JPEG com qualidade 0.80 (gera imagem entre 40KB e 70KB)
+        canvas.toBlob((blob) => {
+          if (!blob) return;
+          blobBannerComprimido = blob;
+          solicitouRemoverBanner = false;
+          urlTemporariaPreview = URL.createObjectURL(blob);
+
+          if (previewBox) {
+            previewBox.style.backgroundImage = `url("${urlTemporariaPreview}")`;
+          }
+          showToast("Imagem ajustada com sucesso!");
+        }, "image/jpeg", 0.80);
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // 4. Botão Limpar Banner (Marca para remoção definitiva)
+  clearBannerBtn?.addEventListener("click", () => {
+    blobBannerComprimido = null;
+    urlTemporariaPreview = "";
+    solicitouRemoverBanner = true;
+    if (fileInput) fileInput.value = "";
     if (previewBox) previewBox.style.backgroundImage = "none";
+    showToast("Banner limpo. Clique em Salvar para confirmar a remoção.");
   });
 
-  urlInput?.addEventListener("input", () => {
-    const val = urlInput.value.trim();
-    if (previewBox) previewBox.style.backgroundImage = val ? `url("${val}")` : "none";
-  });
-
-saveBannerBtn?.addEventListener("click", (e) => {
+  // 5. Salvar Banner (Sobe para o Storage ou remove o arquivo se tiver limpado)
+  saveBannerBtn?.addEventListener("click", async (e) => {
     e.preventDefault();
     if (!isOwnerCallback()) return;
 
-    const newUrl = urlInput?.value.trim() || "";
+    const user = auth.currentUser;
+    if (!user) return;
 
-    // Salva na memória temporária para a prévia sem disparar o Firebase
-    window.__vipBannerUrlTemp = newUrl;
+    const storage = getStorage();
+    const bannerRef = sRef(storage, `banners_vip/${user.uid}.jpg`);
 
-    const profileCoverEl = document.querySelector(".profile-cover");
-    if (profileCoverEl) {
-      if (newUrl) {
-        profileCoverEl.style.background = `url("${newUrl}") center/cover no-repeat`;
-      } else {
-        profileCoverEl.style.backgroundImage = "none";
-        profileCoverEl.style.background = "#00000063";
+    try {
+      let finalUrl = urlTemporariaPreview;
+
+      // Se o usuário clicou em Limpar, remove do Storage
+      if (solicitouRemoverBanner) {
+        try {
+          await deleteObject(bannerRef);
+        } catch (delErr) {
+          // Ignora caso o arquivo não existisse no Storage
+        }
+        finalUrl = "";
+      } 
+      // Se selecionou uma nova foto da câmera/galeria, envia comprimida
+      else if (blobBannerComprimido) {
+        showToast("Otimizando e enviando banner...");
+        await uploadBytes(bannerRef, blobBannerComprimido);
+        finalUrl = await getDownloadURL(bannerRef);
+        blobBannerComprimido = null;
       }
+
+      window.__vipBannerUrlTemp = finalUrl;
+
+      const profileCoverEl = document.querySelector(".profile-cover");
+      if (profileCoverEl) {
+        if (finalUrl) {
+          profileCoverEl.style.background = `url("${finalUrl}") center/cover no-repeat`;
+        } else {
+          profileCoverEl.style.backgroundImage = "none";
+          profileCoverEl.style.background = "#00000063";
+        }
+      }
+
+      atualizarSimulacaoTopoVip();
+      bannerModal?.classList.add("hidden");
+      showToast("Banner definido! Clique em 'Salvar VIP' para gravar.");
+    } catch (err) {
+      console.error("Erro ao salvar banner VIP:", err);
+      showToast("Erro ao processar imagem do banner.");
     }
-
-    atualizarSimulacaoTopoVip();
-    bannerModal?.classList.add("hidden");
-    showToast("Banner selecionado! Clique em 'Salvar VIP' para confirmar.");
   });
-
 }
+
+
+
+
+
+
+
+
+
 
 /* ========================================================================= 
    FLUXO DE ABERTURA E e FECHAMENTO E RETORNO DO PAINEL VIP ISOLADO
