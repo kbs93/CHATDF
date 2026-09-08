@@ -2543,12 +2543,10 @@ TRAVAMENTO EXCLUSIVO DO TOPO AZUL APENAS NA ABA VIP (SEM BAGUNÇAR)
 /* ========================================================================= 27-07-26
 MODAL E CONTAINER DO BANNER VIP (GIF/IMAGEM)
 ========================================================================= */
-/* ========================================================================= 27-07-26
-MODAL E BUSCADOR DE GIFS DO BANNER VIP (GRADE ORGANIZADA)
-========================================================================= */
-.gif-banner-modal { position: fixed; inset: 0; width: 100vw; height: 95vh; background: rgba(0, 0, 0, 0.45); display: flex; align-items: center; justify-content: center; z-index: 10001; }
 
-.gif-banner-modal-content { background: #fff; padding: 20px; border-radius: 20px; width: min(420px, 92vw); max-height: 90vh; overflow-y: auto; position: relative; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); -webkit-overflow-scrolling: touch; }
+.gif-banner-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; height: 100dvh; background: rgba(0, 0, 0, 0.45); display: flex; align-items: center; justify-content: center; z-index: 10001; padding: 12px; box-sizing: border-box; }
+
+.gif-banner-modal-content { background: #fff; padding: 16px 18px calc(16px + env(safe-area-inset-bottom, 0px)); border-radius: 20px; width: min(420px, 94vw); max-height: calc(100dvh - 30px); max-height: calc(100vh - 30px); overflow-y: auto; overflow-x: hidden; position: relative; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
 
 /* Posicionamento no Desktop */
 @media (min-width: 992px) {
@@ -2557,12 +2555,13 @@ MODAL E BUSCADOR DE GIFS DO BANNER VIP (GRADE ORGANIZADA)
 
 /* Posicionamento no Mobile */
 @media (max-width: 991px) {
-  .gif-banner-modal { justify-content: center; padding-right: 0; }
+  .gif-banner-modal { justify-content: center; padding: 10px; }
+  .gif-banner-modal-content { width: 100%; max-width: 390px; max-height: 88dvh; padding: 14px 14px calc(14px + env(safe-area-inset-bottom, 10px)); }
 }
 
 .gif-banner-close { position: absolute; top: 10px; right: 16px; font-size: 24px; font-weight: bold; color: #333; cursor: pointer; user-select: none; z-index: 10; }
 
-.gif-banner-preview-box { width: 100%; height: 180px; border-radius: 14px; background-color: #e2e8f0; background-size: cover; background-position: center; background-repeat: no-repeat; margin-bottom: 12px; border: 1px solid #cbd5e1; flex-shrink: 0; }
+.gif-banner-preview-box { width: 100%; height: 150px; min-height: 120px; border-radius: 14px; background-color: #e2e8f0; background-size: cover; background-position: center; background-repeat: no-repeat; margin-bottom: 10px; border: 1px solid #cbd5e1; flex-shrink: 0; }
 
 /* ABAS DE SELEÇÃO DE PLATAFORMA (GIPHY / PEXELS / PIXABAY) */
 #vipBannerModal .media-tabs-wrapper { display: flex; gap: 6px; width: 100%; }
