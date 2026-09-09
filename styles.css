@@ -1,4 +1,4 @@
-body { font-family: 'Poppins',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background: linear-gradient(180deg,       #f7f9fc 0,       #fff 35%,       #f8fbff 100%); color: #1154a1; margin: 0; min-width: 0; }
+body { font-family: 'Poppins',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background: linear-gradient(180deg,       #f7f9fc 0,       #fff 35%,       #f8fbff 100%); margin: 0; min-width: 0; }
 
 /* Evita pull-to-refresh no mobile */
 body, html { width: 100%; min-height: 100%; }
@@ -125,7 +125,7 @@ font-family: 'Urbanist-Italic'; src: url('./fonts/Urbanist-Italic-VariableFont_w
 /* ================== HERO / PATTERN CONTÍNUO (ALTA PERFORMANCE) =================== */
 /* ================== HERO / PATTERN CONTÍNUO (ALTA PERFORMANCE) =================== */
 
-#heroAnimation { position: absolute; inset: 0; width: 100%; height: 100%; background-image: url("img/imgsimbolo.png"); background-repeat: repeat-x; background-size: 1600px auto; background-position: 0 bottom; opacity: 0.40; filter: grayscale(100%) brightness(1.2) contrast(120%); mix-blend-mode: soft-light; will-change: background-position; animation: slidePattern 24s linear infinite; }
+#heroAnimation { position: absolute; inset: 0; width: 100%; height: 100%; background-image: url("img/imgmonumental.png"); background-repeat: repeat-x; background-size: 1600px auto; background-position: 0 bottom; opacity: 0.40; filter: grayscale(100%) brightness(1.2) contrast(120%); mix-blend-mode: soft-light; will-change: background-position; animation: slidePattern 24s linear infinite; }
 
 @keyframes slidePattern {
   from { background-position-x: 0; }
@@ -996,20 +996,27 @@ NES Anexos estilo WhatsApp zap EDITA O BOTAO SHEET TAMBEM 27-02-26
 
 #tagsDfModal .tags-df-grid button.btn-tag-df span:last-child { font-size: 12.5px; font-weight: 700; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
 
-/* Identidade Visual das 12 Tags (Modal de Seleção e Chat) */
-#tagsDfModal .tags-df-grid button.tag-transito, #chat-container .chat-tag-badge.tag-transito { background-color: #fff3e0; border-color: #ffb74d; color: #e65100; }
-#tagsDfModal .tags-df-grid button.tag-chuva, #chat-container .chat-tag-badge.tag-chuva { background-color: #e1f5fe; border-color: #81d4fa; color: #0288d1; }
-#tagsDfModal .tags-df-grid button.tag-transporte, #chat-container .chat-tag-badge.tag-transporte { background-color: #fff8e1; border-color: #ffe082; color: #f57f17; }
-#tagsDfModal .tags-df-grid button.tag-saude, #chat-container .chat-tag-badge.tag-saude { background-color: #ffebee; border-color: #ef9a9a; color: #d32f2f; }
-#tagsDfModal .tags-df-grid button.tag-fiscalizacao, #chat-container .chat-tag-badge.tag-fiscalizacao { background-color: #e8eaf6; border-color: #9fa8da; color: #1565c0; }
-#tagsDfModal .tags-df-grid button.tag-seguranca, #chat-container .chat-tag-badge.tag-seguranca { background-color: #f3e5f5; border-color: #ce93d8; color: #6a1b9a; }
-#tagsDfModal .tags-df-grid button.tag-servicos, #chat-container .chat-tag-badge.tag-servicos { background-color: #e0f7fa; border-color: #80deea; color: #00838f; }
-#tagsDfModal .tags-df-grid button.tag-concursos, #chat-container .chat-tag-badge.tag-concursos { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
-#tagsDfModal .tags-df-grid button.tag-feiras, #chat-container .chat-tag-badge.tag-feiras { background-color: #e8f5e9; border-color: #a5d6a7; color: #2e7d32; }
-#tagsDfModal .tags-df-grid button.tag-entorno, #chat-container .chat-tag-badge.tag-entorno { background-color: #efebe9; border-color: #bcaaa4; color: #5d4037; }
-#tagsDfModal .tags-df-grid button.tag-achados, #chat-container .chat-tag-badge.tag-achados { background-color: #e0f2f1; border-color: #80cbc4; color: #00695c; }
-#tagsDfModal .tags-df-grid button.tag-alerta, #chat-container .chat-tag-badge.tag-alerta { background-color: #ffebee; border-color: #ef5350; color: #b71c1c; }
+/* Identidade Visual das 12 Tags (Modal Seleção, Chat Feed e Modal de Filtro) */
+/* Ativa a borda física de 1px e o formato oficial em qualquer tag do sistema */
+.chat-tag-badge { display: inline-flex; align-items: center; gap: 4px; padding: 1px 7px; border-radius: 6px; border-width: 1px; border-style: solid; height: 22px; line-height: 1; box-sizing: border-box; flex-shrink: 0; vertical-align: middle; }
 
+.chat-tag-badge .material-symbols-outlined { font-size: 15px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+.chat-tag-badge span:last-child { font-size: 11.5px; font-weight: 700; line-height: 1; letter-spacing: -0.1px; }
+
+/* Cores e bordas oficiais (Preserva o chat e aplica no modal) */
+#tagsDfModal .tags-df-grid button.tag-transito, #chat-container .chat-tag-badge.tag-transito, .filter-tag-feed-list .chat-tag-badge.tag-transito { background-color: #fff3e0; border-color: #ffb74d; color: #e65100; }
+#tagsDfModal .tags-df-grid button.tag-chuva, #chat-container .chat-tag-badge.tag-chuva, .filter-tag-feed-list .chat-tag-badge.tag-chuva { background-color: #e1f5fe; border-color: #81d4fa; color: #0288d1; }
+#tagsDfModal .tags-df-grid button.tag-transporte, #chat-container .chat-tag-badge.tag-transporte, .filter-tag-feed-list .chat-tag-badge.tag-transporte { background-color: #fff8e1; border-color: #ffe082; color: #f57f17; }
+#tagsDfModal .tags-df-grid button.tag-saude, #chat-container .chat-tag-badge.tag-saude, .filter-tag-feed-list .chat-tag-badge.tag-saude { background-color: #ffebee; border-color: #ef9a9a; color: #d32f2f; }
+#tagsDfModal .tags-df-grid button.tag-fiscalizacao, #chat-container .chat-tag-badge.tag-fiscalizacao, .filter-tag-feed-list .chat-tag-badge.tag-fiscalizacao { background-color: #e8eaf6; border-color: #9fa8da; color: #1565c0; }
+#tagsDfModal .tags-df-grid button.tag-seguranca, #chat-container .chat-tag-badge.tag-seguranca, .filter-tag-feed-list .chat-tag-badge.tag-seguranca { background-color: #f3e5f5; border-color: #ce93d8; color: #6a1b9a; }
+#tagsDfModal .tags-df-grid button.tag-servicos, #chat-container .chat-tag-badge.tag-servicos, .filter-tag-feed-list .chat-tag-badge.tag-servicos { background-color: #e0f7fa; border-color: #80deea; color: #00838f; }
+#tagsDfModal .tags-df-grid button.tag-concursos, #chat-container .chat-tag-badge.tag-concursos, .filter-tag-feed-list .chat-tag-badge.tag-concursos { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+#tagsDfModal .tags-df-grid button.tag-feiras, #chat-container .chat-tag-badge.tag-feiras, .filter-tag-feed-list .chat-tag-badge.tag-feiras { background-color: #e8f5e9; border-color: #a5d6a7; color: #2e7d32; }
+#tagsDfModal .tags-df-grid button.tag-entorno, #chat-container .chat-tag-badge.tag-entorno, .filter-tag-feed-list .chat-tag-badge.tag-entorno { background-color: #efebe9; border-color: #bcaaa4; color: #5d4037; }
+#tagsDfModal .tags-df-grid button.tag-achados, #chat-container .chat-tag-badge.tag-achados, .filter-tag-feed-list .chat-tag-badge.tag-achados { background-color: #e0f2f1; border-color: #80cbc4; color: #00695c; }
+#tagsDfModal .tags-df-grid button.tag-alerta, #chat-container .chat-tag-badge.tag-alerta, .filter-tag-feed-list .chat-tag-badge.tag-alerta { background-color: #ffebee; border-color: #ef5350; color: #b71c1c; }
 /* Badge de Tag renderizado dentro da mensagem no chat */
 /* ========================================================
    MICRO-BADGE UX MOBILE: TAGS DE UTILIDADE DF NO FEED
@@ -3016,3 +3023,76 @@ Reposiciona a tag de expiração para não cobrir o botão voltar vip
 #roomsModal .room-online-badge { background: #ecfdf3; color: #0a7a31; border: 1px solid #d4f5df; font-size: 12px; font-weight: 700; min-width: 26px; height: 24px; padding: 0 6px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
 
 #roomsModal .room-online-badge.lotada { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+
+/* ========================================================
+   MODAIS DE FILTRAR TAGS (tag.js) - CHAT-DF UX
+   ======================================================== */
+/* 1. Modal Pequeno Seletor */
+.filter-tag-select-box { max-width: 380px; width: 92%; padding: 16px 14px; }
+
+.filter-tag-select-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-height: 340px; overflow-y: auto; padding: 4px 2px; -webkit-overflow-scrolling: touch; }
+
+.btn-filter-tag-choice { display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 7px 10px; border-radius: 10px; border: 1.5px solid transparent; cursor: pointer; min-height: 38px; max-height: 38px; width: 100%; box-sizing: border-box; background: #f8fafc; transition: transform 0.15s ease,box-shadow 0.15s ease; user-select: none; -webkit-tap-highlight-color: transparent; }
+
+.btn-filter-tag-choice:active { transform: scale(0.96); }
+
+.btn-filter-tag-choice .material-symbols-outlined { font-size: 22px; line-height: 1; flex-shrink: 0; }
+
+.btn-filter-tag-choice span:last-child { font-size: 13px; font-weight: 700; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* 2. Modal Grande Feed de Relatos (Mobile & Desktop) */
+.filter-tag-feed-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); display: flex; align-items: center; justify-content: center; z-index: 10005; padding: 12px; box-sizing: border-box; }
+
+.filter-tag-feed-card { width: 100%; max-width: 580px; height: 90vh; max-height: 750px; background: #ffffff; border-radius: 20px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column; overflow: hidden; }
+
+/* Safe Area e tela cheia em celulares */
+@media (max-width: 768px) {
+  .filter-tag-feed-modal { padding: 0; align-items: flex-end; }
+  .filter-tag-feed-card { max-width: 100%; height: 94vh; height: 94dvh; max-height: none; border-radius: 20px 20px 0 0; padding-bottom: env(safe-area-inset-bottom, 0px); }
+}
+
+.filter-tag-feed-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid #eef2f6; background: #ffffff; flex-shrink: 0; }
+
+.filter-tag-header-info { flex: 1; text-align: center; overflow: hidden; padding: 0 8px; }
+
+.filter-tag-header-info h3 { margin: 0; font-size: 16px; font-weight: 700; color: #1e1b4b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.filter-tag-counter { display: inline-block; font-size: 11px; font-weight: 600; color: #64748b; background: #f1f5f9; padding: 1px 8px; border-radius: 12px; margin-top: 2px; }
+
+.filter-tag-nav-btn { width: 34px; height: 34px; border: none; background: rgba(71, 70, 70, 0.08); color: #444; border-radius: 50%; font-size: 17px; display: grid; place-items: center; cursor: pointer; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+
+.filter-tag-nav-btn:active { transform: scale(0.92); background: rgba(71, 70, 70, 0.16); }
+
+/* Fundo da lista branco com padding exato da imagem */
+.filter-tag-feed-list { flex: 1; overflow-y: auto; padding: 16px 14px; display: flex; flex-direction: column; gap: 12px; -webkit-overflow-scrolling: touch; background: #ffffff; }
+
+/* Card exatamente com o acabamento da imagem */
+.filter-tag-item-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 12px 14px; box-shadow: none; display: flex; flex-direction: column; gap: 6px; }
+
+.filter-tag-item-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0; }
+
+.filter-tag-item-user { display: flex; align-items: center; gap: 8px; min-width: 0; }
+
+.filter-tag-item-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+
+.filter-tag-item-name { font-size: 14px; font-weight: 700; color: #1e1b4b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.filter-tag-item-city { font-size: 11.5px; color: #64748b; background: #f1f5f9; padding: 2px 8px; border-radius: 12px; white-space: nowrap; }
+
+.filter-tag-item-time { font-size: 11px; color: #94a3b8; white-space: nowrap; flex-shrink: 0; }
+
+/* Linha da mensagem com a badge recuada diretamente alinhada abaixo do nome */
+.filter-tag-item-body { display: flex; flex-direction: row; align-items: center; gap: 8px; padding-left: 42px; margin-top: 0; }
+
+/* Badge horizontal idêntica à do chat */
+.filter-tag-feed-list .filter-tag-item-body .chat-tag-badge { display: inline-flex; flex-direction: row; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px; border-width: 1px; border-style: solid; height: 22px; line-height: 1; box-sizing: border-box; flex-shrink: 0; }
+
+.filter-tag-feed-list .filter-tag-item-body .chat-tag-badge .material-symbols-outlined { font-size: 14px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+.filter-tag-feed-list .filter-tag-item-body .chat-tag-badge span:last-child { font-size: 11.5px; font-weight: 700; line-height: 1; letter-spacing: -0.1px; }
+
+.filter-tag-text-content { font-size: 13.5px; color: #1e293b; line-height: 1.4; word-break: break-word; white-space: normal; }
+
+.filter-tag-empty-box { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; color: #64748b; text-align: center; gap: 8px; }
+
+.filter-tag-empty-box i { font-size: 38px; color: #94a3b8; }

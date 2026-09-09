@@ -447,7 +447,12 @@ if (clickArea) {
 clickArea.addEventListener("click", (e) => {
 e.stopPropagation();
 
-// Bloqueia a ação caso o usuário não esteja logado ou esteja com perfil travado
+// 1. Bloqueia abrir o mini modal no próprio nome/mensagem
+if (currentUser && msg.uid && currentUser.uid === msg.uid) {
+  return;
+}
+
+// 2. Bloqueia a ação caso o usuário não esteja logado ou esteja com perfil travado
 const inputTravado = document.getElementById("message-input-wrapper")?.classList.contains("profile-locked");
 if (!currentUser || inputTravado) {
   showToast("Complete seu perfil para interagir com os usuários.");
@@ -701,7 +706,7 @@ const TAGS_DF_CONFIG = {
   "Concursos": { classe: "tag-concursos", icon: "menu_book" },
   "Feiras": { classe: "tag-feiras", icon: "storefront" },
   "Entorno": { classe: "tag-entorno", icon: "signpost" },
-  "Achados e Perdidos": { classe: "tag-achados", icon: "find_in_page" },
+  "Estações e BRT": { classe: "tag-achados", icon: "find_in_page" },
   "Alerta Geral": { classe: "tag-alerta", icon: "warning" }
 };
 
