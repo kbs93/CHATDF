@@ -133,12 +133,16 @@ function closeAllPanels() {
   overlay?.classList.remove("open");
 }
 
-  const attachmentActions = {
+const attachmentActions = {
   users: () => {
     openPanel("users");
   },
   rooms: () => {
     const modal = document.getElementById("roomsModal");
+    modal?.classList.remove("hidden");
+  },
+  tags: () => {
+    const modal = document.getElementById("tagsDfModal");
     modal?.classList.remove("hidden");
   },
   profile: async () => {
@@ -165,6 +169,31 @@ function closeAllPanels() {
   }
 };
 window.attachmentActions = attachmentActions;
+
+// Inserção da Tag no Input e fechamento do modal
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("closeTagsDfModal")?.addEventListener("click", () => {
+    document.getElementById("tagsDfModal")?.classList.add("hidden");
+  });
+
+  document.querySelectorAll(".btn-tag-df").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const tagNome = btn.getAttribute("data-tag");
+      const input = document.getElementById("messageInput");
+      const modal = document.getElementById("tagsDfModal");
+
+      if (tagNome && input) {
+        const textoTag = `[${tagNome}] `;
+        input.value = textoTag + input.value;
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+        if (typeof autoResize === "function") autoResize();
+      }
+
+      modal?.classList.add("hidden");
+    });
+  });
+});
 
 // DOM ELEMENTS 
 const isChatRoute = window.location.pathname.includes("chat.html");

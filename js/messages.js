@@ -687,6 +687,40 @@ ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0
 /*====================================================================================================
 Gera o HTML de renderização para mensagens simples de texto, tratando mensagens longas ou ocultadas
 ======================================================================================================== */
+/*====================================================================================================
+Mapeamento e Formatação das 12 Tags de Utilidade DF para Badges com Google Material Symbols
+======================================================================================================== */
+const TAGS_DF_CONFIG = {
+  "Trânsito": { classe: "tag-transito", icon: "traffic" },
+  "Chuva": { classe: "tag-chuva", icon: "rainy" },
+  "Transporte": { classe: "tag-transporte", icon: "directions_bus" },
+  "Saúde": { classe: "tag-saude", icon: "local_hospital" },
+  "Fiscalização": { classe: "tag-fiscalizacao", icon: "shield_person" },
+  "Segurança": { classe: "tag-seguranca", icon: "security" },
+  "Serviços": { classe: "tag-servicos", icon: "build" },
+  "Concursos": { classe: "tag-concursos", icon: "menu_book" },
+  "Feiras": { classe: "tag-feiras", icon: "storefront" },
+  "Entorno": { classe: "tag-entorno", icon: "signpost" },
+  "Achados e Perdidos": { classe: "tag-achados", icon: "find_in_page" },
+  "Alerta Geral": { classe: "tag-alerta", icon: "warning" }
+};
+
+function formatarTagsDfNoTexto(texto = "") {
+  let resultado = texto;
+  for (const [nomeTag, config] of Object.entries(TAGS_DF_CONFIG)) {
+    const padraoTag = `[${nomeTag}]`;
+    if (resultado.startsWith(padraoTag)) {
+      const badgeHtml = `<span class="chat-tag-badge ${config.classe}"><span class="material-symbols-outlined">${config.icon}</span><span>${nomeTag}</span></span>`;
+      resultado = badgeHtml + resultado.substring(padraoTag.length);
+      break;
+    }
+  }
+  return resultado;
+}
+
+/*====================================================================================================
+Gera o HTML de renderização para mensagens simples de texto, tratando mensagens longas ou ocultadas
+======================================================================================================== */
 function renderPlainMessage(msg) {
 if (msg.deleted === true) {
 return `
@@ -701,13 +735,17 @@ return `<span class="msg-hidden" style=" font-style: italic; font-size: 1rem; fo
 }
 const long = msg.text.length > 200;
 const color = msg.color || "#1E293B";
+const textoFormatado = formatarTagsDfNoTexto(msg.text);
+
 if (long) {
 return `
-<span class="msg-text" style="color:${color};">${msg.text}</span>
+<span class="msg-text" style="color:${color};">${textoFormatado}</span>
 <button class="toggle-expand">Ler mais</button>`;
 }
-return `<span style="white-space:pre-wrap;color:${color};">${msg.text}</span>`;
+return `<span style="white-space:pre-wrap;color:${color};">${textoFormatado}</span>`;
 }
+
+
 
 /*====================================================================================================
 Gera a tag HTML de imagem para exibição de figurinhas estáticas na conversa

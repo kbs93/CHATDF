@@ -975,6 +975,56 @@ NES Anexos estilo WhatsApp zap EDITA O BOTAO SHEET TAMBEM 27-02-26
 .icon-sticker { background: linear-gradient(135deg, #ffc371, #ff5f6d); }
 .icon-color { background: linear-gradient(135deg, #f953c6, #b91d73); }
 .icon-ai { background: linear-gradient(135deg, #1e3c72, #2a5298); }
+.icon-tags-df { background: linear-gradient(135deg, #ff6b6b, #6f42c1); }
+
+
+
+/* ========================================================
+   MODAL DE TAGS DF & BOTÕES COLORIDOS COM MATERIAL SYMBOLS
+   ======================================================== */
+.tags-df-modal-box { max-width: 380px; width: 92%; max-height: 82vh; display: flex; flex-direction: column; padding: 16px 14px; }
+
+.tags-df-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-height: 340px; overflow-y: auto; padding: 4px 2px; -webkit-overflow-scrolling: touch; }
+
+#tagsDfModal .tags-df-grid button.btn-tag-df { display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 7px 10px; border-radius: 10px; border-width: 1.5px; border-style: solid; cursor: pointer; min-height: 38px; max-height: 38px; width: 100%; box-sizing: border-box; transition: transform 0.15s ease,box-shadow 0.15s ease; -webkit-tap-highlight-color: transparent; user-select: none; }
+
+#tagsDfModal .tags-df-grid button.btn-tag-df:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08); }
+
+#tagsDfModal .tags-df-grid button.btn-tag-df:active { transform: scale(0.96); }
+
+#tagsDfModal .tags-df-grid button.btn-tag-df .material-symbols-outlined { font-size: 23px; line-height: 1; flex-shrink: 0; }
+
+#tagsDfModal .tags-df-grid button.btn-tag-df span:last-child { font-size: 12.5px; font-weight: 700; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
+
+/* Identidade Visual das 12 Tags (Modal de Seleção e Chat) */
+#tagsDfModal .tags-df-grid button.tag-transito, #chat-container .chat-tag-badge.tag-transito { background-color: #fff3e0; border-color: #ffb74d; color: #e65100; }
+#tagsDfModal .tags-df-grid button.tag-chuva, #chat-container .chat-tag-badge.tag-chuva { background-color: #e1f5fe; border-color: #81d4fa; color: #0288d1; }
+#tagsDfModal .tags-df-grid button.tag-transporte, #chat-container .chat-tag-badge.tag-transporte { background-color: #fff8e1; border-color: #ffe082; color: #f57f17; }
+#tagsDfModal .tags-df-grid button.tag-saude, #chat-container .chat-tag-badge.tag-saude { background-color: #ffebee; border-color: #ef9a9a; color: #d32f2f; }
+#tagsDfModal .tags-df-grid button.tag-fiscalizacao, #chat-container .chat-tag-badge.tag-fiscalizacao { background-color: #e8eaf6; border-color: #9fa8da; color: #1565c0; }
+#tagsDfModal .tags-df-grid button.tag-seguranca, #chat-container .chat-tag-badge.tag-seguranca { background-color: #f3e5f5; border-color: #ce93d8; color: #6a1b9a; }
+#tagsDfModal .tags-df-grid button.tag-servicos, #chat-container .chat-tag-badge.tag-servicos { background-color: #e0f7fa; border-color: #80deea; color: #00838f; }
+#tagsDfModal .tags-df-grid button.tag-concursos, #chat-container .chat-tag-badge.tag-concursos { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+#tagsDfModal .tags-df-grid button.tag-feiras, #chat-container .chat-tag-badge.tag-feiras { background-color: #e8f5e9; border-color: #a5d6a7; color: #2e7d32; }
+#tagsDfModal .tags-df-grid button.tag-entorno, #chat-container .chat-tag-badge.tag-entorno { background-color: #efebe9; border-color: #bcaaa4; color: #5d4037; }
+#tagsDfModal .tags-df-grid button.tag-achados, #chat-container .chat-tag-badge.tag-achados { background-color: #e0f2f1; border-color: #80cbc4; color: #00695c; }
+#tagsDfModal .tags-df-grid button.tag-alerta, #chat-container .chat-tag-badge.tag-alerta { background-color: #ffebee; border-color: #ef5350; color: #b71c1c; }
+
+/* Badge de Tag renderizado dentro da mensagem no chat */
+/* ========================================================
+   MICRO-BADGE UX MOBILE: TAGS DE UTILIDADE DF NO FEED
+   ======================================================== */
+#chat-container .message .chat-tag-badge { display: inline-flex; align-items: center; gap: 4px; padding: 1px 7px; border-radius: 6px; border-width: 1px; border-style: solid; margin-right: 6px; vertical-align: middle; line-height: 1; height: 22px; box-sizing: border-box; }
+
+#chat-container .message .chat-tag-badge .material-symbols-outlined { font-size: 15px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+#chat-container .message .chat-tag-badge span:last-child { font-size: 11.5px; font-weight: 700; line-height: 1; letter-spacing: -0.1px; }
+
+@media (max-width: 480px) {
+  #chat-container .message .chat-tag-badge { height: 20px; padding: 0 5px; gap: 3px; margin-right: 5px; border-radius: 5px; }
+  #chat-container .message .chat-tag-badge .material-symbols-outlined { font-size: 20px; }
+  #chat-container .message .chat-tag-badge span:last-child { font-size:0.84em; }
+}
 
 /*=============== edita o Botao de feedback sujestao de melhoria ====================*/
 /* =============================== MODAL DE FEEDBACK — ESTÉTICA ================================ */
