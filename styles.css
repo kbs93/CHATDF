@@ -125,7 +125,7 @@ font-family: 'Urbanist-Italic'; src: url('./fonts/Urbanist-Italic-VariableFont_w
 /* ================== HERO / PATTERN CONTÍNUO (ALTA PERFORMANCE) =================== */
 /* ================== HERO / PATTERN CONTÍNUO (ALTA PERFORMANCE) =================== */
 
-#heroAnimation { position: absolute; inset: 0; width: 100%; height: 100%; background-image: url("img/imgmonumental.png"); background-repeat: repeat-x; background-size: 1600px auto; background-position: 0 bottom; opacity: 0.40; filter: grayscale(100%) brightness(1.2) contrast(120%); mix-blend-mode: soft-light; will-change: background-position; animation: slidePattern 24s linear infinite; }
+#heroAnimation { position: absolute; inset: 0; width: 100%; height: 100%; background-image: url("img/imgmonumental.webp"); background-repeat: repeat-x; background-size: 1600px auto; background-position: 0 bottom; opacity: 0.40; filter: grayscale(100%) brightness(1.2) contrast(120%); mix-blend-mode: soft-light; will-change: background-position; animation: slidePattern 24s linear infinite; }
 
 @keyframes slidePattern {
   from { background-position-x: 0; }

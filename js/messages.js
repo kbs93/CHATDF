@@ -991,40 +991,31 @@ snapshot.docChanges().forEach((change) => {
 Tratamento para alteração do tipo 'removed': atualiza o visual da mensagem removida dinamicamente
 ======================================================================================================== */
 if (change.type === "removed") {
-const msgId = change.doc.id;
-const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
+  const msgId = change.doc.id;
+  const msgData = change.doc.data();
 
-if (msgDiv && chat) {
-const alturaAntes = msgDiv.offsetHeight;
-const scrollAntes = chat.scrollTop;
+  // Só marca como excluída visualmente se o documento realmente tiver sido marcado como deletado no Firestore
+  if (msgData && msgData.deleted === true) {
+    const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
+    if (msgDiv) {
+      const replyBox = msgDiv.querySelector(".reply-container");
+      if (replyBox) replyBox.style.display = "none";
 
-const timeDiv = msgDiv.querySelector(".message-time");
-const replyBox = msgDiv.querySelector(".reply-container");
+      const bodyContent = msgDiv.children[2];
+      if (bodyContent) {
+        bodyContent.innerHTML = `
+          <div class="msg-deleted-box">
+            <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
+            <span style="font-size:0.92rem; font-style: italic; color: #888;">Mensagem excluída</span>
+          </div>
+        `;
+      }
+    }
+  }
 
-if (replyBox) replyBox.style.display = "none";
-if (timeDiv) timeDiv.style.display = "none";
-
-if (timeDiv && timeDiv.previousElementSibling) {
-timeDiv.previousElementSibling.innerHTML = `
-<div class="msg-deleted-box" style="display: flex; align-items: center; gap: 6px; color: #888; font-style: italic; margin-top: 2px; min-height: 24px;">
-<i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
-<span style="font-size:0.92rem;">Mensagem excluída</span>
-</div>
-`;
-}
-
-const alturaDepois = msgDiv.offsetHeight;
-const diferenca = alturaAntes - alturaDepois;
-if (diferenca > 0) {
-chat.scrollTop = scrollAntes - diferenca;
-}
-
-msgDiv.style.pointerEvents = "none";
-}
-
-replyCache.delete(msgId);
-messagesMap.delete(msgId);
-return;
+  // Se a mensagem apenas saiu do limite das 30 da consulta (sem ter sido deletada),
+  // não faz nada para mantê-la intacta na tela enquanto o usuário conversa.
+  return;
 }
 
 /*====================================================================================================
