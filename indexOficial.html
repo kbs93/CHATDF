@@ -27,14 +27,14 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <link href="styles.css?v=2" rel="stylesheet">
 <!-- Caminhos RELATIVOS corretos -->
-<script type="module" src="./js/salas.js"></script>
+<!-- Caminhos RELATIVOS corretos -->
 <script type="module" src="./js/modal.js"></script>
 <script type="module" src="./js/main.js"></script>
 <script type="module" src="./js/contato.js"></script>
 </head>
 <body class="index-page">
 <!-- 🔹 NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-3">
+<nav class="navbar navbar-expand-lg navbar-dark py-3">
 <div class="container">
 <!--- BOTÃO ☰ -- EDITA O BOTA DO MENU PRINCIPAL -->
 <button class="navbar-toggler" type="button"
@@ -51,8 +51,8 @@ aria-expanded="false">
   </a>
 <div class="collapse navbar-collapse justify-content-end align-items-center" id="navbarNav">
 <ul class="navbar-nav align-items-center gap-lg-2">
-<li class="nav-item"><a class="nav-link" href="#categorias">Categorias</a></li>
-<li class="nav-item"><a class="nav-link" href="#salas">Salas</a></li>
+<li class="nav-item"><a class="nav-link" href="chat.html?sala=geral">Salas</a></li>
+<li class="nav-item"><a class="nav-link" href="#sobre">Sobre o Chat</a></li>
 <li class="nav-item"><a class="nav-link" href="./uso/somos.html">Quem Somos</a></li>
 <li class="nav-item"><a class="nav-link" href="contato.html">Contato</a></li>
 </ul>
@@ -65,55 +65,75 @@ aria-expanded="false">
 </nav>
   <div id="toast" class="toast-container"></div>
   <!-- 🔹 HERO (100% ORIGINAL - NÃO MEXIDO) -->
-<header class="hero ">
-<div class="hero-animation" id="heroAnimation"></div><!---ANIMACAO DE IMAGEM 28-04-26----->
-<div class="container py-5">
-      <div class="row align-items-center g-4">
-        <div class="animate-slide">
-          <div class="mb-4">
-            <img src="img/a3ras.png" alt="ChatDF" class="img-fluid" style="max-width: 320px; filter: drop-shadow(0px 4px 10px rgba(0,0,0,0.3));">
-          </div>
-          <h1 class="display-4 fw-bold mb-3" style="line-height: 1.2;"> <span class="text-primary" style="color: #ffffff !important;">O Chat Público Oficial do Distrito Federal</span></h1>
-         <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
-            <a href="#salas" class="btn btn-outline-light btn-lg fw-bold shadow-sm">Entrar nas salas</a>
-            <a href="#" class="btn btn-outline-light btn-lg fw-bold open-login">Faça login</a>
-          </div>
+<!-- ================= NOVO HERO MODERNO ESTILO IMAGEM 2 ================= -->
+  <header class="hero-modern">
+    <div class="hero-modern-container">
+      
+      <!-- LADO ESQUERDO: TEXTOS E BOTÕES -->
+      <div class="hero-content">
+        <div class="hero-pill-badge">A COMUNIDADE DA CAPITAL</div>
+        <h1 class="hero-main-title">
+          BATE-PAPO EM<br>TEMPO REAL SEM<br>ENROLAÇÃO
+        </h1>
+        <p class="hero-main-subtitle">
+          O ponto de encontro digital do Distrito Federal. Fale com pessoas do Plano Piloto às cidades satélites instantaneamente, direto no seu navegador.
+        </p>
+ <div class="hero-btn-group">
+          <a href="chat.html?sala=geral" class="hero-btn-primary">Entrar no Chat Agora</a>
+          <a href="#" class="hero-btn-secondary open-login">Entrar</a>
         </div>
+      
       </div>
-    </div>
-  </header>
 
-<!----------------------- 🔹 SALAS (100% ORIGINAL - NÃO MEXIDO) 
+      <!-- LADO DIREITO: MOCKUP DO CHAT COM BADGES FLUTUANTES -->
+      <div class="hero-visual">
+        <!-- Badge 1: Sala Ativa -->
+        <div class="floating-badge badge-sala">
+          <span class="badge-sub"># SALA ATIVA</span>
+          <strong class="badge-txt">#plano-piloto</strong>
+        </div>
 
+        <!-- Badge 2: Online Agora -->
+        <div class="floating-badge badge-online">
+          <span class="online-dot-live"></span>
+          <span>184 online agora</span>
+        </div>
 
- <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
-            <a href="#salas" class="btn btn-outline-light btn-lg fw-bold shadow-sm">Entrar nas salas</a>
-            <a href="#" class="btn btn-outline-light btn-lg fw-bold open-login">Faça login</a>
+        <!-- Mockup do Chat -->
+        <div class="hero-mockup-window">
+          <div class="mockup-sidebar">
+            <div class="mockup-channel active"># geral</div>
+            <div class="mockup-channel"># ceilandia</div>
+            <div class="mockup-channel"># taguatinga</div>
+            <div class="mockup-channel"># eventos</div>
           </div>
-
-
-          #020641;
------------------->
-
-<section id="salas" class="home-main-section">
-  <div class="container">
-    <div class="home-main-wrapper">
-      <div class="row g-4">
-        <div class="col-12">
-          <div class="chat-rooms">
-              <div>
-                <h2 class="section-title display-5 fw-bold" style="color: #020641; text-align: center;" >
-                  Escolha uma sala e converse agora
-                </h2>
+          <div class="mockup-feed">
+            <div class="mockup-msg">
+              <span class="mockup-avatar avatar-blue"></span>
+              <div class="mockup-bubble">
+                <strong class="author-radar">Brasília_Radar:</strong> Eixão sem trânsito sentido Norte!
               </div>
-            <div class="row justify-content-center salas-container" id="salas-lista">
+            </div>
+            <div class="mockup-msg">
+              <span class="mockup-avatar avatar-green"></span>
+              <div class="mockup-bubble">
+                <strong class="author-candango">Candango:</strong> Show! Chegando em 10min.
+              </div>
             </div>
           </div>
         </div>
+
+        <!-- Badge 3: Celular & Desktop -->
+        <div class="floating-badge badge-responsive">
+          <i class="bi bi-phone"></i>
+          <span>Modo Celular &amp; Desktop</span>
+        </div>
       </div>
+
     </div>
-  </div>
-</section>
+  </header>
+
+
 
 <!-------------------------- TRENDING ---------------------------------------------->
 <!-------------------------- 🔹 TRENDING (Reativado e Modernizado com UX Pills) --------------------------
@@ -659,15 +679,17 @@ aria-expanded="false">
       </div>
 
       <!-- Coluna 2: Navegação -->
+ <!-- Coluna 2: Navegação -->
  <div>
   <h5 class="footer-title">Navegação</h5>
   <ul class="footer-links">
-    <li><a href="#salas"><i class="bi bi-chevron-right"></i> Salas Ativas</a></li>
+    <li><a href="chat.html?sala=geral"><i class="bi bi-chevron-right"></i> Entrar nas Salas</a></li>
     <li><a href="uso/somos.html"><i class="bi bi-chevron-right"></i> Quem Somos</a></li>
     <li><a href="contato.html"><i class="bi bi-chevron-right"></i> Fale Conosco</a></li>
     <li><a href="uso/termos.html"><i class="bi bi-chevron-right"></i> Regras da Comunidade</a></li>
   </ul>
 </div>
+
 
       <!-- Coluna 3: Termos e Acesso -->
     <!-- Coluna 3: Termos e Acesso -->

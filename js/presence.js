@@ -2,7 +2,7 @@
 // presence.js - Gerenciamento de Presença e Status Online (RTDB)
 // ========================================================================
 import { rtdb } from "./firebase-config.js";
-import { ref, set, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { ref, set, update, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 /**
  * Atualiza ou define o status de um usuário específico no nó status/{userId}
@@ -40,6 +40,11 @@ let heartbeatInterval = null;
 /**
  * Registra o usuário atual na sala conectada com fallback via onDisconnect e batimento contínuo
  */
+
+
+/**
+ * Registra o usuário atual na sala conectada com fallback via onDisconnect e batimento contínuo
+ */
 export async function trackUserRoomPresence(user, appState, currentRoomFallback = "geral") {
   if (!user || !user.uid) return;
 
@@ -53,7 +58,7 @@ export async function trackUserRoomPresence(user, appState, currentRoomFallback 
     const userStatusRef = ref(rtdb, "status/" + user.uid);
     const connectedRef = ref(rtdb, ".info/connected");
 
-    const gravarStatusOnline = async () => {
+    const getPayloadPresenca = () => {
       const vipData = appState?.currentUser?.vipData || {};
       const fotoReal =
         appState?.currentUser?.foto ||
@@ -69,36 +74,39 @@ export async function trackUserRoomPresence(user, appState, currentRoomFallback 
         user.displayName ||
         "Usuário";
 
-      await set(userStatusRef, {
+      return {
         uid: user.uid,
         name: nomeReal,
         avatar: fotoReal,
         online: true,
-        sala: appState?.currentRoom || currentRoomFallback,
+        sala: (appState?.currentRoom || currentRoomFallback).toLowerCase(),
         lastChanged: Date.now(),
         ...vipData
-      });
+      };
     };
 
-    // 1. Grava online de imediato para não depender de delay inicial
-    await gravarStatusOnline();
-
-    // 2. Configura a desconexão automática e reconexão contínua
+    // 1. Escuta a conexão nativa do Firebase (gerencia quedas e voltas reais do socket)
     onValue(connectedRef, async (snap) => {
       if (snap.val() === true) {
+        // Arma a ação de desconexão no servidor
         await onDisconnect(userStatusRef).update({
           online: false,
           lastChanged: Date.now()
         });
 
-        await gravarStatusOnline();
+        // Grava o status online inicial do usuário
+        await set(userStatusRef, getPayloadPresenca());
       }
     });
 
-    // 3. Heartbeat: a cada 45 segundos renova o carimbo no Firebase para manter o usuário ativo
+    // 2. Heartbeat leve: a cada 45 segundos APENAS atualiza o carimbo de tempo sem sobrescrever o nó
     heartbeatInterval = setInterval(async () => {
       try {
-        await gravarStatusOnline();
+        await update(userStatusRef, {
+          online: true,
+          lastChanged: Date.now(),
+          sala: (appState?.currentRoom || currentRoomFallback).toLowerCase()
+        });
       } catch (err) {
         console.warn("Falha no batimento de presença:", err);
       }
@@ -108,3 +116,12 @@ export async function trackUserRoomPresence(user, appState, currentRoomFallback 
     console.error("Erro ao atualizar presença da sala:", err);
   }
 }
+
+
+
+
+
+
+
+
+

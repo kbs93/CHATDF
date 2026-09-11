@@ -106,6 +106,10 @@ function openPanel(panelName) {
   currentPanel = panelName;
   const backdrop = document.getElementById("chatPanelsBackdrop");
 
+  if (panelName === "roomsSide") {
+    document.getElementById("roomsSidePanel")?.classList.add("open");
+    overlay?.classList.add("open");
+  }
   if (panelName === "users") {
     document.getElementById("onlineUsersPanel")?.classList.add("open");
     overlay?.classList.add("open");
@@ -124,6 +128,7 @@ function openPanel(panelName) {
 function closeAllPanels() {
   currentPanel = null;
   document.getElementById("onlineUsersPanel")?.classList.remove("open");
+  document.getElementById("roomsSidePanel")?.classList.remove("open");
   attachmentPanel?.classList.remove("show");
   document.getElementById("stickerPanel")?.classList.remove("show");
   document.getElementById("chatPanelsBackdrop")?.classList.add("hidden");
@@ -132,14 +137,12 @@ function closeAllPanels() {
   }
   overlay?.classList.remove("open");
 }
-
 const attachmentActions = {
   users: () => {
     openPanel("users");
   },
-  rooms: () => {
-    const modal = document.getElementById("roomsModal");
-    modal?.classList.remove("hidden");
+roomsSide: () => {
+    openPanel("roomsSide");
   },
   tags: () => {
     const modal = document.getElementById("tagsDfModal");
@@ -700,81 +703,6 @@ document.getElementById("cancelFeedback")?.addEventListener("click", () => {
 });
 // Troca de Salas rapida
 // Troca de Salas rapida com contagem em tempo real e catraca
-document.getElementById("closeRoomsModal")?.addEventListener("click", () => {
-  document.getElementById("roomsModal")?.classList.add("hidden");
-});
-
-const MAX_USERS_PER_ROOM_MODAL = 5;
-const modalRoomCounts = {};
-const listaSalasIds = ["geral", "religiao", "politica", "transito", "lugares", "futebol", "eventos", "entretenimento", "games", "concurso"];
-
-// Listener do Realtime Database para atualizar contagem de cada sala no modal
-if (isChatRoute) {
-  const statusRefModal = dbRef(rtdb, "status");
-  const agoraLimite = 120000;
-
-  dbOnValue(statusRefModal, (snapshot) => {
-    const statusData = snapshot.val() || {};
-    const agora = Date.now();
-
-    // 1. Zera as contagens
-    listaSalasIds.forEach((id) => {
-      modalRoomCounts[id] = 0;
-    });
-
-    // 2. Soma os usuários conectados e ativos por sala
-    Object.values(statusData).forEach((user) => {
-      if (!user || user.online !== true) return;
-      if (user.lastChanged && (agora - user.lastChanged > agoraLimite)) return;
-
-      const salaUser = user.sala ? user.sala.toLowerCase() : "";
-      if (modalRoomCounts[salaUser] !== undefined) {
-        modalRoomCounts[salaUser]++;
-      }
-    });
-
-    // 3. Atualiza os badges no modal
-    listaSalasIds.forEach((id) => {
-      const badge = document.getElementById(`modal-online-${id}`);
-      if (!badge) return;
-
-      const total = modalRoomCounts[id] || 0;
-    if (total >= MAX_USERS_PER_ROOM_MODAL) {
-        badge.textContent = `${total}`;
-        badge.classList.add("lotada");
-      } else {
-        badge.textContent = `${total}`;
-        badge.classList.remove("lotada");
-      }
-    });
-  });
-}
-
-document.querySelectorAll(".btn-change-room").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const targetRoom = btn.getAttribute("data-room");
-    if (!targetRoom) return;
-
-    if (appState.currentRoom && appState.currentRoom.toLowerCase() === targetRoom.toLowerCase()) {
-      showToast("Você já está nesta sala.");
-      document.getElementById("roomsModal")?.classList.add("hidden");
-      return;
-    }
-
-    // Catraca no modal: bloqueia sala cheia
-    const totalNaSala = modalRoomCounts[targetRoom.toLowerCase()] || 0;
-    if (totalNaSala >= MAX_USERS_PER_ROOM_MODAL) {
-      showToast(`A sala está cheia no momento (${MAX_USERS_PER_ROOM_MODAL}/${MAX_USERS_PER_ROOM_MODAL}). Aguarde alguns instantes!`);
-      return;
-    }
-
-    window.location.href = `chat.html?sala=${encodeURIComponent(targetRoom)}`;
-  });
-});
-
-
-
-
 
 document.getElementById("sendFeedback")?.addEventListener("click", async () => {
   const text = feedbackText.value.trim();
@@ -2363,4 +2291,9 @@ document.addEventListener("DOMContentLoaded", () => {
       showToast("Foto recortada! Clique em Salvar abaixo para concluir.");
     }, "image/jpeg", 0.85);
   });
+});
+
+document.getElementById("closeRoomsPanel")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  closeAllPanels();
 });

@@ -91,11 +91,15 @@ salas.forEach((sala) => {
 
 col.className = "col-12 col-lg-6";
 
+const urlParams = new URLSearchParams(window.location.search);
+  const salaAtualUrl = (urlParams.get("sala") || "geral").toLowerCase();
+
   const link = document.createElement("a");
 
   link.href = `chat.html?sala=${sala.id}`;
 
-  link.className = "live-room-item room-card";
+  const isSalaAtiva = sala.id.toLowerCase() === salaAtualUrl;
+  link.className = `live-room-item room-card ${isSalaAtiva ? "active" : ""}`;
 
   link.innerHTML = `
   

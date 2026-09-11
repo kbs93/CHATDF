@@ -27,15 +27,20 @@
 <body class="chat-page">
   <nav class="chat-navbar  navbar-dark bg-dark ">
     <!-- CENTRO --  aparece os nomes das salas ---->
+
+<!-- CENTRO --  aparece os nomes das salas ---->
 <div class="chat-center">
   <span id="chatRoomName" class="chat-title"></span>
 </div>  
     <!-- ESQUERDA -->
+<!-- ESQUERDA -->
     <div class="chat-left">
       <a href="./indexOficial.html" class="nav-btn" id="txlogot">
         <img src="./img/inicio1.png" alt="Home">
       </a>
     </div>
+
+
     <!-- DIREITA -->
     <div class="chat-right">
       <div id="userArea" class="user-area-shell" aria-live="polite">
@@ -47,7 +52,19 @@
     </div>
   </nav>
   <!--  ESTRUTURA REAL DO CHAT  -->
+<!--  ESTRUTURA REAL DO CHAT  -->
   <div id="chat-layout">
+    <!-- PAINEL FIXO DE SALAS NA ESQUERDA (3 COLUNAS) -->
+    <div id="roomsSidePanel" class="rooms-side-panel">
+      <div class="rooms-side-header">
+        <span><i class="bi bi-chat-square-text-fill text-primary"></i> Salas de interação</span>
+        <button id="closeRoomsPanel" type="button" class="rooms-side-close-btn">✕</button>
+      </div>
+      <div class="rooms-side-list" id="salas-lista">
+        <!-- Os cards das salas com contagem em tempo real são renderizados aqui via salas.js -->
+      </div>
+    </div>
+
     <div id="chat-main-column">
 
       <!-- Mensagens -->
@@ -133,11 +150,11 @@
                   <span class="attachment-icon icon-ai"><i class="bi bi-stars"></i></span>
                   <span class="attachment-label">FeedBack</span>
                 </button>
-                <button class="attachment-item" data-action="rooms">
+            <button class="attachment-item" data-action="roomsSide">
                   <span class="attachment-icon icon-location" style="background: linear-gradient(135deg, #10b981, #059669);">
                     <i class="bi bi-door-open-fill"></i>
                   </span>
-                  <span class="attachment-label">Trocar Sala</span>
+                  <span class="attachment-label">Salas</span>
                 </button>
               </div>
             </div>
@@ -200,151 +217,6 @@
                 </div>
               </div>
             </div>
-
-
-
-
-
-
-
-
-            
-            <!-- ================= MODAL DE TROCA RÁPIDA DE SALAS ================= -->
-<div id="roomsModal" class="feedback-modal hidden">
-  <div class="feedback-box">
-   <div class="rooms-modal-header">
-  <h4 class="rooms-modal-title">Trocar de Sala</h4>
-  <button id="closeRoomsModal" type="button" class="rooms-modal-close-btn">✕</button>
-</div>
-
-<div class="rooms-list-grid">
-      <!-- 1. Bate papo Geral -->
-      <button type="button" class="btn-change-room" data-room="geral">
-        <div class="room-btn-content">
-          <div class="room-btn-icon"><i class="bi bi-chat-dots"></i></div>
-          <div class="room-btn-text"><strong>Bate papo Geral</strong></div>
-        </div>
-        <div class="room-btn-right">
-          <span class="room-online-badge" id="modal-online-geral">0</span>
-          <i class="bi bi-chevron-right arrow-icon"></i>
-        </div>
-      </button>
-
-      <!-- 2. Religião e Fé -->
-      <button type="button" class="btn-change-room" data-room="religiao">
-        <div class="room-btn-content">
-          <div class="room-btn-icon"><i class="bi bi-house-heart"></i></div>
-          <div class="room-btn-text"><strong>Religião e Fé</strong></div>
-        </div>
-        <div class="room-btn-right">
-          <span class="room-online-badge" id="modal-online-religiao">0 online</span>
-          <i class="bi bi-chevron-right arrow-icon"></i>
-        </div>
-      </button>
-
-      <!-- 3. Politica -->
-      <button type="button" class="btn-change-room" data-room="politica">
-        <div class="room-btn-content">
-          <div class="room-btn-icon"><i class="bi bi-megaphone"></i></div>
-          <div class="room-btn-text"><strong>Politica</strong></div>
-        </div>
-        <div class="room-btn-right">
-          <span class="room-online-badge" id="modal-online-politica">0 online</span>
-          <i class="bi bi-chevron-right arrow-icon"></i>
-        </div>
-      </button>
-
-      <!-- 4. Trânsito e Transporte -->
-      <button type="button" class="btn-change-room" data-room="transito">
-        <div class="room-btn-content">
-          <div class="room-btn-icon"><i class="bi bi-sign-stop"></i></div>
-          <div class="room-btn-text"><strong>Trânsito e Transporte</strong></div>
-        </div>
-        <div class="room-btn-right">
-          <span class="room-online-badge" id="modal-online-transito">0 online</span>
-          <i class="bi bi-chevron-right arrow-icon"></i>
-        </div>
-      </button>
-
-      <!-- 5. Lugares para sair -->
-      <button type="button" class="btn-change-room" data-room="lugares">
-        <div class="room-btn-content">
-          <div class="room-btn-icon"><i class="bi bi-cup-hot"></i></div>
-          <div class="room-btn-text"><strong>Lugares para sair</strong></div>
-        </div>
-        <div class="room-btn-right">
-          <span class="room-online-badge" id="modal-online-lugares">0 online</span>
-          <i class="bi bi-chevron-right arrow-icon"></i>
-        </div>
-      </button>
-
-      <!-- 6. Futebol e Esportes -->
-      <button type="button" class="btn-change-room" data-room="futebol">
-        <div class="room-btn-content">
-          <div class="room-btn-icon"><i class="bi bi-trophy"></i></div>
-          <div class="room-btn-text"><strong>Futebol e Esportes</strong></div>
-        </div>
-        <div class="room-btn-right">
-          <span class="room-online-badge" id="modal-online-futebol">0 online</span>
-          <i class="bi bi-chevron-right arrow-icon"></i>
-        </div>
-      </button>
-
-      <!-- 7. Eventos e Shows -->
-      <button type="button" class="btn-change-room" data-room="eventos">
-        <div class="room-btn-content">
-          <div class="room-btn-icon"><i class="bi bi-calendar-event"></i></div>
-          <div class="room-btn-text"><strong>Eventos e Shows</strong></div>
-        </div>
-        <div class="room-btn-right">
-          <span class="room-online-badge" id="modal-online-eventos">0 online</span>
-          <i class="bi bi-chevron-right arrow-icon"></i>
-        </div>
-      </button>
-
-      <!-- 8. Entretenimento -->
-      <button type="button" class="btn-change-room" data-room="entretenimento">
-        <div class="room-btn-content">
-          <div class="room-btn-icon"><i class="bi bi-chat-square-heart"></i></div>
-          <div class="room-btn-text"><strong>Entretenimento</strong></div>
-        </div>
-        <div class="room-btn-right">
-          <span class="room-online-badge" id="modal-online-entretenimento">0 online</span>
-          <i class="bi bi-chevron-right arrow-icon"></i>
-        </div>
-      </button>
-
-      <!-- 9. Games -->
-      <button type="button" class="btn-change-room" data-room="games">
-        <div class="room-btn-content">
-          <div class="room-btn-icon"><i class="bi bi-controller"></i></div>
-          <div class="room-btn-text"><strong>Games</strong></div>
-        </div>
-        <div class="room-btn-right">
-          <span class="room-online-badge" id="modal-online-games">0 online</span>
-          <i class="bi bi-chevron-right arrow-icon"></i>
-        </div>
-      </button>
-
-      <!-- 10. Concurso Público -->
-      <button type="button" class="btn-change-room" data-room="concurso">
-        <div class="room-btn-content">
-          <div class="room-btn-icon"><i class="bi bi-journal-bookmark"></i></div>
-          <div class="room-btn-text"><strong>Concurso Público</strong></div>
-        </div>
-        <div class="room-btn-right">
-          <span class="room-online-badge" id="modal-online-concurso">0 online</span>
-          <i class="bi bi-chevron-right arrow-icon"></i>
-        </div>
-      </button>
-    </div>
-  </div>
-</div>
-
-
-
-
-
           </div>
           <button id="emojiBtn" title="Adicionar emoji">
             <i class="bi bi-emoji-smile"></i>
@@ -1331,8 +1203,10 @@ MODAL DO BANNER VIP - UPLOAD NATIVO (CÂMERA / GALERIA) COM MODERAÇÃO CHAT-DF
 <script type="module" src="./js/tag.js"></script>
 
   <!-- 🔹 Scripts -->
+  <!-- 🔹 Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@multiavatar/multiavatar/multiavatar.min.js"></script>
+  <script type="module" src="./js/salas.js"></script>
   <script type="module" src="./js/main.js?v=2"></script>
   <script type="module" src="./js/stickers.js"></script>
   <script type="module" src="./js/pixmodal.js"></script>
