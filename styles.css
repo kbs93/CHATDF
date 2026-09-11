@@ -153,7 +153,9 @@ font-family: 'Urbanist-Italic'; src: url('./fonts/Urbanist-Italic-VariableFont_w
 .navbar { position: absolute; top: 0; left: 0; right: 0; z-index: 999; background: transparent; border-bottom: 1px solid rgba(255, 255, 255, 0.05); box-shadow: none; color: #fff!important; }
 
 /* MENU SUSPENSO MOBILE COM A COR OFICIAL DO HERO */
+/* MENU SUSPENSO MOBILE COM A COR OFICIAL DO HERO */
 @media (max-width: 991px) {
+  .navbar { position: relative; top: auto; left: auto; right: auto; }
   #navbarNav { position: absolute; top: 100%; left: 0; right: 0; background: #040714; border-bottom: 1px solid rgba(255, 255, 255, 0.08); z-index: 998; padding: 12px 0; box-shadow: 0 16px 30px rgba(0, 0, 0, 0.6); }
   #navbarNav .navbar-nav { width: 100%; text-align: center; }
   #navbarNav .nav-link { margin-right: 0; padding: 12px 16px; color: #fff!important; font-weight: 700; }
@@ -3076,15 +3078,19 @@ Reposiciona a tag de expiração para não cobrir o botão voltar vip
 .hero-modern-container { width: 100%; max-width: 1160px; display: flex; align-items: center; justify-content: space-between; gap: 50px; position: relative; z-index: 2; }
 
 /* LADO ESQUERDO */
-.hero-content { flex: 1; max-width: 530px; display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
+.hero-content { width: 100%; max-width: 860px; display: flex; flex-direction: column; align-items: center; text-align: center; margin: 0 auto; }
 
-.hero-pill-badge { display: inline-block; background: rgba(30, 58, 138, 0.4); border: 1px solid rgba(59, 130, 246, 0.35); color: #60a5fa; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; padding: 6px 14px; border-radius: 999px; margin-bottom: 24px; }
+.hero-logo-img { width: 340px; max-width: 85vw; height: auto; object-fit: contain; margin-bottom: 28px; }
 
-.hero-main-title { font-size: clamp(2.1rem, 4vw, 3.3rem); font-weight: 800; color: #ffffff; line-height: 1.1; letter-spacing: -0.5px; margin: 0 0 20px 0; }
+.hero-pill-badge { display: inline-block; background: rgba(30, 58, 138, 0.4); border: 1px solid rgba(59, 130, 246, 0.35); color: #60a5fa; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; padding: 6px 14px; border-radius: 999px; margin-top: 14px; margin-bottom: 0; }
 
-.hero-main-subtitle { font-size: 15px; color: #94a3b8; line-height: 1.6; margin: 0 0 34px 0; max-width: 460px; }
+.hero-btn-group { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 24px; }
 
-.hero-btn-group { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.hero-main-title { font-size: clamp(1.8rem, 3.4vw, 2.75rem); font-weight: 800; color: #ffffff; line-height: 1.15; letter-spacing: -0.5px; margin: 0 0 16px 0; white-space: nowrap; text-align: center; width: 100%; }
+
+.hero-main-title .title-part-1, .hero-main-title .title-part-2 { display: inline; }
+
+.hero-main-subtitle { font-size: 15px; color: #94a3b8; line-height: 1.6; margin: 0 auto 10px; max-width: 580px; text-align: center; }
 
 .hero-btn-primary { background: #3b82f6; color: #ffffff!important; font-size: 14px; font-weight: 600; padding: 12px 26px; border-radius: 10px; text-decoration: none; box-shadow: 0 0 24px rgba(59, 130, 246, 0.5); transition: transform 0.2s ease,box-shadow 0.2s ease,background 0.2s ease; }
 
@@ -3138,11 +3144,14 @@ Reposiciona a tag de expiração para não cobrir o botão voltar vip
 
 /* RESPONSIVO MOBILE */
 @media (max-width: 991px) {
-  .hero-modern { padding: 100px 16px 50px; }
-  .hero-modern-container { flex-direction: column; text-align: center; gap: 40px; }
+  .hero-modern { padding: 115px 16px 44px; min-height: auto; }
+  .hero-modern-container { flex-direction: column; text-align: center; gap: 0; }
   .hero-content { align-items: center; text-align: center; max-width: 100%; }
-  .hero-main-subtitle { margin-left: auto; margin-right: auto; }
-  .hero-btn-group { justify-content: center; }
+  .hero-logo-img {  margin-bottom: 6px; }/*width: 230px; max-width: 65vw;*/
+  .hero-btn-group { justify-content: center; margin-bottom: 34px; }
+  .hero-main-title { white-space: normal; font-size: clamp(1.4rem, 6vw, 1.85rem); line-height: 1.25; margin: 0 0 12px 0; }
+  .hero-main-title .title-part-1, .hero-main-title .title-part-2 { display: block; }
+  .hero-main-subtitle { margin-left: auto; margin-right: auto; margin-bottom: 28px; }
   .hero-visual { width: 100%; max-width: 360px; margin-top: 15px; }
   .hero-mockup-window { height: 220px; }
 }
@@ -3174,3 +3183,157 @@ Reposiciona a tag de expiração para não cobrir o botão voltar vip
 
 
 @media (min-width: 992px) { .rooms-side-panel { position: static; left: auto; top: auto; height: 100%; transform: none; transition: none; } .rooms-side-close-btn { display: none; } .btn-open-rooms { display: none; } }
+
+/* ========================================================================= 
+   FUNDO ESCURO CONTÍNUO DO INDEX (HERO + SOBRE + RODAPÉ)
+   ========================================================================= */
+body.index-page {
+  background-color: #040714;
+  background-image: 
+    radial-gradient(circle at 18% 30%, rgba(30, 58, 138, 0.45) 0%, transparent 45%),
+    radial-gradient(circle at 82% 40%, rgba(13, 27, 62, 0.9) 0%, transparent 65%),
+    radial-gradient(circle at 50% 100%, #03050c 0%, #040714 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+}
+
+/* Remove fundos sólidos do Hero, Sobre e Rodapé para exibir o fundo global */
+body.index-page .hero-modern,
+body.index-page .chatdf-features-section,
+body.index-page .custom-footer {
+  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Contraste e cores dos textos da seção Sobre no modo escuro */
+body.index-page .chatdf-feature-title {
+  color: #ffffff !important;
+}
+
+body.index-page .chatdf-feature-text {
+  color: #cbd5e1 !important;
+}
+
+body.index-page .chatdf-feature-subtext {
+  color: #94a3b8 !important;
+}
+
+body.index-page .chatdf-regional-highlight {
+  background-color: rgba(30, 58, 138, 0.2) !important;
+  border-color: rgba(59, 130, 246, 0.35) !important;
+  color: #e2e8f0 !important;
+}
+
+body.index-page .chatdf-tag-item {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #f1f5f9 !important;
+}
+
+/* Contraste dos textos e divisórias do Rodapé */
+body.index-page .footer-title {
+  color: #ffffff !important;
+}
+
+body.index-page .footer-description,
+body.index-page .footer-links li a,
+body.index-page .footer-bottom {
+  color: #94a3b8 !important;
+}
+
+body.index-page .footer-links li a:hover {
+  color: #ffffff !important;
+}
+
+body.index-page .social-links a {
+  color: #94a3b8 !important;
+}
+
+body.index-page .social-links a:hover {
+  color: #3b82f6 !important;
+}
+
+body.index-page .footer-divider {
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+
+
+
+/* From Uiverse.io by JkHuger */ 
+/* From Uiverse.io by JkHuger - Calibrado para o Hero ChatDF */ 
+/* ================== ANEL DE LUZ 3 CORES EXPANDIDO (CHAT-DF) ================== */
+/* ================== ANEL DE LUZ 3 CORES (LINHA GROSSA + PERTO DOS BOTÕES) ================== */
+.loader {
+  position: relative;
+  /* Margem negativa suave para puxar o anel para perto da base dos botões */
+  margin: -25px auto 0 auto;
+  box-sizing: border-box;
+  background-clip: padding-box;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  /* Linha base engrossada para 8px */
+  border: 8px solid rgba(255, 255, 255, 0.12);
+  -webkit-mask: linear-gradient(rgba(0, 0, 0, 0.3), #000000 90%);
+  mask: linear-gradient(rgba(0, 0, 0, 0.3), #000000 90%);
+  transform-origin: 50% 50%;
+  transform: perspective(300px) rotateX(66deg);
+  pointer-events: none;
+}
+
+.loader:before,
+.loader:after,
+.loader span {
+  content: "";
+  position: absolute;
+  /* Alinhamento exato para compensar a borda de 8px */
+  top: -8px;
+  left: -8px;
+  box-sizing: border-box;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  opacity: 0.1;
+  /* Linha das cores engrossada para 8px */
+  border: 10px solid transparent;
+  animation: spinner-spin 3.1s cubic-bezier(0.6, 0.2, 0, 0.8) infinite, spinner-fade 2.1s linear infinite;
+}
+
+/* 1ª COR: Ciano Neon */
+.loader:before {
+  border-top-color: #00d2ff;
+  animation-delay: 0s;
+}
+
+/* 2ª COR: Azul Royal (Cor do botão primário) */
+.loader:after {
+  border-top-color: #0062ff;
+  animation-delay: 0.7s;
+}
+
+/* 3ª COR: Roxo / Índigo Neon VIP */
+.loader span {
+  border-top-color: #a855f7;
+  animation-delay: 1.4s;
+}
+
+@keyframes spinner-spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner-fade {
+  20% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.3;
+  }
+}
