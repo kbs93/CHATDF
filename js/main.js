@@ -408,13 +408,49 @@ document.addEventListener("click", (e) => {
     return;
   }
 
+  
+  
+// ======================== MODAL LOGIN ========================
+const loginModal = document.getElementById("loginModal");
+
+function abrirModalLogin() {
+  if (!loginModal) return;
+  loginModal.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+  document.body.style.touchAction = "none";
+}
+
+function fecharModalLogin() {
+  if (!loginModal) return;
+  loginModal.classList.add("hidden");
+  document.body.style.overflow = "";
+  document.body.style.touchAction = "";
+}
+
+// Abertura global via clique em qualquer botão com .open-login
+document.addEventListener("click", (e) => {
   const btn = e.target.closest(".open-login");
   if (btn) {
     e.preventDefault();
-    const modal = document.getElementById("loginModal");
-    if (modal) modal.classList.remove("hidden");
+    abrirModalLogin();
     return;
   }
+});
+
+// Fecha no "X"
+document.querySelector(".close-login")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  fecharModalLogin();
+});
+
+// Fecha ao tocar fora do card branco
+loginModal?.addEventListener("click", (e) => {
+  if (e.target === loginModal) {
+    fecharModalLogin();
+  }
+});
+
+  
 
   const openPrivacyBtn = e.target.closest("#openPrivacyModalBtn");
   if (openPrivacyBtn) {

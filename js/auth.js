@@ -1,12 +1,10 @@
 // auth.js
-import { auth, provider, signOutUser, onAuthChange, db, rtdb } from "./firebase-config.js";
+// auth.js
+import { auth, provider, signOutUser, db, rtdb } from "./firebase-config.js";
 import { verificarUsuarioBloqueado } from "./bloqueio.js";
 import {
-  GoogleAuthProvider,
   signInWithPopup,
-  fetchSignInMethodsForEmail,
-  signInWithEmailAndPassword,
-  linkWithCredential
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import {
   ref,
@@ -261,21 +259,29 @@ function renderLoggedOutUserArea(userArea, isChatPage) {
 }
 
 function restoreCachedUserArea(userArea, isChatPage) {
-  if (!userArea) return;
-
   const cached = getUserAreaCache();
 
   if (cached?.isLoggedIn) {
-    renderLoggedUserArea(
-      userArea,
-      cached.profileName || "Usuário",
-      cached.profilePhoto || "img/avatar.png"
-    );
+    if (userArea) {
+      renderLoggedUserArea(
+        userArea,
+        cached.profileName || "Usuário",
+        cached.profilePhoto || "img/avatar.png"
+      );
+    }
+    // Aplica o estado logado no Hero imediatamente no 1º milissegundo pelo cache
+    const heroVisitorBtn = document.getElementById("heroVisitorBtn");
+    const heroLoginBtn = document.getElementById("heroLoginBtn");
+    if (heroVisitorBtn) heroVisitorBtn.textContent = "Entrar nas Salas";
+    if (heroLoginBtn) heroLoginBtn.classList.add("bloqueado");
     return;
   }
 
-  renderLoggedOutUserArea(userArea, isChatPage);
+  if (userArea) {
+    renderLoggedOutUserArea(userArea, isChatPage);
+  }
 }
+
 
 function dispatchUserReady(user, extra = {}) {
 
@@ -304,7 +310,7 @@ export function initAuth(showToast) {
   }
 
 
-  onAuthChange(async (user) => {
+ onAuthStateChanged(auth, async (user) => {
 if (user) {
   currentUser = user;
 
@@ -411,10 +417,21 @@ if (isPasswordUser && !user.emailVerified) {
 
 
   // Fecha modal (se estiver no index)
+// Fecha modal e destrava o fundo (se estiver no index)
   const modal = document.getElementById("loginModal");
-  if (modal) modal.classList.add("hidden");
+  if (modal) {
+    modal.classList.add("hidden");
+    document.body.style.overflow = "";
+    document.body.style.touchAction = "";
+  }
   // Some botão do Google dentro do modal
   if (loginBtnModal) loginBtnModal.style.display = "none";
+
+  // Atualiza botões do Hero no index para usuário logado
+  const heroVisitorBtn = document.getElementById("heroVisitorBtn");
+  const heroLoginBtn = document.getElementById("heroLoginBtn");
+  if (heroVisitorBtn) heroVisitorBtn.textContent = "Entrar nas Salas";
+  if (heroLoginBtn) heroLoginBtn.classList.add("bloqueado");
 
   // ATUALIZA NAVBAR (index e chat) Botao de sair 
 saveUserAreaCache({
@@ -570,6 +587,12 @@ dispatchUserLogout();
 renderLoggedOutUserArea(userArea, isChatPage);
 
 
+// Restaura botões do Hero no index para usuario deslogado
+  const heroVisitorBtn = document.getElementById("heroVisitorBtn");
+  const heroLoginBtn = document.getElementById("heroLoginBtn");
+  if (heroVisitorBtn) heroVisitorBtn.textContent = "Modo Visitante";
+  if (heroLoginBtn) heroLoginBtn.classList.remove("bloqueado");
+
     // evento para abrir modal quando clicar
     const newLoginBtn = document.getElementById("btnLogin");
     if (newLoginBtn) {
@@ -612,53 +635,21 @@ if (loginBtnModal) {
         return;
       }
 
-      if (error.code === "auth/account-exists-with-different-credential") {
-        try {
-          const email = error.customData?.email;
 
-          if (!email) {
-            showToast("Não foi possível identificar o e-mail da conta.");
-            if (modal) modal.classList.remove("hidden");
-            return;
-          }
 
-          const methods = await fetchSignInMethodsForEmail(auth, email);
-          const pendingGoogleCred =
-            GoogleAuthProvider.credentialFromError(error);
 
-          if (methods.includes("password")) {
-            const password = prompt(
-              "Este e-mail já possui conta com senha.\nDigite sua senha para vincular ao Google:"
-            );
 
-            if (!password) {
-              showToast("Vinculação cancelada.");
-              if (modal) modal.classList.remove("hidden");
-              return;
-            }
-
-            const userCred = await signInWithEmailAndPassword(
-              auth,
-              email,
-              password
-            );
-
-            await linkWithCredential(userCred.user, pendingGoogleCred);
-            showToast("Conta Google vinculada com sucesso!");
-            return;
-          }
-
-          showToast("Este e-mail já está vinculado a outro método de login.");
-          if (modal) modal.classList.remove("hidden");
-
-        } catch (linkError) {
-          console.error("Erro ao vincular conta Google:", linkError);
-          showToast("Não foi possível vincular sua conta Google.");
-          if (modal) modal.classList.remove("hidden");
-        }
-
+if (error.code === "auth/account-exists-with-different-credential") {
+        showToast("Já existe uma conta associada a este e-mail.");
+        if (modal) modal.classList.remove("hidden");
         return;
       }
+
+
+
+
+
+
 
       showToast("Erro ao fazer login com Google");
       if (modal) modal.classList.remove("hidden");
