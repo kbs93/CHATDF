@@ -248,13 +248,13 @@ function renderLoggedOutUserArea(userArea, isChatPage) {
 
   if (!isChatPage) {
     userArea.innerHTML = `<a class="nav-link" id="btnLogin" href="#">
-      <img src="img/avatar.png" height="65px" width="65px" style="padding:1px; margin-top: -8px;">
+      <img src="/img/avatar.png" height="65px" width="65px" style="padding:1px; margin-top: -8px;">
     </a>`;
     return;
   }
 
   userArea.innerHTML = `<a class="nav-link" id="btnLogin" href="#">
-    <img src="./img/avatar.png" height="65px" width="85px" style="padding:1px; margin-top:2px;">
+    <img src="/img/avatar.png" height="65px" width="85px" style="padding:1px; margin-top:2px;">
   </a>`;
 }
 

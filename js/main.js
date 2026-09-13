@@ -2333,3 +2333,11 @@ document.getElementById("closeRoomsPanel")?.addEventListener("click", (e) => {
   e.preventDefault();
   closeAllPanels();
 });
+
+
+window.addEventListener('pageshow', function (event) {
+  // Se event.persisted for true, a página veio do Back-Forward Cache (botão voltar)
+  if (event.persisted) {
+    window.location.reload();
+  }
+});
