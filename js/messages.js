@@ -745,7 +745,7 @@ const textoFormatado = formatarTagsDfNoTexto(msg.text);
 if (long) {
 return `
 <span class="msg-text" style="color:${color};">${textoFormatado}</span>
-<button class="toggle-expand">Ler mais</button>`;
+<button class="toggle-expand"> Ler mais </button>`;
 }
 return `<span style="white-space:pre-wrap;color:${color};">${textoFormatado}</span>`;
 }
@@ -1563,11 +1563,6 @@ showToast("Erro ao enviar: " + err.message);
 
 
 // ================= EVENTOS =================
-/*====================================================================================================
-Escuta o evento de redimensionamento de janela (resize) para ajustar unidades CSS dinâmicas (--vh)
-======================================================================================================== */
-
-
 /*====================================================================================================
 Salva as mensagens no cache local antes do descarregamento ou fechamento da aba no navegador
 ======================================================================================================== */

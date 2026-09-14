@@ -3,9 +3,8 @@ import {
   collection, 
   query, 
   where, 
-  orderBy, 
   getDocs, 
-  Timestamp 
+  limit 
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 
@@ -72,30 +71,48 @@ function renderizarBotoesFiltro() {
 
 // 2. Coleta mensagens do chat renderizadas no DOM local (Ajuste exato ao messages.js)
 // Função auxiliar de formatação de data e hora do Firestore
+
+const ROOM_ALIASES_TAG = {
+  "Bate papo Geral": "geral",
+  "Religiao": "religiao",
+  "Politica": "politica",
+  "Transito": "transito",
+  "Lugares para sair": "lugares",
+  "Futebol": "futebol",
+  "Eventos": "eventos",
+  "Entretenimento": "entretenimento",
+  "Games": "games",
+  "Consurso Publico": "concurso",
+};
+
+function normalizeRoomIdTag(room) {
+  return ROOM_ALIASES_TAG[room] || room || "geral";
+}
+
 function formatarTimestampTag(ts) {
   if (!ts) return "";
   const d = ts.toDate ? ts.toDate() : new Date(ts);
   return `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
 }
 
-// 2. Coleta mensagens diretamente do Firestore (todas as mensagens do dia)
-async function buscarRelatosDoBanco(nomeTag) {
-  const sala = window.salaAtual || "geral";
+// 2. Busca as primeiras 30 mensagens da tag direto no Firestore
+// 2. Busca somente as mensagens com a tag enviadas no dia de hoje
+async function buscarPrimeiras30Relatos(nomeTag) {
+  const sala = normalizeRoomIdTag(window.salaAtual);
   const chatRef = collection(db, "salas", sala, "messages");
-  
-  // Define o corte de 24 horas atrás
-  const dataLimite = new Date();
-  dataLimite.setHours(dataLimite.getHours() - 24);
-  const tsLimite = Timestamp.fromDate(dataLimite);
-
   const prefixoTag = `[${nomeTag}]`;
   const listaRelatos = [];
+
+  // Pega o dia e mês de HOJE no fuso local: Ex: "14/09"
+  const agora = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  const hojeDDMM = `${pad(agora.getDate())}/${pad(agora.getMonth() + 1)}`;
 
   try {
     const q = query(
       chatRef,
-      where("createdAt", ">=", tsLimite),
-      orderBy("createdAt", "asc")
+      where("tag", "==", nomeTag),
+      limit(30)
     );
 
     const snapshot = await getDocs(q);
@@ -103,19 +120,20 @@ async function buscarRelatosDoBanco(nomeTag) {
     snapshot.forEach((docSnap) => {
       const data = docSnap.data();
 
-      // Ignora mensagens deletadas ou ocultadas
+      // 1. Ignora mensagens deletadas ou ocultadas
       if (data.deleted === true || (data.denunciasContador && data.denunciasContador >= 1)) {
         return;
       }
 
-      const texto = typeof data.text === "string" ? data.text : "";
-      
-      // Valida pelo campo dedicado ou pelo prefixo no texto
-      const possuiTag = data.tag === nomeTag || texto.startsWith(prefixoTag);
-      if (!possuiTag) return;
+      // Formata a data da mensagem (retorna: "DD/MM HH:mm:ss")
+      const horaFormatada = formatarTimestampTag(data.createdAt);
 
-      // Remove a tag do início do texto para exibição limpa
-      let textoLimpo = texto;
+      // 2. Trava absoluta: se não começar com o dia e mês de hoje (ex: "14/09"), descarta na hora!
+      if (!horaFormatada.startsWith(hojeDDMM)) {
+        return;
+      }
+
+      let textoLimpo = typeof data.text === "string" ? data.text : "";
       if (textoLimpo.startsWith(prefixoTag)) {
         textoLimpo = textoLimpo.substring(prefixoTag.length).trim();
       }
@@ -124,23 +142,29 @@ async function buscarRelatosDoBanco(nomeTag) {
         nome: data.user || "Usuário",
         avatar: data.photo || data.avatar || "./img/avatar.png",
         cidade: data.cidade || data.city || "",
-        hora: formatarTimestampTag(data.createdAt),
+        hora: horaFormatada,
         texto: textoLimpo,
         tag: nomeTag
       });
     });
   } catch (err) {
-    console.error("Erro ao buscar relatos por tag do banco:", err);
+    console.error("Erro ao buscar mensagens da tag:", err);
   }
 
   return listaRelatos;
 }
 
-// 3. Abre o Segundo Modal (Feed de Relatos com busca direta)
+
+
+
+
+
+
+// 3. Abre o Segundo Modal (Feed de Relatos)
 export async function abrirFeedDaTag(nomeTag) {
   tagSelecionadaAtual = nomeTag;
 
-  // Fecha o primeiro modal
+  // Fecha o primeiro modal de seleção
   document.getElementById("filterTagSelectModal")?.classList.add("hidden");
 
   const feedModal = document.getElementById("filterTagFeedModal");
@@ -159,12 +183,12 @@ export async function abrirFeedDaTag(nomeTag) {
   }
 
   if (modalCount) modalCount.textContent = "Buscando...";
-  feedList.innerHTML = `<div style="text-align:center; padding: 25px; color: #888;"><i class="bi bi-arrow-repeat" style="font-size: 1.5rem;"></i><br>Carregando relatos do dia...</div>`;
+  feedList.innerHTML = `<div style="text-align:center; padding: 25px; color: #888;"><i class="bi bi-arrow-repeat" style="font-size: 1.5rem;"></i><br>Buscando relatos...</div>`;
   feedModal.classList.remove("hidden");
   setBodyScrollLocked(true);
 
-  // Busca direto do banco sem depender do scroll da tela
-  const relatos = await buscarRelatosDoBanco(nomeTag);
+  // Busca as 30 mensagens da tag no banco
+  const relatos = await buscarPrimeiras30Relatos(nomeTag);
 
   if (modalCount) {
     modalCount.textContent = `${relatos.length} relato${relatos.length === 1 ? "" : "s"}`;
@@ -176,8 +200,8 @@ export async function abrirFeedDaTag(nomeTag) {
     feedList.innerHTML = `
       <div class="filter-tag-empty-box">
         <i class="bi bi-chat-square-text"></i>
-        <strong>Nenhum relato recente</strong>
-        <p style="font-size: 13px; margin: 0;">Nenhuma mensagem com a tag [${nomeTag}] foi enviada nas últimas 24h nesta sala.</p>
+        <strong>Nenhum relato encontrado</strong>
+        <p style="font-size: 13px; margin: 0;">Nenhuma mensagem registrada com a tag [${nomeTag}] nesta sala.</p>
       </div>
     `;
   } else {
@@ -213,25 +237,6 @@ export async function abrirFeedDaTag(nomeTag) {
     feedList.scrollTop = feedList.scrollHeight;
   }, 50);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // 4. Funções de Abertura / Fechamento dos Modais
 export function abrirModalSelecaoFiltro() {
