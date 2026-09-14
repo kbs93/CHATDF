@@ -46,8 +46,10 @@
 
       <!-- ÁREA DO USUÁRIO / AVATAR -->
       <div id="userArea" class="d-flex align-items-center me-3">
-  <a class="open-login btn-sair" id="btnLogin" href="#"></a>
-</div>
+        <a class="open-login btn-sair" id="btnLogin" href="#">
+          <img src="../img/avatar.png" alt="Avatar" class="user-menu-avatar" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid #fff;">
+        </a>
+      </div>
     </div>
   </nav>
 
@@ -111,49 +113,42 @@
   </main>
 
   <!-- 🔹 RODAPÉ -->
- <footer class="custom-footer">
-  <div class="footer-container">
-    <div class="footer-grid">
-      <!-- Coluna 1: Sobre e Redes Sociais -->
-      <div>
-        <h5 class="footer-title">ChatDF</h5>
-        <p class="footer-description">O chat público oficial do Distrito Federal. Conectando pessoas de todas as Regiões Administrativas em tempo real com segurança e respeito.</p>
-        <div class="social-links">
-          <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-          <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-          <a href="#" aria-label="Twitter-X"><i class="bi bi-twitter-x"></i></a>
-          <a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+  <footer class="custom-footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div>
+          <h5 class="footer-title">ChatDF</h5>
+          <p class="footer-description">O chat público oficial do Distrito Federal. Conectando pessoas de todas as Regiões Administrativas em tempo real com segurança e respeito.</p>
+        </div>
+
+        <div>
+          <h5 class="footer-title">Navegação</h5>
+          <ul class="footer-links">
+            <li><a href="../chat.html?sala=geral"><i class="bi bi-chevron-right"></i> Entrar nas Salas</a></li>
+            <li><a href="somos.html"><i class="bi bi-chevron-right"></i> Quem Somos</a></li>
+            <li><a href="../contato.html"><i class="bi bi-chevron-right"></i> Fale Conosco</a></li>
+            <li><a href="termos.html"><i class="bi bi-chevron-right"></i> Regras da Comunidade</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h5 class="footer-title">Termos e Acesso</h5>
+          <ul class="footer-links">
+            <li><a href="#" class="open-login"><i class="bi bi-box-arrow-in-right"></i> Entrar / Login</a></li>
+            <li><a href="privacidade.html"><i class="bi bi-shield-check"></i> Política de Privacidade</a></li>
+            <li><a href="termos.html"><i class="bi bi-journal-text"></i> Termos de Uso</a></li>
+            <li><a href="trabalhe.html"><i class="bi bi-briefcase"></i> Trabalhe com a Gente</a></li>
+          </ul>
         </div>
       </div>
 
-<!-- Coluna 2: Navegação -->
-<div>
-<h5 class="footer-title">Navegação</h5>
-<ul class="footer-links">
-<li><a href="contato.html"><i class="bi bi-chevron-right"></i> Fale Conosco</a></li>
-<li><a href="uso/somos.html"><i class="bi bi-chevron-right"></i> Quem Somos</a></li>
-</ul>
-</div>
+      <hr class="footer-divider">
 
-
-<!-- Coluna 3: Termos e Acesso -->
-<div>
-<h5 class="footer-title">Termos e Acesso</h5>
-<ul class="footer-links">
-
-<li><a href="uso/privacidade.html"><i class="bi bi-chevron-right"></i> Política de Privacidade</a></li>
-<li><a href="uso/termos.html"><i class="bi bi-chevron-right"></i> Termos de Uso</a></li>
-</ul>
-</div>
-</div>
-
-    <!-- Linha Divisória de Direitos Autorais -->
-    <hr class="footer-divider">
-    <div class="footer-bottom">
-      <p>&copy; kbsweb - 2025 | Todos os direitos reservados </p>
+      <div class="footer-bottom">
+        <p>&copy; kbsweb - Todos os direitos reservados | ChatDF</p>
+      </div>
     </div>
-  </div>
-</footer>
+  </footer>
 
   <!-- BOOTSTRAP & SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

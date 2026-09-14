@@ -3075,8 +3075,8 @@ Reposiciona a tag de expiração para não cobrir o botão voltar vip
 
 /* LADO ESQUERDO */
 .hero-content { width: 100%; max-width: 860px; display: flex; flex-direction: column; align-items: center; text-align: center; margin: 0 auto; }
-
-.hero-logo-img { width: 340px; max-width: 85vw; height: auto; object-fit: contain; margin-bottom: 28px; }
+/*IMAGEM LOGO NO MEIO DO INDEX */
+.hero-logo-img { width: 540px; max-width: 85vw; height: auto; object-fit: contain; margin-bottom: 28px; }
 
 .hero-pill-badge { display: inline-block; background: rgba(30, 58, 138, 0.4); border: 1px solid rgba(59, 130, 246, 0.35); color: #60a5fa; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; padding: 6px 14px; border-radius: 999px; margin-top: 14px; margin-bottom: 0; }
 

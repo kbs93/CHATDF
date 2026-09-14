@@ -1,3 +1,14 @@
+import { db } from './firebase-config.js';
+import { 
+  collection, 
+  query, 
+  where, 
+  orderBy, 
+  getDocs, 
+  Timestamp 
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+
 // =========================================================================
 // tag.js - Módulo Isolado de Filtragem e Feed de Relatos por Tags (Chat-DF)
 // =========================================================================
@@ -60,117 +71,73 @@ function renderizarBotoesFiltro() {
 
 
 // 2. Coleta mensagens do chat renderizadas no DOM local (Ajuste exato ao messages.js)
-function coletarMensagensDaTag(nomeTag) {
-  // As mensagens ficam inseridas diretamente dentro do #chat-container
-  const containerChat = document.getElementById("chat-container");
-  if (!containerChat) return [];
-
-  // Mapeamento normalizado da classe CSS
-  const config = TAGS_CONFIG[nomeTag];
-  const classeBadge = config ? config.classe : ""; // ex: "tag-seguranca"
-  const prefixoTexto = `[${nomeTag.toLowerCase()}]`;
-
-  // Seleciona todas as mensagens renderizadas na tela
-  const todasMensagens = containerChat.querySelectorAll(".message");
-  const listaRelatos = [];
-
-  todasMensagens.forEach((el) => {
-    // 1. Pula mensagens excluídas ou nós inválidos
-    if (el.classList.contains("deleted-message-node") || el.querySelector(".msg-deleted-box")) {
-      return;
-    }
-
-    // 2. Verifica se dentro do elemento existe a badge da tag
-    const badgeEl = classeBadge ? el.querySelector(`.chat-tag-badge.${classeBadge}`) : null;
-    
-    // Verifica também pelo texto bruto
-    const textoBruto = el.textContent || "";
-    const textoMinusculo = textoBruto.toLowerCase();
-    const temPrefixoTexto = textoMinusculo.includes(prefixoTexto);
-
-    // Se NÃO tem nem a badge visual e nem o texto com a tag, pula para a próxima
-    if (!badgeEl && !temPrefixoTexto) {
-      return;
-    }
-
-    // 3. Captura os dados do usuário (suporta mensagens normais e mensagens agrupadas)
-    let nome = "Usuário";
-    let avatar = "./img/avatar.png";
-    let cidade = "";
-
-    const userEl = el.querySelector(".message-author-name") || el.querySelector(".user-name");
-    const avatarEl = el.querySelector(".user-photo");
-    const cityEl = el.querySelector(".user-city");
-
-    if (userEl) {
-      nome = userEl.childNodes[0]?.textContent?.trim() || userEl.textContent.trim();
-      if (avatarEl) avatar = avatarEl.getAttribute("src") || avatar;
-      if (cityEl) cidade = cityEl.textContent.replace("bi-geo-alt", "").trim();
-    } else {
-      // Caso a mensagem esteja com agrupamento visual (.is-grouped), busca o autor na anterior
-      let elementoAnterior = el.previousElementSibling;
-      while (elementoAnterior) {
-        const prevUser = elementoAnterior.querySelector(".message-author-name") || elementoAnterior.querySelector(".user-name");
-        if (prevUser) {
-          nome = prevUser.childNodes[0]?.textContent?.trim() || prevUser.textContent.trim();
-          const prevAvatar = elementoAnterior.querySelector(".user-photo");
-          if (prevAvatar) avatar = prevAvatar.getAttribute("src") || avatar;
-          const prevCity = elementoAnterior.querySelector(".user-city");
-          if (prevCity) cidade = prevCity.textContent.replace("bi-geo-alt", "").trim();
-          break;
-        }
-        elementoAnterior = elementoAnterior.previousElementSibling;
-      }
-    }
-
-    // 4. Captura a hora da mensagem
-    const timeEl = el.querySelector(".message-time");
-    const hora = timeEl ? timeEl.textContent.trim() : "";
-
-    // 5. Captura o texto real do relato
-    // Em createMessageElement o corpo fica no 4º nó filho: div.children[2]
-    const bodyEl = el.querySelector(".msg-text") || el.children[2] || el;
-    let textoMensagem = bodyEl.textContent.trim();
-
-    // Remove a palavra da tag se ela estiver repetida no início do texto
-    if (textoMensagem.toLowerCase().startsWith(prefixoTexto)) {
-      textoMensagem = textoMensagem.substring(prefixoTexto.length).trim();
-    } else if (badgeEl) {
-      // Remove o texto da badge capturado pelo textContent (ex: remove "securitySegurança")
-      const textoBadge = badgeEl.textContent.trim();
-      if (textoMensagem.startsWith(textoBadge)) {
-        textoMensagem = textoMensagem.substring(textoBadge.length).trim();
-      }
-    }
-
-listaRelatos.push({
-      nome,
-      avatar,
-      cidade,
-      hora,
-      texto: textoMensagem,
-      tag: nomeTag
-    });
-  });
-
-  // Função auxiliar para converter "DD/MM HH:mm:ss" em timestamp real
-  const converterDataHora = (strHora) => {
-    if (!strHora) return 0;
-    // Exemplo: "09/09 12:54:14"
-    const partes = strHora.trim().split(" ");
-    if (partes.length < 2) return 0;
-    const [dia, mes] = partes[0].split("/").map(Number);
-    const [hora, min, seg] = partes[1].split(":").map(Number);
-    const anoAtual = new Date().getFullYear();
-    return new Date(anoAtual, mes - 1, dia, hora, min, seg || 0).getTime();
-  };
-
-  // Antigas em cima (timestamp menor), recentes embaixo (timestamp maior)
-  return listaRelatos.sort((a, b) => converterDataHora(a.hora) - converterDataHora(b.hora));
+// Função auxiliar de formatação de data e hora do Firestore
+function formatarTimestampTag(ts) {
+  if (!ts) return "";
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
 }
 
-// 3. Abre o Segundo Modal (Feed de Relatos)
-export function abrirFeedDaTag(nomeTag) {
+// 2. Coleta mensagens diretamente do Firestore (todas as mensagens do dia)
+async function buscarRelatosDoBanco(nomeTag) {
+  const sala = window.salaAtual || "geral";
+  const chatRef = collection(db, "salas", sala, "messages");
+  
+  // Define o corte de 24 horas atrás
+  const dataLimite = new Date();
+  dataLimite.setHours(dataLimite.getHours() - 24);
+  const tsLimite = Timestamp.fromDate(dataLimite);
+
+  const prefixoTag = `[${nomeTag}]`;
+  const listaRelatos = [];
+
+  try {
+    const q = query(
+      chatRef,
+      where("createdAt", ">=", tsLimite),
+      orderBy("createdAt", "asc")
+    );
+
+    const snapshot = await getDocs(q);
+
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+
+      // Ignora mensagens deletadas ou ocultadas
+      if (data.deleted === true || (data.denunciasContador && data.denunciasContador >= 1)) {
+        return;
+      }
+
+      const texto = typeof data.text === "string" ? data.text : "";
+      
+      // Valida pelo campo dedicado ou pelo prefixo no texto
+      const possuiTag = data.tag === nomeTag || texto.startsWith(prefixoTag);
+      if (!possuiTag) return;
+
+      // Remove a tag do início do texto para exibição limpa
+      let textoLimpo = texto;
+      if (textoLimpo.startsWith(prefixoTag)) {
+        textoLimpo = textoLimpo.substring(prefixoTag.length).trim();
+      }
+
+      listaRelatos.push({
+        nome: data.user || "Usuário",
+        avatar: data.photo || data.avatar || "./img/avatar.png",
+        cidade: data.cidade || data.city || "",
+        hora: formatarTimestampTag(data.createdAt),
+        texto: textoLimpo,
+        tag: nomeTag
+      });
+    });
+  } catch (err) {
+    console.error("Erro ao buscar relatos por tag do banco:", err);
+  }
+
+  return listaRelatos;
+}
+
+// 3. Abre o Segundo Modal (Feed de Relatos com busca direta)
+export async function abrirFeedDaTag(nomeTag) {
   tagSelecionadaAtual = nomeTag;
 
   // Fecha o primeiro modal
@@ -191,7 +158,13 @@ export function abrirFeedDaTag(nomeTag) {
     `;
   }
 
-  const relatos = coletarMensagensDaTag(nomeTag);
+  if (modalCount) modalCount.textContent = "Buscando...";
+  feedList.innerHTML = `<div style="text-align:center; padding: 25px; color: #888;"><i class="bi bi-arrow-repeat" style="font-size: 1.5rem;"></i><br>Carregando relatos do dia...</div>`;
+  feedModal.classList.remove("hidden");
+  setBodyScrollLocked(true);
+
+  // Busca direto do banco sem depender do scroll da tela
+  const relatos = await buscarRelatosDoBanco(nomeTag);
 
   if (modalCount) {
     modalCount.textContent = `${relatos.length} relato${relatos.length === 1 ? "" : "s"}`;
@@ -204,48 +177,61 @@ export function abrirFeedDaTag(nomeTag) {
       <div class="filter-tag-empty-box">
         <i class="bi bi-chat-square-text"></i>
         <strong>Nenhum relato recente</strong>
-        <p style="font-size: 13px; margin: 0;">Nenhuma mensagem com a tag [${nomeTag}] foi enviada recentemente nesta sala.</p>
+        <p style="font-size: 13px; margin: 0;">Nenhuma mensagem com a tag [${nomeTag}] foi enviada nas últimas 24h nesta sala.</p>
       </div>
     `;
   } else {
     relatos.forEach((r) => {
       const card = document.createElement("div");
-card.className = "message filter-tag-message-item";
-card.innerHTML = `
-  <div class="message-click-area" style="display:flex;align-items:center;gap:6px;">
-    <div class="message-avatar-wrap position-relative d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; flex-shrink: 0; margin-right: 8px;">
-      <img src="${r.avatar}" class="user-photo" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; margin: 0;" onerror="this.src='./img/avatar.png'">
-    </div>
-    <div class="message-user-info">
-      <div class="message-header">
-        <b class="user-name message-author-name">${r.nome}</b>
-      </div>
-      ${r.cidade ? `<span class="user-city"><i class="icon-cidade bi bi-geo-alt"></i> ${r.cidade}</span>` : ""}
-    </div>
-  </div>
-  <div class="filter-tag-msg-body">
-    <span class="chat-tag-badge ${config.classe}">
-      <span class="material-symbols-outlined">${config.icon}</span>
-      <span>${r.tag}</span>
-    </span>
-    <span class="filter-tag-text-content">${r.texto}</span>
-  </div>
-  <div class="message-time">${r.hora}</div>
-`;
-
- 
+      card.className = "message filter-tag-message-item";
+      card.innerHTML = `
+        <div class="message-click-area" style="display:flex;align-items:center;gap:6px;">
+          <div class="message-avatar-wrap position-relative d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; flex-shrink: 0; margin-right: 8px;">
+            <img src="${r.avatar}" class="user-photo" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; margin: 0;" onerror="this.src='./img/avatar.png'">
+          </div>
+          <div class="message-user-info">
+            <div class="message-header">
+              <b class="user-name message-author-name">${r.nome}</b>
+            </div>
+            ${r.cidade ? `<span class="user-city"><i class="icon-cidade bi bi-geo-alt"></i> ${r.cidade}</span>` : ""}
+          </div>
+        </div>
+        <div class="filter-tag-msg-body">
+          <span class="chat-tag-badge ${config.classe}">
+            <span class="material-symbols-outlined">${config.icon}</span>
+            <span>${r.tag}</span>
+          </span>
+          <span class="filter-tag-text-content">${r.texto}</span>
+        </div>
+        <div class="message-time">${r.hora}</div>
+      `;
       feedList.appendChild(card);
     });
   }
 
-  feedModal.classList.remove("hidden");
-  setBodyScrollLocked(true);
-
-  // UX Chat-DF: Garante que o painel abra exibindo a mensagem mais recente (na base)
   setTimeout(() => {
     feedList.scrollTop = feedList.scrollHeight;
   }, 50);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // 4. Funções de Abertura / Fechamento dos Modais
 export function abrirModalSelecaoFiltro() {

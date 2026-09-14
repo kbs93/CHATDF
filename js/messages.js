@@ -1441,12 +1441,22 @@ const finalPhoto = sanitizeMessageAvatar(
 userProfile?.foto || userProfile?.avatar || userProfile?.photoURL || currentUser?.photoURL || profilePhoto
 );
 
+
 const chatRefAchatado = collection(
 db,
 "salas",
 normalizeRoomId(window.salaAtual),
 "messages"
 );
+
+// Identifica se a mensagem contém uma das 12 tags configuradas no início do texto
+let tagDetectada = null;
+for (const nomeTag of Object.keys(TAGS_DF_CONFIG)) {
+  if (text.startsWith(`[${nomeTag}]`)) {
+    tagDetectada = nomeTag;
+    break;
+  }
+}
 
 await setDoc(doc(chatRefAchatado, idOrganizado), {
 uid: currentUser.uid,
@@ -1455,6 +1465,7 @@ cidade: profileCity,
 photo: finalPhoto,
 avatar: finalPhoto,
 text,
+tag: tagDetectada,
 color: userColorChoice,
 vipNameColorType: userProfile?.vipNameColorType || "solid",
 vipNameColorSolid: userProfile?.vipNameColorSolid || "#1E293B",
@@ -1464,6 +1475,7 @@ replyTo: window.replyingTo || null,
 replyColor: replyUserColor,
 createdAt: serverTimestamp(),
 });
+
 
 /*====================================================================================================
 Limpeza de Mensagens no firebse 110 passar disso gera limpeza de mensagem antiga dentro do banco de dados 
