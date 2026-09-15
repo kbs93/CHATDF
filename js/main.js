@@ -684,16 +684,37 @@ function initNavbarCollapse() {
   const navbarNav = document.getElementById("navbarNav");
   const toggler = document.querySelector(".navbar-toggler");
   if (!navbarNav || typeof bootstrap === "undefined") return;
-  const collapse = bootstrap.Collapse.getOrCreateInstance(navbarNav, { toggle: false });
-  collapse.hide();
-  if (toggler) {
-    toggler.setAttribute("aria-expanded", "false");
-    toggler.classList.add("collapsed");
+
+  const bsCollapse = bootstrap.Collapse.getOrCreateInstance(navbarNav, { toggle: false });
+
+  // Clique específico no Sobre o Chat para rolar até o rodapé
+  const btnSobre = document.getElementById("btnSobreNav");
+  if (btnSobre) {
+    btnSobre.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // 1. Fecha o menu e transforma o 'X' de volta em '☰'
+      bsCollapse.hide();
+      if (toggler) {
+        toggler.setAttribute("aria-expanded", "false");
+        toggler.classList.add("collapsed");
+      }
+
+      // 2. Rola suavemente a janela até o final da página
+      setTimeout(() => {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: "smooth"
+        });
+      }, 200);
+    });
   }
-  const navLinks = navbarNav.querySelectorAll("a");
+
+  // Fecha o menu ao clicar nos demais links normais
+  const navLinks = navbarNav.querySelectorAll("a:not(#btnSobreNav)");
   navLinks.forEach((link) => {
     link.addEventListener("click", () => {
-      collapse.hide();
+      bsCollapse.hide();
       if (toggler) {
         toggler.setAttribute("aria-expanded", "false");
         toggler.classList.add("collapsed");

@@ -68,7 +68,7 @@ export const TAGS_POR_SALA = {
     "Quadra coberta": { classe: "tag-futebol", icon: "shield" },
     "Corrida de Rua": { classe: "tag-futebol", icon: "directions_run" },
     "Futsal": { classe: "tag-futebol", icon: "sports" },
-    "Academia": { classe: "tag-futebol", icon: "fitness_center" },
+    "Campo de terra": { classe: "tag-futebol", icon: "fitness_center" },
     "Torcida": { classe: "tag-futebol", icon: "stadium" }
   },
   eventos: {
@@ -117,7 +117,7 @@ export const TAGS_POR_SALA = {
     "Gabaritos": { classe: "tag-concursos", icon: "fact_check" },
     "Inscrições": { classe: "tag-concursos", icon: "app_registration" },
     "Bibliotecas Publicas": { classe: "tag-concursos", icon: "balance" },
-    "Polícia e DF": { classe: "tag-concursos", icon: "local_police" }
+    "Recomendação": { classe: "tag-concursos", icon: "local_police" }
   }
 };
 
