@@ -15,42 +15,24 @@ const salas = [
     descricao: "Resenha livre e amizades pelo quadradinho",
     icone:"bi bi-chat-dots"
   },
-
-  {
-    id: "religiao",
-    nome: "Religião e Fé",
-    descricao: "Conversas, reflexões e eventos religiosos no DF",
-    icone: "bi bi-house-heart"
+ {
+    id: "concurso",
+    nome: "Concurso Público",
+    descricao: "Acompanhamento e dicas sobre concursos públicos.",
+    icone: "bi bi-journal-bookmark-fill"
   },
-
-  {
-    id: "politica",
-    nome: "Politica",
-    descricao: "Debates, opiniões sobre os bastidores da nossa capital ",
-    icone: "bi bi-megaphone"
-  },
-
-  {
+    {
     id: "transito",
     nome: "Trânsito e Transporte",
     descricao: "Mobilidade, Metrô e ônibus do DF",
     icone:"bi bi-sign-stop"
   },
-
-  {
+   {
     id: "lugares",
     nome: "Lugares para sair",
     descricao: "Dicas de bares, cafés, lanchonetes e picos no quadradinho",
     icone: "bi bi-cup-hot"
   },
-
-  {
-    id: "futebol",
-    nome: "Futebol e Esportes",
-    descricao: "Gama, Brasiliense, peladas e grandes jogos",
-    icone: "bi bi-trophy"
-  },
-
   {
     id: "eventos",
     nome: "Eventos e Shows",
@@ -71,11 +53,29 @@ const salas = [
     icone: "bi-controller"
   },
     {
-    id: "concurso",
-    nome: "Concurso Público",
-    descricao: "Acompanhamento e dicas sobre concursos públicos.",
-    icone: "bi bi-journal-bookmark-fill"
-  }
+    id: "futebol",
+    nome: "Futebol e Esportes",
+    descricao: "Gama, Brasiliense, peladas e grandes jogos",
+    icone: "bi bi-trophy"
+  },
+  {
+    id: "religiao",
+    nome: "Religião e Fé",
+    descricao: "Conversas, reflexões e eventos religiosos no DF",
+    icone: "bi bi-house-heart"
+  },
+
+  {
+    id: "politica",
+    nome: "Politica",
+    descricao: "Debates, opiniões sobre os bastidores da nossa capital ",
+    icone: "bi bi-megaphone"
+  },
+
+
+
+  
+   
 
 ];
 // ==========================================

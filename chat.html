@@ -139,19 +139,19 @@
                   </span>
                   <span class="attachment-label">Salas</span>
                 </button>
-
-                <button class="attachment-item" data-action="tags">
+                <button id="btnAttachTags" class="attachment-item" data-action="tags">
                   <span class="attachment-icon icon-tags-df">
                     <i class="bi bi-tag-fill"></i>
                   </span>
                   <span class="attachment-label">Tags</span>
                 </button>
-                <button class="attachment-item" data-action="filterTags">
-  <span class="attachment-icon" style="background: linear-gradient(135deg, #0284c7, #020641);">
-    <i class="bi bi-funnel-fill"></i>
-  </span>
-  <span class="attachment-label">Filtrar Tags</span>
-</button>
+                <button id="btnAttachFilterTags" class="attachment-item" data-action="filterTags">
+                  <span class="attachment-icon" style="background: linear-gradient(135deg, #0284c7, #020641);">
+                    <i class="bi bi-funnel-fill"></i>
+                  </span>
+                  <span class="attachment-label">Filtrar Tags</span>
+                </button>
+                
 
                 <button class="attachment-item" data-action="ai">
                   <span class="attachment-icon icon-ai"><i class="bi bi-stars"></i></span>
@@ -161,64 +161,20 @@
               </div>
             </div>
    <!-- ================= MODAL DE TAGS DF ================= -->
+        
+<!-- ================= MODAL DE TAGS DF (DINÂMICO POR SALA) 14-03-2026================= -->
             <div id="tagsDfModal" class="feedback-modal hidden">
               <div class="feedback-box tags-df-modal-box">
                 <div class="rooms-modal-header">
-                  <h4 class="rooms-modal-title">Tags de Utilidade DF</h4>
+                  <h4 class="rooms-modal-title" id="tagsDfModalTitle">Tags da Sala</h4>
                   <button id="closeTagsDfModal" type="button" class="rooms-modal-close-btn">✕</button>
                 </div>
-                <div class="tags-df-grid">
-                  <button type="button" class="btn-tag-df tag-transito" data-tag="Trânsito">
-                    <span class="material-symbols-outlined">traffic</span>
-                    <span>Trânsito</span>
-                  </button>
-                  <button type="button" class="btn-tag-df tag-chuva" data-tag="Chuva">
-                    <span class="material-symbols-outlined">rainy</span>
-                    <span>Chuva</span>
-                  </button>
-                  <button type="button" class="btn-tag-df tag-transporte" data-tag="Transporte">
-                    <span class="material-symbols-outlined">directions_bus</span>
-                    <span>Transporte</span>
-                  </button>
-                  <button type="button" class="btn-tag-df tag-saude" data-tag="Saúde">
-                    <span class="material-symbols-outlined">local_hospital</span>
-                    <span>Saúde</span>
-                  </button>
-                  <button type="button" class="btn-tag-df tag-fiscalizacao" data-tag="Fiscalização">
-                    <span class="material-symbols-outlined">shield_person</span>
-                    <span>Fiscalização</span>
-                  </button>
-                  <button type="button" class="btn-tag-df tag-seguranca" data-tag="Segurança">
-                    <span class="material-symbols-outlined">security</span>
-                    <span>Segurança</span>
-                  </button>
-                  <button type="button" class="btn-tag-df tag-servicos" data-tag="Serviços">
-                    <span class="material-symbols-outlined">build</span>
-                    <span>Serviços</span>
-                  </button>
-                  <button type="button" class="btn-tag-df tag-concursos" data-tag="Concursos">
-                    <span class="material-symbols-outlined">menu_book</span>
-                    <span>Concursos</span>
-                  </button>
-                  <button type="button" class="btn-tag-df tag-feiras" data-tag="Feiras">
-                    <span class="material-symbols-outlined">storefront</span>
-                    <span>Feiras</span>
-                  </button>
-                  <button type="button" class="btn-tag-df tag-entorno" data-tag="Entorno">
-                    <span class="material-symbols-outlined">signpost</span>
-                    <span>Entorno</span>
-                  </button>
-                  <button type="button" class="btn-tag-df tag-achados" data-tag="Estações e BRT">
-                    <span class="material-symbols-outlined">find_in_page</span>
-                    <span>Estações e BRT</span>
-                  </button>
-                  <button type="button" class="btn-tag-df tag-alerta" data-tag="Alerta Geral">
-                    <span class="material-symbols-outlined">warning</span>
-                    <span>Alerta Geral</span>
-                  </button>
+                <div class="tags-df-grid" id="tagsDfGridContainer">
+                  <!-- Gerado dinamicamente de acordo com a sala atual -->
                 </div>
               </div>
             </div>
+
           </div>
           <button id="emojiBtn" title="Adicionar emoji">
             <i class="bi bi-emoji-smile"></i>

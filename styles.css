@@ -597,7 +597,9 @@ font-family: 'Urbanist-Italic'; src: url('./fonts/Urbanist-Italic-VariableFont_w
 
 #closeContextMenu:active { background: rgba(0, 0, 0, 0.1); }
 
-.msg-text { display: block; white-space: pre-wrap; max-height: 4.5em; overflow: hidden; color: #e00606; overflow-wrap: anywhere; word-break: break-word; }
+/*bota de Ler mais e Ler menos */
+.msg-text { display: block; white-space: pre-wrap; max-height: 4.5em; overflow: hidden; overflow-wrap: anywhere; word-break: break-word; }
+.msg-text.expanded { max-height: none !important; }
 
 .toggle-expand { background: transparent; border: none; color: #00000079; padding: 0; font-size: 14px; cursor: pointer; text-decoration: underline; -webkit-tap-highlight-color: transparent; }
 
@@ -1008,18 +1010,28 @@ NES Anexos estilo WhatsApp zap EDITA O BOTAO SHEET TAMBEM 27-02-26
 .chat-tag-badge span:last-child { font-size: 11.5px; font-weight: 700; line-height: 1; letter-spacing: -0.1px; }
 
 /* Cores e bordas oficiais (Preserva o chat e aplica no modal) */
-#tagsDfModal .tags-df-grid button.tag-transito, #chat-container .chat-tag-badge.tag-transito, .filter-tag-feed-list .chat-tag-badge.tag-transito { background-color: #fff3e0; border-color: #ffb74d; color: #e65100; }
-#tagsDfModal .tags-df-grid button.tag-chuva, #chat-container .chat-tag-badge.tag-chuva, .filter-tag-feed-list .chat-tag-badge.tag-chuva { background-color: #e1f5fe; border-color: #81d4fa; color: #0288d1; }
-#tagsDfModal .tags-df-grid button.tag-transporte, #chat-container .chat-tag-badge.tag-transporte, .filter-tag-feed-list .chat-tag-badge.tag-transporte { background-color: #fff8e1; border-color: #ffe082; color: #f57f17; }
-#tagsDfModal .tags-df-grid button.tag-saude, #chat-container .chat-tag-badge.tag-saude, .filter-tag-feed-list .chat-tag-badge.tag-saude { background-color: #ffebee; border-color: #ef9a9a; color: #d32f2f; }
-#tagsDfModal .tags-df-grid button.tag-fiscalizacao, #chat-container .chat-tag-badge.tag-fiscalizacao, .filter-tag-feed-list .chat-tag-badge.tag-fiscalizacao { background-color: #e8eaf6; border-color: #9fa8da; color: #1565c0; }
-#tagsDfModal .tags-df-grid button.tag-seguranca, #chat-container .chat-tag-badge.tag-seguranca, .filter-tag-feed-list .chat-tag-badge.tag-seguranca { background-color: #f3e5f5; border-color: #ce93d8; color: #6a1b9a; }
-#tagsDfModal .tags-df-grid button.tag-servicos, #chat-container .chat-tag-badge.tag-servicos, .filter-tag-feed-list .chat-tag-badge.tag-servicos { background-color: #e0f7fa; border-color: #80deea; color: #00838f; }
-#tagsDfModal .tags-df-grid button.tag-concursos, #chat-container .chat-tag-badge.tag-concursos, .filter-tag-feed-list .chat-tag-badge.tag-concursos { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
-#tagsDfModal .tags-df-grid button.tag-feiras, #chat-container .chat-tag-badge.tag-feiras, .filter-tag-feed-list .chat-tag-badge.tag-feiras { background-color: #e8f5e9; border-color: #a5d6a7; color: #2e7d32; }
-#tagsDfModal .tags-df-grid button.tag-entorno, #chat-container .chat-tag-badge.tag-entorno, .filter-tag-feed-list .chat-tag-badge.tag-entorno { background-color: #efebe9; border-color: #bcaaa4; color: #5d4037; }
-#tagsDfModal .tags-df-grid button.tag-achados, #chat-container .chat-tag-badge.tag-achados, .filter-tag-feed-list .chat-tag-badge.tag-achados { background-color: #e0f2f1; border-color: #80cbc4; color: #00695c; }
-#tagsDfModal .tags-df-grid button.tag-alerta, #chat-container .chat-tag-badge.tag-alerta, .filter-tag-feed-list .chat-tag-badge.tag-alerta { background-color: #ffebee; border-color: #ef5350; color: #b71c1c; }
+/* Cores e bordas oficiais padronizadas (Preserva o chat, modal de envio e modal de filtro) */
+.btn-filter-tag-choice.tag-transito, #tagsDfModal .tags-df-grid button.tag-transito, #chat-container .chat-tag-badge.tag-transito, .filter-tag-feed-list .chat-tag-badge.tag-transito { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-chuva, #tagsDfModal .tags-df-grid button.tag-chuva, #chat-container .chat-tag-badge.tag-chuva, .filter-tag-feed-list .chat-tag-badge.tag-chuva { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-transporte, #tagsDfModal .tags-df-grid button.tag-transporte, #chat-container .chat-tag-badge.tag-transporte, .filter-tag-feed-list .chat-tag-badge.tag-transporte { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-saude, #tagsDfModal .tags-df-grid button.tag-saude, #chat-container .chat-tag-badge.tag-saude, .filter-tag-feed-list .chat-tag-badge.tag-saude { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-fiscalizacao, #tagsDfModal .tags-df-grid button.tag-fiscalizacao, #chat-container .chat-tag-badge.tag-fiscalizacao, .filter-tag-feed-list .chat-tag-badge.tag-fiscalizacao { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-seguranca, #tagsDfModal .tags-df-grid button.tag-seguranca, #chat-container .chat-tag-badge.tag-seguranca, .filter-tag-feed-list .chat-tag-badge.tag-seguranca { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-servicos, #tagsDfModal .tags-df-grid button.tag-servicos, #chat-container .chat-tag-badge.tag-servicos, .filter-tag-feed-list .chat-tag-badge.tag-servicos { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-concursos, #tagsDfModal .tags-df-grid button.tag-concursos, #chat-container .chat-tag-badge.tag-concursos, .filter-tag-feed-list .chat-tag-badge.tag-concursos { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-feiras, #tagsDfModal .tags-df-grid button.tag-feiras, #chat-container .chat-tag-badge.tag-feiras, .filter-tag-feed-list .chat-tag-badge.tag-feiras { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-entorno, #tagsDfModal .tags-df-grid button.tag-entorno, #chat-container .chat-tag-badge.tag-entorno, .filter-tag-feed-list .chat-tag-badge.tag-entorno { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-achados, #tagsDfModal .tags-df-grid button.tag-achados, #chat-container .chat-tag-badge.tag-achados, .filter-tag-feed-list .chat-tag-badge.tag-achados { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-alerta, #tagsDfModal .tags-df-grid button.tag-alerta, #chat-container .chat-tag-badge.tag-alerta, .filter-tag-feed-list .chat-tag-badge.tag-alerta { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+
+/* Novas Classes Específicas por Sala (Futebol, Lugares, Política, Games, etc.) */
+.btn-filter-tag-choice.tag-futebol, #tagsDfModal .tags-df-grid button.tag-futebol, #chat-container .chat-tag-badge.tag-futebol, .filter-tag-feed-list .chat-tag-badge.tag-futebol { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-politica, #tagsDfModal .tags-df-grid button.tag-politica, #chat-container .chat-tag-badge.tag-politica, .filter-tag-feed-list .chat-tag-badge.tag-politica { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-religiao, #tagsDfModal .tags-df-grid button.tag-religiao, #chat-container .chat-tag-badge.tag-religiao, .filter-tag-feed-list .chat-tag-badge.tag-religiao { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-lugares, #tagsDfModal .tags-df-grid button.tag-lugares, #chat-container .chat-tag-badge.tag-lugares, .filter-tag-feed-list .chat-tag-badge.tag-lugares { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-eventos, #tagsDfModal .tags-df-grid button.tag-eventos, #chat-container .chat-tag-badge.tag-eventos, .filter-tag-feed-list .chat-tag-badge.tag-eventos { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-entretenimento, #tagsDfModal .tags-df-grid button.tag-entretenimento, #chat-container .chat-tag-badge.tag-entretenimento, .filter-tag-feed-list .chat-tag-badge.tag-entretenimento { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
+.btn-filter-tag-choice.tag-games, #tagsDfModal .tags-df-grid button.tag-games, #chat-container .chat-tag-badge.tag-games, .filter-tag-feed-list .chat-tag-badge.tag-games { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
 /* Badge de Tag renderizado dentro da mensagem no chat */
 /* ========================================================
    MICRO-BADGE UX MOBILE: TAGS DE UTILIDADE DF NO FEED

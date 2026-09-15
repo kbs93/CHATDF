@@ -629,13 +629,15 @@ const dispararEnvioMensagem = async () => {
     }
   });
 
-  chat.addEventListener("click", (e) => {
+  // BOTAO DE Ler mais e Ler menos   
+chat.addEventListener("click", (e) => {
     if (e.target.classList.contains("toggle-expand")) {
+      e.stopPropagation();
       const textEl = e.target.previousElementSibling;
       if (textEl && textEl.classList.contains("msg-text")) {
         const expanded = textEl.classList.toggle("expanded");
         textEl.style.maxHeight = expanded ? "none" : "4.5em";
-        e.target.textContent = expanded ? "Ler mais" : "Ler menos";
+        e.target.textContent = expanded ? "Ler menos" : "Ler mais";
       }
     }
   });
@@ -1161,7 +1163,10 @@ if (!isPanelOpen) {
       fecharPainelVip();
     }
     openProfilePanel();
-    document.querySelector('.profile-tab[data-tab="info"]')?.click();
+    // Se for visita a outro usuário, garante abertura em Info
+    if (!isOwner) {
+      document.querySelector('.profile-tab[data-tab="info"]')?.click();
+    }
   }
 
   if (profileAvatar) {
@@ -1220,7 +1225,7 @@ if (!isPanelOpen) {
       const bannerColor = data.bannerColor || "#00000063";
       const instagram = data.instagram || "";
 
-      selectedBannerColor = bannerColor;
+   selectedBannerColor = bannerColor;
       selectedProfileAvatar = foto;
 
       profileName.textContent = nome;
@@ -1232,6 +1237,28 @@ if (!isPanelOpen) {
       if (profileGender) profileGender.textContent = genero;
       if (profileMemberSince) {
         profileMemberSince.textContent = formatProfileDate(membroDesde);
+      }
+
+      // Redirecionamento automático e trava da aba Info caso o perfil esteja incompleto
+      const infoTabBtn = document.querySelector('.profile-tab[data-tab="info"]');
+      if (isOwner) {
+        if (data.perfilCompleto !== true) {
+          // Bloqueia visualmente e funcionalmente a aba Info
+          if (infoTabBtn) {
+            infoTabBtn.style.opacity = "0.4";
+            infoTabBtn.style.pointerEvents = "none";
+            infoTabBtn.title = "Complete o formulário para liberar a visualização";
+          }
+          // Abre diretamente a aba Editar perfil
+          document.querySelector('.profile-tab[data-tab="edit"]')?.click();
+        } else {
+          // Libera a aba Info se já estiver completo
+          if (infoTabBtn) {
+            infoTabBtn.style.opacity = "1";
+            infoTabBtn.style.pointerEvents = "auto";
+            infoTabBtn.removeAttribute("title");
+          }
+        }
       }
 
       const abaAtiva = document.querySelector('.profile-tab.active')?.dataset.tab || "info";
@@ -2017,12 +2044,23 @@ await setUserStatus(user.uid, {
       vipAvatarFrame: data.vipAvatarFrame || "none"
     });
   
-    document.getElementById("profileEditTooltip")?.classList.remove("show");
-    window.attachmentActions.profile();
+document.getElementById("profileEditTooltip")?.classList.remove("show");
+
+    // Libera a aba Info e redireciona a visão do usuário para ela
+    const infoTabBtn = document.querySelector('.profile-tab[data-tab="info"]');
+    if (infoTabBtn) {
+      infoTabBtn.style.opacity = "1";
+      infoTabBtn.style.pointerEvents = "auto";
+      infoTabBtn.removeAttribute("title");
+      infoTabBtn.click();
+    }
+
+    showToast("Perfil salvo com sucesso!");
   } catch (err) {
     console.error(err);
     showToast("Erro ao salvar perfil");
   }
+
 });
 
 // Drag Mobile/Desktop Perfil

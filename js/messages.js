@@ -19,6 +19,7 @@ import { currentUser } from "./auth.js";
 import { showToast, getColorFromName, highlightMentions } from "./ui.js";
 import { showReplyPreview } from "./ui.js";
 import { formatarAutorVipChat } from "./vip.js";
+import { TAGS_CONFIG } from "./tag.js";
 
 // =================== STATE ========================================================
 window.replyingTo = null;
@@ -36,18 +37,46 @@ let currentMountedChat = null;
 const MESSAGES_CACHE_PREFIX = "chatdf_messages_cache_v1:";
 const USER_AREA_CACHE_KEY = "chatdf_user_area_cache";
 const DEFAULT_AVATAR = "./img/avatar.png";
-
 const ROOM_ALIASES = {
-"Bate papo Geral": "geral",
-"Religiao": "religiao",
-"Politica": "politica",
-"Transito": "transito",
-"Lugares para sair": "lugares",
-"Futebol": "futebol",
-"Eventos": "eventos",
-"Entretenimento": "entretenimento",
-"Games":"games",
-"Consurso Publico":"concurso",
+  "Bate papo Geral": "geral",
+  "geral": "geral",
+
+  "Religião e Fé": "religiao",
+  "Religião": "religiao",
+  "Religiao": "religiao",
+  "religiao": "religiao",
+
+  "Política": "politica",
+  "Politica": "politica",
+  "politica": "politica",
+
+  "Trânsito e Transporte": "transito",
+  "Trânsito": "transito",
+  "Transito": "transito",
+  "transito": "transito",
+
+  "Lugares para sair": "lugares",
+  "Lugares": "lugares",
+  "lugares": "lugares",
+
+  "Futebol e Esportes": "futebol",
+  "Futebol": "futebol",
+  "futebol": "futebol",
+
+  "Eventos e Shows": "eventos",
+  "Eventos": "eventos",
+  "eventos": "eventos",
+
+  "Entretenimento": "entretenimento",
+  "entretenimento": "entretenimento",
+
+  "Games": "games",
+  "games": "games",
+
+  "Concurso Público": "concurso",
+  "Concurso": "concurso",
+  "Consurso Publico": "concurso",
+  "concurso": "concurso"
 };
 
 /*====================================================================================================
@@ -689,27 +718,74 @@ return `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padSt
 ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")} `;
 }
 
-/*====================================================================================================
-Gera o HTML de renderização para mensagens simples de texto, tratando mensagens longas ou ocultadas
-======================================================================================================== */
-/*====================================================================================================
+/*==================================================================================================== 14-09-2026 
 Mapeamento e Formatação das 12 Tags de Utilidade DF para Badges com Google Material Symbols
 ======================================================================================================== */
 const TAGS_DF_CONFIG = {
-  "Trânsito": { classe: "tag-transito", icon: "traffic" },
+  // Geral e Utilidade
+  "Alerta Geral": { classe: "tag-alerta", icon: "warning" },
   "Chuva": { classe: "tag-chuva", icon: "rainy" },
-  "Transporte": { classe: "tag-transporte", icon: "directions_bus" },
-  "Saúde": { classe: "tag-saude", icon: "local_hospital" },
-  "Fiscalização": { classe: "tag-fiscalizacao", icon: "shield_person" },
-  "Segurança": { classe: "tag-seguranca", icon: "security" },
   "Serviços": { classe: "tag-servicos", icon: "build" },
-  "Concursos": { classe: "tag-concursos", icon: "menu_book" },
+  "Achados e Perdidos": { classe: "tag-achados", icon: "find_in_page" },
   "Feiras": { classe: "tag-feiras", icon: "storefront" },
   "Entorno": { classe: "tag-entorno", icon: "signpost" },
-  "Estações e BRT": { classe: "tag-achados", icon: "find_in_page" },
-  "Alerta Geral": { classe: "tag-alerta", icon: "warning" }
-};
+  "Saúde": { classe: "tag-saude", icon: "local_hospital" },
+  "Segurança": { classe: "tag-seguranca", icon: "security" },
 
+  // Trânsito e Transporte
+  "Trânsito": { classe: "tag-transito", icon: "traffic" },
+  "Acidente": { classe: "tag-alerta", icon: "car_crash" },
+  "Fiscalização": { classe: "tag-fiscalizacao", icon: "shield_person" },
+  "Metrô e BRT": { classe: "tag-transporte", icon: "train" },
+  "Ônibus": { classe: "tag-transporte", icon: "directions_bus" },
+
+  // Religião
+  "Reflexão": { classe: "tag-religiao", icon: "auto_stories" },
+  "Oração": { classe: "tag-religiao", icon: "folded_hands" },
+  "Avisos": { classe: "tag-religiao", icon: "campaign" },
+
+  // Política
+  "GDF": { classe: "tag-politica", icon: "account_balance" },
+  "Câmara DF": { classe: "tag-politica", icon: "gavel" },
+  "Debate": { classe: "tag-politica", icon: "forum" },
+  "Notícias": { classe: "tag-politica", icon: "newspaper" },
+
+  // Lugares para sair
+  "Bares": { classe: "tag-lugares", icon: "local_bar" },
+  "Restaurantes": { classe: "tag-lugares", icon: "restaurant" },
+  "Passeios": { classe: "tag-lugares", icon: "nature_people" },
+  "Dicas DF": { classe: "tag-lugares", icon: "tips_and_updates" },
+
+  // Futebol e Esportes
+  "Brasilião": { classe: "tag-futebol", icon: "sports_soccer" },
+  "Futebol DF": { classe: "tag-futebol", icon: "sports_soccer" },
+  "Peladas": { classe: "tag-futebol", icon: "group" },
+  "Resenha": { classe: "tag-futebol", icon: "chat" },
+
+  // Eventos e Shows
+  "Shows": { classe: "tag-eventos", icon: "music_note" },
+  "Festas": { classe: "tag-eventos", icon: "celebration" },
+  "Cultural": { classe: "tag-eventos", icon: "theater_comedy" },
+  "Gratuito": { classe: "tag-eventos", icon: "confirmation_number" },
+
+  // Entretenimento
+  "Filmes e Séries": { classe: "tag-entretenimento", icon: "movie" },
+  "Música": { classe: "tag-entretenimento", icon: "headphones" },
+  "Livros": { classe: "tag-entretenimento", icon: "menu_book" },
+  "Memes": { classe: "tag-entretenimento", icon: "sentiment_very_satisfied" },
+
+  // Games
+  "PC e Console": { classe: "tag-games", icon: "sports_esports" },
+  "Mobile": { classe: "tag-games", icon: "smartphone" },
+  "Dicas": { classe: "tag-games", icon: "lightbulb" },
+  "Torneios": { classe: "tag-games", icon: "emoji_events" },
+
+  // Concurso Público
+  "Editais": { classe: "tag-concursos", icon: "description" },
+  "Dúvidas": { classe: "tag-concursos", icon: "help" },
+  "Material": { classe: "tag-concursos", icon: "library_books" },
+  "Dicas de Estudo": { classe: "tag-concursos", icon: "school" }
+};
 function formatarTagsDfNoTexto(texto = "") {
   let resultado = texto;
   for (const [nomeTag, config] of Object.entries(TAGS_DF_CONFIG)) {
@@ -907,6 +983,9 @@ sala = normalizeRoomId(sala);
 const isSameRoom = currentMountedRoom === sala && currentMountedChat === chat;
 
 window.salaAtual = sala;
+
+// Atualiza os botões de tag no menu de anexos conforme a sala
+import('./tag.js').then(m => m.atualizarVisibilidadeBotoesTagsPorSala?.());
 
 cleanupMessageListeners();
 
