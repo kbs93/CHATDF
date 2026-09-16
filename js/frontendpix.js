@@ -5,7 +5,7 @@ import { auth } from "./firebase-config.js";
 import { abrirModalPix, fecharModalPix } from "./pixmodal.js";
 
 const BACKEND_URL = "http://localhost:3000";
-
+// pra testar no mobile real usar assim  const BACKEND_URL = "http://192.168.1.9:3000";
 export async function solicitarPixVip(valor = 15.00, plano = "VIP Diamante - 30 Dias") {
   const user = auth.currentUser;
 

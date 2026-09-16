@@ -583,7 +583,22 @@ export function initVipEngine(isOwnerCallback) {
 // ====================================3. Gravação das Configurações VIP VERIFICACAO E RESET AUTOMÁTICO DO VIP EXPIRADO 
 //  RESETANDO O PAINEL VIP.. =============================
 
-document.getElementById("btnSaveVipSettings")?.addEventListener("click", async () => {
+
+// Função unificada para chamar o modal Pix
+  const acionarModalPix = (e) => {
+    if (e && typeof e.preventDefault === "function") e.preventDefault();
+    if (typeof window.solicitarPixVip === "function") {
+      window.solicitarPixVip(15.00, "VIP Diamante - 30 Dias");
+    } else if (typeof window.abrirModalPix === "function") {
+      window.abrirModalPix({
+        titulo: "VIP Diamante - 30 Dias",
+        valor: "R$ 15,00"
+      });
+    }
+  };
+
+  // 3. Gravação das Configurações VIP + Abertura Primária do Pix
+  document.getElementById("btnSaveVipSettings")?.addEventListener("click", async () => {
     const user = auth.currentUser;
     if (!user) return;
 
@@ -609,7 +624,7 @@ document.getElementById("btnSaveVipSettings")?.addEventListener("click", async (
       return;
     }
 
-    // 3. Cor do texto (agora valida corretamente porque inicia como null)
+    // 3. Cor do texto
     if (!corMsg) {
       showToast("Por favor, selecione a Cor do texto.");
       return;
@@ -632,63 +647,26 @@ document.getElementById("btnSaveVipSettings")?.addEventListener("click", async (
       showToast("Por favor, selecione uma Imagem para o Banner da capa.");
       return;
     }
-
-    try {
-      showToast("Gravando configurações VIP...");
-      const refUser = doc(db, "users", user.uid);
-
-/*  RESETANDO o original ,  const validadeVip = window.__currentProfileData?.vipExpiresAt || (Date.now() + 7 * 24 * 60 * 60 * 1000);
-
-O trecho window.__currentProfileData?.vipExpiresAt preserva a data que o usuário já tinha caso ele esteja apenas editando/salvando as cores do VIP,
-e o fallback cria um prazo de 7 dias a partir do momento atual.
-Portanto, a premissa está correta.*/
-
-// TESTE 1 : Validade de apenas 1 minuto (60 segundos)  const validadeVip = Date.now() + 1 * 60 * 1000;
-// TESTE 2 : Validade de 3 horas  const validadeVip = Date.now() + 3 * 60 * 60 * 1000;
-// TESTE 3 : Validade de 3 dias   const validadeVip = Date.now() + 3 * 24 * 60 * 60 * 1000; 
-    
-      const validadeVip = Date.now() + 1 * 60 * 1000;
-      await updateDoc(refUser, {
-        isVip: true,
-        vipExpiresAt: validadeVip,
-        vipNameColorType: document.getElementById("vipNameColorType").value,
+try {
+      // Guarda o rascunho apenas localmente (sem gravar no banco nem no status online)
+      const rascunhoVip = {
+        vipNameColorType: tipoNome,
         vipNameColorSolid: window.__vipNOME_COR_SELECIONADA || "#6f42c1",
-        vipNameFont: document.getElementById("vipNameFont").value,
-        vipMsgColor: window.__vipMENSAGEM_COR_SELECIONADA || "#333333",
-        vipAvatarFrame: document.getElementById("vipAvatarFrameSelect").value,
-        vipProfileBanner: document.getElementById("vipProfileBannerSelect").value,
+        vipNameFont: fonteNome,
+        vipMsgColor: corMsg,
+        vipAvatarFrame: moldura,
+        vipProfileBanner: tema,
         vipBannerUrl: bannerUrlFinal
-      });
+      };
+      sessionStorage.setItem("chatdf_vip_rascunho", JSON.stringify(rascunhoVip));
 
-
-      const userStatusRef = rRef(rtdb, "status/" + user.uid);
-      await rUpdate(userStatusRef, {
-        isVip: true,
-        vipNameColorType: document.getElementById("vipNameColorType").value,
-        vipNameColorSolid: window.__vipNOME_COR_SELECIONADA || "#6f42c1",
-        vipNameFont: document.getElementById("vipNameFont").value,
-        vipAvatarFrame: document.getElementById("vipAvatarFrameSelect").value
-      });
-
-      if (window.__currentProfileData) {
-        window.__currentProfileData.vipBannerUrl = bannerUrlFinal;
-        window.__currentProfileData.vipMsgColor = window.__vipMENSAGEM_COR_SELECIONADA || "#333333";
-      }
-      window.__vipBannerUrlTemp = undefined;
-
-      // Aplica a cor do texto e do cursor no input do chat instantaneamente
-      const chatInput = document.getElementById("messageInput");
-      if (chatInput) {
-        const corFinalTexto = window.__vipMENSAGEM_COR_SELECIONADA || "#333333";
-        chatInput.style.color = corFinalTexto;
-        chatInput.style.caretColor = corFinalTexto;
-      }
-
-      //showToast("Vantagens VIP salvas e aplicadas com sucesso!");
- // 1. Fecha imediatamente todos os dropdowns/accordions abertos
+      // 1. Fecha dropdowns abertos
       document.querySelectorAll('.vip-custom-dropdown').forEach(d => d.classList.add('hidden'));
 
-      // 2. Transfere a visualização para a gaveta "Renovar" (Status do Plano)
+      // 2. Mantém a simulação visual apenas na tela local do usuário
+      atualizarSimulacaoTopoVip();
+
+      // 3. Direciona a visualização para a gaveta "Renovar"
       const btnRenovar = document.querySelector('.vip-btn-card[data-target="gaveta-renovar"]');
       if (btnRenovar) {
         document.querySelectorAll(".vip-drawer-content").forEach(drawer => drawer.classList.add("hidden"));
@@ -697,38 +675,38 @@ Portanto, a premissa está correta.*/
         btnRenovar.classList.add("active");
       }
 
-      // 3. Atualiza os dados e trava os botões pelo tempo VIP
-      const editName = document.getElementById("editName");
-      const profileAvatar = document.getElementById("profileAvatar");
-      inicializarPainelVipDinamico(editName?.value, profileAvatar?.src);
-
+      // 4. Dispara o Modal Pix imediatamente
+      acionarModalPix();
 
     } catch (err) {
-      console.error("Erro ao salvar dados VIP:", err);
-      showToast("Erro ao salvar configurações.");
+      console.error("Erro ao preparar rascunho VIP:", err);
+      showToast("Erro ao processar opções VIP.");
     }
+
   });
 
-  //===============================  4. Modal de Banner & Buscador Multi-Plataforma ===================================
- 
+  // 4. Modal de Banner & Buscador
   initVipBannerModal(isOwnerCallback);
 
-  //===============================  5. Abertura do Modal Pix para Renovação VIP ===================================
-//===============================  5. Abertura do Modal Pix para Renovação VIP ===================================
-  const acionarModalPix = (e) => {
-    e.preventDefault();
-    if (typeof window.solicitarPixVip === "function") {
-      window.solicitarPixVip(15.00, "VIP Diamante - 30 Dias");
-    } else if (typeof window.abrirModalPix === "function") {
-      window.abrirModalPix({
-        titulo: "VIP Diamante - 30 Dias",
-        valor: "R$ 15,00"
-      });
-    }
-  };
-
+  // 5. Botões de Renovação (Gatilho secundário/renovação posterior)
   document.getElementById("btnDrawerRenewVip")?.addEventListener("click", acionarModalPix);
   document.getElementById("btnTopRenewVip")?.addEventListener("click", acionarModalPix);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 
@@ -917,6 +895,47 @@ export function abrirPainelVip() {
   if (profileContent) profileContent.classList.add("d-none");
   if (profileVip) profileVip.classList.remove("d-none");
 
+  // 2. Restaura o rascunho anterior para não perder o que foi selecionado
+  try {
+    const rawRascunho = sessionStorage.getItem("chatdf_vip_rascunho");
+    if (rawRascunho) {
+      const r = JSON.parse(rawRascunho);
+      if (r.vipNameColorType) {
+        const sel = document.getElementById("vipNameColorType");
+        const btn = document.getElementById("btnVipNameColorType");
+        if (sel) sel.value = r.vipNameColorType;
+        const opt = document.querySelector(`#listVipNameColorType .vip-dropdown-option[data-value="${r.vipNameColorType}"]`);
+        if (btn && opt) btn.textContent = opt.textContent;
+      }
+      if (r.vipNameFont) {
+        const sel = document.getElementById("vipNameFont");
+        const btn = document.getElementById("btnVipNameFont");
+        if (sel) sel.value = r.vipNameFont;
+        const opt = document.querySelector(`#listVipNameFont .vip-dropdown-option[data-value="${r.vipNameFont}"]`);
+        if (btn && opt) btn.textContent = opt.textContent;
+      }
+      if (r.vipAvatarFrame) {
+        const sel = document.getElementById("vipAvatarFrameSelect");
+        const btn = document.getElementById("btnVipAvatarFrameSelect");
+        if (sel) sel.value = r.vipAvatarFrame;
+        const opt = document.querySelector(`#listVipAvatarFrameSelect .vip-dropdown-option[data-value="${r.vipAvatarFrame}"]`);
+        if (btn && opt) btn.textContent = opt.textContent;
+      }
+      if (r.vipProfileBanner) {
+        const sel = document.getElementById("vipProfileBannerSelect");
+        const btn = document.getElementById("btnVipProfileBannerSelect");
+        if (sel) sel.value = r.vipProfileBanner;
+        const opt = document.querySelector(`#listVipProfileBannerSelect .vip-dropdown-option[data-value="${r.vipProfileBanner}"]`);
+        if (btn && opt) btn.textContent = opt.textContent;
+      }
+      if (r.vipNameColorSolid) window.__vipNOME_COR_SELECIONADA = r.vipNameColorSolid;
+      if (r.vipMsgColor) window.__vipMENSAGEM_COR_SELECIONADA = r.vipMsgColor;
+      if (r.vipBannerUrl) window.__vipBannerUrlTemp = r.vipBannerUrl;
+    }
+  } catch (e) {
+    console.warn("Sem rascunho VIP prévio:", e);
+  }
+
   // 2. Troca os botões do cabeçalho
   if (vipBtn) vipBtn.classList.add("d-none");
   if (backBtn) backBtn.classList.remove("d-none");
@@ -971,7 +990,10 @@ export function fecharPainelVip() {
   const topExpiry = document.getElementById("vipTopExpiryRow");
 
   // 1. Descarta a imagem temporária não salva do banner
+ // 1. Descarta a imagem temporária e o rascunho apenas ao fechar ou voltar
   window.__vipBannerUrlTemp = undefined;
+  sessionStorage.removeItem("chatdf_vip_rascunho");
+  restaurarVisualPadraoPerfil();
 
   // 2. Restaura as abas principais e o conteúdo comum
   if (mainTabs) mainTabs.classList.remove("d-none");

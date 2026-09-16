@@ -853,8 +853,8 @@ emoji-picker { animation: fadeInUp 0.25s ease forwards; border-radius: 10px!impo
 
 .close-login:hover { background: #ff5252; color: #fff; transform: rotate(90deg); }
 
-/* =============================== LAYOUT ========================================================================== */
-.login-left { width: 48%; position: relative; display: flex; min-width: 0; background: #020641; }
+/* =============================== LAYOUT modal de Login com google MODAL dentro do index ========================================================================== */
+.login-left { width: 58%; position: relative; display: flex; min-width: 0; background: #020641; }
 
 .login-left img { width: 100%; height: 100%; object-fit: cover; }
 
