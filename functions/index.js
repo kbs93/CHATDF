@@ -1,23 +1,17 @@
-/**
- * BACKEND ISOLADO: SERVIÇO DE PIX MERCADO PAGO + FIRESTORE
- * Instalação de dependências:
- * npm install express cors dotenv
- */
-
-const express = require('express');
-const cors = require('cors');
+const functions = require("firebase-functions");
+const express = require("express");
+const cors = require("cors");
 
 const app = express();
-app.use(express.json());
-app.use(cors());
 
-// INSIRA O ACCESS TOKEN AQUI (TEST-... ou APP_USR-...) quando tiver hospedado colocar o original do Mercado Pago 
-// 
-// JA TROCADO 16-09-26
+// Habilita CORS completo
+app.use(cors({ origin: true }));
+app.use(express.json());
+
 const MP_ACCESS_TOKEN = "APP_USR-7106146778120922-090215-2590fc2fb5e4f0bf4c00f1b4088cb6ad-2445082082";
 
-// 1. ROTA: GERAR COBRANÇA PIX
-app.post('/api/pix/criar', async (req, res) => {
+// Handler para criação do Pix (responde tanto em /api/pix/criar quanto em /pix/criar)
+const criarPixHandler = async (req, res) => {
   try {
     const { uid, email, nome, valor, descricao } = req.body;
 
@@ -39,7 +33,6 @@ app.post('/api/pix/criar', async (req, res) => {
       }
     };
 
-// DEPOIS (ajuste cirúrgico):
     const response = await fetch("https://api.mercadopago.com/v1/payments", {
       method: "POST",
       headers: {
@@ -49,7 +42,8 @@ app.post('/api/pix/criar', async (req, res) => {
       },
       body: JSON.stringify(bodyPagamento)
     });
-const data = await response.json();
+
+    const data = await response.json();
 
     if (!response.ok) {
       console.error("Erro Mercado Pago:", data);
@@ -57,6 +51,7 @@ const data = await response.json();
         error: data.message || (data.cause && data.cause[0]?.description) || "Erro ao gerar Pix" 
       });
     }
+
     const qrCodeBase64 = data.point_of_interaction?.transaction_data?.qr_code_base64;
     const copiaECola = data.point_of_interaction?.transaction_data?.qr_code;
     const paymentId = data.id;
@@ -72,38 +67,35 @@ const data = await response.json();
     console.error("Erro interno ao criar Pix:", err);
     return res.status(500).json({ error: "Erro interno do servidor." });
   }
-});
+};
 
-// 2. ROTA: WEBHOOK DO MERCADO PAGO
-app.post('/api/pix/webhook', async (req, res) => {
+// Handler para consulta de status do Pix
+const statusPixHandler = async (req, res) => {
   try {
-    const { data } = req.body;
-    res.status(200).send("OK");
-
-    const paymentId = data?.id || req.query["data.id"] || req.query.id;
-    if (!paymentId) return;
-
+    const { paymentId } = req.params;
     const consulta = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
       headers: {
         "Authorization": `Bearer ${MP_ACCESS_TOKEN}`
       }
     });
 
-    if (!consulta.ok) return;
-
-    const paymentData = await consulta.json();
-
-    if (paymentData.status === "approved") {
-      const userUid = paymentData.metadata?.user_uid;
-      console.log(`Pagamento ${paymentId} APROVADO para o UID: ${userUid}`);
+    if (!consulta.ok) {
+      return res.status(consulta.status).json({ error: "Erro ao consultar pagamento" });
     }
 
+    const paymentData = await consulta.json();
+    return res.json({ status: paymentData.status });
   } catch (err) {
-    console.error("Erro no webhook:", err);
+    console.error("Erro ao verificar status:", err);
+    return res.status(500).json({ error: "Erro interno ao checar status" });
   }
-});
+};
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(` Servidor Pix rodando na porta ${PORT}`);
-});
+// Rotas mapeadas para suportar com ou sem o prefixo /api
+app.post("/pix/criar", criarPixHandler);
+app.post("/api/pix/criar", criarPixHandler);
+
+app.get("/pix/status/:paymentId", statusPixHandler);
+app.get("/api/pix/status/:paymentId", statusPixHandler);
+
+exports.api = functions.https.onRequest(app);

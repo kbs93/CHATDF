@@ -360,19 +360,44 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
         vipBannerHeaderBtn.style.pointerEvents = "none";
       }
 
-    } else {
-      // Quando o tempo zera ou o usuário não é VIP
-      if (topExpiryDays) topExpiryDays.textContent = `Expirado`;
-      if (drawerExpiryDays) {
-        drawerExpiryDays.textContent = `VIP Expirado`;
-        drawerExpiryDays.className = "text-danger fw-bold";
-      }
-      if (drawerBtnRenew) {
-        drawerBtnRenew.className = "btn btn-warning w-100 fw-bold py-2 shadow-sm text-dark";
-        drawerBtnRenew.innerHTML = `<i class="bi bi-gem me-1"></i> RENOVAR VIP`;
+
+} else {
+      // Identifica se já foi VIP alguma vez ou se é a primeira contratação
+      const jaFoiVipAlgumaVez = Boolean(data.vipExpiresAt && data.vipExpiresAt > 0);
+
+      if (jaFoiVipAlgumaVez) {
+        // Usuário veterano com VIP Vencido -> Libera o botão de Renovar direto
+        if (topExpiryDays) topExpiryDays.textContent = `Expirado`;
+        if (drawerExpiryDays) {
+          drawerExpiryDays.textContent = `VIP Expirado`;
+          drawerExpiryDays.className = "text-danger fw-bold";
+        }
+        if (drawerBtnRenew) {
+          drawerBtnRenew.removeAttribute("disabled");
+          drawerBtnRenew.style.opacity = "1";
+          drawerBtnRenew.style.cursor = "pointer";
+          drawerBtnRenew.style.pointerEvents = "auto";
+          drawerBtnRenew.className = "btn btn-warning w-100 fw-bold py-2 shadow-sm text-dark";
+          drawerBtnRenew.innerHTML = `<i class="bi bi-arrow-repeat me-1"></i> Renovar assinatura VIP`;
+        }
+      } else {
+        // Usuário Novo (Nunca assinou) -> Trava e ofusca o botão Renovar seguindo o padrão
+        if (topExpiryDays) topExpiryDays.textContent = `Sem VIP`;
+        if (drawerExpiryDays) {
+          drawerExpiryDays.textContent = `Nenhum plano ativo`;
+          drawerExpiryDays.className = "text-muted fw-bold";
+        }
+        if (drawerBtnRenew) {
+          drawerBtnRenew.setAttribute("disabled", "disabled");
+          drawerBtnRenew.style.opacity = "0.35";
+          drawerBtnRenew.style.cursor = "not-allowed";
+          drawerBtnRenew.style.pointerEvents = "none";
+          drawerBtnRenew.className = "btn btn-warning w-100 fw-bold py-2 shadow-sm text-dark";
+          drawerBtnRenew.innerHTML = `<i class="bi bi-lock-fill me-1"></i> Renovar assinatura VIP`;
+        }
       }
 
-      // LIBERA O BOTÃO SALVAR VIP
+      // LIBERA O BOTÃO SALVAR VIP (Porta de entrada principal)
       if (btnSaveVip) {
         btnSaveVip.removeAttribute("disabled");
         btnSaveVip.style.opacity = "1";
@@ -405,6 +430,11 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
         vipCountdownInterval = null;
       }
     }
+
+
+
+
+
   };
 
   atualizarStatusInterfaceVip();
@@ -588,11 +618,11 @@ export function initVipEngine(isOwnerCallback) {
   const acionarModalPix = (e) => {
     if (e && typeof e.preventDefault === "function") e.preventDefault();
     if (typeof window.solicitarPixVip === "function") {
-      window.solicitarPixVip(15.00, "VIP Diamante - 30 Dias");
+      window.solicitarPixVip(5.99, "VIP Diamante - 3 Dias");
     } else if (typeof window.abrirModalPix === "function") {
       window.abrirModalPix({
         titulo: "VIP Diamante - 30 Dias",
-        valor: "R$ 15,00"
+        valor: "R$ 5,99"
       });
     }
   };

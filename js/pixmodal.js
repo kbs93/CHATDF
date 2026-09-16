@@ -4,16 +4,9 @@
 
 // 1. INJEÇÃO DO CSS EXCLUSIVO DO MODAL
 const modalStyles = `
-  .pix-modal-overlay {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.65);
-    backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .pix-modal-overlay {position: fixed;inset: 0;width: 100vw;height: 100vh;background: rgba(0, 0, 0, 0.65);backdrop-filter: blur(4px);display: flex;
+  align-items: center;
+justify-content: center;
     z-index: 10005;
     opacity: 0;
     pointer-events: none;
@@ -201,8 +194,8 @@ const modalHTML = `
         <i class="bi bi-gem"></i> Assinatura VIP
       </div>
       
-      <h4 class="pix-title" id="pixPlanTitle">Plano 30 Dias</h4>
-      <div class="pix-value" id="pixPlanPrice">R$ 15,00</div>
+      <h4 class="pix-title" id="pixPlanTitle">Plano 3 Dias</h4>
+      <div class="pix-value" id="pixPlanPrice">R$ 5,99</div>
 
       <div class="pix-qrcode-box">
         <img id="pixQrCodeImg" src="" alt="Aguardando QR Code..." style="display: none;">
@@ -258,7 +251,7 @@ copyBtn?.addEventListener("click", async () => {
   }, 2000);
 });
 
-export function abrirModalPix({ titulo = "Plano 30 Dias", valor = "R$ 15,00", qrCodeBase64 = "", copiaECola = "" } = {}) {
+export function abrirModalPix({ titulo = "Plano 3 Dias", valor = "R$ 5,99", qrCodeBase64 = "", copiaECola = "" } = {}) {
   if (titulo) document.getElementById("pixPlanTitle").textContent = titulo;
   if (valor) document.getElementById("pixPlanPrice").textContent = valor;
   

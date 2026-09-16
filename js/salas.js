@@ -128,17 +128,24 @@ if (container) {
 
 // Ouvinte de Presença
 const statusRef = ref(rtdb, "status");
-
 onValue(statusRef, (snapshot) => {
   const statusData = snapshot.val() || {};
+  const agora = Date.now();
+  // Limite de 2 minutos (120000ms): se o usuário não emitiu sinal nesse tempo, é fantasma
+  const TEMPO_LIMITE_OFFLINE = 120000;
 
   salas.forEach((sala) => {
     roomCounts[sala.id] = 0;
   });
 
   Object.values(statusData).forEach((user) => {
-    if (!user?.online) return;
-    const salaAtual = user.sala;
+    if (!user || user.online !== true) return;
+
+    // Descarta registros órfãos antigos cujo socket não limpou
+    const ultimaAtividade = user.lastChanged || 0;
+    if (agora - ultimaAtividade > TEMPO_LIMITE_OFFLINE) return;
+
+    const salaAtual = (user.sala || "").toLowerCase();
     if (roomCounts[salaAtual] !== undefined) {
       roomCounts[salaAtual]++;
     }
