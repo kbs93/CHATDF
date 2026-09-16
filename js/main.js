@@ -667,6 +667,90 @@ chat.addEventListener("click", (e) => {
 
 
 
+// =========================================================================
+  // SISTEMA PROFISSIONAL DE TROCA DE SALAS SEM RECARREGAR (SPA)
+  // =========================================================================
+  window.trocarSalaSemPiscar = (novaSala) => {
+    if (!novaSala || novaSala === appState.currentRoom) {
+      closeAllPanels();
+      return;
+    }
+
+    appState.currentRoom = novaSala;
+
+    // 1. Atualiza silenciosamente a URL sem dar refresh
+    const novaUrl = `${window.location.pathname}?sala=${novaSala}`;
+    window.history.pushState({ sala: novaSala }, "", novaUrl);
+
+    // 2. Atualiza o título da sala na navbar do chat
+    const roomTitle = document.getElementById("chatRoomName");
+    if (roomTitle) {
+      const salaObj = window.salas?.find(s => s.id === novaSala);
+      roomTitle.textContent = salaObj ? salaObj.nome : novaSala;
+    }
+
+    // 3. Atualiza o estado ativo no menu lateral de salas
+    document.querySelectorAll("#salas-lista .live-room-item").forEach(item => {
+      const ativo = item.dataset.salaId === novaSala;
+      item.classList.toggle("active", ativo);
+    });
+
+    // 4. Executa a troca de containers de mensagens instantaneamente
+    initMessages(chat, novaSala);
+
+    // 5. Atualiza a presença do usuário na nova sala no Realtime Database
+    updateUserRoomPresence();
+
+    // 6. Fecha o painel lateral no mobile se estiver aberto
+    closeAllPanels();
+  };
+
+  // Suporte aos botões voltar/avançar do navegador do celular
+ // Suporte aos botões voltar/avançar do navegador do celular
+  window.addEventListener("popstate", (e) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const salaUrl = urlParams.get("sala") || "geral";
+    if (window.trocarSalaSemPiscar) {
+      window.trocarSalaSemPiscar(salaUrl);
+    }
+  });
+
+  // =========================================================================
+  // ECONOMIA DE FIREBASE: PAUSA EM SEGUNDO PLANO (PAGE VISIBILITY API) 15-09-26 
+  // =========================================================================
+  document.addEventListener("visibilitychange", () => {
+    // Só atua se o usuário estiver na tela de chat montada
+    if (!isChatRoute || !appState.chatMounted) return;
+
+    if (document.visibilityState === "hidden") {
+      // O usuário minimizou o app ou bloqueou a tela: encerra o ouvinte do Firestore
+      cleanupChatMessages();
+    } else if (document.visibilityState === "visible") {
+      // O usuário voltou para o chat: reconecta na sala atual e atualiza a presença
+      const salaAtiva = appState.currentRoom || sala;
+      cleanupChatMessages();
+      appState.unsubscribeMessages = initMessages(chat, salaAtiva);
+      updateUserRoomPresence();
+    }
+  });
+
+/* TESTE PRA SABER  se a document.addEventListener("visibilitychange", () => {  DEU CERTO   OLHAR NO CONSOLE 
+document.addEventListener("visibilitychange", () => {
+    if (!isChatRoute || !appState.chatMounted) return;
+
+    if (document.visibilityState === "hidden") {
+      cleanupChatMessages();
+      console.log("🔴 [FIREBASE PAUSADO] Usuário minimizou a tela - economizando cota!");
+    } else if (document.visibilityState === "visible") {
+      const salaAtiva = appState.currentRoom || sala;
+      cleanupChatMessages();
+      appState.unsubscribeMessages = initMessages(chat, salaAtiva);
+      updateUserRoomPresence();
+      console.log("🟢 [FIREBASE RECONECTADO] Usuário voltou para a tela!");
+    }
+  }); */
+
+
 
 }
 
@@ -1341,25 +1425,8 @@ if (!isPanelOpen) {
 
       if (editInstagram) editInstagram.value = username ? `@${username}` : "";
 
-      if (profileInstagramText) {
-        if (username !== "") {
-          const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-          if (isMobile) {
-            profileInstagramText.innerHTML = `<a id="instaClickBtn" href="instagram://user?username=${username}" style="color: #000000 !important; font-weight: 600; text-decoration: none;">@${username}</a>`;
-            document.getElementById("instaClickBtn")?.addEventListener("click", (e) => {
-              e.stopPropagation();
-              setTimeout(() => { window.location.href = `https://www.instagram.com/${username}/`; }, 800);
-            });
-          } else {
-            profileInstagramText.innerHTML = `<span id="instaDesktopBtn" style="color: #161616dc; font-weight: 600; cursor: pointer;" title="Acesse pelo celular para abrir o perfil">@${username}</span>`;
-            document.getElementById("instaDesktopBtn")?.addEventListener("click", (e) => {
-              e.stopPropagation();
-              if (typeof showToast === "function") showToast("O link do Instagram está disponível apenas no acesso pelo celular.");
-            });
-          }
-        } else {
-          profileInstagramText.textContent = "-";
-        }
+if (profileInstagramText) {
+        profileInstagramText.textContent = username !== "" ? `@${username}` : "-";
       }
 
       let teleUser = telegram ? String(telegram).trim() : "";
@@ -1371,12 +1438,8 @@ if (!isPanelOpen) {
 
       if (editTelegram) editTelegram.value = teleUser ? `@${teleUser}` : "";
 
-if (profileTelegramText) {
-        if (teleUser !== "") {
-          profileTelegramText.innerHTML = `<a href="https://t.me/${teleUser}" target="_blank" rel="noopener noreferrer" style="color: #161616dc; font-weight: 600; text-decoration: none;">@${teleUser}</a>`;
-        } else {
-          profileTelegramText.textContent = "-";
-        }
+      if (profileTelegramText) {
+        profileTelegramText.textContent = teleUser !== "" ? `@${teleUser}` : "-";
       }
 
       // Carrega e renderiza os interesses do usuario (Aba Info e Aba Editar) tag

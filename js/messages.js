@@ -33,7 +33,6 @@ let unsubscribeCurrentMessages = null;
 const historyListeners = new Set();
 let currentMountedRoom = null;
 let currentMountedChat = null;
-
 const MESSAGES_CACHE_PREFIX = "chatdf_messages_cache_v1:";
 const USER_AREA_CACHE_KEY = "chatdf_user_area_cache";
 const DEFAULT_AVATAR = "./img/avatar.png";
@@ -1017,392 +1016,381 @@ chat.removeChild(first);
 /*====================================================================================================
 Inicializa o listener do chat, configurando o carregamento inicial, escutas do Firestore e scroll
 ======================================================================================================== */
+
+
+// Estrutura de containers e estados isolados por sala
+const activeRoomListeners = new Map();
+const activeRoomFeeds = new Map();
+const roomPaginationState = new Map(); // Guarda o histórico de cada sala separadamente
+
 export function initMessages(chat, sala) {
-sala = normalizeRoomId(sala);
-const isSameRoom = currentMountedRoom === sala && currentMountedChat === chat;
+  sala = normalizeRoomId(sala);
+  window.salaAtual = sala;
 
-window.salaAtual = sala;
-
-// Atualiza os botões de tag no menu de anexos conforme a sala
-import('./tag.js').then(m => m.atualizarVisibilidadeBotoesTagsPorSala?.());
-
-cleanupMessageListeners();
-
-/*====================================================================================================
-Verifica se o container do chat está presente no HTML antes de dar prosseguimento à inicialização
-======================================================================================================== */
-if (!chat) {
-console.warn("initMessages: container de chat não encontrado");
-return () => {};
-}
-
-// Trava o Pull-to-refresh nativo do navegador mobile
-chat.style.overscrollBehaviorY = "contain";
-
-setChatLoading(true);
-isInitialLoad = true;
-
-const chatRefAchatado = collection(db, "salas", sala, "messages");
-if (!isSameRoom) {
-const restoredFromCache = restoreMessagesCache(chat, sala);
-
-if (!restoredFromCache) {
-renderedMessages = new Set();
-replyCache.clear();
-messagesState.length = 0;
-messagesMap.clear();
-
-if (chat.children.length === 0) {
-chat.textContent = "";
-}
-}
-}
-
-currentMountedRoom = sala;
-currentMountedChat = chat;
-
-// Garantia do Elemento Visual Spinner no topo
-let spinnerEl = chat.querySelector(".pull-to-refresh-spinner");
-if (!spinnerEl) {
-spinnerEl = document.createElement("div");
-spinnerEl.className = "pull-to-refresh-spinner";
-spinnerEl.innerHTML = `<div class="spinner-box"><i class="bi bi-arrow-repeat"></i></div>`;
-chat.prepend(spinnerEl);
-}
-
-// ============================================================================================================================
-//ESTADO E PAGINAÇÃO INVERSA DAS MENSAGEM   MOSTRA AS MENSAGENS MAIS ANTIGAS PRIMEIRO, E VAI CARREGANDO MAIS CONFORME O USUÁRIO ROLA PARA CIMA
-// ============================================================================================================================
-let oldestDoc = null; // Guarda o ponteiro da mensagem mais antiga no topo
-let hasMoreHistory = true; // Trava quando não houver mais mensagens antigas
-let isLoadingHistory = false; // Trava para evitar requisições simultâneas
-const BATCH_SIZE = 30; // Quantidade de mensagens antigas por lote
-
-// 1. QUERY INICIAL (Escuta em tempo real apenas as últimas mensagens)
-
-const qAchatada = query(
-chatRefAchatado,
-orderBy("createdAt"),
-limitToLast(BATCH_SIZE)
-);
-
-/*====================================================================================================
-Processa alterações do snapshot recebidas do Firestore (adição, modificação e remoção em tempo real)
-======================================================================================================== */
-const processSnapshot = (snapshot) => {
-const fragment = document.createDocumentFragment();
-const pendingReplies = [];
-let addedCount = 0;
-
-/*====================================================================================================
-Armazena o documento mais antigo do lote inicial para servirem de cursor na paginação do histórico
-======================================================================================================== */
-if (snapshot.docs.length > 0 && !oldestDoc) {
-oldestDoc = snapshot.docs[0];
-}
-
-/*====================================================================================================
-Itera sobre cada alteração individual do snapshot retornado pelo banco de dados
-======================================================================================================== */
-snapshot.docChanges().forEach((change) => {
-/*====================================================================================================
-Tratamento para alteração do tipo 'removed': atualiza o visual da mensagem removida dinamicamente
-======================================================================================================== */
-if (change.type === "removed") {
-  const msgId = change.doc.id;
-  const msgData = change.doc.data();
-
-  // Só marca como excluída visualmente se o documento realmente tiver sido marcado como deletado no Firestore
-  if (msgData && msgData.deleted === true) {
-    const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
-    if (msgDiv) {
-      const replyBox = msgDiv.querySelector(".reply-container");
-      if (replyBox) replyBox.style.display = "none";
-
-      const bodyContent = msgDiv.children[2];
-      if (bodyContent) {
-        bodyContent.innerHTML = `
-          <div class="msg-deleted-box">
-            <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
-            <span style="font-size:0.92rem; font-style: italic; color: #888;">Mensagem excluída</span>
-          </div>
-        `;
-      }
-    }
+  if (!chat) {
+    console.warn("initMessages: container de chat não encontrado");
+    return () => {};
   }
 
-  // Se a mensagem apenas saiu do limite das 30 da consulta (sem ter sido deletada),
-  // não faz nada para mantê-la intacta na tela enquanto o usuário conversa.
-  return;
-}
+  // Trava o Pull-to-refresh nativo no mobile
+  chat.style.overscrollBehaviorY = "contain";
 
-/*====================================================================================================
-Tratamento para alteração do tipo 'modified': atualiza os dados visuais de mensagens modificadas
-======================================================================================================== */
-if (change.type === "modified") {
-  const msgId = change.doc.id;
-  const msgData = change.doc.data();
-  const msgDiv = document.querySelector(`[data-id="${msgId}"]`);
+  let messagesWrapper = document.getElementById("chat-messages");
+  if (!messagesWrapper) {
+    messagesWrapper = chat;
+  }
 
-  // Sincroniza a memória global em tempo real
-  const msgExistente = messagesMap.get(msgId) || {};
-  messagesMap.set(msgId, { ...msgExistente, ...msgData });
+  // 1. Oculta os feeds das outras salas
+  messagesWrapper.querySelectorAll(".room-feed-container").forEach((feed) => {
+    feed.style.display = "none";
+  });
 
-  if (msgDiv) {
-    if (msgData.deleted === true) {
-      // Limpa o cache de citação
-      replyCache.delete(msgId);
+  // 2. Localiza ou cria a div da sala atual
+  let currentFeed = document.getElementById(`room-feed-${sala}`);
+  if (!currentFeed) {
+    currentFeed = document.createElement("div");
+    currentFeed.id = `room-feed-${sala}`;
+    currentFeed.className = "room-feed-container";
+    currentFeed.style.width = "100%";
+    messagesWrapper.appendChild(currentFeed);
+  }
 
-      // Fecha o preview caso a mensagem estivesse selecionada no momento
-      if (window.replyingTo === msgId) {
-        window.replyingTo = null;
-        const preview = document.getElementById("replyPreview");
-        if (preview) {
-          preview.style.display = "none";
-          preview.innerHTML = "";
+  currentFeed.style.display = "block";
+  activeRoomFeeds.set(sala, currentFeed);
+
+  // Atualiza as tags da sala
+  import('./tag.js').then(m => m.atualizarVisibilidadeBotoesTagsPorSala?.());
+
+  // Garante a existência do Spinner no topo do chat
+  let spinnerEl = chat.querySelector(".pull-to-refresh-spinner");
+  if (!spinnerEl) {
+    spinnerEl = document.createElement("div");
+    spinnerEl.className = "pull-to-refresh-spinner";
+    spinnerEl.innerHTML = `<div class="spinner-box"><i class="bi bi-arrow-repeat"></i></div>`;
+    chat.prepend(spinnerEl);
+  }
+
+  // Se o ouvinte desta sala já existe, apenas garante o scroll e não reconecta
+  if (activeRoomListeners.has(sala)) {
+    setTimeout(() => {
+      window.smartScrollToBottom?.();
+    }, 50);
+    return () => {};
+  }
+
+  // =========================================================================
+  // ESTADO DE PAGINAÇÃO INVERSA DA SALA (30 EM 30)
+  // =========================================================================
+  const pagState = {
+    oldestDoc: null,
+    hasMoreHistory: true,
+    isLoadingHistory: false,
+    BATCH_SIZE: 30
+  };
+  roomPaginationState.set(sala, pagState);
+
+  const chatRefAchatado = collection(db, "salas", sala, "messages");
+  const qAchatada = query(
+    chatRefAchatado,
+    orderBy("createdAt"),
+    limitToLast(pagState.BATCH_SIZE)
+  );
+
+  const processSnapshot = (snapshot) => {
+    const fragment = document.createDocumentFragment();
+    const pendingReplies = [];
+    let addedCount = 0;
+
+    if (snapshot.docs.length > 0 && !pagState.oldestDoc) {
+      pagState.oldestDoc = snapshot.docs[0];
+    }
+
+    snapshot.docChanges().forEach((change) => {
+      if (change.type === "removed") {
+        const msgId = change.doc.id;
+        const msgData = change.doc.data();
+
+        if (msgData && msgData.deleted === true) {
+          const msgDiv = currentFeed.querySelector(`[data-id="${msgId}"]`);
+          if (msgDiv) {
+            const replyBox = msgDiv.querySelector(".reply-container");
+            if (replyBox) replyBox.style.display = "none";
+
+            const bodyContent = msgDiv.children[2];
+            if (bodyContent) {
+              bodyContent.innerHTML = `
+                <div class="msg-deleted-box">
+                  <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
+                  <span style="font-size:0.92rem; font-style: italic; color: #888;">Mensagem excluída</span>
+                </div>
+              `;
+            }
+          }
         }
+        return;
       }
 
-      const replyBox = msgDiv.querySelector(".reply-container");
-      if (replyBox) replyBox.style.display = "none";
+      if (change.type === "modified") {
+        const msgId = change.doc.id;
+        const msgData = change.doc.data();
+        const msgDiv = currentFeed.querySelector(`[data-id="${msgId}"]`);
 
-      // Mantém a estrutura HTML original sem alterar classes ou alinhamento
-      const bodyContent = msgDiv.children[2];
-      if (bodyContent) {
-        bodyContent.innerHTML = `
-          <div class="msg-deleted-box">
-            <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
-            <span style="font-size:0.92rem; font-style: italic; color: #888;">Mensagem excluída</span>
-          </div>
-        `;
+        const msgExistente = messagesMap.get(msgId) || {};
+        messagesMap.set(msgId, { ...msgExistente, ...msgData });
+
+        if (msgDiv) {
+          if (msgData.deleted === true) {
+            replyCache.delete(msgId);
+            if (window.replyingTo === msgId) {
+              window.replyingTo = null;
+              const preview = document.getElementById("replyPreview");
+              if (preview) {
+                preview.style.display = "none";
+                preview.innerHTML = "";
+              }
+            }
+
+            const replyBox = msgDiv.querySelector(".reply-container");
+            if (replyBox) replyBox.style.display = "none";
+
+            const bodyContent = msgDiv.children[2];
+            if (bodyContent) {
+              bodyContent.innerHTML = `
+                <div class="msg-deleted-box">
+                  <i class="bi bi-ban" style="font-size: 0.9rem; color: #a0a0a0;"></i>
+                  <span style="font-size:0.92rem; font-style: italic; color: #888;">Mensagem excluída</span>
+                </div>
+              `;
+            }
+          } else if (msgData.denunciasContador && msgData.denunciasContador >= 1) {
+            const textSpan = msgDiv.querySelector(".msg-text") || msgDiv.querySelector("span[style*='color']");
+            if (textSpan) {
+              textSpan.className = "msg-hidden";
+              textSpan.style.color = "";
+              textSpan.innerHTML = `<i class="bi bi-emoji-frown"></i> Mensagem ocultada..`;
+            }
+          }
+        }
+        return;
       }
+
+      if (change.type !== "added") return;
+      const docSnap = change.doc;
+      const msgId = docSnap.id;
+
+      if (renderedMessages.has(msgId)) return;
+      renderedMessages.add(msgId);
+
+      const raw = docSnap.data();
+      const msg = {
+        ...raw,
+        text: typeof raw.text === "string" ? raw.text : ""
+      };
+
+      replyCache.set(msgId, {
+        user: msg.user,
+        text: msg.text,
+        photo: msg.photo,
+        color: msg.color,
+        vipNameFont: msg.vipNameFont || "default",
+        vipNameColorType: msg.vipNameColorType || "solid",
+        vipNameColorSolid: msg.vipNameColorSolid || msg.color || "#1E293B"
+      });
+
+      if (!messagesMap.has(msgId)) {
+        const fullMsg = { id: msgId, ...msg };
+        messagesState.push(fullMsg);
+        messagesMap.set(msgId, fullMsg);
+      }
+
+      const timestamp = msg.createdAt ? formatTimestamp(msg.createdAt) : "";
+      const div = createMessageElement(msgId, msg, timestamp);
+      const createdAtMs = msg.createdAt?.toMillis?.() || (msg.createdAt?.seconds * 1000) || Date.now();
+
+      div.setAttribute("data-created-at", createdAtMs);
+      fragment.appendChild(div);
+      addedCount++;
+
+      if (msg.replyTo) {
+        pendingReplies.push({ msg, div });
+      }
+    });
+
+    if (addedCount > 0) {
+      currentFeed.appendChild(fragment);
+      setTimeout(() => {
+        window.smartScrollToBottom?.();
+      }, isInitialLoad ? 0 : 80);
     }
-    else if (msgData.denunciasContador && msgData.denunciasContador >= 1) {
-      const textSpan = msgDiv.querySelector(".msg-text") || msgDiv.querySelector("span[style*='color']");
-      if (textSpan) {
-        textSpan.className = "msg-hidden";
-        textSpan.style.color = "";
-        textSpan.innerHTML = `<i class="bi bi-emoji-frown"></i> Mensagem ocultada..`;
+
+    pendingReplies.forEach(({ msg, div }) => {
+      renderReply(msg).then((replyHTML) => {
+        const box = div.querySelector(".reply-container");
+        if (box && replyHTML) {
+          box.innerHTML = replyHTML;
+        }
+      });
+    });
+
+    isInitialLoad = false;
+    setChatLoading(false);
+  };
+
+  // =========================================================================
+  // CARREGAR MAIS MENSAGENS ANTIGAS (PAGINAÇÃO DE 30 COM DELAY DE 2 SEGUNDOS)
+  // =========================================================================
+  async function loadMoreOlderMessages() {
+    if (pagState.isLoadingHistory || !pagState.hasMoreHistory || !pagState.oldestDoc) return;
+
+    pagState.isLoadingHistory = true;
+
+    if (spinnerEl) {
+      spinnerEl.classList.add("visible", "spinning");
+    }
+
+    try {
+      const { endBefore, limitToLast: firestoreLimitToLast } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
+
+      const qHistorico = query(
+        chatRefAchatado,
+        orderBy("createdAt"),
+        endBefore(pagState.oldestDoc),
+        firestoreLimitToLast(pagState.BATCH_SIZE)
+      );
+
+      const snapshot = await getDocs(qHistorico);
+
+      // Delay de 2 segundos com o spinner rodando
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      if (snapshot.empty) {
+        pagState.hasMoreHistory = false;
+      } else {
+        pagState.oldestDoc = snapshot.docs[0];
+
+        const previousScrollHeight = chat.scrollHeight;
+        const previousScrollTop = chat.scrollTop;
+
+        const fragment = document.createDocumentFragment();
+        const pendingReplies = [];
+
+        snapshot.docs.forEach((docSnap) => {
+          const msgId = docSnap.id;
+          if (renderedMessages.has(msgId)) return;
+          renderedMessages.add(msgId);
+
+          const raw = docSnap.data();
+          const msg = {
+            ...raw,
+            text: typeof raw.text === "string" ? raw.text : ""
+          };
+
+          replyCache.set(msgId, {
+            user: msg.user,
+            text: msg.text,
+            photo: msg.photo,
+            color: msg.color,
+            vipNameFont: msg.vipNameFont || "default",
+            vipNameColorType: msg.vipNameColorType || "solid",
+            vipNameColorSolid: msg.vipNameColorSolid || msg.color || "#1E293B"
+          });
+
+          if (!messagesMap.has(msgId)) {
+            const fullMsg = { id: msgId, ...msg };
+            messagesState.unshift(fullMsg);
+            messagesMap.set(msgId, fullMsg);
+          }
+
+          const timestamp = msg.createdAt ? formatTimestamp(msg.createdAt) : "";
+          const div = createMessageElement(msgId, msg, timestamp);
+          const createdAtMs = msg.createdAt?.toMillis?.() || (msg.createdAt?.seconds * 1000) || Date.now();
+
+          div.setAttribute("data-created-at", createdAtMs);
+          fragment.appendChild(div);
+
+          if (msg.replyTo) {
+            pendingReplies.push({ msg, div });
+          }
+        });
+
+        // Insere as mensagens antigas no topo da sala atual
+        currentFeed.insertBefore(fragment, currentFeed.firstChild);
+
+        pendingReplies.forEach(({ msg, div }) => {
+          renderReply(msg).then((replyHTML) => {
+            const box = div.querySelector(".reply-container");
+            if (box && replyHTML) box.innerHTML = replyHTML;
+          });
+        });
+
+        // Retenção exata de scroll (sem pulos)
+        const newScrollHeight = chat.scrollHeight;
+        chat.scrollTop = (newScrollHeight - previousScrollHeight) + previousScrollTop;
+      }
+    } catch (err) {
+      console.error("Erro ao carregar histórico antigo:", err);
+    } finally {
+      pagState.isLoadingHistory = false;
+      if (spinnerEl) {
+        spinnerEl.classList.remove("visible", "spinning");
       }
     }
   }
-  return;
+
+  // Ouvinte de rolagem para disparar ao chegar perto do topo (10px)
+// Ouvinte de rolagem otimizado com Throttling (60 FPS)
+  let isCheckingScroll = false;
+
+  const handleScroll = () => {
+    if (isCheckingScroll) return;
+    isCheckingScroll = true;
+
+    requestAnimationFrame(() => {
+      if (chat.scrollTop <= 10 && window.salaAtual === sala) {
+        loadMoreOlderMessages();
+      }
+      isCheckingScroll = false;
+    });
+  };
+
+  chat.addEventListener("scroll", handleScroll, { passive: true });
+
+  const unsubCurrent = onSnapshot(qAchatada, (snapshot) => {
+    processSnapshot(snapshot);
+  });
+
+  activeRoomListeners.set(sala, unsubCurrent);
+
+  return () => {};
 }
 
 
 
-/*====================================================================================================
-Verifica se a alteração é do tipo 'added', ignorando outros tipos de alterações que não sejam adições
-======================================================================================================== */
-if (change.type !== "added") return;
-const docSnap = change.doc;
-const msgId = docSnap.id;
-if (renderedMessages.has(msgId)) return;
-renderedMessages.add(msgId);
-const raw = docSnap.data();
-const msg = {
-...raw,
-text: typeof raw.text === "string" ? raw.text : ""
-};
 
-replyCache.set(msgId, {
-  user: msg.user,
-  text: msg.text,
-  photo: msg.photo,
-  color: msg.color,
-  vipNameFont: msg.vipNameFont || "default",
-  vipNameColorType: msg.vipNameColorType || "solid",
-  vipNameColorSolid: msg.vipNameColorSolid || msg.color || "#1E293B"
-});
 
-if (!messagesMap.has(msgId)) {
-const fullMsg = { id: msgId, ...msg };
-messagesState.push(fullMsg);
-messagesMap.set(msgId, fullMsg);
-}
 
-const timestamp = msg.createdAt ? formatTimestamp(msg.createdAt) : "";
-const div = createMessageElement(msgId, msg, timestamp);
-const createdAtMs = msg.createdAt?.toMillis?.() || (msg.createdAt?.seconds * 1000) || Date.now();
 
-div.setAttribute("data-created-at", createdAtMs);
-fragment.appendChild(div);
-addedCount++;
 
-if (msg.replyTo) {
-pendingReplies.push({ msg, div });
-}
-});
 
-/*====================================================================================================
-Se novas mensagens forem adicionadas, anexa o fragmento no chat e faz rolagem suave para o fundo
-======================================================================================================== */
-if (addedCount > 0) {
-chat.appendChild(fragment);
-setTimeout(() => {
-window.smartScrollToBottom?.();
-}, isInitialLoad ? 0 : 80);
-}
 
-pendingReplies.forEach(({ msg, div }) => {
-renderReply(msg).then((replyHTML) => {
-const box = div.querySelector(".reply-container");
-if (box && replyHTML) {
-box.innerHTML = replyHTML;
-}
-});
-});
 
-setTimeout(() => {
-saveMessagesCache(sala, chat);
-isInitialLoad = false;
-setChatLoading(false);
-}, 0);
-};
 
-/*====================================================================================================
-Função assíncrona que busca lotes de mensagens antigas no banco de dados ao rolar até o topo do chat
-======================================================================================================== */
-async function loadMoreOlderMessages() {
-/*====================================================================================================
-Verifica se o sistema já está carregando, se não há mais mensagens ou se não há ponteiro de consulta
-======================================================================================================== */
-if (isLoadingHistory || !hasMoreHistory || !oldestDoc) return;
 
-isLoadingHistory = true;
 
-// Exibe o Spinner e ativa a rotação
-if (spinnerEl) {
-spinnerEl.classList.add("visible", "spinning");
-}
 
-try {
-const { endBefore, limitToLast: firestoreLimitToLast } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
 
-const qHistorico = query(
-chatRefAchatado,
-orderBy("createdAt"),
-endBefore(oldestDoc),
-firestoreLimitToLast(BATCH_SIZE)
-);
 
-const snapshot = await getDocs(qHistorico);
 
-// DELAY FORÇADO DE 2 SEGUNDOS COM SPINNER GIRANDO
-await new Promise((resolve) => setTimeout(resolve, 2000));
 
-/*====================================================================================================
-Verifica se o snapshot do histórico retornou vazio e encerra a busca de histórico antigo
-======================================================================================================== */
-if (snapshot.empty) {
-hasMoreHistory = false;
-} else {
-oldestDoc = snapshot.docs[0];
 
-const previousScrollHeight = chat.scrollHeight;
-const previousScrollTop = chat.scrollTop;
 
-const fragment = document.createDocumentFragment();
-const pendingReplies = [];
 
-snapshot.docs.forEach((docSnap) => {
-const msgId = docSnap.id;
-if (renderedMessages.has(msgId)) return;
-renderedMessages.add(msgId);
 
-const raw = docSnap.data();
-const msg = {
-...raw,
-text: typeof raw.text === "string" ? raw.text : ""
-};
 
-replyCache.set(msgId, {
-  user: msg.user,
-  text: msg.text,
-  photo: msg.photo,
-  color: msg.color,
-  vipNameFont: msg.vipNameFont || "default",
-  vipNameColorType: msg.vipNameColorType || "solid",
-  vipNameColorSolid: msg.vipNameColorSolid || msg.color || "#1E293B"
-});
 
-if (!messagesMap.has(msgId)) {
-const fullMsg = { id: msgId, ...msg };
-messagesState.unshift(fullMsg);
-messagesMap.set(msgId, fullMsg);
-}
 
-const timestamp = msg.createdAt ? formatTimestamp(msg.createdAt) : "";
-const div = createMessageElement(msgId, msg, timestamp);
-const createdAtMs = msg.createdAt?.toMillis?.() || (msg.createdAt?.seconds * 1000) || Date.now();
 
-div.setAttribute("data-created-at", createdAtMs);
-fragment.appendChild(div);
 
-if (msg.replyTo) {
-pendingReplies.push({ msg, div });
-}
-});
-
-/*====================================================================================================
-Insere o fragmento de mensagens antigas no topo, respeitando a posição do spinner
-======================================================================================================== */
-if (spinnerEl && spinnerEl.nextSibling) {
-chat.insertBefore(fragment, spinnerEl.nextSibling);
-} else {
-chat.insertBefore(fragment, chat.firstChild);
-}
-
-pendingReplies.forEach(({ msg, div }) => {
-renderReply(msg).then((replyHTML) => {
-const box = div.querySelector(".reply-container");
-if (box && replyHTML) box.innerHTML = replyHTML;
-});
-});
-
-// RETENÇÃO EXATA DE SCROLL (SEM PULOS)
-const newScrollHeight = chat.scrollHeight;
-chat.scrollTop = (newScrollHeight - previousScrollHeight) + previousScrollTop;
-}
-} catch (err) {
-console.error("Erro ao carregar histórico antigo:", err);
-} finally {
-isLoadingHistory = false;
-if (spinnerEl) {
-spinnerEl.classList.remove("visible", "spinning");
-}
-}
-}
-
-/*====================================================================================================
-Função do ouvinte de scroll para identificar quando o usuário se aproxima do topo do container
-======================================================================================================== */
-const handleScroll = () => {
-/*====================================================================================================
-Verifica se a distância de rolagem do topo é menor ou igual a 10px para carregar mensagens antigas
-======================================================================================================== */
-if (chat.scrollTop <= 10) {
-loadMoreOlderMessages();
-}
-};
-
-chat.addEventListener("scroll", handleScroll);
-
-let unsubCurrent = onSnapshot(qAchatada, (snapshot) => {
-processSnapshot(snapshot);
-});
-
-unsubscribeCurrentMessages = () => {
-if (unsubCurrent) unsubCurrent();
-chat.removeEventListener("scroll", handleScroll);
-setChatLoading(false);
-};
-
-return () => {
-saveMessagesCache(sala, chat);
-cleanupMessageListeners();
-};
-}
 
 // ================= ENVIO =========================================================
 /*====================================================================================================
@@ -1596,7 +1584,8 @@ createdAt: serverTimestamp(),
 
 
 /*====================================================================================================
-Limpeza de Mensagens no firebse 110 passar disso gera limpeza de mensagem antiga dentro do banco de dados 
+                                            FIREBASE
+Limpeza de Mensagens no firebase FIREBASE 110 passar disso gera limpeza de mensagem antiga dentro do banco de dados 
 Math.random() < 0.10: Executar a faxina apenas em 10% dos envios
 ======================================================================================================== */
 if (Math.random() < 0.10) {
@@ -1609,7 +1598,7 @@ const totalMensagens = snapshotCount.data().count;
 Verifica se a contagem total de mensagens ultrapassa 110 documentos para efetuar o expurgo
 ======================================================================================================== */
 if (totalMensagens > 110) {
-const excesso = totalMensagens - 110;
+const excesso = totalMensagens - 100;
 const qMaisVelhas = query(chatRefAchatado, orderBy("createdAt", "asc"), limit(excesso));
 const docsMaisVelhos = await getDocs(qMaisVelhas);
 
