@@ -62,7 +62,7 @@ async function efetivarVipAposPagamento(user) {
     // Fecha o modal e exibe o alerta de sucesso
     fecharModalPix();
     if (typeof showToast === "function") {
-      showToast("🎉 Pagamento aprovado! Seu VIP de 3 dias está ativo!");
+      showToast("Pagamento aprovado! Seu VIP de 3 dias está ativo!");
     }
 
     // Atualiza a visualização do painel VIP

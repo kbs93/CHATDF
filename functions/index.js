@@ -8,7 +8,11 @@ const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
 
-const MP_ACCESS_TOKEN = "APP_USR-7106146778120922-090215-2590fc2fb5e4f0bf4c00f1b4088cb6ad-2445082082";
+// ===========================================================================================================
+// ===========================================================================================================
+// QUANDO FOR FAZR O TESTE PEGAR O NOVO CODIGO DE PRODUÇÃO NO MERCADO PAGO 
+
+//const MP_ACCESS_TOKEN = "APP_USR-7106146778120922-090215-2590fc2fb5e4f0bf4c00f1b4088cb6ad-2445082082";
 
 // Handler para criação do Pix (responde tanto em /api/pix/criar quanto em /pix/criar)
 const criarPixHandler = async (req, res) => {
