@@ -1,10 +1,7 @@
 body { font-family: 'Poppins',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background: linear-gradient(180deg,       #f7f9fc 0,       #fff 35%,       #f8fbff 100%); margin: 0; min-width: 0; }
 
-/* Evita pull-to-refresh no mobile */
-/* Evita pull-to-refresh sem travar a rolagem natural da página no mobile */
-html { width: 100%;  min-height: 100%;  scroll-behavior: smooth; }
+html, body {width: 100%;min-height: 100%;margin: 0;padding: 0;}
 
-body { width: 100%; min-height: 100%; }
 /*Isso impede o index de “puxar para baixo” por trás do painel. 10-05-2026*/
 body.profile-open { overflow: hidden; height: 100vh; touch-action: none; position: fixed; width: 100%; overscroll-behavior: none; }
 
@@ -378,7 +375,26 @@ font-family: 'Urbanist-Italic'; src: url('./fonts/Urbanist-Italic-VariableFont_w
 #salaTitulo { text-align: center; background: #186dec; color: #fff; padding: 12px; font-weight: 400; font-size: 1.1rem; border-bottom: 3px solid #0b5ed7; display: none; }
 
 /*edita os nomes da salas que aparece no chat IMPORTANTE*/
-.chat-page { display: flex; flex-direction: column; height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh; overflow: hidden; overscroll-behavior-y: none; overscroll-behavior: none; position: fixed; width: 100%; }
+/* Container raiz do chat sincronizado 100% */
+.chat-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: var(--visual-viewport-height, 100dvh);
+  max-height: var(--visual-viewport-height, 100dvh);
+  position: fixed;
+  top: var(--visual-viewport-top, 0px);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+    /* ESSAS DUAS LINHAS ABAIXO TRAVAM O PULL-TO-REFRESH NATIVO DO CELULAR 100% */
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+}
+
+
+
 .chat-page #chat-container { flex: 1; overflow-y: auto; overscroll-behavior-y: contain; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
 /*EDITAR o espacamento das lateral dentro do chat */
 #chat-container { padding-left: 6px; }
@@ -412,7 +428,7 @@ font-family: 'Urbanist-Italic'; src: url('./fonts/Urbanist-Italic-VariableFont_w
 #chat-main-column { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
 
 /*COR DE FUNDO DO CAMPO E ENVIAR MSG*/
-#message-input-area { display: flex; align-items: center; gap: 8px; background: #fff; border-top: 1px solid #ddd; padding: 10px; width: 100%; box-sizing: border-box; min-height: var(--input-area-height, 62px); flex-shrink: 0; }
+#message-input-area { display: flex; align-items: center; gap: 8px; background: #fff; border-top: 1px solid #ddd; padding: 10px; width: 100%; box-sizing: border-box; flex-shrink: 0; }
 
 /*todos os botao do input de eviar */
 #message-input-area button { background: none; border: none; color: #555; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; padding: 6px; min-width: 40px; min-height: 40px; cursor: pointer; transition: 0.2s; flex-shrink: 0; }
@@ -544,7 +560,32 @@ font-family: 'Urbanist-Italic'; src: url('./fonts/Urbanist-Italic-VariableFont_w
 #loginBtn:hover { background-color: #012346!important; color: #fff!important; }
 
 /*EDITA A COR DE FUNDO DAS mensagens*/
-.message { background: #fffdfd; border-radius: 18px; max-width: 98%; margin-top: 1px; margin-bottom: 1px; word-wrap: break-word; overflow-wrap: anywhere; }
+.message { 
+  background: #fffdfd; 
+  border-radius: 18px; 
+  max-width: 98%; 
+  margin-top: 1px; 
+  margin-bottom: 1px; 
+  word-wrap: break-word; 
+  overflow-wrap: anywhere; 
+
+  /* ========================================================================= 
+     VIRTUALIZAÇÃO NATIVA DE DOM (ALTA PERFORMANCE NO MOBILE)
+     ========================================================================= */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 65px;
+}
+/* ========================================================================= 
+   ESTADO VISUAL DE ENVIO PENDENTE / REDE OSCILANDO
+   ========================================================================= */
+body.chat-page #chat-container .message.message-pending {
+  opacity: 0.5;
+  filter: grayscale(35%);
+  transition: opacity 0.3s ease, filter 0.3s ease;
+  cursor: wait;
+}
+
+
 
 /*tamanho do texto do chat e o espaçamento do texto*/
 .message span { font-size: 0.95em; line-height: 1.7em; }
@@ -821,7 +862,7 @@ emoji-picker { animation: fadeInUp 0.25s ease forwards; border-radius: 10px!impo
 
 .youtube-reply-thumb .youtube-thumb { display: block; width: 120px; max-width: 100%; border-radius: 6px; }
 
-/*EDITA AS CORES DOS AVISO EXIBIDO NO CHAT show toast */
+/*====================== EDITA AS CORES DOS AVISO EXIBIDO NO CHAT show toast ===================================*/
 .custom-toast { position: fixed; bottom: calc(70px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%) scale(0.9); padding: 12px 20px; background: #4f5bfc94; color: #fff; border-radius: 10px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3); display: flex; align-items: center; gap: 8px; opacity: 0; transition: all 0.5s ease; z-index: 9999; font-size: 17px; max-width: calc(100vw - 24px); text-align: center; }
 
 .custom-toast.show { opacity: 1; transform: translateX(-50%) scale(1); }
@@ -831,7 +872,35 @@ emoji-picker { animation: fadeInUp 0.25s ease forwards; border-radius: 10px!impo
 .custom-toast.warning { background: #fc0; }
 
 
+/*EDITA AS CORES DOS AVISO EXIBIDO NO CHAT show toast */
+.custom-toast { position: fixed; bottom: calc(70px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%) scale(0.9); padding: 12px 20px; background: #4f5bfc94; color: #fff; border-radius: 10px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3); display: flex; align-items: center; gap: 8px; opacity: 0; transition: all 0.5s ease; z-index: 9999; font-size: 17px; max-width: calc(100vw - 24px); text-align: center; }
 
+/* ========================================================================= 
+   TOAST SEM RETÂNGULO DE FUNDO EM RECONECTANDO E CONEXAO PERDIDA 
+   ========================================================================= */
+/* ========================================================================= 
+   FEEDBACK DE REDE TOTALMENTE TRANSPARENTE (SEM RETÂNGULO NEM FUNDO)
+   ========================================================================= */
+body .network-status-text {
+  position: fixed;
+  bottom: calc(68px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  background: transparent;
+  color: #64748b;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+body .network-status-text.visible {
+  opacity: 1;
+}
 
 
 
@@ -1202,8 +1271,6 @@ will-change: transform;
 #bottomSheet .emoji-item { display: flex; align-items: center; justify-content: center; font-size: 24px; line-height: 1; cursor: pointer; }
 
 .bottom-sheet-backdrop { position: fixed; inset: 0; background: transparent; z-index: 9998; }
-
-:root { --input-area-height: 72px; }
 
 /* ============================= MENSAGEM DO ADIMINISTRADOR ADM 15-03 =============================*/
 .admin-message { background: rgba(107, 59, 218, 0.08); border-left: 4px solid rgb(109, 68, 204); padding: 6px 8px; border-radius: 6px; }

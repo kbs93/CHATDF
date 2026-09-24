@@ -5,12 +5,11 @@ import { initMessages, sendMessage } from './messages.js?v=2';
 import { showToast, openAttachmentSheet, openUIPanel, textColorPalette } from "./ui.js";
 import { initStickerPanel } from "./stickers-panel.js";
 
-import { auth, db, rtdb } from "./firebase-config.js";
-import { ref as dbRef, onValue as dbOnValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { auth, db } from "./firebase-config.js";
 import { initUsersPanel } from "./users-panel.js";
 import { initDenuncias, usuarioJaFoiDenunciado } from "./bloqueio.js";
 import { updateProfile } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { setUserStatus, listenUserOnlineStatus, trackUserRoomPresence } from "./presence.js";
+import { listenUserOnlineStatus, trackUserRoomPresence, debounceUpdateRoomPresence } from "./presence.js";
 
 
 import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
@@ -69,17 +68,12 @@ export async function verificarEExpiraVipUsuario(userId, userData) {
           vipBannerUrl: ""
         };
 
-        await updateDoc(refUser, resetData);
-
-        await setUserStatus(userId, {
-          name: userData.nome || "Usuário",
-          avatar: userData.foto || "./img/avatar.png",
-          online: true,
-          sala: appState.currentRoom || sala,
-          ...resetData
-        });
+     
+await updateDoc(refUser, resetData);
 
         Object.assign(userData, resetData);
+
+
       } catch (err) {
         console.error("Erro ao expirar VIP do usuário:", err);
       }
@@ -350,7 +344,7 @@ function handleUserLogout() {
     roomTitle.textContent = appState.currentRoom || sala;
   }
 
-  document.body.classList.remove("keyboard-open");
+
   closeAllPanels();
 
   if (typeof appState.unsubscribeProfileLock === "function") {
@@ -642,17 +636,42 @@ chat.addEventListener("click", (e) => {
     }
   });
 
-  (function handleKeyboardMobile() {
-    const detectKeyboard = () => {
-      if (window.innerWidth <= 768) {
-        const vh = window.innerHeight;
-        const body = document.body;
-        if (vh < 500) body.classList.add("keyboard-open");
-        else body.classList.remove("keyboard-open");
+//================================  MEXE NO TECLADO NO MODO MOBILE 23-09-26 ======================
+
+(function handleVisualViewport() {
+    if (!window.visualViewport) return;
+
+    const root = document.documentElement;
+
+    const syncViewport = () => {
+      const vv = window.visualViewport;
+      const height = vv.height;
+      const offsetTop = vv.offsetTop;
+
+      // Define a altura e o deslocamento real da janela visível
+      root.style.setProperty("--visual-viewport-height", `${height}px`);
+      root.style.setProperty("--visual-viewport-top", `${offsetTop}px`);
+
+      // Mantém a conversa ancorada no final quando o teclado abre
+      const chatContainer = document.getElementById("chat-container");
+      if (chatContainer && !window.isUserReading) {
+        requestAnimationFrame(() => {
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+        });
       }
     };
-    window.visualViewport?.addEventListener("resize", detectKeyboard);
-    window.addEventListener("resize", detectKeyboard);
+
+    window.visualViewport.addEventListener("resize", syncViewport);
+    window.visualViewport.addEventListener("scroll", syncViewport);
+
+    // Garante sincronização imediata assim que o campo recebe o toque/foco
+    const input = document.getElementById("messageInput");
+    input?.addEventListener("focus", () => {
+      setTimeout(syncViewport, 50);
+      setTimeout(syncViewport, 150);
+    });
+
+    syncViewport();
   })();
 
   messageInput.addEventListener("input", autoResize);

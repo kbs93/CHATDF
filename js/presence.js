@@ -30,21 +30,12 @@ export function listenUserOnlineStatus(userId, callback) {
   });
 }
 
+
+
 /**
- * Registra o usuário atual na sala conectada com fallback via onDisconnect
+ * Registra o usuário atual na sala conectada com fallback via onDisconnect e batimento contínuo
  */
-
-
 let heartbeatInterval = null;
-
-/**
- * Registra o usuário atual na sala conectada com fallback via onDisconnect e batimento contínuo
- */
-
-
-/**
- * Registra o usuário atual na sala conectada com fallback via onDisconnect e batimento contínuo
- */
 export async function trackUserRoomPresence(user, appState, currentRoomFallback = "geral") {
   if (!user || !user.uid) return;
 
@@ -96,10 +87,11 @@ export async function trackUserRoomPresence(user, appState, currentRoomFallback 
 
         // Grava o status online inicial do usuário
         await set(userStatusRef, getPayloadPresenca());
+        lastRegisteredRoom = (appState?.currentRoom || currentRoomFallback).toLowerCase();
       }
     });
 
-    // 2. Heartbeat leve: a cada 45 segundos APENAS atualiza o carimbo de tempo sem sobrescrever o nó
+   // 2. Heartbeat leve: a cada 45 segundos APENAS atualiza o carimbo de tempo sem sobrescrever o nó
     heartbeatInterval = setInterval(async () => {
       try {
         await update(userStatusRef, {
@@ -117,6 +109,50 @@ export async function trackUserRoomPresence(user, appState, currentRoomFallback 
   }
 }
 
+// ========================================================================
+// CONTROLE DE PRESENÇA INTELIGENTE COM DEBOUNCE (7 SEGUNDOS) 23-09-26
+// ========================================================================
+
+let roomDebounceTimeout = null;
+let lastRegisteredRoom = null;
+
+/**
+ * Atualiza a sala do usuário no RTDB aplicando um debounce de 7 segundos.
+ * Cancela gravações intermediárias se o usuário trocar de sala antes do tempo.
+ */
+export function debounceUpdateRoomPresence(userId, novaSala) {
+  if (!userId || !novaSala) return;
+
+  const salaNormalizada = String(novaSala).toLowerCase().trim();
+
+  // Se o usuário já está registrado oficialmente nessa sala, não grava repetido
+  if (lastRegisteredRoom === salaNormalizada) return;
+
+  // 1. Cancela a gravação da sala anterior caso ele tenha trocado antes de 7s
+  if (roomDebounceTimeout) {
+    clearTimeout(roomDebounceTimeout);
+    console.log(`%c[DEBOUNCE] Troca rápida detectada! Gravação cancelada para evitar escrita desnecessária no RTDB.`, "color: #f59e0b; font-weight: bold;");
+    roomDebounceTimeout = null;
+  }
+
+  console.log(`%c[DEBOUNCE] Usuário entrou em '${salaNormalizada}'. Aguardando 7 segundos de permanência...`, "color: #3b82f6; font-weight: bold;");
+
+  // 2. Inicia a contagem regressiva de 7 segundos
+  roomDebounceTimeout = setTimeout(async () => {
+    try {
+      const userStatusRef = ref(rtdb, "status/" + userId);
+      await update(userStatusRef, {
+        sala: salaNormalizada,
+        lastChanged: Date.now()
+      });
+      lastRegisteredRoom = salaNormalizada;
+      roomDebounceTimeout = null;
+      console.log(`%c[DEBOUNCE GRAVADO] ✅ Usuário confirmou presença na sala '${salaNormalizada}' após 7s!`, "color: #10b981; font-weight: bold;");
+    } catch (err) {
+      console.warn("Falha ao atualizar presença com debounce:", err);
+    }
+  }, 7000);
+}
 
 
 

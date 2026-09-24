@@ -274,9 +274,6 @@ window.atualizarSimulacaoTopoVip = atualizarSimulacaoTopoVip;
 
 
 /* ========================================================================
-   INICIALIZACAO DO PAINEL VIP (COM CONTADOR E TRAVA COMPLETA DE BOTÕES)
-===================================================================== */
-/* ========================================================================
    INICIALIZAÇÃO DO PAINEL VIP (COM CONTADOR E TRAVA COMPLETA DE BOTÕES)
 ===================================================================== */
 let vipCountdownInterval = null;

@@ -11,10 +11,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// INSIRA O ACCESS TOKEN AQUI (TEST-... ou APP_USR-...) quando tiver hospedado colocar o original do Mercado Pago 
+// INSIRA O ACCESS TOKEN / API  AQUI (TEST-... ou APP_USR-...) quando tiver hospedado colocar o original do Mercado Pago 
 // 
-// JA TROCADO 16-09-26
-const MP_ACCESS_TOKEN = "APP_USR-7106146778120922-090215-2590fc2fb5e4f0bf4c00f1b4088cb6ad-2445082082";
+// JA TROCADO 16-09-26 O CODIGO ORIGINAl AINDA NAO FOI COLOCADO 
+const MP_ACCESS_TOKEN = " rascunhoooooooooooooooooooooooooooooooo ";
 
 // 1. ROTA: GERAR COBRANÇA PIX
 app.post('/api/pix/criar', async (req, res) => {

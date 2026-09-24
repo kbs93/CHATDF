@@ -89,11 +89,141 @@ return ROOM_ALIASES[room] || room || "geral";
 const replyCache = new Map();
 const messagesState = [];
 const messagesMap = new Map();
-
 // CONTROLES DE ENVIO
 let floodCount = 0;
 let floodResetTimeout = null;
 let ultimaDenunciaTime = 0;
+
+
+// =========================================================================
+// CAMADA INDEXEDDB + CACHE EM MEMÓRIA PARA PERFIS
+// =========================================================================
+const profileMemoryCache = new Map();
+const pendingProfileRequests = new Map();
+const IDB_STORE_NAME = "chatdf_perfis";
+let chatDbInstance = null;
+
+function getChatIndexedDB() {
+  if (!chatDbInstance) {
+    chatDbInstance = new Promise((resolve) => {
+      if (!window.indexedDB) {
+        resolve(null);
+        return;
+      }
+      const request = indexedDB.open("ChatDF_LocalStore", 1);
+      request.onupgradeneeded = (e) => {
+        const idb = e.target.result;
+        if (!idb.objectStoreNames.contains(IDB_STORE_NAME)) {
+          idb.createObjectStore(IDB_STORE_NAME, { keyPath: "uid" });
+        }
+      };
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => resolve(null);
+    });
+  }
+  return chatDbInstance;
+}
+
+async function getProfileFromLocalDB(uid) {
+  try {
+    const idb = await getChatIndexedDB();
+    if (!idb) return null;
+    return new Promise((resolve) => {
+      const tx = idb.transaction(IDB_STORE_NAME, "readonly");
+      const store = tx.objectStore(IDB_STORE_NAME);
+      const req = store.get(uid);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => resolve(null);
+    });
+  } catch (err) {
+    return null;
+  }
+}
+
+async function saveProfileToLocalDB(profile) {
+  try {
+    const idb = await getChatIndexedDB();
+    if (!idb) return;
+    const tx = idb.transaction(IDB_STORE_NAME, "readwrite");
+    const store = tx.objectStore(IDB_STORE_NAME);
+    store.put(profile);
+  } catch (err) {}
+}
+
+async function fetchRemoteUserProfile(uid, fallbackMsg = {}) {
+  try {
+    const userDocRef = doc(db, "users", uid);
+    const userSnap = await getDoc(userDocRef);
+    if (userSnap.exists()) {
+      const u = userSnap.data();
+      return {
+        uid,
+        user: u.nome || u.name || fallbackMsg.user || "Usuário",
+        photo: sanitizeMessageAvatar(u.foto || u.avatar || fallbackMsg.photo || fallbackMsg.avatar),
+        cidade: u.cidade || u.city || fallbackMsg.cidade || "",
+        vipNameColorType: u.vipNameColorType || "solid",
+        vipNameColorSolid: u.vipNameColorSolid || "#1E293B",
+        vipNameFont: u.vipNameFont || "default",
+        vipAvatarFrame: u.vipAvatarFrame || "none",
+        isVip: u.isVip === true,
+        cachedAt: Date.now()
+      };
+    }
+  } catch (e) {}
+
+  return {
+    uid,
+    user: fallbackMsg.user || "Usuário",
+    photo: sanitizeMessageAvatar(fallbackMsg.photo || fallbackMsg.avatar),
+    cidade: fallbackMsg.cidade || "",
+    vipNameColorType: fallbackMsg.vipNameColorType || "solid",
+    vipNameColorSolid: fallbackMsg.vipNameColorSolid || fallbackMsg.color || "#1E293B",
+    vipNameFont: fallbackMsg.vipNameFont || "default",
+    vipAvatarFrame: fallbackMsg.vipAvatarFrame || "none",
+    cachedAt: Date.now()
+  };
+}
+
+async function resolveUserProfileSafe(uid, fallbackMsg = {}) {
+  if (!uid) return fallbackMsg;
+
+  // 1. RAM da aba
+  if (profileMemoryCache.has(uid)) {
+    return profileMemoryCache.get(uid);
+  }
+
+  // 2. IndexedDB (Disco)
+  const cachedIDB = await getProfileFromLocalDB(uid);
+  const now = Date.now();
+  // Válido por 2 horas (7200000 ms)
+  if (cachedIDB && (now - cachedIDB.cachedAt < 7200000)) {
+    profileMemoryCache.set(uid, cachedIDB);
+    return cachedIDB;
+  }
+
+  // 3. Deduplicação de requisições ao Firebase
+  if (pendingProfileRequests.has(uid)) {
+    return await pendingProfileRequests.get(uid);
+  }
+
+  const p = (async () => {
+    const fresh = await fetchRemoteUserProfile(uid, fallbackMsg);
+    profileMemoryCache.set(uid, fresh);
+    saveProfileToLocalDB(fresh);
+    pendingProfileRequests.delete(uid);
+    return fresh;
+  })();
+
+  pendingProfileRequests.set(uid, p);
+  return await p;
+}
+
+
+
+
+
+
+
 
 // =================== HELPERS VISUAIS ========================================================
 /*====================================================================================================
@@ -382,6 +512,9 @@ preview.appendChild(actionBtn);
 /*====================================================================================================
 Cria o elemento DOM HTML individual da mensagem com foto, nome, conteúdo, horario e menus de contexto
 ======================================================================================================== */
+/*====================================================================================================
+Cria o elemento DOM HTML individual da mensagem com foto, nome, conteúdo, horario e menus de contexto
+======================================================================================================== */
 function createMessageElement(msgId, msg, timestamp = "") {
 const div = document.createElement("div");
 div.classList.add("message");
@@ -389,10 +522,10 @@ div.dataset.id = msgId;
 div.dataset.uid = msg.uid || msg.user;
 
 const ytId = extractYouTubeId(msg.text);
-const avatar = sanitizeMessageAvatar(msg.photo || msg.avatar);
+const initialAvatar = sanitizeMessageAvatar(msg.photo || msg.avatar);
 const cidade = msg.replyTo ? "" : (msg.cidade || msg.city || "");
 
-// Formatação VIP centralizada direto do módulo vip.js
+// Formatação VIP imediata usando os dados existentes da mensagem
 const { 
   classeEfeito: classeEfeitoNome, 
   corInline: corInlineNome, 
@@ -402,11 +535,7 @@ const {
 } = formatarAutorVipChat(msg);
 
 let content = "";
-const idUnicoLottie = "lottie-" + Math.random().toString(36).substring(2, 11);
 
-/*====================================================================================================
-Tratamento de renderização do conteúdo conforme o status da mensagem (Excluída, Ocultada ou Mídia)
-======================================================================================================== */
 if (msg.deleted === true) {
 content = `
 <div class="msg-deleted-box" style="display: flex; align-items: center; gap: 6px; color: #888; font-style: italic;">
@@ -424,9 +553,6 @@ content = renderYouTube(ytId);
 content = renderPlainMessage(msg);
 }
 
-/*====================================================================================================
-Aplica estilo dos avatar dentro do chat fonte TAMANHO DO AVATAR DENTRO DO CHAT 
-======================================================================================================== */
 if (msg.user === "Kbsweb") {
 div.classList.add("admin-message");
 }
@@ -435,7 +561,7 @@ div.innerHTML = `
 <div class="message-click-area" style="display:flex;align-items:center;gap:6px;">
 <div class="message-avatar-wrap position-relative d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; flex-shrink: 0; margin-right: 8px;">
   <img 
-    src="${avatar}" 
+    src="${initialAvatar}" 
     class="user-photo"
     style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; margin: 0;"
     onerror="this.src='./img/avatar.png'"
@@ -446,7 +572,7 @@ div.innerHTML = `
 <div class="message-user-info">
 <div class="message-header">
 <b class="user-name message-author-name ${classeEfeitoNome}" style="${corInlineNome} ${fonteInlineNome} cursor:pointer; display:inline-flex; align-items:center; gap:2px;">
-${msg.user}${tagDiamante}${msg.user === "Kbsweb" ? "&nbsp;Adm" : ""}
+${msg.user || "Usuário"}${tagDiamante}${msg.user === "Kbsweb" ? "&nbsp;Adm" : ""}
 </b>
 </div>
 ${cidade ? `<span class="user-city"><i class="icon-cidade bi bi-geo-alt"></i> ${cidade}</span>` : ""}
@@ -459,28 +585,49 @@ ${cidade ? `<span class="user-city"><i class="icon-cidade bi bi-geo-alt"></i> ${
 <div class="message-time">${timestamp}</div>
 `;
 
-/*====================================================================================================
-Agenda a inicialização da animação Lottie para figurinhas após a injeção da estrutura no DOM
-======================================================================================================== */
+// Sincronização em segundo plano via IndexedDB/RAM (Mantém visual instantâneo e atualiza se o perfil mudou)
+if (msg.uid) {
+  resolveUserProfileSafe(msg.uid, msg).then((perfilAtualizado) => {
+    if (!perfilAtualizado) return;
 
+    const imgEl = div.querySelector(".user-photo");
+    const frameEl = div.querySelector(".avatar-frame");
+    const nameEl = div.querySelector(".user-name");
+
+    const vipAtual = formatarAutorVipChat(perfilAtualizado);
+
+    if (imgEl && perfilAtualizado.photo && imgEl.src !== perfilAtualizado.photo) {
+      imgEl.src = perfilAtualizado.photo;
+    }
+
+    if (frameEl) {
+      if (vipAtual.moldura && vipAtual.moldura !== "none") {
+        frameEl.className = `avatar-frame position-absolute rounded-circle ${vipAtual.moldura}`;
+      } else {
+        frameEl.className = "avatar-frame position-absolute rounded-circle d-none";
+      }
+    }
+
+    if (nameEl && perfilAtualizado.user) {
+      nameEl.className = `user-name message-author-name ${vipAtual.classeEfeito}`;
+      nameEl.style.cssText = `${vipAtual.corInline} ${vipAtual.fonteInline} cursor:pointer; display:inline-flex; align-items:center; gap:2px;`;
+      nameEl.innerHTML = `${perfilAtualizado.user}${vipAtual.tagDiamante}${perfilAtualizado.user === "Kbsweb" ? "&nbsp;Adm" : ""}`;
+    }
+  });
+}
 
 bindMessageReplyClick(div, msgId, msg);
 
 const clickArea = div.querySelector(".message-click-area");
 
-/*====================================================================================================
-Associa evento de abertura do menu contextual ao clicar na foto ou nome do autor da mensagem
-======================================================================================================== */
 if (clickArea) {
 clickArea.addEventListener("click", (e) => {
 e.stopPropagation();
 
-// 1. Bloqueia abrir o mini modal no próprio nome/mensagem
 if (currentUser && msg.uid && currentUser.uid === msg.uid) {
   return;
 }
 
-// 2. Bloqueia a ação caso o usuário não esteja logado ou esteja com perfil travado
 const inputTravado = document.getElementById("message-input-wrapper")?.classList.contains("profile-locked");
 if (!currentUser || inputTravado) {
   showToast("Complete seu perfil para interagir com os usuários.");
@@ -489,7 +636,6 @@ if (!currentUser || inputTravado) {
 }
 
 const menu = document.getElementById("messageContextMenu");
-
 
 if (!menu) return;
 
@@ -500,9 +646,6 @@ const margin = 8;
 let left = rect.left;
 let top = rect.bottom + 6;
 
-/*====================================================================================================
-Ajusta a posição do menu contextual dentro dos limites visíveis da janela
-======================================================================================================== */
 if (left < margin) left = margin;
 if (left + menuWidth > window.innerWidth - margin) {
 left = window.innerWidth - margin - menuWidth;
@@ -521,6 +664,11 @@ menu.dataset.text = msg.text;
 
 return div;
 }
+
+
+
+
+
 
 /*====================================================================================================
 Event Listener global para ocultar menus contextuais quando o usuário clica fora deles
@@ -1174,11 +1322,18 @@ export function initMessages(chat, sala) {
         return;
       }
 
-      if (change.type !== "added") return;
+    if (change.type !== "added") return;
       const docSnap = change.doc;
       const msgId = docSnap.id;
 
-      if (renderedMessages.has(msgId)) return;
+      if (renderedMessages.has(msgId)) {
+        // Se a mensagem já estava na tela em estado pendente, confirma e restaura a opacidade normal
+        const existingEl = currentFeed.querySelector(`[data-id="${msgId}"]`);
+        if (existingEl && existingEl.classList.contains("message-pending")) {
+          existingEl.classList.remove("message-pending");
+        }
+        return;
+      }
       renderedMessages.add(msgId);
 
       const raw = docSnap.data();
@@ -1364,34 +1519,6 @@ export function initMessages(chat, sala) {
   return () => {};
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ================= ENVIO =========================================================
 /*====================================================================================================
 Envia a mensagem digitada pelo usuário realizando sanitização, bloqueios e gravação no Firestore
@@ -1439,9 +1566,22 @@ showToast("Faça login para enviar mensagens.");
 return;
 }
 
-const perfilRef = doc(db, "users", currentUser.uid);
-const perfilSnap = await getDoc(perfilRef);
-const userProfile = perfilSnap.exists() ? perfilSnap.data() : {};
+// Recupera o perfil direto da RAM / Cache local para não travar a tela se estiver sem internet
+let userProfile = window.__currentProfileData || {};
+
+// Se não estiver na memória, tenta buscar no banco apenas se houver rede ativa
+if (!userProfile.nome && navigator.onLine) {
+  try {
+    const perfilRef = doc(db, "users", currentUser.uid);
+    const perfilSnap = await getDoc(perfilRef);
+    if (perfilSnap.exists()) {
+      userProfile = perfilSnap.data();
+      window.__currentProfileData = userProfile;
+    }
+  } catch (e) {
+    console.warn("Sem rede imediata, usando perfil em cache.");
+  }
+}
 
 /*====================================================================================================
 Verifica se o usuário completou seu perfil e dispara o evento de abertura de perfil se for falso
@@ -1564,108 +1704,117 @@ for (const nomeTag of Object.keys(TAGS_DF_CONFIG)) {
   }
 }
 
-await setDoc(doc(chatRefAchatado, idOrganizado), {
-uid: currentUser.uid,
-user: profileName,
-cidade: profileCity,
-photo: finalPhoto,
-avatar: finalPhoto,
-text,
-tag: tagDetectada,
-color: userColorChoice,
-vipNameColorType: userProfile?.vipNameColorType || "solid",
-vipNameColorSolid: userProfile?.vipNameColorSolid || "#1E293B",
-vipNameFont: userProfile?.vipNameFont || "default",
-vipAvatarFrame: userProfile?.vipAvatarFrame || "none",
-replyTo: window.replyingTo || null,
-replyColor: replyUserColor,
-createdAt: serverTimestamp(),
-});
+const replyToSalvo = window.replyingTo || null;
+const payloadMsg = {
+  uid: currentUser.uid,
+  user: profileName,
+  cidade: profileCity,
+  photo: finalPhoto,
+  avatar: finalPhoto,
+  text,
+  tag: tagDetectada,
+  color: userColorChoice,
+  vipNameColorType: userProfile?.vipNameColorType || "solid",
+  vipNameColorSolid: userProfile?.vipNameColorSolid || "#1E293B",
+  vipNameFont: userProfile?.vipNameFont || "default",
+  vipAvatarFrame: userProfile?.vipAvatarFrame || "none",
+  replyTo: replyToSalvo,
+  replyColor: replyUserColor,
+  createdAt: serverTimestamp()
+};
 
-
-/*====================================================================================================
-                                            FIREBASE
-Limpeza de Mensagens no firebase FIREBASE 110 passar disso gera limpeza de mensagem antiga dentro do banco de dados 
-Math.random() < 0.10: Executar a faxina apenas em 10% dos envios
-======================================================================================================== */
-if (Math.random() < 0.10) {
-setTimeout(async () => {
-try {
-const snapshotCount = await getCountFromServer(chatRefAchatado);
-const totalMensagens = snapshotCount.data().count;
-
-/*====================================================================================================
-Verifica se a contagem total de mensagens ultrapassa 110 documentos para efetuar o expurgo
-======================================================================================================== */
-if (totalMensagens > 110) {
-const excesso = totalMensagens - 100;
-const qMaisVelhas = query(chatRefAchatado, orderBy("createdAt", "asc"), limit(excesso));
-const docsMaisVelhos = await getDocs(qMaisVelhas);
-
-/*====================================================================================================
-Itera sobre os documentos retornados na consulta e executa a exclusão individual do banco
-======================================================================================================== */
-docsMaisVelhos.forEach((docSnap) => {
-deleteDoc(docSnap.ref);
-});
-}
-} catch (erroFaxina) {
-console.warn("Faxina em segundo plano ignorada:", erroFaxina);
-}
-}, 2000);
-}
-
+// 1. LIMPEZA IMEDIATA DO INPUT (O usuário não perde tempo esperando o servidor)
 input.value = "";
+if (typeof input.focus === 'function') input.focus();
+if (input && input.style) input.style.height = "44px";
 
-/*====================================================================================================
-Garante que o campo de entrada recupere o foco do teclado após o envio bem-sucedido
-======================================================================================================== */
-if (typeof input.focus === 'function') {
-input.focus();
-}
 window.replyingTo = null;
-
-setTimeout(() => {
-const lastTime = document.querySelector(".message:last-child .message-time");
-/*====================================================================================================
-Verifica a presença da hora da última mensagem e atualiza com o horário corrente do dispositivo
-======================================================================================================== */
-if (lastTime) {
-const now = new Date();
-lastTime.textContent = formatTimestamp({ toDate: () => now });
-}
-}, 30);
-
 const preview = document.getElementById("replyPreview");
 if (preview) preview.style.display = "none";
-
 document.querySelector("emoji-picker")?.remove();
 
-/*====================================================================================================
-Ajusta a altura da caixa de texto do input e executa rolagem automática da conversa para a base
-======================================================================================================== */
-if (input && input.style) {
-input.style.height = "44px";
+// 2. RENDERIZAÇÃO OTIMISTA: A mensagem entra na hora na tela com opacidade reduzida
+const salaNormalizada = normalizeRoomId(window.salaAtual);
+const currentFeed = document.getElementById(`room-feed-${salaNormalizada}`) || chat;
+const horaLocal = formatTimestamp({ toDate: () => new Date() });
 
-requestAnimationFrame(() => {
-/*====================================================================================================
-Verifica a existência do elemento container do chat para realizar a rolagem
-======================================================================================================== */
-if (chat) {
-chat.scrollTo({
-top: chat.scrollHeight,
-behavior: isInitialLoad ? "auto" : "smooth"
-});
+const pendingDiv = createMessageElement(idOrganizado, payloadMsg, horaLocal);
+pendingDiv.classList.add("message-pending");
+pendingDiv.setAttribute("data-created-at", Date.now());
+
+renderedMessages.add(idOrganizado);
+messagesMap.set(idOrganizado, { id: idOrganizado, ...payloadMsg });
+
+if (payloadMsg.replyTo) {
+  renderReply(payloadMsg).then((replyHTML) => {
+    const box = pendingDiv.querySelector(".reply-container");
+    if (box && replyHTML) box.innerHTML = replyHTML;
+  });
 }
+
+if (currentFeed) {
+  currentFeed.appendChild(pendingDiv);
+  if (chat) {
+    chat.scrollTo({
+      top: chat.scrollHeight,
+      behavior: "smooth"
+    });
+  }
+}
+
+// 3. ENVIO EM SEGUNDO PLANO AO FIRESTORE
+await setDoc(doc(chatRefAchatado, idOrganizado), payloadMsg);
+
+// 4. CONFIRMAÇÃO DO SERVIDOR: Restaura a opacidade normal a 100%
+pendingDiv.classList.remove("message-pending");
+
+// Atualiza imediatamente o perfil local na RAM/IndexedDB ao enviar mensagem
+profileMemoryCache.set(currentUser.uid, {
+  uid: currentUser.uid,
+  user: profileName,
+  photo: finalPhoto,
+  cidade: profileCity,
+  vipNameColorType: userProfile?.vipNameColorType || "solid",
+  vipNameColorSolid: userProfile?.vipNameColorSolid || "#1E293B",
+  vipNameFont: userProfile?.vipNameFont || "default",
+  vipAvatarFrame: userProfile?.vipAvatarFrame || "none",
+  cachedAt: Date.now()
 });
+saveProfileToLocalDB(profileMemoryCache.get(currentUser.uid));
+
+// Rotina de Faxina de 110 mensagens (mantida em 10% dos envios)
+if (Math.random() < 0.10) {
+  setTimeout(async () => {
+    try {
+      const snapshotCount = await getCountFromServer(chatRefAchatado);
+      const totalMensagens = snapshotCount.data().count;
+
+      if (totalMensagens > 110) {
+        const excesso = totalMensagens - 100;
+        const qMaisVelhas = query(chatRefAchatado, orderBy("createdAt", "asc"), limit(excesso));
+        const docsMaisVelhos = await getDocs(qMaisVelhas);
+
+        docsMaisVelhos.forEach((docSnap) => {
+          deleteDoc(docSnap.ref);
+        });
+      }
+    } catch (erroFaxina) {
+      console.warn("Faxina em segundo plano ignorada:", erroFaxina);
+    }
+  }, 2000);
 }
 
 } catch (err) {
-console.error(err);
-showToast("Erro ao enviar: " + err.message);
-}
+  console.error(err);
+  const pendingDiv = document.querySelector(`[data-id="${idOrganizado}"]`);
+  if (pendingDiv) {
+    pendingDiv.style.opacity = "0.35";
+    pendingDiv.title = "Falha ao enviar mensagem";
+  }
+  showToast("Oscilação de rede ao enviar.");
 }
 
+}
 
 
 
@@ -1865,5 +2014,46 @@ document.addEventListener("chatdf:user-ready", (e) => {
   if (input && userData?.vipMsgColor) {
     input.style.color = userData.vipMsgColor;
     input.style.caretColor = userData.vipMsgColor;
+  }
+});
+// =========================================================================
+// FEEDBACK DE REDE DISCRETO CONEXAO E DESCONECTADO 
+// =========================================================================
+let redeEstavaOffline = false;
+
+function exibirAvisoRedeDiscreto(texto) {
+  const antigo = document.getElementById("aviso-rede-discreto");
+  if (antigo) antigo.remove();
+
+  const el = document.createElement("div");
+  el.id = "aviso-rede-discreto";
+  el.textContent = texto;
+  el.className = "network-status-text";
+
+  document.body.appendChild(el);
+
+  // Transição suave para exibir
+  requestAnimationFrame(() => {
+    el.classList.add("visible");
+  });
+
+  // Remove suavemente após 7 segundos
+  setTimeout(() => {
+    el.classList.remove("visible");
+    setTimeout(() => el.remove(), 300);
+  }, 4000);
+}
+
+window.addEventListener("offline", () => {
+  if (!redeEstavaOffline) {
+    redeEstavaOffline = true;
+    exibirAvisoRedeDiscreto("Reconectando...");
+  }
+});
+
+window.addEventListener("online", () => {
+  if (redeEstavaOffline) {
+    redeEstavaOffline = false;
+    exibirAvisoRedeDiscreto("Conexão restabelecida!");
   }
 });

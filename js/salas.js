@@ -1,5 +1,6 @@
-import { rtdb } from "./firebase-config.js";
+import { rtdb, auth } from "./firebase-config.js";
 import { showToast } from "./ui.js";
+import { debounceUpdateRoomPresence } from "./presence.js";
 
 import {
   ref,
@@ -106,7 +107,7 @@ if (container) {
     `;
 
     // Interceptação de clique: SPA real sem recarregar
-    link.addEventListener("click", (e) => {
+link.addEventListener("click", (e) => {
       e.preventDefault();
 
       const totalNaSala = roomCounts[sala.id] || 0;
@@ -115,9 +116,15 @@ if (container) {
         return;
       }
 
-      // Dispara a troca sem recarregar a tela
+      // 1. Dispara a troca visual e de mensagens imediatamente (0ms de atraso)
       if (window.trocarSalaSemPiscar) {
         window.trocarSalaSemPiscar(sala.id);
+      }
+
+      // 2. Debounce de 7s no Realtime Database para economizar escritas e conexões
+      const user = auth?.currentUser;
+      if (user && user.uid) {
+        debounceUpdateRoomPresence(user.uid, sala.id);
       }
     });
 
