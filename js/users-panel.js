@@ -1,12 +1,11 @@
 // ============================== IMPORTS ======================================================
+// ============================== IMPORTS ======================================================
 
-import { auth, db, rtdb } from "./firebase-config.js";
+import { auth } from "./firebase-config.js";
 import { showToast } from "./ui.js";
-import {
-  ref,
-  onValue
-} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 import { formatarAutorVipChat } from "./vip.js";
+import { listenRoomOnlineUsers } from "./presence.js";
+
 
 
 // ========================= CACHE LOCAL ONLINE =========================
@@ -163,59 +162,20 @@ document.body.classList.remove("panel-open");
   });
 
   // ========================= LISTA ONLINE =========================
+// ========================= LISTA ONLINE =========================
 
   const onlineUsersList = document.getElementById("onlineUsersList");
   const onlineCount = document.getElementById("onlineCount");
-  const statusRef = ref(rtdb, "status");
 
-  // renderiza cache imediatamente para evitar piscar no F5
-const cachedUsers = loadOnlineUsersCache();
-if (cachedUsers.length) {
-  renderOnlineUsers(onlineUsersList, onlineCount, cachedUsers);
-}
-  
-// Tolerância para quedas rápidas de conexão (evita piscar a bolinha verde)
-// Limite de 2 minutos (120000ms) sem pulso para descartar conexões mortas/fantasmas
-  const LIMITE_INATIVIDADE_MS = 120000;
+  // Renderiza cache imediatamente para evitar piscar no F5
+  const cachedUsers = loadOnlineUsersCache();
+  if (cachedUsers.length) {
+    renderOnlineUsers(onlineUsersList, onlineCount, cachedUsers);
+  }
 
-  onValue(statusRef, (snapshot) => {
+  // Ouvinte Delegado e Otimizado vindo do presence.js
+  listenRoomOnlineUsers(() => window.appState?.currentRoom || "geral", (users) => {
     if (!onlineUsersList) return;
-
-    const data = snapshot.val();
-    const agora = Date.now();
-    const salaAtual = window.appState?.currentRoom || "geral";
-
-    if (!data || typeof data !== "object") {
-      const fallbackUsers = loadOnlineUsersCache();
-      if (fallbackUsers.length) {
-        renderOnlineUsers(onlineUsersList, onlineCount, fallbackUsers);
-      } else {
-        if (onlineCount) onlineCount.textContent = "0";
-        onlineUsersList.replaceChildren();
-      }
-      return;
-    }
-
-    const users = Object.entries(data)
-      .map(([uid, user]) => {
-        if (!user || typeof user !== "object") return null;
-        return { uid, ...user };
-      })
-      .filter(user => {
-        if (!user || !user.uid) return false;
-        
-        // 1. Filtra para exibir apenas usuários que pertencem à mesma sala aberta
-        const mesmaSala = !user.sala || user.sala.toLowerCase() === salaAtual.toLowerCase();
-        if (!mesmaSala) return false;
-
-        // 2. Se for explicitamente offline no Firebase, descarta imediatamente
-        if (user.online === false || user.online === "false") return false;
-
-        // 3. Valida se o heartbeat do usuário respondeu nos últimos 2 minutos
-        const sinalValido = !user.lastChanged || (agora - user.lastChanged < LIMITE_INATIVIDADE_MS);
-
-        return (user.online === true || user.online === "true") && sinalValido;
-      });
 
     renderOnlineUsers(onlineUsersList, onlineCount, users);
     saveOnlineUsersCache(users);

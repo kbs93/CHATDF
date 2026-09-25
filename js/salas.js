@@ -1,11 +1,6 @@
-import { rtdb, auth } from "./firebase-config.js";
+import { auth } from "./firebase-config.js";
 import { showToast } from "./ui.js";
-import { debounceUpdateRoomPresence } from "./presence.js";
-
-import {
-  ref,
-  onValue
-} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { debounceUpdateRoomPresence, listenRoomsUserCounts } from "./presence.js";
 
 // --- Criação das salas ---
 export const salas = [
@@ -134,35 +129,15 @@ link.addEventListener("click", (e) => {
 }
 
 // Ouvinte de Presença
-const statusRef = ref(rtdb, "status");
-onValue(statusRef, (snapshot) => {
-  const statusData = snapshot.val() || {};
-  const agora = Date.now();
-  // Limite de 2 minutos (120000ms): se o usuário não emitiu sinal nesse tempo, é fantasma
-  const TEMPO_LIMITE_OFFLINE = 120000;
-
+// Ouvinte de Presença Delegado ao presence.js
+listenRoomsUserCounts(salas, (counts) => {
   salas.forEach((sala) => {
-    roomCounts[sala.id] = 0;
-  });
+    const total = counts[sala.id] || 0;
+    roomCounts[sala.id] = total;
 
-  Object.values(statusData).forEach((user) => {
-    if (!user || user.online !== true) return;
-
-    // Descarta registros órfãos antigos cujo socket não limpou
-    const ultimaAtividade = user.lastChanged || 0;
-    if (agora - ultimaAtividade > TEMPO_LIMITE_OFFLINE) return;
-
-    const salaAtual = (user.sala || "").toLowerCase();
-    if (roomCounts[salaAtual] !== undefined) {
-      roomCounts[salaAtual]++;
-    }
-  });
-
-  salas.forEach((sala) => {
     const el = document.getElementById(`online-${sala.id}`);
     if (!el) return;
 
-    const total = roomCounts[sala.id] || 0;
     if (total >= MAX_USERS_PER_ROOM) {
       el.innerHTML = `<span style="color: #07884c;">Sala Cheia ( ${MAX_USERS_PER_ROOM}/${MAX_USERS_PER_ROOM} )</span>`;
     } else {

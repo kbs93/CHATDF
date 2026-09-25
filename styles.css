@@ -1384,11 +1384,16 @@ body.index-page .profile-panel.open { opacity: 1; pointer-events: auto; transfor
 
 .profile-body { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; background: transparent; display: flex; flex-direction: column; padding-top: 0; -webkit-overflow-scrolling: touch; }
 
-/*cor de fundo E ALTURA E LARGURA  do baner tambem tem no main*/
-.profile-cover { position: relative; width: 100%; min-height: 200px; background: #00000063; flex-shrink: 0; }
+/*cor de fundo E ALTURA E LARGURA  do banner tambem tem no main*/
+.profile-cover { position: relative; width: 100%; min-height: 230px; background: #00000063; flex-shrink: 0; }
 
-.profile-avatar-wrap { position: relative; display: flex; justify-content: center; margin-top: -58px; z-index: 2; padding: 0 16px; }
+.profile-avatar-wrap { position: relative; /* Garante que o posicionamento absoluto do botão seja em relação a todo o bloco do avatar */ }
+/*bolinha verde dentro do painel perfil 03-05-2026*/
+.profile-avatar-wrap { position: relative; }
+
 /*edita a foto do usuario no painel*/
+.profile-avatar-wrap { position: relative; display: flex; justify-content: center; margin-top: -98px; z-index: 2; padding: 0 16px; }
+
 .profile-avatar { width: 116px; height: 116px; border-radius: 50%; border: 5px solid #fff; /* BORDA BRANCA TRADICIONAL NATIVA */ flex-shrink: 0; position: relative; z-index: 1; }
 /* Força a imagem interna a ser cortada em círculo sem estourar o fundo */
 #profileAvatar, .profile-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
@@ -1603,10 +1608,7 @@ body.index-page .profile-panel.open { transform: translateY(0); opacity: 1; poin
 
 .gender-dropdown-item:hover { background: #f3edff; color: #36006b; }
 
-/*bolinha verde dentro do painel perfil 03-05-2026*/
 
-/* bolinha verde no avatar grande do perfil */
-.profile-avatar-wrap { position: relative; }
 
 .profile-online-dot { position: absolute; top: 8px; right: calc(50% - 52px); width: 20px; height: 20px; background: #22c55e; border: 3px solid #fff; border-radius: 50%; z-index: 80; pointer-events: none; }
 
@@ -1769,7 +1771,7 @@ body.index-page .profile-panel.open { transform: translateY(0); opacity: 1; poin
    BOTÃO DE CAMERA UPLOAD DE FOTO DE PERFIL (CANTINHO DA FOTO)
    ========================================================================= */
 
-.profile-avatar-wrap { position: relative; /* Garante que o posicionamento absoluto do botão seja em relação a todo o bloco do avatar */ }
+
 
 .profile-photo-upload-btn { position: absolute;
 /* Posiciona o botão ligeiramente mais para baixo e ajustado à curva do círculo */
@@ -2649,45 +2651,31 @@ DROPDOWNS E LISTAS INTERNAS MODERNAS DA SEÇÃO VIP
 
 #profilePanel #profileVip .vip-carousel-wrapper .color-grid { padding: 4px 2px; gap: 8px; }
 
-/* ========================================================================= 
-   VISITANTE: Oculta a barra de abas quando visualizar o perfil de outro usuario
-   ========================================================================= */
+/*VISITANTE: Oculta a barra de abas quando visualizar o perfil de outro usuario */
 body.viewing-other-profile #profilePanel .profile-tabs { display: none; }
 
 /* ========================================================================= 
-BOTÕES DE REDES SOCIAIS NO PERFIL (INSTAGRAM UX)
+EXIBIÇÃO DE TEXTO DO INSTAGRAM E TELEGRAM NO PERFIL (CHAT-DF UX)
 ========================================================================= */
-.profile-social-links { padding-left: 4px; }
-
-.social-icon-btn { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; text-decoration: none; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); transition: transform 0.2s ease,box-shadow 0.2s ease; }
-
-.social-icon-btn:hover { transform: scale(1.1); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); }
-
-/* GRADIENTE OFICIAL DO INSTAGRAM */
-.social-icon-btn.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
-
-/* ==========================================================================
-ESTILIZAÇÃO DO BOTAO DO INSTAGRAM NO PERFIL (CHAT-DF UX)
-========================================================================== */
-
-.profile-social-links { border-top: 1px solid rgba(0, 0, 0, 0.08); padding-top: 12px; }
-
-.social-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; text-decoration: none; font-size: 1.2rem; transition: transform 0.2s ease,box-shadow 0.2s ease,opacity 0.2s ease; }
-
-/* ========================================================================= 
-TRAVAMENTO EXCLUSIVO DO TOPO AZUL APENAS NA ABA VIP (SEM BAGUNÇAR)
-========================================================================= */
+.dados-info #profileInstagramText,
+.dados-info #profileTelegramText {
+  pointer-events: none;
+  user-select: text;
+  text-decoration: none;
+  cursor: default;
+}
+/* TRAVAMENTO EXCLUSIVO DO TOPO AZUL APENAS NA ABA VIP (SEM BAGUNÇAR) */
 
 /* Permite a rolagem suave de todo o cabeçalho junto com o painel */
 #profilePanel.vip-mode-active .profile-top-header { position: static; background-color: transparent; }
 
 /* ========================================================================= 27-07-26
-MODAL E CONTAINER DO BANNER VIP (GIF/IMAGEM)
+MODAL BANNER VIP  ADICIONANDO FOTOS 
 ========================================================================= */
 
-.gif-banner-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; height: 100dvh; background: rgba(0, 0, 0, 0.45); display: flex; align-items: center; justify-content: center; z-index: 10001; padding: 12px; box-sizing: border-box; }
+.gif-banner-modal { position: fixed; inset: 0; width: 100%; height: 100dvh; background: rgba(0, 0, 0, 0.45); display: flex; align-items: center; justify-content: center; z-index: 10001; padding: 12px; box-sizing: border-box; }
 
-.gif-banner-modal-content { background: #fff; padding: 16px 18px calc(16px + env(safe-area-inset-bottom, 0px)); border-radius: 20px; width: min(420px, 94vw); max-height: calc(100dvh - 30px); max-height: calc(100vh - 30px); overflow-y: auto; overflow-x: hidden; position: relative; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.gif-banner-modal-content { background: #fff; padding: 16px 18px calc(16px + env(safe-area-inset-bottom, 0px)); border-radius: 20px; width: min(420px, 94vw); max-height: calc(100dvh - 30px); overflow-y: auto; overflow-x: hidden; position: relative; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); -webkit-overflow-scrolling: touch; overscroll-behavior: contain; margin-bottom: 60px; }
 
 /* Posicionamento no Desktop */
 @media (min-width: 992px) {
@@ -2696,13 +2684,14 @@ MODAL E CONTAINER DO BANNER VIP (GIF/IMAGEM)
 
 /* Posicionamento no Mobile */
 @media (max-width: 991px) {
-  .gif-banner-modal { justify-content: center; padding: 10px; }
-  .gif-banner-modal-content { width: 100%; max-width: 390px; max-height: 88dvh; padding: 14px 14px calc(14px + env(safe-area-inset-bottom, 10px)); }
+  .gif-banner-modal { padding: 10px; }
+  .gif-banner-modal .gif-banner-modal-content { width: 100%; max-width: 390px; max-height: 85dvh; padding: 14px 14px calc(14px + env(safe-area-inset-bottom, 10px)); margin-bottom: 150px; }
 }
-
+/* BANNER ADICIONANDO FOTOS */
 .gif-banner-close { position: absolute; top: 10px; right: 16px; font-size: 24px; font-weight: bold; color: #333; cursor: pointer; user-select: none; z-index: 10; }
-
-.gif-banner-preview-box { width: 100%; height: 150px; min-height: 120px; border-radius: 14px; background-color: #e2e8f0; background-size: cover; background-position: center; background-repeat: no-repeat; margin-bottom: 10px; border: 1px solid #cbd5e1; flex-shrink: 0; }
+.gif-banner-preview-box { position: relative; width: 100%; height: 230px; min-height: 120px; border-radius: 14px; background-color: #e2e8f0; margin-bottom: 8px; border: 1px solid #cbd5e1; flex-shrink: 0; overflow: hidden; touch-action: none; user-select: none; display: flex; align-items: center; justify-content: center; }
+#vipBannerCropImg { position: absolute; max-width: none; max-height: none; cursor: grab; user-select: none; touch-action: none; transform-origin: center center; }
+#vipBannerCropImg:active { cursor: grabbing; }
 
 /* ABAS DE SELEÇÃO DE PLATAFORMA (GIPHY / PEXELS / PIXABAY) */
 /* ========================================================================= 08-09-26
@@ -2711,11 +2700,23 @@ MODAL E CONTAINER DO BANNER VIP (GIF/IMAGEM)
 
 .vip-banner-warning-box { width: 100%; background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 9px; box-sizing: border-box; }
 
-.vip-banner-warning-box i { font-size: 20px; color: #dc2626; line-height: 1; margin-top: 1px; flex-shrink: 0; }
+.vip-banner-app-toolbar { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 320px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 6px 10px; margin: 8px auto 10px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04); box-sizing: border-box; }
+.app-tool-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; user-select: none; transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease; -webkit-tap-highlight-color: transparent; }
+.app-tool-btn:active { transform: scale(0.95); }
+.app-tool-btn.danger { background: #070d54da; color: #fcf7f7; height: 36px; padding: 0 12px; font-size: 12px; }
+.app-tool-btn.danger:hover { background: #0616c494; color: #fffbfb; }
+.app-tool-btn.danger i { font-size: 14px; color: #fff9f9; }
+.app-tool-btn.main { background: #020641; color: #ffffff; height: 38px; padding: 0 18px; font-size: 12.5px; margin: 0 4px; }
+.app-tool-btn.main:hover { background: #0616c494; }
+.app-tool-btn.main i { font-size: 15px; color: #38bdf8; }
+.app-tool-btn.confirm { background: #070d54da; color: #ffffff; height: 36px; padding: 0 14px; font-size: 12px; }
+.app-tool-btn.confirm:hover { background: #0616c494; }
+.app-tool-btn.confirm i { font-size: 16px; color: #ffffff; }
+.vip-banner-security-badge { display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%; max-width: 320px; margin: 0 auto; padding: 6px 10px;  }
+.vip-banner-security-badge i { font-size: 10; color: #dc2626 !important; flex-shrink: 0; }
+.vip-banner-security-badge span { font-size: 12.5px; color: #b91c1c !important; line-height: 1.25; text-align: center; }
 
-.vip-banner-warning-box span { font-size: 12px; color: #991b1b; line-height: 1.45; word-break: break-word; }
 
-.vip-banner-warning-box strong { color: #7f1d1d; font-weight: 700; }
 
 .vip-banner-upload-btn { width: 100%; min-height: 46px; background: #020641; color: #fff; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; font-size: 14.5px; font-weight: 600; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; transition: background-color 0.2s ease,transform 0.15s ease,box-shadow 0.2s ease; margin-bottom: 6px; box-sizing: border-box; }
 
@@ -3352,54 +3353,19 @@ body.index-page .footer-divider {
    PLANO 3D ISOMÉTRICO (HERO CHAT-DF)
    ========================================================================= */
 
-.hero-content {
-  position: relative;
-  z-index: 2;
-}
+.hero-content {position: relative;z-index: 2;}
 
 /* 1. Container inclinado em perspectiva 3D */
-.loader-fullscreen {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-  overflow: hidden;
-
-  /* Aplica o plano 3D com ponto de fuga */
-  perspective: 600px;
-  perspective-origin: 50% 60%;
-  transform-style: preserve-3d;
-  transform: rotateX(25deg);
-}
+.loader-fullscreen {position: absolute;inset: 0;width: 100%;height: 100%;pointer-events: none;z-index: 1;overflow: hidden;
+/* Aplica o plano 3D com ponto de fuga */
+perspective: 600px;perspective-origin: 50% 60%;transform-style: preserve-3d;transform: rotateX(25deg);}
 
 /* 2. Animação com respiração suave em 3D */
-@keyframes loader_5191 {
-  0% {
-    opacity: 0.05;
-    transform: translateZ(0px) scale(0.7);
-  }
-  50% {
-    opacity: 0.85;
-    transform: translateZ(15px) scale(1.1); /* Flutua levemente no eixo Z */
-  }
-  100% {
-    opacity: 0.05;
-    transform: translateZ(0px) scale(0.7);
-  }
-}
+@keyframes loader_5191 {0% {opacity: 0.05;transform: translateZ(0px) scale(0.7);}50% {opacity: 0.85;transform: translateZ(15px) scale(1.1); /* Flutua levemente no eixo Z */}
+100% {opacity: 0.05;transform: translateZ(0px) scale(0.7);}}
 
 /* 3. Base dos micro-quadrados com acabamento suave */
-.loader-fullscreen .square {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  border-radius: 2px;
-  background: rgba(0, 210, 255, 0.7);
-  box-shadow: 0 0 8px rgba(0, 210, 255, 0.4);
-  transform-style: preserve-3d;
-}
+.loader-fullscreen .square {position: absolute;width: 6px;height: 6px;border-radius: 2px;background: rgba(0, 210, 255, 0.7);box-shadow: 0 0 8px rgba(0, 210, 255, 0.4);transform-style: preserve-3d;}
 
 /* Distribuição equilibrada dos 40 micro-quadrados cobrindo toda a área do Hero */
 

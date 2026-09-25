@@ -9,7 +9,7 @@ import { auth, db } from "./firebase-config.js";
 import { initUsersPanel } from "./users-panel.js";
 import { initDenuncias, usuarioJaFoiDenunciado } from "./bloqueio.js";
 import { updateProfile } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { listenUserOnlineStatus, trackUserRoomPresence, debounceUpdateRoomPresence } from "./presence.js";
+import { listenUserOnlineStatus, trackUserRoomPresence, debounceUpdateRoomPresence, setUserStatus } from "./presence.js";
 
 
 import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
@@ -1444,8 +1444,9 @@ if (!isPanelOpen) {
 
       if (editInstagram) editInstagram.value = username ? `@${username}` : "";
 
-if (profileInstagramText) {
+      if (profileInstagramText) {
         profileInstagramText.textContent = username !== "" ? `@${username}` : "-";
+        profileInstagramText.onclick = (e) => e.preventDefault();
       }
 
       let teleUser = telegram ? String(telegram).trim() : "";
@@ -1459,6 +1460,7 @@ if (profileInstagramText) {
 
       if (profileTelegramText) {
         profileTelegramText.textContent = teleUser !== "" ? `@${teleUser}` : "-";
+        profileTelegramText.onclick = (e) => e.preventDefault();
       }
 
       // Carrega e renderiza os interesses do usuario (Aba Info e Aba Editar) tag

@@ -18,9 +18,16 @@
   <title>O Chat</title>
 
   <!-- Bootstrap -->
+
+<!-- Google Fonts Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
   <!-- Estilos personalizados -->
   <link href="styles.css?v=2" rel="stylesheet">
   <link rel="shortcut icon" href="./img/imgicon2.png" />
@@ -283,6 +290,11 @@
           </label>
           <span id="profileOnlineDot" class="profile-online-dot hidden"></span>
         </div>
+
+
+
+
+        
 <!-- INFORMAÇÕES DO USUÁRIO + PRÉVIA DA MENSAGEM -->
  <div class="profile-user-info">
           <div class="d-flex align-items-center justify-content-center gap-1">
@@ -334,20 +346,21 @@
             <span id="profileMemberSince" class="col-7 px-0 text-dark">-</span>
           </div>
        <!-- LINHA DO INSTAGRAM NO PAINEL DE INFO         <i class="bi bi-instagram text-danger fs-5"></i> -->
+      <!-- LINHA DO INSTAGRAM NO PAINEL DE INFO -->
           <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
             <span class="col-5 d-flex align-items-center gap-2 px-0">
-              <i class="bi bi-instagram  fs-5"></i>
+              <i class="bi bi-instagram fs-5"></i>
               <strong>Instagram</strong>
             </span>
-            <span id="profileInstagramText" class="col-7 px-0 text-dark">-</span>
+            <span id="profileInstagramText" class="col-7 px-0 text-dark" style="pointer-events: none; user-select: text;">-</span>
           </div>
-          <!-- LINHA DO TELEGRAM NO PAINEL DE INFO        <i class="bi bi-telegram text-primary fs-5">-->
+          <!-- LINHA DO TELEGRAM NO PAINEL DE INFO -->
           <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
             <span class="col-5 d-flex align-items-center gap-2 px-0">
               <i class="bi bi-telegram fs-5"></i>
               <strong>Telegram</strong>
             </span>
-            <span id="profileTelegramText" class="col-7 px-0 text-dark">-</span>
+            <span id="profileTelegramText" class="col-7 px-0 text-dark" style="pointer-events: none; user-select: text;">-</span>
           </div>
 
           <!-- SECAO DE TAGS & HOBBIES DO DF -->
@@ -1075,42 +1088,64 @@
     </div>
   </div>
 
-<!---========================== 27-07-26 ========================================================
-MODAL DO BANNER VIP
-================================================================================-->
-<!-- Modal de Banner VIP (Buscador Multi-Plataforma: GIPHY / Pexels / Pixabay) -->
+
 
 <!---========================== 08-09-26 ========================================================
 MODAL DO BANNER VIP - UPLOAD NATIVO (CÂMERA / GALERIA) COM MODERAÇÃO CHAT-DF
 ================================================================================-->
-  <div id="vipBannerModal" class="gif-banner-modal hidden">
+        <div id="vipBannerModal" class="gif-banner-modal hidden">
     <div class="gif-banner-modal-content">
       <span id="closeVipBannerModal" class="gif-banner-close">&times;</span>
       <h4 style="font-size: 18px; font-weight: 700; color: #1e1b4b; margin-bottom: 10px; text-align: center;">Edita seu Banner</h4>
       
-      <!-- Área do Banner (Container Visual de Prévia) -->
-      <div id="vipBannerPreviewBox" class="gif-banner-preview-box"></div>
-
-      <!-- Caixa de Alerta Legal de Moderação VIP -->
-      <div class="vip-banner-warning-box">
-        <i class="bi bi-shield-fill-exclamation"></i>
-        <span>
-          <strong>Aviso de Moderação VIP:</strong> Para evitar o cancelamento imediato e banimento definitivo da sua conta sem reembolso, é estritamente proibido o envio de imagens com nudez, pornografia, drogas, armas, apologia a crimes ou conteúdos ofensivos.
-        </span>
+      <!-- Área do Banner (Container Visual com a imagem interativa dentro) -->
+      <div id="vipBannerPreviewBox" class="gif-banner-preview-box">
+        <img id="vipBannerCropImg" src="" alt="Prévia do Banner" style="display: none;" />
       </div>
 
-      <!-- Botão de Abertura da Câmera / Galeria do Celular -->
-      <label for="vipBannerFileInput" class="vip-banner-upload-btn">
-        <i class="bi bi-camera-fill"></i>
-        <span>Escolher da Galeria</span>
-      </label>
+      <!-- Controle de Zoom do Banner (Slider nativo) -->
+       <div id="vipBannerZoomWrapper" class="crop-zoom-wrapper" style="display: flex; margin: 8px 0 12px;">
+        <button id="btnBannerZoomOut" class="zoom-btn" type="button">—</button>
+        <input type="range" id="vipBannerZoomSlider" min="0.5" max="6" step="0.01" value="1" />
+        <button id="btnBannerZoomIn" class="zoom-btn" type="button">+</button>
+      </div>
+
+   <!---------------------
+   /* ========================================================================= 08-09-26
+   MODAL BANNER VIP - AVISO DE MODERAÇÃO E BOTÃO DE UPLOAD NATIVO (CHAT-DF UX)
+   ========================================================================= */
+   
+   -->
+<!-- Input de arquivo invisível -->
       <input type="file" id="vipBannerFileInput" accept="image/jpeg, image/png, image/webp" style="display: none;">
 
-      <!-- Botões de Ação (Limpar e Salvar) -->
-      <div class="d-flex gap-2 w-100 mt-2">
-        <button id="btnClearVipBannerUrl" type="button" class="btn btn-dark w-50 fw-bold" style="border-radius: 10px; font-size: 15px; background: #020641;">Limpar</button>
-        <button id="btnSaveVipBannerUrl" type="button" class="btn btn-dark w-50 fw-bold" style="border-radius: 10px; font-size: 15px; background: #020641;">Salvar</button>
+      <!-- Nova Barra de Ferramentas Estilo App (Toolbar Unificada) -->
+      <div class="vip-banner-app-toolbar">
+        <button id="btnClearVipBannerUrl" type="button" class="app-tool-btn danger" title="Limpar imagem">
+          <i class="bi bi-trash3"></i>
+          <span>Limpar</span>
+        </button>
+
+        <label for="vipBannerFileInput" class="app-tool-btn main" title="Escolher nova imagem">
+          <i class="bi bi-camera-fill"></i>
+          <span>Galeria</span>
+        </label>
+
+        <button id="btnSaveVipBannerUrl" type="button" class="app-tool-btn confirm" title="Confirmar e Salvar">
+          <i class="bi bi-check-lg"></i>
+          <span>Salvar</span>
+        </button>
       </div>
+
+      <!-- Barra de Segurança e Moderação Integrada -->
+      <div class="vip-banner-security-badge">
+        <i class="bi bi-shield-lock-fill"></i>
+        <span>Proibido nudez explícita e apologia ao crime. Sujeito a banimento imediato sem reembolso.</span>
+      </div>
+
+
+
+      
     </div>
   </div>
 

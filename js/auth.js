@@ -1,18 +1,11 @@
 // auth.js
-// auth.js
-import { auth, provider, signOutUser, db, rtdb } from "./firebase-config.js";
+
+import { auth, provider, signOutUser, db } from "./firebase-config.js";
 import { verificarUsuarioBloqueado } from "./bloqueio.js";
 import {
   signInWithPopup,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import {
-  ref,
-  set,
-  update,
-  onValue,
-  onDisconnect
-} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 import {
   doc,
@@ -376,42 +369,7 @@ else {
 }
 
 // ===================== PRESENÇA ONLINE ======================
-// ===================== PRESENÇA ONLINE (RECONEXÃO AUTOMÁTICA FIX) ======================
-const userStatusRef = ref(rtdb, "status/" + user.uid);
-const connectedRef = ref(rtdb, ".info/connected");
 
-const isPasswordUser = user.providerData?.some(
-  p => p.providerId === "password"
-);
-
-if (isPasswordUser && !user.emailVerified) {
-  await set(userStatusRef, null);
-} else {
-  let finalAvatar = sanitizeAvatarUrl(profilePhoto);
-
-  onValue(connectedRef, async (snap) => {
-    if (snap.val() === true) {
-      // 1. Quando o socket cair, apenas altera o status para offline, sem apagar o nó
-      await onDisconnect(userStatusRef).update({
-        online: false,
-        lastChanged: Date.now()
-      });
-
-      // 2. Sempre que a rede conectar/reconectar, regrava online: true imediatamente
-      const dynamicUrlParams = new URLSearchParams(window.location.search);
-      const activeRoom = window.location.pathname.includes("chat.html") ? (dynamicUrlParams.get("sala") || "geral") : null;
-
-      await set(userStatusRef, { 
-        uid: user.uid,
-        name: profileName,
-        avatar: finalAvatar,
-        online: true,
-        sala: activeRoom,
-        lastChanged: Date.now()
-      });
-    }
-  });
-}
 
 
 
@@ -493,7 +451,6 @@ unsubscribeUserAreaProfileListener = onSnapshot(
     document.dispatchEvent(new CustomEvent("chatdf:user-ready", {
       detail: { user, userData: liveData }
     }));
-
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
       logoutBtn.onclick = async () => {
@@ -501,11 +458,6 @@ unsubscribeUserAreaProfileListener = onSnapshot(
           window.replyingTo = null;
           window.dispatchEvent(new Event("resetColorPicker"));
           localStorage.removeItem("chatdf_user_color");
-          if (currentUser?.uid) {
-            const userStatusRef = ref(rtdb, "status/" + currentUser.uid);
-            await set(userStatusRef, null);
-          }
-
           clearUserAreaCache();
           await signOutUser();
           showToast("Volte sempre!");
@@ -542,11 +494,6 @@ if (logoutBtn) {
       window.dispatchEvent(new Event("resetColorPicker"));
       localStorage.removeItem("chatdf_user_color");
 
-      // Remove presença online antes do logout
-      if (currentUser?.uid) {
-  const userStatusRef = ref(rtdb, "status/" + currentUser.uid);
-  await set(userStatusRef, null); // Deleta o nó imediatamente do banco ao clicar em Sair
-}
       // Logout
          clearUserAreaCache();
 

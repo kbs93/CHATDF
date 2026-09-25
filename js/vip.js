@@ -718,38 +718,45 @@ try {
   // 5. Botões de Renovação (Gatilho secundário/renovação posterior)
   document.getElementById("btnDrawerRenewVip")?.addEventListener("click", acionarModalPix);
   document.getElementById("btnTopRenewVip")?.addEventListener("click", acionarModalPix);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
-
-
+// ================================== BANNER ADICIONANDO FOTOS =============================
 function initVipBannerModal(isOwnerCallback) {
   const vipHeaderBtn = document.getElementById("vipHeaderActionBtn");
   const bannerModal = document.getElementById("vipBannerModal");
   const closeBannerModal = document.getElementById("closeVipBannerModal");
   const previewBox = document.getElementById("vipBannerPreviewBox");
+  const cropImg = document.getElementById("vipBannerCropImg");
   const fileInput = document.getElementById("vipBannerFileInput");
   const saveBannerBtn = document.getElementById("btnSaveVipBannerUrl");
   const clearBannerBtn = document.getElementById("btnClearVipBannerUrl");
 
-  let blobBannerComprimido = null;
-  let urlTemporariaPreview = "";
+  const zoomWrapper = document.getElementById("vipBannerZoomWrapper");
+  const zoomSlider = document.getElementById("vipBannerZoomSlider");
+  const btnZoomIn = document.getElementById("btnBannerZoomIn");
+  const btnZoomOut = document.getElementById("btnBannerZoomOut");
+
+  let imagemOriginal = null;
   let solicitouRemoverBanner = false;
+  let escalaZoom = 1;
+  let posX = 0;
+  let posY = 0;
+  let arrastando = false;
+  let startX = 0;
+  let startY = 0;
+
+  function aplicarTransformacao() {
+    if (!cropImg) return;
+    cropImg.style.transform = `translate(${posX}px, ${posY}px) scale(${escalaZoom})`;
+  }
+
+  function resetarControles() {
+    escalaZoom = 1;
+    posX = 0;
+    posY = 0;
+    if (zoomSlider) zoomSlider.value = 1;
+    aplicarTransformacao();
+  }
 
   // 1. Abrir Modal de Banner
   vipHeaderBtn?.addEventListener("click", (e) => {
@@ -760,14 +767,27 @@ function initVipBannerModal(isOwnerCallback) {
     const data = window.__currentProfileData || {};
     const linkAtual = window.__vipBannerUrlTemp !== undefined ? window.__vipBannerUrlTemp : (data.vipBannerUrl || "");
 
-    blobBannerComprimido = null;
     solicitouRemoverBanner = false;
-    urlTemporariaPreview = linkAtual;
+    imagemOriginal = null;
+    resetarControles();
 
-    if (previewBox) {
-      previewBox.style.backgroundImage = linkAtual ? `url("${linkAtual}")` : "none";
-    }
     if (fileInput) fileInput.value = "";
+
+    if (linkAtual) {
+  if (cropImg) {
+    cropImg.src = linkAtual;
+    cropImg.style.display = "block";
+  }
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = () => { imagemOriginal = img; };
+  img.src = linkAtual;
+} else {
+  if (cropImg) {
+    cropImg.src = "";
+    cropImg.style.display = "none";
+  }
+}
 
     bannerModal?.classList.remove("hidden");
   });
@@ -777,7 +797,7 @@ function initVipBannerModal(isOwnerCallback) {
     bannerModal?.classList.add("hidden");
   });
 
-  // 3. Captura e Compressão via Canvas (Redimensionamento para 800px no formato Capa)
+  // 3. Captura da Imagem para Ajuste Interativo
   fileInput?.addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -791,53 +811,162 @@ function initVipBannerModal(isOwnerCallback) {
     reader.onload = (event) => {
       const img = new Image();
       img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
+        imagemOriginal = img;
+        solicitouRemoverBanner = false;
 
-        // Limita a largura máxima em 800px preservando a proporção exata
-        const MAX_WIDTH = 800;
-        let targetWidth = img.naturalWidth;
-        let targetHeight = img.naturalHeight;
+        if (cropImg) {
+          cropImg.src = event.target.result;
+          cropImg.style.display = "block";
 
-        if (targetWidth > MAX_WIDTH) {
-          const ratio = MAX_WIDTH / targetWidth;
-          targetWidth = MAX_WIDTH;
-          targetHeight = Math.round(targetHeight * ratio);
+          // Ajusta tamanho inicial proporcional à altura do quadro
+          const ratio = img.naturalWidth / img.naturalHeight;
+          const boxH = previewBox ? previewBox.clientHeight || 150 : 150;
+          cropImg.style.height = `${boxH}px`;
+          cropImg.style.width = `${boxH * ratio}px`;
         }
 
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-
-        // Converte para JPEG com qualidade 0.80 (gera imagem entre 40KB e 70KB)
-        canvas.toBlob((blob) => {
-          if (!blob) return;
-          blobBannerComprimido = blob;
-          solicitouRemoverBanner = false;
-          urlTemporariaPreview = URL.createObjectURL(blob);
-
-          if (previewBox) {
-            previewBox.style.backgroundImage = `url("${urlTemporariaPreview}")`;
-          }
-          showToast("Imagem ajustada com sucesso!");
-        }, "image/jpeg", 0.80);
+        resetarControles();
+        if (zoomWrapper) zoomWrapper.style.display = "flex";
+        showToast("Arraste e use o zoom para enquadrar!");
       };
       img.src = event.target.result;
     };
     reader.readAsDataURL(file);
   });
 
-  // 4. Botão Limpar Banner (Marca para remoção definitiva)
+  // 4. Controles de Zoom
+  zoomSlider?.addEventListener("input", (e) => {
+    escalaZoom = parseFloat(e.target.value);
+    aplicarTransformacao();
+  });
+//Controle de Zoom do Banner (Slider nativo)
+btnZoomIn?.addEventListener("click", () => {
+    if (!zoomSlider) return;
+    zoomSlider.value = Math.min(6, parseFloat(zoomSlider.value) + 0.15);
+    escalaZoom = parseFloat(zoomSlider.value);
+    aplicarTransformacao();
+  });
+
+  btnZoomOut?.addEventListener("click", () => {
+    if (!zoomSlider) return;
+    zoomSlider.value = Math.max(0.5, parseFloat(zoomSlider.value) - 0.1);
+    escalaZoom = parseFloat(zoomSlider.value);
+    aplicarTransformacao();
+  });
+
+  // 5. Arraste com Dedo (Touch) e Mouse (Pointer Events)
+// 5. Arraste e Zoom com os Dedos (Touch Pinch-to-Zoom e Arraste com Mouse)
+  let distanciaInicialPinca = 0;
+  let escalaBasePinca = 1;
+
+  function obterDistanciaToques(t1, t2) {
+    const dx = t1.clientX - t2.clientX;
+    const dy = t1.clientY - t2.clientY;
+    return Math.hypot(dx, dy);
+  }
+
+  const iniciarArrasto = (clientX, clientY) => {
+    if (!cropImg || cropImg.style.display === "none") return;
+    arrastando = true;
+    startX = clientX - posX;
+    startY = clientY - posY;
+  };
+
+  const moverArrasto = (clientX, clientY) => {
+    if (!arrastando) return;
+    posX = clientX - startX;
+    posY = clientY - startY;
+    aplicarTransformacao();
+  };
+
+  const pararArrasto = () => {
+    arrastando = false;
+    distanciaInicialPinca = 0;
+  };
+
+  previewBox?.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    iniciarArrasto(e.clientX, e.clientY);
+  });
+
+  window.addEventListener("mousemove", (e) => {
+    if (arrastando) {
+      e.preventDefault();
+      moverArrasto(e.clientX, e.clientY);
+    }
+  });
+
+  window.addEventListener("mouseup", pararArrasto);
+
+  // Eventos de Toque no Celular (1 dedo = arrastar / 2 dedos = zoom de pinça)
+  previewBox?.addEventListener("touchstart", (e) => {
+    if (!cropImg || cropImg.style.display === "none") return;
+
+    if (e.touches.length === 1) {
+      iniciarArrasto(e.touches[0].clientX, e.touches[0].clientY);
+    } else if (e.touches.length === 2) {
+      e.preventDefault();
+      arrastando = false;
+      distanciaInicialPinca = obterDistanciaToques(e.touches[0], e.touches[1]);
+      escalaBasePinca = escalaZoom;
+    }
+  }, { passive: false });
+
+  window.addEventListener("touchmove", (e) => {
+    if (!cropImg || cropImg.style.display === "none") return;
+
+    // 1 Dedo: Move a imagem
+    if (arrastando && e.touches.length === 1) {
+      moverArrasto(e.touches[0].clientX, e.touches[0].clientY);
+    } 
+    // 2 Dedos: Zoom por pinça
+    else if (e.touches.length === 2 && distanciaInicialPinca > 0) {
+      e.preventDefault();
+      const distanciaAtual = obterDistanciaToques(e.touches[0], e.touches[1]);
+      const fator = distanciaAtual / distanciaInicialPinca;
+      
+      // Limita o zoom entre 0.5 e 3.0 (mesmos limites do slider)
+      // Libera zoom amplo até 6.0x
+      const novoZoom = Math.min(6, Math.max(0.5, escalaBasePinca * fator));
+      escalaZoom = parseFloat(novoZoom.toFixed(2));
+
+      // Sincroniza a barra deslizante na tela enquanto move os dedos
+      if (zoomSlider) zoomSlider.value = escalaZoom;
+
+      aplicarTransformacao();
+    }
+  }, { passive: false });
+
+  window.addEventListener("touchend", (e) => {
+    if (e.touches.length === 0) {
+      pararArrasto();
+    } else if (e.touches.length === 1) {
+      // Se tirou um dos dedos, volta a permitir arrastar com o que sobrou
+      distanciaInicialPinca = 0;
+      iniciarArrasto(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  });
+
+
+
+
+
+
+
+  // 6. Botão Limpar Banner
   clearBannerBtn?.addEventListener("click", () => {
-    blobBannerComprimido = null;
-    urlTemporariaPreview = "";
+    imagemOriginal = null;
     solicitouRemoverBanner = true;
     if (fileInput) fileInput.value = "";
-    if (previewBox) previewBox.style.backgroundImage = "none";
+    if (cropImg) {
+      cropImg.src = "";
+      cropImg.style.display = "none";
+    }
+   if (zoomWrapper) zoomWrapper.style.display = "flex";
     showToast("Banner limpo. Clique em Salvar para confirmar a remoção.");
   });
 
-  // 5. Salvar Banner (Sobe para o Storage ou remove o arquivo se tiver limpado)
+  // 7. Salvar Banner (Gera o recorte do que está visível no retângulo e envia ao Storage)
   saveBannerBtn?.addEventListener("click", async (e) => {
     e.preventDefault();
     if (!isOwnerCallback()) return;
@@ -849,23 +978,53 @@ function initVipBannerModal(isOwnerCallback) {
     const bannerRef = sRef(storage, `banners_vip/${user.uid}.jpg`);
 
     try {
-      let finalUrl = urlTemporariaPreview;
+      let finalUrl = "";
 
-      // Se o usuário clicou em Limpar, remove do Storage
       if (solicitouRemoverBanner) {
         try {
           await deleteObject(bannerRef);
         } catch (delErr) {
-          // Ignora caso o arquivo não existisse no Storage
+          // Arquivo já não existia
         }
         finalUrl = "";
-      } 
-      // Se selecionou uma nova foto da câmera/galeria, envia comprimida
-      else if (blobBannerComprimido) {
-        showToast("Otimizando e enviando banner...");
-        await uploadBytes(bannerRef, blobBannerComprimido);
-        finalUrl = await getDownloadURL(bannerRef);
-        blobBannerComprimido = null;
+      } else if (imagemOriginal && cropImg && cropImg.style.display !== "none") {
+        showToast("Processando recorte e enviando banner...");
+
+        // Dimensões do visor retangular na tela
+        const boxRect = previewBox.getBoundingClientRect();
+        const imgRect = cropImg.getBoundingClientRect();
+
+        // Canvas final no tamanho padrão de capa (800x300 proporcional)
+        const canvas = document.createElement("canvas");
+        const TARGET_W = 800;
+        const TARGET_H = Math.round(TARGET_W * (boxRect.height / boxRect.width));
+        canvas.width = TARGET_W;
+        canvas.height = TARGET_H;
+
+        const ctx = canvas.getContext("2d");
+
+        // Fator de escala da tela para o canvas de 800px
+        const fator = TARGET_W / boxRect.width;
+
+        // Posição da imagem relativa ao visor retangular
+        const desenharX = (imgRect.left - boxRect.left) * fator;
+        const desenharY = (imgRect.top - boxRect.top) * fator;
+        const desenharW = imgRect.width * fator;
+        const desenharH = imgRect.height * fator;
+
+        ctx.drawImage(imagemOriginal, desenharX, desenharY, desenharW, desenharH);
+
+        const blobFinal = await new Promise((resolve) => {
+          canvas.toBlob(resolve, "image/jpeg", 0.82);
+        });
+
+        if (blobFinal) {
+          await uploadBytes(bannerRef, blobFinal);
+          finalUrl = await getDownloadURL(bannerRef);
+        }
+      } else {
+        const data = window.__currentProfileData || {};
+        finalUrl = window.__vipBannerUrlTemp !== undefined ? window.__vipBannerUrlTemp : (data.vipBannerUrl || "");
       }
 
       window.__vipBannerUrlTemp = finalUrl;
@@ -882,15 +1041,13 @@ function initVipBannerModal(isOwnerCallback) {
 
       atualizarSimulacaoTopoVip();
       bannerModal?.classList.add("hidden");
-      showToast("Banner definido! Clique em 'Salvar VIP' para gravar.");
+      showToast("Banner ajustado com sucesso! Clique em 'Salvar VIP'.");
     } catch (err) {
       console.error("Erro ao salvar banner VIP:", err);
       showToast("Erro ao processar imagem do banner.");
     }
   });
 }
-
-
 
 
 
