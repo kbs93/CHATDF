@@ -3,7 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chat DF — Em Manutenção</title>
+  
+  <!-- 1. TÍTULO QUE O GOOGLE EXIBE NA BUSCA -->
+  <title>Chat DF — Conectando pessoas no Distrito Federal</title>
+
+  <!-- 2. DESCRIÇÃO CINZA QUE APARECE LOGO ABAIXO DO TÍTULO -->
+  <meta name="description" content="Chat DF: O bate-papo em tempo real do Distrito Federal. Conecte-se com pessoas de Brasília, Taguatinga, Ceilândia e regiões administrativas.">
+
+  <!-- 3. CANONICAL (Evita páginas duplicadas no Google, fixando seu domínio oficial) -->
+  <link rel="canonical" href="https://chatdf.com.br/">
+
+  <!-- 4. ÍCONE OFICIAL QUE O GOOGLE MOSTRA AO LADO DO NOME -->
+  <link rel="icon" type="image/png" href="img/logo-chatdf.png">
+
+  <!-- 5. META TAGS DE COMPARTILHAMENTO (WhatsApp, Telegram e Redes Sociais) -->
+  <meta property="og:title" content="Chat DF — Conectando pessoas no Distrito Federal">
+  <meta property="og:description" content="O bate-papo em tempo real do Distrito Federal. Conecte-se agora.">
+  <meta property="og:image" content="https://chatdf.com.br/img/logo-chatdf.png">
+  <meta property="og:url" content="https://chatdf.com.br/">
+  <meta property="og:type" content="website">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -146,7 +165,6 @@
 
   <main class="maintenance-card">
     <div class="logo-container">
-      <!-- Caso a extensão seja diferente de .png, ajuste abaixo -->
       <img src="img/logo-chatdf.png" alt="Chat DF Logo" onerror="this.src='Gemini_Generated_Image_bc3umrbc3umrbc3u.jfif'">
     </div>
 
@@ -161,7 +179,10 @@
       Estamos aplicando novidades e otimizações de performance para oferecer a melhor experiência de bate-papo do DF.
     </p>
 
-
+    <!-- Adicionado o botão que seu script tenta escutar -->
+    <button class="btn-refresh" id="btnRefresh">
+      Verificar Disponibilidade
+    </button>
 
     <div class="footer-copy">
       Chat DF &bull; Conectando pessoas no Distrito Federal
@@ -169,7 +190,6 @@
   </main>
 
   <script>
-    // Linha 170: Lógica simples do botão de recarregar a página
     document.getElementById('btnRefresh').addEventListener('click', () => {
       const btn = document.getElementById('btnRefresh');
       btn.style.opacity = '0.7';

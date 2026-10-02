@@ -60,31 +60,24 @@ aria-expanded="false">
 </div>
 </nav>
   <div id="toast" class="toast-container"></div>
-  <!-- 🔹 HERO (100% ORIGINAL - NÃO MEXIDO) -->
-<!-- ================= NOVO HERO MODERNO ESTILO IMAGEM 2 ================= -->
 
+
+
+<!-- ================= NOVO HERO MODERNO COM THREE.JS ================= -->
 <header class="hero-modern">
-<!-- 🔹 CONSTELAÇÃO DE MICRO-QUADRADOS TECH EM TELA CHEIA -->
-<div class="loader-fullscreen"><div class="square sq-1"></div><div class="square sq-2"></div><div class="square sq-3"></div><div class="square sq-4"></div>
-<div class="square sq-5"></div><div class="square sq-6"></div><div class="square sq-7"></div><div class="square sq-8"></div><div class="square sq-9"></div>
-<div class="square sq-10"></div><div class="square sq-11"></div><div class="square sq-12"></div><div class="square sq-13"></div><div class="square sq-14"></div>
-<div class="square sq-15"></div><div class="square sq-16"></div><div class="square sq-17"></div><div class="square sq-18"></div><div class="square sq-19"></div>
-<div class="square sq-20"></div><div class="square sq-21"></div><div class="square sq-22"></div><div class="square sq-23"></div><div class="square sq-24"></div>
-<div class="square sq-25"></div><div class="square sq-26"></div><div class="square sq-27"></div><div class="square sq-28"></div><div class="square sq-29"></div>
-<div class="square sq-30"></div><div class="square sq-31"></div><div class="square sq-32"></div><div class="square sq-33"></div><div class="square sq-34"></div>
-<div class="square sq-35"></div><div class="square sq-36"></div><div class="square sq-37"></div><div class="square sq-38"></div><div class="square sq-39"></div>
-<div class="square sq-40"></div>
-</div>
- <div class="hero-content">
-    <img src="img/simbolo1.png" alt="chatdf- bate papo do distrito federal" class="hero-logo-img">
+  <!-- Canvas onde o túnel 3D é renderizado -->
+  <canvas id="hero-tunnel-canvas"></canvas>
+
+  <div class="hero-content">
+    <img src="img/logochat3.png" alt="chatdf- bate papo do distrito federal" class="hero-logo-img">
     <div class="hero-btn-group">
       <a href="chat.html" class="hero-btn-primary" id="heroVisitorBtn">Modo Visitante</a>
       <a href="#" class="hero-btn-secondary open-login" id="heroLoginBtn">Faça login / Entrar</a>
     </div>
   </div>
-  <img src="img/iconesbsb.png" alt="monumentos do distrito federal" class="hero-monumentos-banner">
 </header>
-</header>
+
+
 
 <!----------------==============================================================
     🔹 SEÇÃO DE VANTAGENS E SOBRE O CHAT-DF (CSS PRÓPRIO - SEM BOOTSTRAP)
@@ -190,7 +183,7 @@ aria-expanded="false">
       <div class="modal-login-box">
         <button type="button" class="close-login" title="Fechar">✕</button>
         <div class="login-left">
-          <img src="img/catedral1.jfif" alt="ChatDF Login">
+          <img src="img/logochat.jfif" alt="ChatDF Login">
         </div>
         <div class="login-right">
           <div id="loginView">
@@ -571,5 +564,227 @@ aria-expanded="false">
   <!-- BOOTSTRAP -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@multiavatar/multiavatar/multiavatar.min.js"></script>
+
+
+<!-- Biblioteca Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- Biblioteca Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+  (function initChatDFTunnel() {
+    const canvas = document.getElementById("hero-tunnel-canvas");
+    const container = canvas ? canvas.parentElement : null;
+    if (!canvas || !container) return;
+
+    let width = container.clientWidth;
+    let height = container.clientHeight;
+
+    const TUNNEL_WIDTH = 24;
+    const TUNNEL_HEIGHT = 16;
+    const SEGMENT_DEPTH = 6;
+    const NUM_SEGMENTS = 14;
+    const SPEED = 0.09;
+
+    const FLOOR_COLS = 6;
+    const WALL_ROWS = 4;
+    const COL_WIDTH = TUNNEL_WIDTH / FLOOR_COLS;
+    const ROW_HEIGHT = TUNNEL_HEIGHT / WALL_ROWS;
+
+    const imageUrls = [
+      "img/1.png",
+      "img/2.png",
+      "img/3.png",
+      "img/4.png",
+      "img/5.png",
+      "img/6.png",
+      "img/7.png",
+      "img/8.png",
+      "img/9.png",
+      "img/10.png",
+    ];
+
+    const scene = new THREE.Scene();
+    scene.background = null; 
+
+    const camera = new THREE.PerspectiveCamera(65, width / height, 0.1, 1000);
+    camera.position.set(0, 0, 0);
+
+    const renderer = new THREE.WebGLRenderer({ 
+      canvas, 
+      antialias: true, 
+      alpha: true
+    });
+    renderer.setClearColor(0x000000, 0);
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const textureLoader = new THREE.TextureLoader();
+    const textures = imageUrls.map(url => {
+      const tex = textureLoader.load(url);
+      tex.minFilter = THREE.LinearFilter;
+      return tex;
+    });
+
+    let globalTextureStep = 0;
+    function getNextDistributedTexture() {
+      const tex = textures[globalTextureStep % textures.length];
+      globalTextureStep++;
+      return tex;
+    }
+
+    const segments = [];
+
+    // Padrões de rotação para chão e laterais linhas 
+    const floorPattern = [0, 2, 4, 1, 3, 5];
+    const leftPattern  = [0, 2, 1, 3];
+    const rightPattern = [3, 1, 2, 0];
+
+    function populateImages(group, w, h, d, segIndex) {
+      const margin = 0.35;
+      const addCard = (pos, rot, cardW, cardH) => {
+        const geom = new THREE.PlaneGeometry(cardW - margin, cardH - margin);
+        const tex = getNextDistributedTexture();
+        const mat = new THREE.MeshBasicMaterial({
+          map: tex,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.19 // imagem levemente transparente para efeito de profundidade
+        });
+        const mesh = new THREE.Mesh(geom, mat);
+        mesh.position.copy(pos);
+        mesh.rotation.copy(rot);
+        mesh.name = "tunnel_image";
+        group.add(mesh);
+      };
+
+      //  Chao (cobre as colunas 0 a 5 sem repetição)
+      const floorCol = floorPattern[segIndex % floorPattern.length];
+      addCard(
+        new THREE.Vector3(-w + floorCol * COL_WIDTH + COL_WIDTH / 2, -h, -d / 2),
+        new THREE.Euler(-Math.PI / 2, 0, 0),
+        COL_WIDTH,
+        d
+      );
+
+      //  Teto removido: a parte superior fica limpa apenas com as linhas da malha 3D
+
+      //  Parede Esquerda (espaçamento de 1 e 2)
+      const leftRow = leftPattern[segIndex % leftPattern.length];
+      addCard(
+        new THREE.Vector3(-w, -h + leftRow * ROW_HEIGHT + ROW_HEIGHT / 2, -d / 2),
+        new THREE.Euler(0, Math.PI / 2, 0),
+        d,
+        ROW_HEIGHT
+      );
+
+      //  Parede Direita (espaçamento de 1 e 2)
+      const rightRow = rightPattern[segIndex % rightPattern.length];
+      addCard(
+        new THREE.Vector3(w, -h + rightRow * ROW_HEIGHT + ROW_HEIGHT / 2, -d / 2),
+        new THREE.Euler(0, -Math.PI / 2, 0),
+        d,
+        ROW_HEIGHT
+      );
+    }
+// edita as linhas nas laterais e no chão do túnel 3D
+    function createSegment(zPos, segIndex) {
+      const group = new THREE.Group();
+      group.position.z = zPos;
+      group.userData = { index: segIndex };
+
+      const w = TUNNEL_WIDTH / 2;
+      const h = TUNNEL_HEIGHT / 2;
+      const d = SEGMENT_DEPTH;
+
+      const lineMaterial = new THREE.LineBasicMaterial({ 
+        color: 0xffffff, 
+        transparent: true, 
+        opacity: 0.05 
+      });
+      const vertices = [];
+
+      for (let i = 0; i <= FLOOR_COLS; i++) {
+        const x = -w + (i * COL_WIDTH);
+        vertices.push(x, -h, 0, x, -h, -d);
+        vertices.push(x, h, 0, x, h, -d);
+      }
+      for (let i = 1; i < WALL_ROWS; i++) {
+        const y = -h + (i * ROW_HEIGHT);
+        vertices.push(-w, y, 0, -w, y, -d);
+        vertices.push(w, y, 0, w, y, -d);
+      }
+
+      vertices.push(-w, -h, 0, w, -h, 0);
+      vertices.push(-w, h, 0, w, h, 0);
+      vertices.push(-w, -h, 0, -w, h, 0);
+      vertices.push(w, -h, 0, w, h, 0);
+
+      const lineGeo = new THREE.BufferGeometry();
+      lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+      group.add(new THREE.LineSegments(lineGeo, lineMaterial));
+
+      populateImages(group, w, h, d, segIndex);
+      return group;
+    }
+
+    let nextSegIndex = 0;
+    for (let i = 0; i < NUM_SEGMENTS; i++) {
+      const seg = createSegment(-i * SEGMENT_DEPTH, nextSegIndex++);
+      scene.add(seg);
+      segments.push(seg);
+    }
+
+    const totalTunnelSpan = NUM_SEGMENTS * SEGMENT_DEPTH;
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      segments.forEach(segment => {
+        segment.position.z += SPEED;
+
+        if (segment.position.z > SEGMENT_DEPTH) {
+          segment.position.z -= totalTunnelSpan;
+          segment.userData.index = nextSegIndex++;
+
+          const toRemove = [];
+          segment.traverse(child => {
+            if (child.name === "tunnel_image") toRemove.push(child);
+          });
+          toRemove.forEach(mesh => {
+            segment.remove(mesh);
+            mesh.geometry.dispose();
+            mesh.material.dispose();
+          });
+
+          populateImages(
+            segment, 
+            TUNNEL_WIDTH / 2, 
+            TUNNEL_HEIGHT / 2, 
+            SEGMENT_DEPTH, 
+            segment.userData.index
+          );
+        }
+      });
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener("resize", () => {
+      if (!container) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    });
+  })();
+</script>
+
+
+
+
+
 </body>
 </html>
