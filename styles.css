@@ -144,12 +144,11 @@ radial-gradient(circle at 50% 100%, #040714 0%, #040714 100%); /*border-bottom: 
 .hero-logo-img { width: 300px; max-width: 65vw; height: auto; object-fit: contain; margin-bottom: 24px; }
 .hero-btn-group { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin: 0; }
 
-.hero-btn-primary { background: #3b82f6; color: #ffffff; font-size: 14px; font-weight: 600; padding: 10px 14px; border-radius: 10px; text-decoration: none; box-shadow: 0 0 24px rgba(59, 130, 246, 0.5); transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease; }
-.hero-btn-primary:hover { background: #1e2337; transform: translateY(-2px); box-shadow: 0 0 30px rgba(59, 130, 246, 0.7); color: #ffffff; }
-.hero-btn-secondary { background: #3b82f6; color: #cbd5e1; font-size: 14px; font-weight: 600; padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.08); text-decoration: none; transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease; }
-.hero-btn-secondary:hover { background: #1e2337; color: #ffffff; transform: translateY(-2px); box-shadow: 0 0 30px rgba(59, 130, 246, 0.7); color: #ffffff; }
+.hero-btn-primary { background: #3b82f6; color: #ffffff; font-size: 14px; font-weight: 600; padding: 10px 14px; border-radius: 10px; text-decoration: none; box-shadow: 0 0 24px rgba(59, 130, 246, 0.5); transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+@media (hover: hover) and (pointer: fine) { .hero-btn-primary:hover { background: #1e2337; transform: translateY(-2px); box-shadow: 0 0 30px rgba(59, 130, 246, 0.7); color: #ffffff; } }
+.hero-btn-secondary { background: #3b82f6; color: #cbd5e1; font-size: 14px; font-weight: 600; padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.08); text-decoration: none; transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease; touch-action: manipulation; -webkit-tap-highlight-color: transparent; cursor: pointer; }
+@media (hover: hover) and (pointer: fine) { .hero-btn-secondary:hover { background: #1e2337; color: #ffffff; transform: translateY(-2px); box-shadow: 0 0 30px rgba(59, 130, 246, 0.7); } }
 .hero-btn-secondary.bloqueado { opacity: 0.35; pointer-events: none; cursor: not-allowed; }
-
 
 @media (max-width: 991px) { .hero-modern { height: 85vh; padding: 0 16px; } 
 .hero-logo-img { width: 180px; max-width: 50vw; margin-bottom: 8px; background: transparent; padding: 0; box-shadow: none; } }
@@ -1097,8 +1096,8 @@ NES Anexos estilo WhatsApp zap EDITA O BOTAO SHEET TAMBEM 27-02-26
 
 .chat-tag-badge span:last-child { font-size: 11.5px; font-weight: 700; line-height: 1; letter-spacing: -0.1px; }
 
-/* Cores e bordas oficiais (Preserva o chat e aplica no modal) */
-/* Cores e bordas oficiais padronizadas (Preserva o chat, modal de envio e modal de filtro) */
+
+/* Cores e bordas  DA TAG */
 .btn-filter-tag-choice.tag-transito, #tagsDfModal .tags-df-grid button.tag-transito, #chat-container .chat-tag-badge.tag-transito, .filter-tag-feed-list .chat-tag-badge.tag-transito { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
 .btn-filter-tag-choice.tag-chuva, #tagsDfModal .tags-df-grid button.tag-chuva, #chat-container .chat-tag-badge.tag-chuva, .filter-tag-feed-list .chat-tag-badge.tag-chuva { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
 .btn-filter-tag-choice.tag-transporte, #tagsDfModal .tags-df-grid button.tag-transporte, #chat-container .chat-tag-badge.tag-transporte, .filter-tag-feed-list .chat-tag-badge.tag-transporte { background-color: #e8eaf6; border-color: #7986cb; color: #283593; }
@@ -1364,9 +1363,11 @@ will-change: transform;
 
 /* PROFILE PAINEL USUARIO TABLET CHAT  */
 
-@media (min-width: 769px) and (max-width: 991px) {
-  body.chat-page .profile-panel { top: 68px; right: 14px; left: auto; bottom: auto; width: min(400px, calc(100vw - 28px)); height: calc(100vh - 86px); max-height: 630PX; border-radius: 22px; transform: scale(0.97); transform-origin: top right; opacity: 0; pointer-events: none; transition: opacity 0.22s ease,transform 0.22s ease; }
-  body.chat-page .profile-panel.open { opacity: 1; pointer-events: auto; transform: scale(1); }
+/* PROFILE PAINEL USUARIO TABLET CHAT  */
+
+@media (min-width: 577px) and (max-width: 991px) {
+  body.chat-page .profile-panel { top: 50%; left: 50%; right: auto; bottom: auto; width: min(420px, calc(100vw - 32px)); height: auto; max-height: min(88dvh, 680px); border-radius: 22px; transform: translate(-50%, -50%) scale(0.96); transform-origin: center; opacity: 0; pointer-events: none; transition: opacity 0.22s ease,transform 0.22s ease; }
+  body.chat-page .profile-panel.open { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
 }
 
 /* ================== PERFIL do usuario NO desktop INDEX (MODAL NORMAL) 10-05-2026  =================== */

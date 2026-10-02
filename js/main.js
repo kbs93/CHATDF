@@ -387,23 +387,6 @@ document.addEventListener("chatdf:open-profile", async () => {
   }
 });
 
-// Ações Globais de Clique
-document.addEventListener("click", (e) => {
-  const vipBuyBtn = e.target.closest("#btnBuyVip");
-  if (vipBuyBtn) {
-    e.preventDefault();
-    const promoSec = document.getElementById("vipPromoSection");
-    const settingsSec = document.getElementById("vipSettingsSection");
-
-    if (promoSec && settingsSec) {
-      promoSec.classList.add("d-none");
-      settingsSec.classList.remove("d-none");
-    }
-    return;
-  }
-
-  
-  
 // ======================== MODAL LOGIN ========================
 const loginModal = document.getElementById("loginModal");
 
@@ -421,16 +404,6 @@ function fecharModalLogin() {
   document.body.style.touchAction = "";
 }
 
-// Abertura global via clique em qualquer botão com .open-login
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest(".open-login");
-  if (btn) {
-    e.preventDefault();
-    abrirModalLogin();
-    return;
-  }
-});
-
 // Fecha no "X"
 document.querySelector(".close-login")?.addEventListener("click", (e) => {
   e.preventDefault();
@@ -443,6 +416,38 @@ loginModal?.addEventListener("click", (e) => {
     fecharModalLogin();
   }
 });
+
+// Ações Globais de Clique
+document.addEventListener("click", (e) => {
+  const openLoginBtn = e.target.closest(".open-login");
+  if (openLoginBtn) {
+    e.preventDefault();
+    abrirModalLogin();
+    return;
+  }
+
+  const vipBuyBtn = e.target.closest("#btnBuyVip");
+  if (vipBuyBtn) {
+    e.preventDefault();
+    const promoSec = document.getElementById("vipPromoSection");
+    const settingsSec = document.getElementById("vipSettingsSection");
+
+    if (promoSec && settingsSec) {
+      promoSec.classList.add("d-none");
+      settingsSec.classList.remove("d-none");
+    }
+    return;
+  }
+
+
+
+
+
+
+
+
+
+
 
   
 
