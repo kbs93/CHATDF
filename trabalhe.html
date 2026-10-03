@@ -22,8 +22,8 @@
   <!-- 🔹 NAVBAR -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-3">
     <div class="container">
-  <!-- BOTÃO INÍCIO (CASA) -->
-      <a href="indexOficial.html" class="btn btn-outline-light border-0 d-inline-flex align-items-center justify-content-center p-2 me-2" title="Voltar ao Início" style="font-size: 20px; line-height: 1;">
+      <!-- BOTÃO INÍCIO (CASA) -->
+      <a href="indexOficial.html" class="btn btn-outline-light border-0 d-inline-flex align-items-center justify-content-center p-2 me-2" title="Voltar ao Início" aria-label="Voltar ao Início" style="font-size: 20px; line-height: 1;">
         <i class="bi bi-house-door-fill"></i>
       </a>
 
@@ -33,9 +33,9 @@
 
       <!-- ÁREA DO USUÁRIO / AVATAR -->
       <div id="userArea" class="d-flex align-items-center me-3">
-        <a class="open-login btn-sair" id="btnLogin" href="#">
+        <button type="button" class="open-login btn-sair bg-transparent border-0 p-0" id="btnLogin" aria-label="Abrir perfil de utilizador">
           <img src="../img/avatar.png" alt="Avatar" class="user-menu-avatar" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid #fff;">
-        </a>
+        </button>
       </div>
     </div>
   </nav>
@@ -84,12 +84,12 @@
               <p class="mb-0"><strong>Assunto da mensagem:</strong> <code>[Trabalhe Conosco] Seu Nome - no campo de texto, fale um pouco sobre suas habilidades e interesse na vaga e o que pode somar</code></p>
             </div>
             <p>
-              Você também pode nos enviar uma mensagem direta detalhando seu portfólio através da nossa página de <a href="../contato.html">Fale Conosco</a>.
+              Você também pode nos enviar uma mensagem direta detalhando seu portfólio através da nossa página de <a href="contato.html">Fale Conosco</a>.
             </p>
           </div>
 
           <div class="mt-5 pt-3 border-top text-center">
-            <a href="./indexOficial.html" class="btn btn-outline-dark px-4 py-2 rounded-pill fw-medium">
+            <a href="indexOficial.html" class="btn btn-outline-dark px-4 py-2 rounded-pill fw-medium">
               <i class="bi bi-arrow-left me-2"></i>Voltar para a Página Inicial
             </a>
           </div>
@@ -113,7 +113,7 @@
           <ul class="footer-links">
             <li><a href="../chat.html?sala=geral"><i class="bi bi-chevron-right"></i> Entrar nas Salas</a></li>
             <li><a href="somos.html"><i class="bi bi-chevron-right"></i> Quem Somos</a></li>
-            <li><a href="../contato.html"><i class="bi bi-chevron-right"></i> Fale Conosco</a></li>
+            <li><a href="contato.html"><i class="bi bi-chevron-right"></i> Fale Conosco</a></li>
             <li><a href="termos.html"><i class="bi bi-chevron-right"></i> Regras da Comunidade</a></li>
           </ul>
         </div>
@@ -121,7 +121,7 @@
         <div>
           <h5 class="footer-title">Termos e Acesso</h5>
           <ul class="footer-links">
-            <li><a href="#" class="open-login"><i class="bi bi-box-arrow-in-right"></i> Entrar / Login</a></li>
+            <li><button type="button" class="open-login bg-transparent border-0 p-0 text-decoration-none text-light"><i class="bi bi-box-arrow-in-right"></i> Entrar / Login</button></li>
             <li><a href="privacidade.html"><i class="bi bi-shield-check"></i> Política de Privacidade</a></li>
             <li><a href="termos.html"><i class="bi bi-journal-text"></i> Termos de Uso</a></li>
             <li><a href="trabalhe.html"><i class="bi bi-briefcase"></i> Trabalhe com a Gente</a></li>

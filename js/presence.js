@@ -1,14 +1,15 @@
 // ========================================================================
 // presence.js - Gerenciamento Unificado de Presença e Status Online (RTDB)
 // ========================================================================
-import { rtdb } from "./firebase-config.js";
+
 import {
+  onDisconnect,
+  onValue,
   ref,
   set,
   update,
-  onValue,
-  onDisconnect
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { rtdb } from "./firebase-config.js";
 
 const TEMPO_LIMITE_OFFLINE_MS = 120000; // 2 minutos de tolerância sem sinal
 
@@ -21,7 +22,7 @@ export async function setUserStatus(userId, statusData) {
   await update(userStatusRef, {
     uid: userId,
     lastChanged: Date.now(),
-    ...statusData
+    ...statusData,
   });
 }
 
@@ -34,7 +35,9 @@ export function listenUserOnlineStatus(userId, callback) {
   return onValue(statusRef, (snapshot) => {
     const statusData = snapshot.val();
     const agora = Date.now();
-    const sinalValido = statusData?.lastChanged && (agora - statusData.lastChanged < TEMPO_LIMITE_OFFLINE_MS);
+    const sinalValido =
+      statusData?.lastChanged &&
+      agora - statusData.lastChanged < TEMPO_LIMITE_OFFLINE_MS;
     const isOnline = statusData?.online === true && sinalValido;
     callback(isOnline, statusData);
   });
@@ -49,11 +52,16 @@ let currentTrackingUser = null;
 let lastRegisteredRoom = null;
 let roomDebounceTimeout = null;
 
-export async function trackUserRoomPresence(user, appState, currentRoomFallback = "geral") {
+export async function trackUserRoomPresence(
+  user,
+  appState,
+  currentRoomFallback = "geral",
+) {
   if (!user || !user.uid) return;
   currentTrackingUser = user;
 
-  const getSalaAtual = () => (appState?.currentRoom || currentRoomFallback || "geral").toLowerCase();
+  const getSalaAtual = () =>
+    (appState?.currentRoom || currentRoomFallback || "geral").toLowerCase();
   const userStatusRef = ref(rtdb, "status/" + user.uid);
   const connectedRef = ref(rtdb, ".info/connected");
 
@@ -79,7 +87,7 @@ export async function trackUserRoomPresence(user, appState, currentRoomFallback 
       online: true,
       sala: getSalaAtual(),
       lastChanged: Date.now(),
-      ...vipData
+      ...vipData,
     };
   };
 
@@ -89,11 +97,11 @@ export async function trackUserRoomPresence(user, appState, currentRoomFallback 
     onValue(connectedRef, async (snap) => {
       if (snap.val() === true && currentTrackingUser?.uid) {
         const refAtiva = ref(rtdb, "status/" + currentTrackingUser.uid);
-        
+
         // Arma a desconexão suave no servidor
         await onDisconnect(refAtiva).update({
           online: false,
-          lastChanged: Date.now()
+          lastChanged: Date.now(),
         });
 
         // Grava o status online inicial
@@ -116,7 +124,7 @@ export async function trackUserRoomPresence(user, appState, currentRoomFallback 
       await update(userStatusRef, {
         online: true,
         lastChanged: Date.now(),
-        sala: getSalaAtual()
+        sala: getSalaAtual(),
       });
     } catch (err) {
       console.warn("Falha no batimento de presença:", err);
@@ -143,7 +151,7 @@ export function debounceUpdateRoomPresence(userId, novaSala) {
       const userStatusRef = ref(rtdb, "status/" + userId);
       await update(userStatusRef, {
         sala: salaNormalizada,
-        lastChanged: Date.now()
+        lastChanged: Date.now(),
       });
       lastRegisteredRoom = salaNormalizada;
       roomDebounceTimeout = null;
@@ -161,7 +169,8 @@ export function debounceUpdateRoomPresence(userId, novaSala) {
  * Escuta centralizada para alimentar os contadores de cada sala (salas.js)
  */
 export function listenRoomsUserCounts(salasArray, callback) {
-  if (!Array.isArray(salasArray) || typeof callback !== "function") return () => {};
+  if (!Array.isArray(salasArray) || typeof callback !== "function")
+    return () => {};
   const statusRef = ref(rtdb, "status");
 
   return onValue(statusRef, (snapshot) => {
@@ -198,7 +207,10 @@ export function listenRoomOnlineUsers(getSalaAtualCallback, callback) {
   return onValue(statusRef, (snapshot) => {
     const data = snapshot.val();
     const agora = Date.now();
-    const salaAlvo = typeof getSalaAtualCallback === "function" ? getSalaAtualCallback().toLowerCase() : "geral";
+    const salaAlvo =
+      typeof getSalaAtualCallback === "function"
+        ? getSalaAtualCallback().toLowerCase()
+        : "geral";
 
     if (!data || typeof data !== "object") {
       callback([]);
@@ -216,7 +228,9 @@ export function listenRoomOnlineUsers(getSalaAtualCallback, callback) {
         if (!mesmaSala) return false;
         if (user.online === false || user.online === "false") return false;
 
-        const sinalValido = !user.lastChanged || (agora - user.lastChanged < TEMPO_LIMITE_OFFLINE_MS);
+        const sinalValido =
+          !user.lastChanged ||
+          agora - user.lastChanged < TEMPO_LIMITE_OFFLINE_MS;
         return (user.online === true || user.online === "true") && sinalValido;
       });
 

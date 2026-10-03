@@ -938,20 +938,19 @@
   </div>
 </div>
   </div>
-
   <div class="d-flex justify-content-center mt-2 pb-2">
           <button type="button" id="btnSaveVipSettings" class="vip-btn-save-custom">
             <span>Salvar VIP</span>
           </button>
         </div>
 
-</div>
-</div>
-</div>
+      </div> <!-- fecha .vip-standalone-panel -->
+    </div> <!-- fecha .profile-content / gaveta -->
+  </div> <!-- fecha .profile-body -->
+</div> <!-- fecha #profilePanel -->
 
-</div>
-</div>
 <div id="profileEditorModal" class="profile-editor-modal hidden">
+
     <div class="profile-editor-card">
       <div class="profile-editor-header">
         <button id="showBannerEditorBtn" type="button" class="profile-editor-tab active">
@@ -1189,14 +1188,12 @@ MODAL DO BANNER VIP - UPLOAD NATIVO (CÂMERA / GALERIA) COM MODERAÇÃO CHAT-DF
 <script type="module" src="./js/tag.js"></script>
 
   <!-- 🔹 Scripts -->
-  <!-- 🔹 Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@multiavatar/multiavatar/multiavatar.min.js"></script>
-  <script type="module" src="./js/salas.js"></script>
-  <script type="module" src="./js/main.js?v=2"></script>
-  <script type="module" src="./js/stickers.js"></script>
-  <script type="module" src="./js/pixmodal.js"></script>
-  <script type="module" src="./js/frontendpix.js"></script>
-</body>
+<!-- DEPOIS (Limpo, sem módulos duplicados) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+<script type="module" src="./js/salas.js"></script>
+<script type="module" src="./js/main.js"></script>
+<script type="module" src="./js/pixmodal.js"></script>
+<script type="module" src="./js/frontendpix.js"></script>
+</body>
 </html>

@@ -1,124 +1,124 @@
-import { db } from './firebase-config.js';
-import { 
-  collection, 
-  query, 
-  where, 
-  getDocs, 
-  limit 
+import {
+  collection,
+  getDocs,
+  limit,
+  query,
+  where,
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { db } from "./firebase-config.js";
 
 // =========================================================================
 // Mapeamento Centralizado: 10 Tags Exclusivas por Sala (Chat-DF)
 // =========================================================================
 export const TAGS_POR_SALA = {
   transito: {
-    "Trânsito": { classe: "tag-transito", icon: "traffic" },
-    "Acidente": { classe: "tag-alerta", icon: "car_crash" },
-    "Fiscalização": { classe: "tag-fiscalizacao", icon: "shield_person" },
+    Trânsito: { classe: "tag-transito", icon: "traffic" },
+    Acidente: { classe: "tag-alerta", icon: "car_crash" },
+    Fiscalização: { classe: "tag-fiscalizacao", icon: "shield_person" },
     "Metrô e BRT": { classe: "tag-transporte", icon: "train" },
-    "Ônibus": { classe: "tag-transporte", icon: "directions_bus" },
-    "Obras": { classe: "tag-transito", icon: "construction" },
-    "Radar": { classe: "tag-fiscalizacao", icon: "speed" },
-    "Parada": { classe: "tag-transporte", icon: "departure_board" },
-    "Alagamento": { classe: "tag-transito", icon: "alt_route" },
-    "Buracos": { classe: "tag-transito", icon: "navigation" }
+    Ônibus: { classe: "tag-transporte", icon: "directions_bus" },
+    Obras: { classe: "tag-transito", icon: "construction" },
+    Radar: { classe: "tag-fiscalizacao", icon: "speed" },
+    Parada: { classe: "tag-transporte", icon: "departure_board" },
+    Alagamento: { classe: "tag-transito", icon: "alt_route" },
+    Buracos: { classe: "tag-transito", icon: "navigation" },
   },
   religiao: {
-    "Reflexão": { classe: "tag-religiao", icon: "auto_stories" },
-    "Oração": { classe: "tag-religiao", icon: "folded_hands" },
-    "Eventos": { classe: "tag-religiao", icon: "event" },
-    "Visita": { classe: "tag-religiao", icon: "campaign" },
+    Reflexão: { classe: "tag-religiao", icon: "auto_stories" },
+    Oração: { classe: "tag-religiao", icon: "folded_hands" },
+    Eventos: { classe: "tag-religiao", icon: "event" },
+    Visita: { classe: "tag-religiao", icon: "campaign" },
     "Culto e Missa": { classe: "tag-religiao", icon: "church" },
-    "Testemunho": { classe: "tag-religiao", icon: "record_voice_over" },
-    "Louvor": { classe: "tag-religiao", icon: "library_music" },
+    Testemunho: { classe: "tag-religiao", icon: "record_voice_over" },
+    Louvor: { classe: "tag-religiao", icon: "library_music" },
     "Estudo Bíblico": { classe: "tag-religiao", icon: "menu_book" },
     "Ação Social": { classe: "tag-religiao", icon: "volunteer_activism" },
-    "Pedido": { classe: "tag-religiao", icon: "favorite" }
+    Pedido: { classe: "tag-religiao", icon: "favorite" },
   },
   politica: {
-    "GDF": { classe: "tag-politica", icon: "account_balance" },
+    GDF: { classe: "tag-politica", icon: "account_balance" },
     "Câmara DF": { classe: "tag-politica", icon: "gavel" },
-    "Debate": { classe: "tag-politica", icon: "forum" },
-    "Notícias": { classe: "tag-politica", icon: "newspaper" },
-    "Projetos": { classe: "tag-politica", icon: "assignment" },
-    "Eleições": { classe: "tag-politica", icon: "how_to_vote" },
-    "Opinião": { classe: "tag-politica", icon: "chat" },
-    "Congresso": { classe: "tag-politica", icon: "commute" },
-    "Bastidores": { classe: "tag-politica", icon: "school" },
-    "Propostas": { classe: "tag-politica", icon: "local_hospital" }
+    Debate: { classe: "tag-politica", icon: "forum" },
+    Notícias: { classe: "tag-politica", icon: "newspaper" },
+    Projetos: { classe: "tag-politica", icon: "assignment" },
+    Eleições: { classe: "tag-politica", icon: "how_to_vote" },
+    Opinião: { classe: "tag-politica", icon: "chat" },
+    Congresso: { classe: "tag-politica", icon: "commute" },
+    Bastidores: { classe: "tag-politica", icon: "school" },
+    Propostas: { classe: "tag-politica", icon: "local_hospital" },
   },
   lugares: {
-    "Bares": { classe: "tag-lugares", icon: "local_bar" },
-    "Restaurantes": { classe: "tag-lugares", icon: "restaurant" },
-    "Passeios": { classe: "tag-lugares", icon: "nature_people" },
+    Bares: { classe: "tag-lugares", icon: "local_bar" },
+    Restaurantes: { classe: "tag-lugares", icon: "restaurant" },
+    Passeios: { classe: "tag-lugares", icon: "nature_people" },
     "Dicas DF": { classe: "tag-lugares", icon: "tips_and_updates" },
-    "Cafés": { classe: "tag-lugares", icon: "local_cafe" },
-    "Parques": { classe: "tag-lugares", icon: "park" },
-    "Cachoeiras": { classe: "tag-lugares", icon: "water" },
-    "Feiras": { classe: "tag-lugares", icon: "directions_walk" },
+    Cafés: { classe: "tag-lugares", icon: "local_cafe" },
+    Parques: { classe: "tag-lugares", icon: "park" },
+    Cachoeiras: { classe: "tag-lugares", icon: "water" },
+    Feiras: { classe: "tag-lugares", icon: "directions_walk" },
     "Picos Baratos": { classe: "tag-lugares", icon: "savings" },
-    "Novidades": { classe: "tag-lugares", icon: "star" }
+    Novidades: { classe: "tag-lugares", icon: "star" },
   },
   futebol: {
-    "Brasileirão": { classe: "tag-futebol", icon: "sports_soccer" },
+    Brasileirão: { classe: "tag-futebol", icon: "sports_soccer" },
     "Futebol DF": { classe: "tag-futebol", icon: "sports_soccer" },
-    "Peladas": { classe: "tag-futebol", icon: "group" },
-    "Resenha": { classe: "tag-futebol", icon: "chat" },
+    Peladas: { classe: "tag-futebol", icon: "group" },
+    Resenha: { classe: "tag-futebol", icon: "chat" },
     "Campo sintetico": { classe: "tag-futebol", icon: "shield" },
     "Quadra coberta": { classe: "tag-futebol", icon: "shield" },
     "Corrida de Rua": { classe: "tag-futebol", icon: "directions_run" },
-    "Futsal": { classe: "tag-futebol", icon: "sports" },
+    Futsal: { classe: "tag-futebol", icon: "sports" },
     "Campo de terra": { classe: "tag-futebol", icon: "fitness_center" },
-    "Torcida": { classe: "tag-futebol", icon: "stadium" }
+    Torcida: { classe: "tag-futebol", icon: "stadium" },
   },
   eventos: {
-    "Shows": { classe: "tag-eventos", icon: "music_note" },
-    "Festas": { classe: "tag-eventos", icon: "celebration" },
-    "Cultural": { classe: "tag-eventos", icon: "theater_comedy" },
-    "Gratuito": { classe: "tag-eventos", icon: "confirmation_number" },
-    "Teatro": { classe: "tag-eventos", icon: "masks" },
-    "Baladas": { classe: "tag-eventos", icon: "nightlife" },
-    "Exposições": { classe: "tag-eventos", icon: "palette" },
+    Shows: { classe: "tag-eventos", icon: "music_note" },
+    Festas: { classe: "tag-eventos", icon: "celebration" },
+    Cultural: { classe: "tag-eventos", icon: "theater_comedy" },
+    Gratuito: { classe: "tag-eventos", icon: "confirmation_number" },
+    Teatro: { classe: "tag-eventos", icon: "masks" },
+    Baladas: { classe: "tag-eventos", icon: "nightlife" },
+    Exposições: { classe: "tag-eventos", icon: "palette" },
     "Parque da Cidade": { classe: "tag-eventos", icon: "attractions" },
-    "Ingressos": { classe: "tag-eventos", icon: "airplane_ticket" },
-    "Festival": { classe: "tag-eventos", icon: "festival" }
+    Ingressos: { classe: "tag-eventos", icon: "airplane_ticket" },
+    Festival: { classe: "tag-eventos", icon: "festival" },
   },
   entretenimento: {
     "Filmes e Séries": { classe: "tag-entretenimento", icon: "movie" },
-    "Música": { classe: "tag-entretenimento", icon: "headphones" },
-    "Livros": { classe: "tag-entretenimento", icon: "menu_book" },
-    "Memes": { classe: "tag-entretenimento", icon: "sentiment_very_satisfied" },
-    "Cinema": { classe: "tag-entretenimento", icon: "theaters" },
-    "Streaming": { classe: "tag-entretenimento", icon: "tv" },
-    "Anime": { classe: "tag-entretenimento", icon: "animation" },
-    "Podcasts": { classe: "tag-entretenimento", icon: "mic" },
-    "Humor": { classe: "tag-entretenimento", icon: "mood" },
-    "Recomendações": { classe: "tag-entretenimento", icon: "thumb_up" }
+    Música: { classe: "tag-entretenimento", icon: "headphones" },
+    Livros: { classe: "tag-entretenimento", icon: "menu_book" },
+    Memes: { classe: "tag-entretenimento", icon: "sentiment_very_satisfied" },
+    Cinema: { classe: "tag-entretenimento", icon: "theaters" },
+    Streaming: { classe: "tag-entretenimento", icon: "tv" },
+    Anime: { classe: "tag-entretenimento", icon: "animation" },
+    Podcasts: { classe: "tag-entretenimento", icon: "mic" },
+    Humor: { classe: "tag-entretenimento", icon: "mood" },
+    Recomendações: { classe: "tag-entretenimento", icon: "thumb_up" },
   },
   games: {
     "PC e Console": { classe: "tag-games", icon: "sports_esports" },
-    "Mobile": { classe: "tag-games", icon: "smartphone" },
-    "Dicas": { classe: "tag-games", icon: "lightbulb" },
-    "Torneios": { classe: "tag-games", icon: "emoji_events" },
-    "PlayStation": { classe: "tag-games", icon: "gamepad" },
-    "Xbox": { classe: "tag-games", icon: "videogame_asset" },
-    "Nintendo": { classe: "tag-games", icon: "stadia_controller" },
-    "Multiplayer": { classe: "tag-games", icon: "hub" },
-    "Lançamentos": { classe: "tag-games", icon: "rocket_launch" },
-    "Setup": { classe: "tag-games", icon: "desktop_windows" }
+    Mobile: { classe: "tag-games", icon: "smartphone" },
+    Dicas: { classe: "tag-games", icon: "lightbulb" },
+    Torneios: { classe: "tag-games", icon: "emoji_events" },
+    PlayStation: { classe: "tag-games", icon: "gamepad" },
+    Xbox: { classe: "tag-games", icon: "videogame_asset" },
+    Nintendo: { classe: "tag-games", icon: "stadia_controller" },
+    Multiplayer: { classe: "tag-games", icon: "hub" },
+    Lançamentos: { classe: "tag-games", icon: "rocket_launch" },
+    Setup: { classe: "tag-games", icon: "desktop_windows" },
   },
   concurso: {
-    "Editais": { classe: "tag-concursos", icon: "description" },
-    "Dúvidas": { classe: "tag-concursos", icon: "help" },
-    "Material": { classe: "tag-concursos", icon: "library_books" },
+    Editais: { classe: "tag-concursos", icon: "description" },
+    Dúvidas: { classe: "tag-concursos", icon: "help" },
+    Material: { classe: "tag-concursos", icon: "library_books" },
     "Dicas de Estudo": { classe: "tag-concursos", icon: "school" },
     "Locais de Prova": { classe: "tag-concursos", icon: "pin_drop" },
-    "Bancas": { classe: "tag-concursos", icon: "domain" },
-    "Gabaritos": { classe: "tag-concursos", icon: "fact_check" },
-    "Inscrições": { classe: "tag-concursos", icon: "app_registration" },
+    Bancas: { classe: "tag-concursos", icon: "domain" },
+    Gabaritos: { classe: "tag-concursos", icon: "fact_check" },
+    Inscrições: { classe: "tag-concursos", icon: "app_registration" },
     "Bibliotecas Publicas": { classe: "tag-concursos", icon: "balance" },
-    "Recomendação": { classe: "tag-concursos", icon: "local_police" }
-  }
+    Recomendação: { classe: "tag-concursos", icon: "local_police" },
+  },
 };
 
 // Dicionário global de busca
@@ -178,51 +178,50 @@ function renderizarBotoesFiltro() {
   });
 }
 
-
 // 2. Coleta mensagens do chat renderizadas no DOM local (Ajuste exato ao messages.js)
 // Função auxiliar de formatação de data e hora do Firestore
 
 const ROOM_ALIASES_TAG = {
   // Nomes exatos da interface (com e sem acento / com subtítulo)
   "Bate papo Geral": "geral",
-  "geral": "geral",
+  geral: "geral",
 
   "Religião e Fé": "religiao",
-  "Religião": "religiao",
-  "Religiao": "religiao",
-  "religiao": "religiao",
+  Religião: "religiao",
+  Religiao: "religiao",
+  religiao: "religiao",
 
-  "Política": "politica",
-  "Politica": "politica",
-  "politica": "politica",
+  Política: "politica",
+  Politica: "politica",
+  politica: "politica",
 
   "Trânsito e Transporte": "transito",
-  "Trânsito": "transito",
-  "Transito": "transito",
-  "transito": "transito",
+  Trânsito: "transito",
+  Transito: "transito",
+  transito: "transito",
 
   "Lugares para sair": "lugares",
-  "Lugares": "lugares",
-  "lugares": "lugares",
+  Lugares: "lugares",
+  lugares: "lugares",
 
   "Futebol e Esportes": "futebol",
-  "Futebol": "futebol",
-  "futebol": "futebol",
+  Futebol: "futebol",
+  futebol: "futebol",
 
   "Eventos e Shows": "eventos",
-  "Eventos": "eventos",
-  "eventos": "eventos",
+  Eventos: "eventos",
+  eventos: "eventos",
 
-  "Entretenimento": "entretenimento",
-  "entretenimento": "entretenimento",
+  Entretenimento: "entretenimento",
+  entretenimento: "entretenimento",
 
-  "Games": "games",
-  "games": "games",
+  Games: "games",
+  games: "games",
 
   "Concurso Público": "concurso",
-  "Concurso": "concurso",
+  Concurso: "concurso",
   "Consurso Publico": "concurso",
-  "concurso": "concurso"
+  concurso: "concurso",
 };
 function normalizeRoomIdTag(room) {
   return ROOM_ALIASES_TAG[room] || room || "geral";
@@ -248,11 +247,7 @@ async function buscarPrimeiras30Relatos(nomeTag) {
   const hojeDDMM = `${pad(agora.getDate())}/${pad(agora.getMonth() + 1)}`;
 
   try {
-    const q = query(
-      chatRef,
-      where("tag", "==", nomeTag),
-      limit(30)
-    );
+    const q = query(chatRef, where("tag", "==", nomeTag), limit(30));
 
     const snapshot = await getDocs(q);
 
@@ -260,7 +255,10 @@ async function buscarPrimeiras30Relatos(nomeTag) {
       const data = docSnap.data();
 
       // 1. Ignora mensagens deletadas ou ocultadas
-      if (data.deleted === true || (data.denunciasContador && data.denunciasContador >= 1)) {
+      if (
+        data.deleted === true ||
+        (data.denunciasContador && data.denunciasContador >= 1)
+      ) {
         return;
       }
 
@@ -283,7 +281,7 @@ async function buscarPrimeiras30Relatos(nomeTag) {
         cidade: data.cidade || data.city || "",
         hora: horaFormatada,
         texto: textoLimpo,
-        tag: nomeTag
+        tag: nomeTag,
       });
     });
   } catch (err) {
@@ -292,12 +290,6 @@ async function buscarPrimeiras30Relatos(nomeTag) {
 
   return listaRelatos;
 }
-
-
-
-
-
-
 
 // 3. Abre o Segundo Modal (Feed de Relatos)
 export async function abrirFeedDaTag(nomeTag) {
@@ -392,33 +384,47 @@ export function fecharTodosModaisFiltro() {
 // Inicialização dos Ouvintes de Evento
 document.addEventListener("DOMContentLoaded", () => {
   // Botão de fechar do modal pequeno
-  document.getElementById("closeFilterTagSelectModal")?.addEventListener("click", () => {
-    document.getElementById("filterTagSelectModal")?.classList.add("hidden");
-  });
+  document
+    .getElementById("closeFilterTagSelectModal")
+    ?.addEventListener("click", () => {
+      document.getElementById("filterTagSelectModal")?.classList.add("hidden");
+    });
 
   // Botão fechar do modal grande
-  document.getElementById("btnCloseFilterFeedModal")?.addEventListener("click", () => {
-    fecharTodosModaisFiltro();
-  });
+  document
+    .getElementById("btnCloseFilterFeedModal")
+    ?.addEventListener("click", () => {
+      fecharTodosModaisFiltro();
+    });
 
   // Botão voltar do modal grande para o pequeno
-  document.getElementById("btnBackToFilterSelect")?.addEventListener("click", () => {
-    document.getElementById("filterTagFeedModal")?.classList.add("hidden");
-    document.getElementById("filterTagSelectModal")?.classList.remove("hidden");
-  });
+  document
+    .getElementById("btnBackToFilterSelect")
+    ?.addEventListener("click", () => {
+      document.getElementById("filterTagFeedModal")?.classList.add("hidden");
+      document
+        .getElementById("filterTagSelectModal")
+        ?.classList.remove("hidden");
+    });
 
   // Fechar ao clicar fora (backdrop)
-  document.getElementById("filterTagFeedModal")?.addEventListener("click", (e) => {
-    if (e.target.id === "filterTagFeedModal") {
-      fecharTodosModaisFiltro();
-    }
-  });
+  document
+    .getElementById("filterTagFeedModal")
+    ?.addEventListener("click", (e) => {
+      if (e.target.id === "filterTagFeedModal") {
+        fecharTodosModaisFiltro();
+      }
+    });
 
-  document.getElementById("filterTagSelectModal")?.addEventListener("click", (e) => {
-    if (e.target.id === "filterTagSelectModal") {
-      document.getElementById("filterTagSelectModal")?.classList.add("hidden");
-    }
-  });
+  document
+    .getElementById("filterTagSelectModal")
+    ?.addEventListener("click", (e) => {
+      if (e.target.id === "filterTagSelectModal") {
+        document
+          .getElementById("filterTagSelectModal")
+          ?.classList.add("hidden");
+      }
+    });
 
   // Conecta ao attachmentActions se existir
   if (window.attachmentActions) {
@@ -469,7 +475,8 @@ export function renderizarModalEnvioTags() {
     btn.addEventListener("click", () => {
       const inputMsg = document.getElementById("messageInput");
       if (inputMsg) {
-        inputMsg.value = `[${nomeTag}] ` + inputMsg.value.replace(/^\[.*?\]\s*/, "");
+        inputMsg.value =
+          `[${nomeTag}] ` + inputMsg.value.replace(/^\[.*?\]\s*/, "");
         inputMsg.focus();
       }
       document.getElementById("tagsDfModal")?.classList.add("hidden");

@@ -1,7 +1,18 @@
 // bloqueio.js - Módulo de Moderação, Denúncias e Bloqueio do Chat-DF
+
+import {
+  ref,
+  set,
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 import { auth, db, rtdb, signOutUser } from "./firebase-config.js";
-import { doc, getDoc, setDoc, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-import { ref, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 import { showToast } from "./ui.js";
 
 /**
@@ -13,8 +24,14 @@ export async function verificarUsuarioBloqueado(user, userData = null) {
 
   try {
     // 1. Checagem direta nos dados do documento do usuário
-    if (userData && (userData.isBanned === true || userData.status === "banned")) {
-      await executarExpulsaoBloqueio(user, userData.banReason || "Violação dos termos de uso da comunidade.");
+    if (
+      userData &&
+      (userData.isBanned === true || userData.status === "banned")
+    ) {
+      await executarExpulsaoBloqueio(
+        user,
+        userData.banReason || "Violação dos termos de uso da comunidade.",
+      );
       return true;
     }
 
@@ -25,7 +42,10 @@ export async function verificarUsuarioBloqueado(user, userData = null) {
       if (snap.exists()) {
         const data = snap.data();
         if (data.isBanned === true || data.status === "banned") {
-          await executarExpulsaoBloqueio(user, data.banReason || "Violação dos termos de uso da comunidade.");
+          await executarExpulsaoBloqueio(
+            user,
+            data.banReason || "Violação dos termos de uso da comunidade.",
+          );
           return true;
         }
       }
@@ -33,13 +53,19 @@ export async function verificarUsuarioBloqueado(user, userData = null) {
 
     // 3. Checagem secundária por e-mail na coleção banned_emails (caso tenha sido banido por e-mail direto)
     if (user.email) {
-      const sanitizedEmail = user.email.toLowerCase().trim().replace(/\./g, "_");
+      const sanitizedEmail = user.email
+        .toLowerCase()
+        .trim()
+        .replace(/\./g, "_");
       const bannedEmailRef = doc(db, "banned_emails", sanitizedEmail);
       const bannedSnap = await getDoc(bannedEmailRef);
 
       if (bannedSnap.exists()) {
         const banInfo = bannedSnap.data();
-        await executarExpulsaoBloqueio(user, banInfo.reason || "E-mail suspenso por moderação.");
+        await executarExpulsaoBloqueio(
+          user,
+          banInfo.reason || "E-mail suspenso por moderação.",
+        );
         return true;
       }
     }
@@ -108,10 +134,12 @@ function exibirModalContaSuspensa(motivo) {
     `;
     document.body.appendChild(modal);
 
-    document.getElementById("closeBannedNoticeBtn")?.addEventListener("click", () => {
-      modal.remove();
-      window.location.href = "index.html";
-    });
+    document
+      .getElementById("closeBannedNoticeBtn")
+      ?.addEventListener("click", () => {
+        modal.remove();
+        window.location.href = "index.html";
+      });
   }
 }
 
@@ -123,7 +151,6 @@ function exibirModalContaSuspensa(motivo) {
  * Centralizado e compatível com as regras de 'denuncias_usuarios'.
  */
 
-
 /**
  * Verifica se o usuário autenticado já denunciou o alvo anteriormente
  */
@@ -132,7 +159,9 @@ export async function usuarioJaFoiDenunciado(targetUid) {
 
   // 1. Checagem rápida em cache local
   try {
-    const localList = JSON.parse(localStorage.getItem(`denunciados_${auth.currentUser.uid}`) || "[]");
+    const localList = JSON.parse(
+      localStorage.getItem(`denunciados_${auth.currentUser.uid}`) || "[]",
+    );
     if (localList.includes(targetUid)) return true;
   } catch (e) {}
 
@@ -144,7 +173,10 @@ export async function usuarioJaFoiDenunciado(targetUid) {
       if (lista.includes(targetUid)) {
         // Atualiza cache local
         try {
-          localStorage.setItem(`denunciados_${auth.currentUser.uid}`, JSON.stringify(lista));
+          localStorage.setItem(
+            `denunciados_${auth.currentUser.uid}`,
+            JSON.stringify(lista),
+          );
         } catch (e) {}
         return true;
       }
@@ -157,7 +189,9 @@ export async function usuarioJaFoiDenunciado(targetUid) {
 }
 
 export function initDenuncias() {
-  const modalDenuncia = document.getElementById("reportUserModal") || document.getElementById("reportModal");
+  const modalDenuncia =
+    document.getElementById("reportUserModal") ||
+    document.getElementById("reportModal");
   const btnSubmit = document.getElementById("submitReportBtn");
   const btnCancel = document.getElementById("cancelReportBtn");
   const btnCloseX = document.getElementById("closeReportModalX");
@@ -181,7 +215,9 @@ export function initDenuncias() {
       return;
     }
 
-    const targetUid = reportBtn.getAttribute("data-target-uid") || window.appState?.currentViewedProfileId;
+    const targetUid =
+      reportBtn.getAttribute("data-target-uid") ||
+      window.appState?.currentViewedProfileId;
 
     if (!targetUid) {
       showToast("Não foi possível identificar o usuário denunciado.");
@@ -209,7 +245,9 @@ export function initDenuncias() {
   btnCloseX?.addEventListener("click", fecharModal);
 
   btnSubmit?.addEventListener("click", async () => {
-    const targetUid = reportBtn?.getAttribute("data-target-uid") || window.appState?.currentViewedProfileId;
+    const targetUid =
+      reportBtn?.getAttribute("data-target-uid") ||
+      window.appState?.currentViewedProfileId;
     const motivo = reasonInput?.value?.trim();
 
     if (!auth.currentUser) {
@@ -244,21 +282,26 @@ export function initDenuncias() {
       const reporterProfileRef = doc(db, "users", auth.currentUser.uid);
       const reporterSnap = await getDoc(reporterProfileRef);
       const reporterData = reporterSnap.exists() ? reporterSnap.data() : {};
-      const reporterName = reporterData.nome || auth.currentUser.displayName || "Usuário";
+      const reporterName =
+        reporterData.nome || auth.currentUser.displayName || "Usuário";
 
-// 2. Busca os dados do denunciado (nome e e-mail)
+      // 2. Busca os dados do denunciado (nome e e-mail)
       const targetProfileRef = doc(db, "users", targetUid);
       const targetSnap = await getDoc(targetProfileRef);
       const targetData = targetSnap.exists() ? targetSnap.data() : {};
-      const targetName = targetData.nome || window.__currentProfileData?.nome || "Usuário";
+      const targetName =
+        targetData.nome || window.__currentProfileData?.nome || "Usuário";
       const targetEmail = targetData.email || "Sem e-mail cadastrado";
 
       // 3. Monta o ID idêntico ao padrão
-   // 3. Monta o ID usando o nome do DENUNCIADO (facilita moderação e contagem visual)
+      // 3. Monta o ID usando o nome do DENUNCIADO (facilita moderação e contagem visual)
       const agora = new Date();
       const pad = (n) => String(n).padStart(2, "0");
       const dataId = `${agora.getFullYear()}-${pad(agora.getMonth() + 1)}-${pad(agora.getDate())}_${pad(agora.getHours())}-${pad(agora.getMinutes())}-${pad(agora.getSeconds())}`;
-      const nomeLimpoDenunciado = targetName.trim().replace(/\s+/g, "_").replace(/[^\wÀ-ÿ_-]/g, "");
+      const nomeLimpoDenunciado = targetName
+        .trim()
+        .replace(/\s+/g, "_")
+        .replace(/[^\wÀ-ÿ_-]/g, "");
       const docId = `denunciado_${nomeLimpoDenunciado}_${dataId}`;
 
       // 4. Salva a denúncia na coleção incluindo o e-mail do infrator
@@ -269,23 +312,32 @@ export function initDenuncias() {
         reporterUid: auth.currentUser.uid,
         reporterName: reporterName,
         reason: motivo,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
       });
 
       // 5. Grava no perfil do denunciante para NUNCA mais abrir para esta pessoa
-      const listaAtual = Array.isArray(reporterData.denunciadosList) ? reporterData.denunciadosList : [];
+      const listaAtual = Array.isArray(reporterData.denunciadosList)
+        ? reporterData.denunciadosList
+        : [];
       if (!listaAtual.includes(targetUid)) {
         listaAtual.push(targetUid);
       }
 
-      await setDoc(reporterProfileRef, {
-        denunciadosList: listaAtual,
-        ultimoUsuarioDenunciado: targetUid
-      }, { merge: true });
+      await setDoc(
+        reporterProfileRef,
+        {
+          denunciadosList: listaAtual,
+          ultimoUsuarioDenunciado: targetUid,
+        },
+        { merge: true },
+      );
 
       // Atualiza o cache local
       try {
-        localStorage.setItem(`denunciados_${auth.currentUser.uid}`, JSON.stringify(listaAtual));
+        localStorage.setItem(
+          `denunciados_${auth.currentUser.uid}`,
+          JSON.stringify(listaAtual),
+        );
       } catch (e) {}
 
       showToast("Denúncia enviada com sucesso.");
@@ -294,7 +346,6 @@ export function initDenuncias() {
       if (reportBtn) reportBtn.style.opacity = "0.5";
       const contextReportBtn = document.getElementById("contextReportBtn");
       if (contextReportBtn) contextReportBtn.style.opacity = "0.5";
-
     } catch (err) {
       console.error("Erro ao registrar denúncia:", err);
       showToast("Erro ao enviar denúncia. Tente novamente.");

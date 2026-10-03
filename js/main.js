@@ -1,46 +1,52 @@
 // ============================== IMPORTS ======================================================
-import { avataresEles, avataresElas, avataresUnissex } from "./avatar.js";
-import { initAuth } from "./auth.js";
-import { initMessages, sendMessage } from './messages.js?v=2';
-import { showToast, openAttachmentSheet, openUIPanel, textColorPalette } from "./ui.js";
-import { initStickerPanel } from "./stickers-panel.js";
 
-import { auth, db } from "./firebase-config.js";
-import { initUsersPanel } from "./users-panel.js";
-import { initDenuncias, usuarioJaFoiDenunciado } from "./bloqueio.js";
 import { updateProfile } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { listenUserOnlineStatus, trackUserRoomPresence, debounceUpdateRoomPresence, setUserStatus } from "./presence.js";
-
-
-import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
-
 import {
   addDoc,
   collection,
-  serverTimestamp,
-  setDoc,
   doc,
   getDoc,
+  onSnapshot,
+  serverTimestamp,
+  setDoc,
   updateDoc,
-  onSnapshot
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-// Importação do Módulo VIP Isolado
-import {
-  aplicarVisualVipCompleto,
-  restaurarVisualPadraoPerfil,
-  inicializarPainelVipDinamico,
-  initVipEngine,
-  abrirPainelVip,
-  fecharPainelVip
-} from "./vip.js";
+import { initAuth } from "./auth.js";
+import { avataresElas, avataresEles, avataresUnissex } from "./avatar.js";
+import { initDenuncias, usuarioJaFoiDenunciado } from "./bloqueio.js";
 // Importação do Módulo de Curtidas & Interesses Isolado tag 30-08-26
 import {
-  renderProfileInterests,
   renderEditInterestsSelector,
+  renderProfileInterests,
+  selectedInterests,
   setSelectedInterests,
-  selectedInterests
 } from "./curtidas.js";
+import { auth, db } from "./firebase-config.js";
+import { initMessages, sendMessage } from "./messages.js";
+import {
+  debounceUpdateRoomPresence,
+  listenUserOnlineStatus,
+  setUserStatus,
+  trackUserRoomPresence,
+} from "./presence.js";
+import { initStickerPanel } from "./stickers-panel.js";
+import {
+  openAttachmentSheet,
+  openUIPanel,
+  showToast,
+  textColorPalette,
+} from "./ui.js";
+import { initUsersPanel } from "./users-panel.js";
+// Importação do Módulo VIP Isolado
+import {
+  abrirPainelVip,
+  aplicarVisualVipCompleto,
+  fecharPainelVip,
+  inicializarPainelVipDinamico,
+  initVipEngine,
+  restaurarVisualPadraoPerfil,
+} from "./vip.js";
 
 // ========================================================================
 // ROTINA DE VERIFICACAO E RESET AUTOMÁTICO DO VIP EXPIRADO
@@ -65,15 +71,12 @@ export async function verificarEExpiraVipUsuario(userId, userData) {
           vipMsgColor: "#333333",
           vipAvatarFrame: "none",
           vipProfileBanner: "default",
-          vipBannerUrl: ""
+          vipBannerUrl: "",
         };
 
-     
-await updateDoc(refUser, resetData);
+        await updateDoc(refUser, resetData);
 
         Object.assign(userData, resetData);
-
-
       } catch (err) {
         console.error("Erro ao expirar VIP do usuário:", err);
       }
@@ -94,7 +97,7 @@ let currentPanel = null;
 function openPanel(panelName) {
   const isAlreadyOpen = currentPanel === panelName;
   closeAllPanels();
-  
+
   if (isAlreadyOpen) return;
 
   currentPanel = panelName;
@@ -135,7 +138,7 @@ const attachmentActions = {
   users: () => {
     openPanel("users");
   },
-roomsSide: () => {
+  roomsSide: () => {
     openPanel("roomsSide");
   },
   tags: () => {
@@ -163,7 +166,7 @@ roomsSide: () => {
   ai: () => {
     const modal = document.getElementById("feedbackModal");
     modal?.classList.remove("hidden");
-  }
+  },
 };
 window.attachmentActions = attachmentActions;
 
@@ -192,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// DOM ELEMENTS 
+// DOM ELEMENTS
 const isChatRoute = window.location.pathname.includes("chat.html");
 const attachBtn = document.getElementById("attachBtn");
 const attachmentPanel = document.getElementById("attachmentPanel");
@@ -218,7 +221,7 @@ const appState = {
   chatMounted: false,
   unsubscribeMessages: null,
   unsubscribeProfileLock: null,
-  reportCount: 0
+  reportCount: 0,
 };
 window.appState = appState;
 
@@ -236,7 +239,7 @@ window.addEventListener("online", () => {
 
 function atualizarBloqueioCampoMensagem(perfilCompleto) {
   const wrapper = document.getElementById("message-input-wrapper");
-  let aviso = document.getElementById("messageProfileLock");
+  const aviso = document.getElementById("messageProfileLock");
   const input = document.getElementById("messageInput");
   const sendBtn = document.getElementById("sendBtn");
 
@@ -288,12 +291,15 @@ function mountChatIfNeeded() {
 async function handleUserReady(detail = {}) {
   appState.userReady = true;
   appState.currentUser = detail.user || auth.currentUser || null;
-  
+
   if (detail.userData && appState.currentUser) {
-    detail.userData = await verificarEExpiraVipUsuario(appState.currentUser.uid, detail.userData);
+    detail.userData = await verificarEExpiraVipUsuario(
+      appState.currentUser.uid,
+      detail.userData,
+    );
   }
 
-if (detail.userData?.nome) {
+  if (detail.userData?.nome) {
     appState.currentUser.nome = detail.userData.nome;
     appState.currentUser.displayNameChat = detail.userData.nome;
   }
@@ -314,14 +320,14 @@ if (detail.userData?.nome) {
       vipNameColorType: detail.userData.vipNameColorType || "solid",
       vipNameColorSolid: detail.userData.vipNameColorSolid || "#1E293B",
       vipNameFont: detail.userData.vipNameFont || "default",
-      vipAvatarFrame: detail.userData.vipAvatarFrame || "none"
+      vipAvatarFrame: detail.userData.vipAvatarFrame || "none",
     };
   }
 
   if (isChatRoute) {
     if (detail.userData) {
       atualizarBloqueioCampoMensagem(detail.userData.perfilCompleto === true);
-      
+
       const input = document.getElementById("messageInput");
       if (input && detail.userData.vipMsgColor) {
         input.style.color = detail.userData.vipMsgColor;
@@ -343,7 +349,6 @@ function handleUserLogout() {
   if (roomTitle) {
     roomTitle.textContent = appState.currentRoom || sala;
   }
-
 
   closeAllPanels();
 
@@ -439,18 +444,6 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-
-
-
-
-
-
-
-
-
-
-  
-
   const openPrivacyBtn = e.target.closest("#openPrivacyModalBtn");
   if (openPrivacyBtn) {
     e.preventDefault();
@@ -463,7 +456,9 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-  const closePrivacyBtn = e.target.closest("#closePrivacyModalBtn") || e.target.closest("#agreePrivacyBtn");
+  const closePrivacyBtn =
+    e.target.closest("#closePrivacyModalBtn") ||
+    e.target.closest("#agreePrivacyBtn");
   if (closePrivacyBtn) {
     e.preventDefault();
     const privacyWrapper = document.getElementById("privacyTermsWrapper");
@@ -479,10 +474,7 @@ document.addEventListener("click", (e) => {
 document.addEventListener("DOMContentLoaded", () => {
   initNavbarCollapse();
   initVipEngine(() => currentProfileIsOwner);
-initDenuncias(); // <--- Adicionado aqui 01-09-2026
-
-
-  
+  initDenuncias(); // <--- Adicionado aqui 01-09-2026
 
   // Vincular Abertura e Retorno do VIP
   document.getElementById("vipTopHeaderBtn")?.addEventListener("click", (e) => {
@@ -491,10 +483,12 @@ initDenuncias(); // <--- Adicionado aqui 01-09-2026
     abrirPainelVip();
   });
 
-  document.getElementById("vipBackToProfileBtn")?.addEventListener("click", (e) => {
-    e.preventDefault();
-    fecharPainelVip();
-  });
+  document
+    .getElementById("vipBackToProfileBtn")
+    ?.addEventListener("click", (e) => {
+      e.preventDefault();
+      fecharPainelVip();
+    });
 
   if (!isChatRoute) return;
   mountChatIfNeeded();
@@ -522,25 +516,33 @@ function setupChat() {
   }
 
   let touchStartY = 0;
-  chat.addEventListener("touchstart", (e) => {
-    if (window.innerWidth > 768) return;
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
+  chat.addEventListener(
+    "touchstart",
+    (e) => {
+      if (window.innerWidth > 768) return;
+      touchStartY = e.touches[0].clientY;
+    },
+    { passive: true },
+  );
 
-  chat.addEventListener("touchmove", (e) => {
-    if (window.innerWidth > 768) return;
+  chat.addEventListener(
+    "touchmove",
+    (e) => {
+      if (window.innerWidth > 768) return;
 
-    if (document.activeElement === input) {
-      let touchCurrentY = e.touches[0].clientY;
-      let deltaY = Math.abs(touchCurrentY - touchStartY);
+      if (document.activeElement === input) {
+        const touchCurrentY = e.touches[0].clientY;
+        const deltaY = Math.abs(touchCurrentY - touchStartY);
 
-      if (deltaY > 50 && touchCurrentY < touchStartY) {
-        input.blur();
+        if (deltaY > 50 && touchCurrentY < touchStartY) {
+          input.blur();
+        }
       }
-    }
-  }, { passive: true });
+    },
+    { passive: true },
+  );
 
-// Evita que o clique no botão tire o foco antes do evento 'click' rodar
+  // Evita que o clique no botão tire o foco antes do evento 'click' rodar
   emojiBtn?.addEventListener("mousedown", (e) => e.preventDefault());
   attachBtn?.addEventListener("mousedown", (e) => e.preventDefault());
 
@@ -550,13 +552,17 @@ function setupChat() {
   });
 
   // Abertura instantânea no 1º clique
-// Abertura instantânea e fechamento forçado do teclado mobile
-// Abertura suave sem flash/piscada ao recolher o teclado mobile
+  // Abertura instantânea e fechamento forçado do teclado mobile
+  // Abertura suave sem flash/piscada ao recolher o teclado mobile
   const abrirPainelSemFlashTeclado = (nomePainel) => {
-    const tecladoEstavaAberto = document.activeElement === input || window.innerHeight < 500;
-    
+    const tecladoEstavaAberto =
+      document.activeElement === input || window.innerHeight < 500;
+
     if (input) input.blur();
-    if (document.activeElement && typeof document.activeElement.blur === "function") {
+    if (
+      document.activeElement &&
+      typeof document.activeElement.blur === "function"
+    ) {
       document.activeElement.blur();
     }
 
@@ -582,9 +588,11 @@ function setupChat() {
   });
 
   // Fechamento via Backdrop ao clicar fora
-  document.getElementById("chatPanelsBackdrop")?.addEventListener("click", () => {
-    closeAllPanels();
-  });
+  document
+    .getElementById("chatPanelsBackdrop")
+    ?.addEventListener("click", () => {
+      closeAllPanels();
+    });
 
   openOnlineUsersBtn?.addEventListener("click", (e) => {
     e.preventDefault();
@@ -603,7 +611,10 @@ function setupChat() {
   }
 
   cleanupChatMessages();
-  appState.unsubscribeMessages = initMessages(chat, appState.currentRoom || sala);
+  appState.unsubscribeMessages = initMessages(
+    chat,
+    appState.currentRoom || sala,
+  );
   updateUserRoomPresence();
   setTimeout(() => {
     document.body.classList.remove("chat-loading");
@@ -613,9 +624,12 @@ function setupChat() {
     e.preventDefault();
   });
 
-const dispararEnvioMensagem = async () => {
+  const dispararEnvioMensagem = async () => {
     if (auth.currentUser && window.__currentProfileData) {
-      window.__currentProfileData = await verificarEExpiraVipUsuario(auth.currentUser.uid, window.__currentProfileData);
+      window.__currentProfileData = await verificarEExpiraVipUsuario(
+        auth.currentUser.uid,
+        window.__currentProfileData,
+      );
     }
     sendMessage(input);
   };
@@ -628,8 +642,8 @@ const dispararEnvioMensagem = async () => {
     }
   });
 
-  // BOTAO DE Ler mais e Ler menos   
-chat.addEventListener("click", (e) => {
+  // BOTAO DE Ler mais e Ler menos
+  chat.addEventListener("click", (e) => {
     if (e.target.classList.contains("toggle-expand")) {
       e.stopPropagation();
       const textEl = e.target.previousElementSibling;
@@ -641,9 +655,9 @@ chat.addEventListener("click", (e) => {
     }
   });
 
-//================================  MEXE NO TECLADO NO MODO MOBILE 23-09-26 ======================
+  //================================  MEXE NO TECLADO NO MODO MOBILE 23-09-26 ======================
 
-(function handleVisualViewport() {
+  (function handleVisualViewport() {
     if (!window.visualViewport) return;
 
     const root = document.documentElement;
@@ -682,16 +696,16 @@ chat.addEventListener("click", (e) => {
   messageInput.addEventListener("input", autoResize);
   initStickerPanel();
 
-// Fechar painel de anexos pelo botão X
-  document.getElementById("closeAttachmentPanel")?.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    closeAllPanels();
-  });
+  // Fechar painel de anexos pelo botão X
+  document
+    .getElementById("closeAttachmentPanel")
+    ?.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeAllPanels();
+    });
 
-
-
-// =========================================================================
+  // =========================================================================
   // SISTEMA PROFISSIONAL DE TROCA DE SALAS SEM RECARREGAR (SPA)
   // =========================================================================
   window.trocarSalaSemPiscar = (novaSala) => {
@@ -709,15 +723,17 @@ chat.addEventListener("click", (e) => {
     // 2. Atualiza o título da sala na navbar do chat
     const roomTitle = document.getElementById("chatRoomName");
     if (roomTitle) {
-      const salaObj = window.salas?.find(s => s.id === novaSala);
+      const salaObj = window.salas?.find((s) => s.id === novaSala);
       roomTitle.textContent = salaObj ? salaObj.nome : novaSala;
     }
 
     // 3. Atualiza o estado ativo no menu lateral de salas
-    document.querySelectorAll("#salas-lista .live-room-item").forEach(item => {
-      const ativo = item.dataset.salaId === novaSala;
-      item.classList.toggle("active", ativo);
-    });
+    document
+      .querySelectorAll("#salas-lista .live-room-item")
+      .forEach((item) => {
+        const ativo = item.dataset.salaId === novaSala;
+        item.classList.toggle("active", ativo);
+      });
 
     // 4. Executa a troca de containers de mensagens instantaneamente
     initMessages(chat, novaSala);
@@ -730,7 +746,7 @@ chat.addEventListener("click", (e) => {
   };
 
   // Suporte aos botões voltar/avançar do navegador do celular
- // Suporte aos botões voltar/avançar do navegador do celular
+  // Suporte aos botões voltar/avançar do navegador do celular
   window.addEventListener("popstate", (e) => {
     const urlParams = new URLSearchParams(window.location.search);
     const salaUrl = urlParams.get("sala") || "geral";
@@ -740,7 +756,7 @@ chat.addEventListener("click", (e) => {
   });
 
   // =========================================================================
-  // ECONOMIA DE FIREBASE: PAUSA EM SEGUNDO PLANO (PAGE VISIBILITY API) 15-09-26 
+  // ECONOMIA DE FIREBASE: PAUSA EM SEGUNDO PLANO (PAGE VISIBILITY API) 15-09-26
   // =========================================================================
   document.addEventListener("visibilitychange", () => {
     // Só atua se o usuário estiver na tela de chat montada
@@ -758,7 +774,7 @@ chat.addEventListener("click", (e) => {
     }
   });
 
-/* TESTE PRA SABER  se a document.addEventListener("visibilitychange", () => {  DEU CERTO   OLHAR NO CONSOLE 
+  /* TESTE PRA SABER  se a document.addEventListener("visibilitychange", () => {  DEU CERTO   OLHAR NO CONSOLE 
 document.addEventListener("visibilitychange", () => {
     if (!isChatRoute || !appState.chatMounted) return;
 
@@ -773,9 +789,6 @@ document.addEventListener("visibilitychange", () => {
       console.log("🟢 [FIREBASE RECONECTADO] Usuário voltou para a tela!");
     }
   }); */
-
-
-
 }
 
 export function resetMessageInput() {
@@ -793,7 +806,9 @@ function initNavbarCollapse() {
   const toggler = document.querySelector(".navbar-toggler");
   if (!navbarNav || typeof bootstrap === "undefined") return;
 
-  const bsCollapse = bootstrap.Collapse.getOrCreateInstance(navbarNav, { toggle: false });
+  const bsCollapse = bootstrap.Collapse.getOrCreateInstance(navbarNav, {
+    toggle: false,
+  });
 
   // Clique específico no Sobre o Chat para rolar até o rodapé
   const btnSobre = document.getElementById("btnSobreNav");
@@ -812,7 +827,7 @@ function initNavbarCollapse() {
       setTimeout(() => {
         window.scrollTo({
           top: document.documentElement.scrollHeight,
-          behavior: "smooth"
+          behavior: "smooth",
         });
       }, 200);
     });
@@ -844,7 +859,11 @@ document.addEventListener("click", (e) => {
   const stickerPanelEl = document.getElementById("stickerPanel");
   const emojiBtnEl = document.getElementById("emojiBtn");
   if (stickerPanelEl?.classList.contains("show")) {
-    if (!stickerPanelEl.contains(e.target) && !emojiBtnEl?.contains(e.target) && !e.target.closest("#emojiBtn")) {
+    if (
+      !stickerPanelEl.contains(e.target) &&
+      !emojiBtnEl?.contains(e.target) &&
+      !e.target.closest("#emojiBtn")
+    ) {
       stickerPanelEl.classList.remove("show");
     }
   }
@@ -852,7 +871,11 @@ document.addEventListener("click", (e) => {
   const attachmentPanelEl = document.getElementById("attachmentPanel");
   const attachBtnEl = document.getElementById("attachBtn");
   if (attachmentPanelEl?.classList.contains("show")) {
-    if (!attachmentPanelEl.contains(e.target) && !attachBtnEl?.contains(e.target) && !e.target.closest("#attachBtn")) {
+    if (
+      !attachmentPanelEl.contains(e.target) &&
+      !attachBtnEl?.contains(e.target) &&
+      !e.target.closest("#attachBtn")
+    ) {
       closeAllPanels();
     }
   }
@@ -880,7 +903,9 @@ document.getElementById("sendFeedback")?.addEventListener("click", async () => {
   const lastSent = localStorage.getItem("lastFeedbackTime");
   const now = Date.now();
   if (lastSent && now - lastSent < FEEDBACK_COOLDOWN * 1000) {
-    const wait = Math.ceil((FEEDBACK_COOLDOWN * 1000 - (now - lastSent)) / 1000);
+    const wait = Math.ceil(
+      (FEEDBACK_COOLDOWN * 1000 - (now - lastSent)) / 1000,
+    );
     showToast(`Aguarde ${wait}s para enviar outra sugestão.`);
     return;
   }
@@ -891,7 +916,7 @@ document.getElementById("sendFeedback")?.addEventListener("click", async () => {
       text,
       uid: user?.uid || null,
       name: user?.displayName || "Anônimo",
-      createdAt: serverTimestamp()
+      createdAt: serverTimestamp(),
     });
 
     localStorage.setItem("lastFeedbackTime", now);
@@ -912,66 +937,68 @@ window.addEventListener("attachmentAction", (e) => {
 window.closeAllPanels = closeAllPanels;
 
 // Menu de Mensagem
-document.getElementById("contextProfileBtn")?.addEventListener("click", async (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+document
+  .getElementById("contextProfileBtn")
+  ?.addEventListener("click", async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-  const menu = document.getElementById("messageContextMenu");
-  if (!menu) return;
+    const menu = document.getElementById("messageContextMenu");
+    if (!menu) return;
 
-  const userId = menu.dataset.uid;
-  menu.classList.add("hidden");
+    const userId = menu.dataset.uid;
+    menu.classList.add("hidden");
 
-  if (!userId) {
-    showToast("Perfil não encontrado para essa mensagem antiga.");
-    return;
-  }
+    if (!userId) {
+      showToast("Perfil não encontrado para essa mensagem antiga.");
+      return;
+    }
 
-  if (typeof window.openMainProfilePanel === "function") {
-    await window.openMainProfilePanel(userId);
-  }
-});
-// DENUNCIA DE USUARIO  
-document.getElementById("contextReportBtn")?.addEventListener("click", async (e) => {
-  e.preventDefault();
-  const menu = document.getElementById("messageContextMenu");
-  const reportUserModal = document.getElementById("reportUserModal") || document.getElementById("reportModal");
-  const reportUserBtn = document.getElementById("reportUserBtn");
+    if (typeof window.openMainProfilePanel === "function") {
+      await window.openMainProfilePanel(userId);
+    }
+  });
+// DENUNCIA DE USUARIO
+document
+  .getElementById("contextReportBtn")
+  ?.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const menu = document.getElementById("messageContextMenu");
+    const reportUserModal =
+      document.getElementById("reportUserModal") ||
+      document.getElementById("reportModal");
+    const reportUserBtn = document.getElementById("reportUserBtn");
 
-  if (!menu || !reportUserModal) return;
-  const targetUid = menu.dataset.uid;
+    if (!menu || !reportUserModal) return;
+    const targetUid = menu.dataset.uid;
 
-  if (!targetUid) {
-    showToast("Não foi possível identificar o usuário desta mensagem.");
-    return;
-  }
+    if (!targetUid) {
+      showToast("Não foi possível identificar o usuário desta mensagem.");
+      return;
+    }
 
-  menu.classList.add("hidden");
+    menu.classList.add("hidden");
 
-  if (auth.currentUser && auth.currentUser.uid === targetUid) {
-    showToast("Você não pode denunciar a si mesmo.");
-    return;
-  }
+    if (auth.currentUser && auth.currentUser.uid === targetUid) {
+      showToast("Você não pode denunciar a si mesmo.");
+      return;
+    }
 
-  // Trava de denúncia já realizada
-  const jaDenunciou = await usuarioJaFoiDenunciado(targetUid);
-  if (jaDenunciou) {
-    showToast("Você já denúnciou este usuário.");
-    return;
-  }
+    // Trava de denúncia já realizada
+    const jaDenunciou = await usuarioJaFoiDenunciado(targetUid);
+    if (jaDenunciou) {
+      showToast("Você já denúnciou este usuário.");
+      return;
+    }
 
-  if (reportUserBtn) {
-    reportUserBtn.setAttribute("data-target-uid", targetUid);
-  }
+    if (reportUserBtn) {
+      reportUserBtn.setAttribute("data-target-uid", targetUid);
+    }
 
-  // Abre o modal de denúncia na tela
-  reportUserModal.classList.remove("hidden");
-  reportUserModal.style.display = "flex";
-});
-
-
-
-
+    // Abre o modal de denúncia na tela
+    reportUserModal.classList.remove("hidden");
+    reportUserModal.style.display = "flex";
+  });
 
 document.getElementById("cancelReport")?.addEventListener("click", () => {
   document.getElementById("reportModal")?.classList.add("hidden");
@@ -1000,7 +1027,9 @@ document.addEventListener("DOMContentLoaded", () => {
         hiddenInput.value = value;
         selectedText.textContent = option.textContent;
 
-        dropdown.querySelectorAll(".accordion-option").forEach(opt => opt.classList.remove("selected"));
+        dropdown
+          .querySelectorAll(".accordion-option")
+          .forEach((opt) => opt.classList.remove("selected"));
         option.classList.add("selected");
 
         customSelect.classList.remove("open");
@@ -1037,11 +1066,49 @@ const editGender = document.getElementById("editGender");
 const saveProfileBtn = document.getElementById("saveProfileBtn");
 
 const CIDADES_DF = [
-  "Águas Claras", "Arniqueira", "Asa Norte", "Asa Sul", "Brazlândia", "Candangolândia", "Ceilândia","Ceilândia S","Ceilândia N", "Cruzeiro", "Fercal", "Gama",
-  "Guará", "Guará II", "Itapoã", "Jardim Botânico", "Lago Norte", "Lago Sul", "Núcleo Bandeirante", "Paranoá", "Park Way", "Planaltina",
-  "Plano Piloto", "Recanto das Emas", "Riacho Fundo", "Riacho Fundo II", "Samambaia N", "Samambaia S", "Santa Maria", "São Sebastião",
-  "Estrutural", "SIA", "Sobradinho", "Sobradinho II", "Sol Nascente", "Pôr do Sol", "Sudoeste", "Octogonal", "Taguatinga", "Taguatinga N",
-  "Taguatinga S", "Varjão", "Vicente Pires"
+  "Águas Claras",
+  "Arniqueira",
+  "Asa Norte",
+  "Asa Sul",
+  "Brazlândia",
+  "Candangolândia",
+  "Ceilândia",
+  "Ceilândia S",
+  "Ceilândia N",
+  "Cruzeiro",
+  "Fercal",
+  "Gama",
+  "Guará",
+  "Guará II",
+  "Itapoã",
+  "Jardim Botânico",
+  "Lago Norte",
+  "Lago Sul",
+  "Núcleo Bandeirante",
+  "Paranoá",
+  "Park Way",
+  "Planaltina",
+  "Plano Piloto",
+  "Recanto das Emas",
+  "Riacho Fundo",
+  "Riacho Fundo II",
+  "Samambaia N",
+  "Samambaia S",
+  "Santa Maria",
+  "São Sebastião",
+  "Estrutural",
+  "SIA",
+  "Sobradinho",
+  "Sobradinho II",
+  "Sol Nascente",
+  "Pôr do Sol",
+  "Sudoeste",
+  "Octogonal",
+  "Taguatinga",
+  "Taguatinga N",
+  "Taguatinga S",
+  "Varjão",
+  "Vicente Pires",
 ];
 
 function criarListaCidadesPerfil() {
@@ -1138,12 +1205,20 @@ const profileBannerColors = document.getElementById("profileBannerColors");
 
 const profileEditorModal = document.getElementById("profileEditorModal");
 const closeProfileEditorBtn = document.getElementById("closeProfileEditorBtn");
-const profileEditorBannerPreview = document.getElementById("profileEditorBannerPreview");
-const profileEditorBannerColors = document.getElementById("profileEditorBannerColors");
+const profileEditorBannerPreview = document.getElementById(
+  "profileEditorBannerPreview",
+);
+const profileEditorBannerColors = document.getElementById(
+  "profileEditorBannerColors",
+);
 const showBannerEditorBtn = document.getElementById("showBannerEditorBtn");
 const openAvatarPickerBtn = document.getElementById("openAvatarPickerBtn");
-const profileEditorAvatarArea = document.getElementById("profileEditorAvatarArea");
-const profileEditorAvatarGrid = document.getElementById("profileEditorAvatarGrid");
+const profileEditorAvatarArea = document.getElementById(
+  "profileEditorAvatarArea",
+);
+const profileEditorAvatarGrid = document.getElementById(
+  "profileEditorAvatarGrid",
+);
 const saveProfileEditorBtn = document.getElementById("saveProfileEditorBtn");
 
 const profileEditTab = document.querySelector('.profile-tab[data-tab="edit"]');
@@ -1163,7 +1238,7 @@ function formatProfileDate(value) {
   return date.toLocaleString("pt-BR", {
     day: "2-digit",
     month: "2-digit",
-    year: "numeric"
+    year: "numeric",
   });
 }
 
@@ -1173,7 +1248,8 @@ let isProfileEditLocked = false;
 let profileEditRemainingDays = 0;
 
 const PROFILE_EDIT_COOLDOWN_DAYS = 1;
-const PROFILE_EDIT_COOLDOWN_MS = PROFILE_EDIT_COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
+const PROFILE_EDIT_COOLDOWN_MS =
+  PROFILE_EDIT_COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
 
 function getRemainingEditDays(lastEditAt) {
   if (!lastEditAt) return 0;
@@ -1194,7 +1270,8 @@ function openProfileEditor() {
   profileEditorBannerColors?.classList.remove("hidden");
   profileEditorAvatarArea?.classList.add("hidden");
   if (profileEditorBannerPreview) {
-    profileEditorBannerPreview.style.background = selectedBannerColor || "#000000";
+    profileEditorBannerPreview.style.background =
+      selectedBannerColor || "#000000";
   }
   renderProfileEditorBannerPalette();
 }
@@ -1204,7 +1281,10 @@ function closeProfileEditor() {
   profileEditorModal.classList.remove("open");
   const finalizeClose = () => {
     profileEditorModal.classList.add("hidden");
-    profileEditorModal.removeEventListener("transitionend", handleTransitionEnd);
+    profileEditorModal.removeEventListener(
+      "transitionend",
+      handleTransitionEnd,
+    );
   };
   const handleTransitionEnd = (e) => {
     if (e.target !== profileEditorModal) return;
@@ -1218,7 +1298,7 @@ function renderProfileEditorBannerPalette() {
   if (!profileEditorBannerColors) return;
   profileEditorBannerColors.innerHTML = "";
 
-  textColorPalette.forEach(color => {
+  textColorPalette.forEach((color) => {
     if (!color || color === "<br>") return;
     const box = document.createElement("div");
     box.className = "profile-banner-editor-color-box";
@@ -1230,8 +1310,11 @@ function renderProfileEditorBannerPalette() {
     box.addEventListener("click", () => {
       if (!currentProfileIsOwner) return;
       selectedBannerColor = color;
-      if (profileEditorBannerPreview) profileEditorBannerPreview.style.background = color;
-      profileEditorBannerColors.querySelectorAll(".profile-banner-editor-color-box").forEach(el => el.classList.remove("selected"));
+      if (profileEditorBannerPreview)
+        profileEditorBannerPreview.style.background = color;
+      profileEditorBannerColors
+        .querySelectorAll(".profile-banner-editor-color-box")
+        .forEach((el) => el.classList.remove("selected"));
       box.classList.add("selected");
     });
     profileEditorBannerColors.appendChild(box);
@@ -1242,7 +1325,7 @@ function renderProfileBannerPalette() {
   if (!profileBannerColors) return;
   profileBannerColors.innerHTML = "";
 
-  textColorPalette.forEach(color => {
+  textColorPalette.forEach((color) => {
     if (!color || color === "<br>") return;
     const box = document.createElement("div");
     box.className = "profile-banner-color-box";
@@ -1256,7 +1339,9 @@ function renderProfileBannerPalette() {
       selectedBannerColor = color;
       if (profileCover) profileCover.style.background = color;
       if (profileBannerPreview) profileBannerPreview.style.background = color;
-      profileBannerColors.querySelectorAll(".profile-banner-color-box").forEach(el => el.classList.remove("selected"));
+      profileBannerColors
+        .querySelectorAll(".profile-banner-color-box")
+        .forEach((el) => el.classList.remove("selected"));
       box.classList.add("selected");
     });
     profileBannerColors.appendChild(box);
@@ -1266,7 +1351,8 @@ function renderProfileBannerPalette() {
 let unsubscribeProfileListener = null;
 window.openMainProfilePanel = async (userId) => {
   if (!auth.currentUser) {
-    if (typeof showToast === "function") showToast("Faça login para ver o perfil");
+    if (typeof showToast === "function")
+      showToast("Faça login para ver o perfil");
     const modal = document.getElementById("loginModal");
     if (modal) modal.classList.remove("hidden");
     return;
@@ -1286,8 +1372,7 @@ window.openMainProfilePanel = async (userId) => {
   profileRequestToken += 1;
   const requestToken = profileRequestToken;
 
-
-if (!isPanelOpen) {
+  if (!isPanelOpen) {
     if (typeof fecharPainelVip === "function") {
       fecharPainelVip();
     }
@@ -1306,8 +1391,7 @@ if (!isPanelOpen) {
   document.body.classList.toggle("viewing-other-profile", !isOwner);
   applyProfileMode(isOwner);
 
-
-  await new Promise(resolve => requestAnimationFrame(resolve));
+  await new Promise((resolve) => requestAnimationFrame(resolve));
 
   try {
     const refUser = doc(db, "users", userId);
@@ -1324,7 +1408,8 @@ if (!isPanelOpen) {
         selectedBannerColor = "#8b898963";
 
         if (profileCover) profileCover.style.background = selectedBannerColor;
-        if (profileEditorBannerPreview) profileEditorBannerPreview.style.background = selectedBannerColor;
+        if (profileEditorBannerPreview)
+          profileEditorBannerPreview.style.background = selectedBannerColor;
 
         renderProfileBannerPalette();
         renderProfileEditorBannerPalette();
@@ -1336,7 +1421,8 @@ if (!isPanelOpen) {
         data = await verificarEExpiraVipUsuario(userId, data);
       }
       listenUserOnlineStatus(userId, (isOnline) => {
-        if (profileOnlineDot) profileOnlineDot.classList.toggle("hidden", !isOnline);
+        if (profileOnlineDot)
+          profileOnlineDot.classList.toggle("hidden", !isOnline);
       });
 
       window.__currentProfileData = data;
@@ -1354,7 +1440,7 @@ if (!isPanelOpen) {
       const bannerColor = data.bannerColor || "#00000063";
       const instagram = data.instagram || "";
 
-   selectedBannerColor = bannerColor;
+      selectedBannerColor = bannerColor;
       selectedProfileAvatar = foto;
 
       profileName.textContent = nome;
@@ -1369,14 +1455,17 @@ if (!isPanelOpen) {
       }
 
       // Redirecionamento automático e trava da aba Info caso o perfil esteja incompleto
-      const infoTabBtn = document.querySelector('.profile-tab[data-tab="info"]');
+      const infoTabBtn = document.querySelector(
+        '.profile-tab[data-tab="info"]',
+      );
       if (isOwner) {
         if (data.perfilCompleto !== true) {
           // Bloqueia visualmente e funcionalmente a aba Info
           if (infoTabBtn) {
             infoTabBtn.style.opacity = "0.4";
             infoTabBtn.style.pointerEvents = "none";
-            infoTabBtn.title = "Complete o formulário para liberar a visualização";
+            infoTabBtn.title =
+              "Complete o formulário para liberar a visualização";
           }
           // Abre diretamente a aba Editar perfil
           document.querySelector('.profile-tab[data-tab="edit"]')?.click();
@@ -1390,7 +1479,8 @@ if (!isPanelOpen) {
         }
       }
 
-      const abaAtiva = document.querySelector('.profile-tab.active')?.dataset.tab || "info";
+      const abaAtiva =
+        document.querySelector(".profile-tab.active")?.dataset.tab || "info";
       const profileCoverEl = document.querySelector(".profile-cover");
 
       if (abaAtiva === "vip") {
@@ -1399,7 +1489,8 @@ if (!isPanelOpen) {
             profileCoverEl.style.background = `url("${data.vipBannerUrl}") center/cover no-repeat`;
           } else {
             profileCoverEl.style.backgroundImage = "none";
-            profileCoverEl.style.background = selectedBannerColor || "#00000063";
+            profileCoverEl.style.background =
+              selectedBannerColor || "#00000063";
           }
         }
         if (typeof window.atualizarSimulacaoTopoVip === "function") {
@@ -1415,19 +1506,23 @@ if (!isPanelOpen) {
             profileCoverEl.style.background = bannerColor;
           }
         }
-   // Garante que o botão do lápis só apareça se a aba ativa for "Editar perfil"
+        // Garante que o botão do lápis só apareça se a aba ativa for "Editar perfil"
         if (isOwner && editProfileCoverBtn) {
-          const abaAtivaAtual = document.querySelector('.profile-tab.active')?.dataset.tab || "info";
-          editProfileCoverBtn.style.display = (abaAtivaAtual === "edit") ? "grid" : "none";
+          const abaAtivaAtual =
+            document.querySelector(".profile-tab.active")?.dataset.tab ||
+            "info";
+          editProfileCoverBtn.style.display =
+            abaAtivaAtual === "edit" ? "grid" : "none";
         }
       }
 
-      if (profileEditorBannerPreview) profileEditorBannerPreview.style.background = bannerColor;
+      if (profileEditorBannerPreview)
+        profileEditorBannerPreview.style.background = bannerColor;
       renderProfileBannerPalette();
       renderProfileEditorBannerPalette();
 
       const setInputValue = (el, val) => {
-        if (el && 'value' in el) el.value = val ?? "";
+        if (el && "value" in el) el.value = val ?? "";
       };
 
       setInputValue(editName, nome);
@@ -1437,12 +1532,17 @@ if (!isPanelOpen) {
 
       const editInstagram = document.getElementById("editInstagram");
       const editTelegram = document.getElementById("editTelegram");
-      const profileInstagramText = document.getElementById("profileInstagramText");
-      const profileTelegramText = document.getElementById("profileTelegramText");
+      const profileInstagramText = document.getElementById(
+        "profileInstagramText",
+      );
+      const profileTelegramText = document.getElementById(
+        "profileTelegramText",
+      );
       const telegram = data.telegram || "";
 
       let username = instagram ? String(instagram).trim() : "";
-      if (username.includes("instagram.com/")) username = username.split("instagram.com/")[1];
+      if (username.includes("instagram.com/"))
+        username = username.split("instagram.com/")[1];
       username = username.split("?")[0].split("#")[0].split("/")[0];
       if (username.startsWith("@")) username = username.substring(1);
       username = username.replace(/[^a-zA-Z0-9_.]/g, "").toLowerCase();
@@ -1450,13 +1550,15 @@ if (!isPanelOpen) {
       if (editInstagram) editInstagram.value = username ? `@${username}` : "";
 
       if (profileInstagramText) {
-        profileInstagramText.textContent = username !== "" ? `@${username}` : "-";
+        profileInstagramText.textContent =
+          username !== "" ? `@${username}` : "-";
         profileInstagramText.onclick = (e) => e.preventDefault();
       }
 
       let teleUser = telegram ? String(telegram).trim() : "";
       if (teleUser.includes("t.me/")) teleUser = teleUser.split("t.me/")[1];
-      if (teleUser.includes("telegram.me/")) teleUser = teleUser.split("telegram.me/")[1];
+      if (teleUser.includes("telegram.me/"))
+        teleUser = teleUser.split("telegram.me/")[1];
       teleUser = teleUser.split("?")[0].split("#")[0].split("/")[0];
       if (teleUser.startsWith("@")) teleUser = teleUser.substring(1);
       teleUser = teleUser.replace(/[^a-zA-Z0-9_.]/g, "").toLowerCase();
@@ -1464,13 +1566,18 @@ if (!isPanelOpen) {
       if (editTelegram) editTelegram.value = teleUser ? `@${teleUser}` : "";
 
       if (profileTelegramText) {
-        profileTelegramText.textContent = teleUser !== "" ? `@${teleUser}` : "-";
+        profileTelegramText.textContent =
+          teleUser !== "" ? `@${teleUser}` : "-";
         profileTelegramText.onclick = (e) => e.preventDefault();
       }
 
       // Carrega e renderiza os interesses do usuario (Aba Info e Aba Editar) tag
-      const interessesData = Array.isArray(data.interesses) ? data.interesses : [];
-      setSelectedInterests(interessesData.map(i => (typeof i === "string" ? i : i.id)));
+      const interessesData = Array.isArray(data.interesses)
+        ? data.interesses
+        : [];
+      setSelectedInterests(
+        interessesData.map((i) => (typeof i === "string" ? i : i.id)),
+      );
       renderProfileInterests(interessesData, userId, isOwner);
       renderEditInterestsSelector();
 
@@ -1478,7 +1585,6 @@ if (!isPanelOpen) {
       criarListaGeneroPerfil();
       setTimeout(perfilEstaCompleto, 200);
     });
-
   } catch (err) {
     if (requestToken !== profileRequestToken) return;
     console.error(err);
@@ -1502,20 +1608,20 @@ function applyProfileMode(isOwner) {
     document.body.classList.remove("viewing-other-profile");
     if (reportBtn) reportBtn.style.display = "none";
 
-const abaAtual = document.querySelector('.profile-tab.active')?.dataset.tab || "info";
-    const isEditAba = (abaAtual === "edit");
-    const isInfoAba = (abaAtual === "info");
+    const abaAtual =
+      document.querySelector(".profile-tab.active")?.dataset.tab || "info";
+    const isEditAba = abaAtual === "edit";
+    const isInfoAba = abaAtual === "info";
     const vipTopBtn = document.getElementById("vipTopHeaderBtn");
-    
+
     // Lápis e Câmera na aba Editar; Botão VIP exibido na aba Info
-    if (editProfileCoverBtn) editProfileCoverBtn.style.display = isEditAba ? "grid" : "none";
+    if (editProfileCoverBtn)
+      editProfileCoverBtn.style.display = isEditAba ? "grid" : "none";
     if (vipTopBtn) vipTopBtn.style.display = isInfoAba ? "inline-flex" : "none";
     if (uploadPhotoBtn) {
       uploadPhotoBtn.classList.toggle("hidden", !isEditAba);
       uploadPhotoBtn.style.display = isEditAba ? "flex" : "none";
     }
-
-
 
     if (vipTabBtn) {
       vipTabBtn.hidden = false;
@@ -1561,7 +1667,8 @@ const abaAtual = document.querySelector('.profile-tab.active')?.dataset.tab || "
     if (vipHeaderBtn) vipHeaderBtn.style.display = "none";
 
     if (vipTabBtn) vipTabBtn.style.setProperty("display", "none", "important");
-    if (profileEditTab) profileEditTab.style.setProperty("display", "none", "important");
+    if (profileEditTab)
+      profileEditTab.style.setProperty("display", "none", "important");
 
     document.querySelector('.profile-tab[data-tab="info"]')?.click();
   }
@@ -1571,16 +1678,18 @@ const abaAtual = document.querySelector('.profile-tab.active')?.dataset.tab || "
 const tabs = document.querySelectorAll(".profile-tab");
 const sections = document.querySelectorAll(".profile-section");
 
-tabs.forEach(tab => {
+tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     const target = tab.dataset.tab;
 
     if (target === "edit" && isProfileEditLocked) {
-      showToast(`Você poderá editar novamente em ${profileEditRemainingDays} dia(s).`);
+      showToast(
+        `Você poderá editar novamente em ${profileEditRemainingDays} dia(s).`,
+      );
       return;
     }
 
-    tabs.forEach(t => {
+    tabs.forEach((t) => {
       t.classList.remove("active");
       if (t.dataset.tab === "edit" || t.dataset.tab === "vip") {
         t.style.background = "";
@@ -1588,7 +1697,7 @@ tabs.forEach(tab => {
       }
     });
 
-    sections.forEach(s => {
+    sections.forEach((s) => {
       s.classList.remove("active");
       s.classList.add("hidden");
       s.style.setProperty("display", "none", "important");
@@ -1617,14 +1726,14 @@ tabs.forEach(tab => {
       topMood.style.display = isVip ? "none" : "block";
     }
 
-      const editBtn = document.getElementById("editProfileCoverBtn");
+    const editBtn = document.getElementById("editProfileCoverBtn");
     const vipBtn = document.getElementById("vipHeaderActionBtn");
     const vipTopBtn = document.getElementById("vipTopHeaderBtn");
     const uploadPhotoBtn = document.getElementById("btnUploadPhoto");
 
-if (currentProfileIsOwner) {
-      const isEdit = (target === "edit");
-      const isInfo = (target === "info");
+    if (currentProfileIsOwner) {
+      const isEdit = target === "edit";
+      const isInfo = target === "info";
 
       // Lápis e Câmera na aba Editar perfil; Botão VIP na aba Info
       if (editBtn) editBtn.style.display = isEdit ? "grid" : "none";
@@ -1639,8 +1748,6 @@ if (currentProfileIsOwner) {
         vipBtn.classList.toggle("d-none", !isVip);
       }
     }
-
-
 
     const topExpiry = document.getElementById("vipTopExpiryRow");
     if (topExpiry) {
@@ -1727,7 +1834,9 @@ function closeProfilePanel(force = false) {
     currentProfileIsOwner = false;
 
     if (profileEditTab) profileEditTab.style.removeProperty("display");
-    const vipTabBtnReset = document.querySelector('.profile-tab[data-tab="vip"]');
+    const vipTabBtnReset = document.querySelector(
+      '.profile-tab[data-tab="vip"]',
+    );
     if (vipTabBtnReset) vipTabBtnReset.style.removeProperty("display");
     return;
   }
@@ -1757,7 +1866,9 @@ function closeProfilePanel(force = false) {
       currentProfileIsOwner = false;
 
       if (profileEditTab) profileEditTab.style.removeProperty("display");
-      const vipTabBtnReset2 = document.querySelector('.profile-tab[data-tab="vip"]');
+      const vipTabBtnReset2 = document.querySelector(
+        '.profile-tab[data-tab="vip"]',
+      );
       if (vipTabBtnReset2) vipTabBtnReset2.style.removeProperty("display");
     }
   };
@@ -1772,7 +1883,9 @@ function closeProfilePanel(force = false) {
   requestAnimationFrame(() => {
     const duration = getComputedStyle(profilePanel).transitionDuration || "0s";
     const first = duration.split(",")[0].trim();
-    const time = first.endsWith("ms") ? parseFloat(first) : parseFloat(first) * 1000;
+    const time = first.endsWith("ms")
+      ? parseFloat(first)
+      : parseFloat(first) * 1000;
     setTimeout(finalizeClose, isNaN(time) ? 300 : time + 40);
   });
 }
@@ -1788,7 +1901,9 @@ editProfileCoverBtn?.addEventListener("click", (e) => {
   e.stopPropagation();
   if (!currentProfileIsOwner) return;
   if (isProfileEditLocked) {
-    showToast(`Você poderá editar novamente em ${profileEditRemainingDays} dia(s).`);
+    showToast(
+      `Você poderá editar novamente em ${profileEditRemainingDays} dia(s).`,
+    );
     return;
   }
   openProfileEditor();
@@ -1841,29 +1956,38 @@ openAvatarPickerBtn?.addEventListener("click", (e) => {
   }
 });
 
-
-
 // Motor Multiavatar
 let listaAtual = [];
 let avataresRenderizados = 0;
 const LOTE_TAMANHO = 60; // Carrega 60 avatares de imediato para liberar a barra vertical completa
 let categoriaAtual = "aleatorios";
-let partesDna = { ambiente: 0, roupas: 0, cabeca: 0, boca: 0, olhos: 0, cabelo: 0 };
+const partesDna = {
+  ambiente: 0,
+  roupas: 0,
+  cabeca: 0,
+  boca: 0,
+  olhos: 0,
+  cabelo: 0,
+};
 
 function gerarAvatarDnaUri(dna12Digitos) {
   const svgCode = multiavatar(dna12Digitos, true);
-  return "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgCode)));
+  return (
+    "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgCode)))
+  );
 }
 
 function gerarAvatarUri(texto) {
   const svgCode = multiavatar(texto);
-  return "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgCode)));
+  return (
+    "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgCode)))
+  );
 }
 
 function renderizarLote() {
   if (!profileEditorAvatarGrid) return;
   let html = "";
-  let limite = avataresRenderizados + LOTE_TAMANHO;
+  const limite = avataresRenderizados + LOTE_TAMANHO;
 
   for (let i = avataresRenderizados; i < limite; i++) {
     let codigo;
@@ -1873,7 +1997,7 @@ function renderizarLote() {
       if (i >= listaAtual.length) break;
       codigo = listaAtual[i];
     }
-    let imagemUri = gerarAvatarUri(codigo);
+    const imagemUri = gerarAvatarUri(codigo);
     html += `<img src="${imagemUri}" class="avatar-option" data-uri="${imagemUri}" style="width: 58px; height: 58px; cursor: pointer; border-radius: 50%; border: 3px solid transparent;" />`;
   }
 
@@ -1885,7 +2009,9 @@ function carregarCategoria(categoria) {
   categoriaAtual = categoria;
   avataresRenderizados = 0;
 
-  const construtorContainer = document.getElementById("avatarConstructorContainer");
+  const construtorContainer = document.getElementById(
+    "avatarConstructorContainer",
+  );
   if (profileEditorAvatarGrid) profileEditorAvatarGrid.innerHTML = "";
 
   if (categoria === "criar") {
@@ -1908,7 +2034,10 @@ function carregarCategoria(categoria) {
 
 // Escuta a rolagem e carrega mais avatares automaticamente sem travar
 profileEditorAvatarGrid?.addEventListener("scroll", function () {
-  if (categoriaAtual !== "criar" && this.scrollTop + this.clientHeight >= this.scrollHeight - 80) {
+  if (
+    categoriaAtual !== "criar" &&
+    this.scrollTop + this.clientHeight >= this.scrollHeight - 80
+  ) {
     renderizarLote();
   }
 });
@@ -1917,14 +2046,33 @@ function padDoisDigitos(val) {
 }
 
 function atualizarPreviewConstrutor() {
-  if (document.getElementById("valAmbiente")) document.getElementById("valAmbiente").textContent = padDoisDigitos(partesDna.ambiente);
-  if (document.getElementById("valRoupas")) document.getElementById("valRoupas").textContent = padDoisDigitos(partesDna.roupas);
-  if (document.getElementById("valCabeca")) document.getElementById("valCabeca").textContent = padDoisDigitos(partesDna.cabeca);
-  if (document.getElementById("valBoca")) document.getElementById("valBoca").textContent = padDoisDigitos(partesDna.boca);
-  if (document.getElementById("valOlhos")) document.getElementById("valOlhos").textContent = padDoisDigitos(partesDna.olhos);
-  if (document.getElementById("valCabelo")) document.getElementById("valCabelo").textContent = padDoisDigitos(partesDna.cabelo);
+  if (document.getElementById("valAmbiente"))
+    document.getElementById("valAmbiente").textContent = padDoisDigitos(
+      partesDna.ambiente,
+    );
+  if (document.getElementById("valRoupas"))
+    document.getElementById("valRoupas").textContent = padDoisDigitos(
+      partesDna.roupas,
+    );
+  if (document.getElementById("valCabeca"))
+    document.getElementById("valCabeca").textContent = padDoisDigitos(
+      partesDna.cabeca,
+    );
+  if (document.getElementById("valBoca"))
+    document.getElementById("valBoca").textContent = padDoisDigitos(
+      partesDna.boca,
+    );
+  if (document.getElementById("valOlhos"))
+    document.getElementById("valOlhos").textContent = padDoisDigitos(
+      partesDna.olhos,
+    );
+  if (document.getElementById("valCabelo"))
+    document.getElementById("valCabelo").textContent = padDoisDigitos(
+      partesDna.cabelo,
+    );
 
-  const dnaFinal = padDoisDigitos(partesDna.ambiente) +
+  const dnaFinal =
+    padDoisDigitos(partesDna.ambiente) +
     padDoisDigitos(partesDna.roupas) +
     padDoisDigitos(partesDna.cabeca) +
     padDoisDigitos(partesDna.boca) +
@@ -1941,12 +2089,14 @@ function atualizarPreviewConstrutor() {
 function VincularAcaoParte(idPrev, idNext, chaveParte) {
   document.getElementById(idPrev)?.addEventListener("click", (e) => {
     e.preventDefault();
-    partesDna[chaveParte] = partesDna[chaveParte] <= 0 ? 47 : partesDna[chaveParte] - 1;
+    partesDna[chaveParte] =
+      partesDna[chaveParte] <= 0 ? 47 : partesDna[chaveParte] - 1;
     atualizarPreviewConstrutor();
   });
   document.getElementById(idNext)?.addEventListener("click", (e) => {
     e.preventDefault();
-    partesDna[chaveParte] = partesDna[chaveParte] >= 47 ? 0 : partesDna[chaveParte] + 1;
+    partesDna[chaveParte] =
+      partesDna[chaveParte] >= 47 ? 0 : partesDna[chaveParte] + 1;
     atualizarPreviewConstrutor();
   });
 }
@@ -1958,11 +2108,12 @@ VincularAcaoParte("prevBoca", "nextBoca", "boca");
 VincularAcaoParte("prevOlhos", "nextOlhos", "olhos");
 VincularAcaoParte("prevCabelo", "nextCabelo", "cabelo");
 
-
-
 profileEditorAvatarGrid?.addEventListener("click", (e) => {
-  if (e.target.tagName === "IMG" && e.target.classList.contains("avatar-option")) {
-    profileEditorAvatarGrid.querySelectorAll("img").forEach(img => {
+  if (
+    e.target.tagName === "IMG" &&
+    e.target.classList.contains("avatar-option")
+  ) {
+    profileEditorAvatarGrid.querySelectorAll("img").forEach((img) => {
       img.style.border = "3px solid transparent";
       img.classList.remove("selected");
     });
@@ -1972,16 +2123,18 @@ profileEditorAvatarGrid?.addEventListener("click", (e) => {
   }
 });
 
-document.querySelectorAll(".profile-avatar-cat").forEach(botao => {
+document.querySelectorAll(".profile-avatar-cat").forEach((botao) => {
   botao.addEventListener("click", (e) => {
     e.preventDefault();
-    document.querySelectorAll(".profile-avatar-cat").forEach(b => b.classList.remove("active"));
+    document
+      .querySelectorAll(".profile-avatar-cat")
+      .forEach((b) => b.classList.remove("active"));
     botao.classList.add("active");
     carregarCategoria(botao.getAttribute("data-cat"));
   });
 });
 
-window.renderProfileAvatarGrid = function () {
+window.renderProfileAvatarGrid = () => {
   carregarCategoria("aleatorios");
 };
 
@@ -2003,7 +2156,14 @@ function perfilEstaCompleto() {
     selectedBannerColor !== "#8b898963" &&
     selectedBannerColor !== "#000000";
 
-  const completo = !!(nome && cidade && idade && genero && avatarValido && bannerValido);
+  const completo = !!(
+    nome &&
+    cidade &&
+    idade &&
+    genero &&
+    avatarValido &&
+    bannerValido
+  );
 
   if (saveProfileBtn) {
     if (currentProfileIsOwner && !isProfileEditLocked) {
@@ -2021,12 +2181,15 @@ function perfilEstaCompleto() {
 }
 
 setTimeout(() => {
-  [editName, editAge].forEach(input => {
+  [editName, editAge].forEach((input) => {
     input?.addEventListener("input", perfilEstaCompleto);
   });
 
   document.addEventListener("click", (e) => {
-    if (e.target.classList.contains("city-dropdown-item") || e.target.classList.contains("gender-dropdown-item")) {
+    if (
+      e.target.classList.contains("city-dropdown-item") ||
+      e.target.classList.contains("gender-dropdown-item")
+    ) {
       setTimeout(perfilEstaCompleto, 50);
     }
   });
@@ -2044,7 +2207,9 @@ saveProfileEditorBtn?.addEventListener("click", async () => {
   if (profileCover) profileCover.style.background = selectedBannerColor;
   if (profileAvatar) profileAvatar.src = selectedProfileAvatar;
 
-  showToast("Alteração aplicada! Lembre-se de clicar em Salvar para gravar o perfil.");
+  showToast(
+    "Alteração aplicada! Lembre-se de clicar em Salvar para gravar o perfil.",
+  );
 });
 
 saveProfileBtn?.addEventListener("click", async () => {
@@ -2065,13 +2230,21 @@ saveProfileBtn?.addEventListener("click", async () => {
     return;
   }
 
-  const bannerValido = selectedBannerColor && selectedBannerColor !== "#00000063" && selectedBannerColor !== "#8b898963" && selectedBannerColor !== "#000000";
+  const bannerValido =
+    selectedBannerColor &&
+    selectedBannerColor !== "#00000063" &&
+    selectedBannerColor !== "#8b898963" &&
+    selectedBannerColor !== "#000000";
   if (!bannerValido) {
     showToast("Editar capa e selecione uma cor de fundo.");
     return;
   }
 
-  const avatarValido = selectedProfileAvatar && selectedProfileAvatar !== DEFAULT_PROFILE_AVATAR && selectedProfileAvatar !== "./img/avatar.png" && selectedProfileAvatar !== "img/avatar.png";
+  const avatarValido =
+    selectedProfileAvatar &&
+    selectedProfileAvatar !== DEFAULT_PROFILE_AVATAR &&
+    selectedProfileAvatar !== "./img/avatar.png" &&
+    selectedProfileAvatar !== "img/avatar.png";
   if (!avatarValido) {
     showToast("Selecione um avatar.");
     return;
@@ -2103,8 +2276,12 @@ saveProfileBtn?.addEventListener("click", async () => {
     showToast("Salvando alterações...");
     let linkFotoFinal = selectedProfileAvatar;
 
+
     if (window.blobFotoTemporaria) {
       showToast("Enviando foto ao servidor...");
+      const { getStorage, ref: sRef, uploadBytes, getDownloadURL } = await import(
+        "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js"
+      );
       const storage = getStorage();
       const fotoRef = sRef(storage, `profile_foto/${user.uid}.jpg`);
       await uploadBytes(fotoRef, window.blobFotoTemporaria);
@@ -2113,18 +2290,20 @@ saveProfileBtn?.addEventListener("click", async () => {
     }
 
     let rawInsta = document.getElementById("editInstagram")?.value.trim() || "";
-    if (rawInsta.includes("instagram.com/")) rawInsta = rawInsta.split("instagram.com/")[1];
+    if (rawInsta.includes("instagram.com/"))
+      rawInsta = rawInsta.split("instagram.com/")[1];
     rawInsta = rawInsta.split("?")[0].split("#")[0].split("/")[0];
     if (rawInsta.startsWith("@")) rawInsta = rawInsta.substring(1);
     const instaUser = rawInsta.replace(/[^a-zA-Z0-9_.]/g, "").toLowerCase();
 
     let rawTele = document.getElementById("editTelegram")?.value.trim() || "";
     if (rawTele.includes("t.me/")) rawTele = rawTele.split("t.me/")[1];
-    if (rawTele.includes("telegram.me/")) rawTele = rawTele.split("telegram.me/")[1];
+    if (rawTele.includes("telegram.me/"))
+      rawTele = rawTele.split("telegram.me/")[1];
     rawTele = rawTele.split("?")[0].split("#")[0].split("/")[0];
     if (rawTele.startsWith("@")) rawTele = rawTele.substring(1);
     const teleUser = rawTele.replace(/[^a-zA-Z0-9_.]/g, "").toLowerCase();
-await updateDoc(refUser, {
+    await updateDoc(refUser, {
       nome: editName.value.trim(),
       cidade: cidadeSelecionada,
       idade: editAge.value.trim(),
@@ -2133,16 +2312,16 @@ await updateDoc(refUser, {
       telegram: teleUser,
       foto: linkFotoFinal,
       bannerColor: selectedBannerColor,
-      interesses: selectedInterests,//curtidas tags 30-08-26
+      interesses: selectedInterests, //curtidas tags 30-08-26
       perfilCompleto: true,
-      lastProfileEditAt: Date.now()
+      lastProfileEditAt: Date.now(),
     });
 
     if (!linkFotoFinal.startsWith("data:image")) {
       await updateProfile(user, { photoURL: linkFotoFinal });
     }
 
-await setUserStatus(user.uid, {
+    await setUserStatus(user.uid, {
       name: editName.value.trim() || "Usuário",
       avatar: linkFotoFinal || "./img/avatar.png",
       online: true,
@@ -2151,10 +2330,10 @@ await setUserStatus(user.uid, {
       vipNameColorType: data.vipNameColorType || "solid",
       vipNameColorSolid: data.vipNameColorSolid || "#1E293B",
       vipNameFont: data.vipNameFont || "default",
-      vipAvatarFrame: data.vipAvatarFrame || "none"
+      vipAvatarFrame: data.vipAvatarFrame || "none",
     });
-  
-document.getElementById("profileEditTooltip")?.classList.remove("show");
+
+    document.getElementById("profileEditTooltip")?.classList.remove("show");
 
     // Libera a aba Info e redireciona a visão do usuário para ela
     const infoTabBtn = document.querySelector('.profile-tab[data-tab="info"]');
@@ -2170,7 +2349,6 @@ document.getElementById("profileEditTooltip")?.classList.remove("show");
     console.error(err);
     showToast("Erro ao salvar perfil");
   }
-
 });
 
 // Drag Mobile/Desktop Perfil
@@ -2186,7 +2364,6 @@ function getTranslateY(element) {
   const matrix = new DOMMatrix(transform);
   return matrix.m42;
 }
-
 
 // Trava de segurança: impede arrastar/fechar o modal ao tocar em qualquer campo, botão ou lista interna
 function onProfileDragStart(e) {
@@ -2245,8 +2422,12 @@ function onProfileDragEnd() {
 }
 
 if (profilePanel) {
-  profilePanel.addEventListener("touchstart", onProfileDragStart, { passive: true });
-  profilePanel.addEventListener("touchmove", onProfileDragMove, { passive: true });
+  profilePanel.addEventListener("touchstart", onProfileDragStart, {
+    passive: true,
+  });
+  profilePanel.addEventListener("touchmove", onProfileDragMove, {
+    passive: true,
+  });
   profilePanel.addEventListener("touchend", onProfileDragEnd);
 
   profilePanel.addEventListener("mousedown", onProfileDragStart);
@@ -2257,9 +2438,6 @@ if (profilePanel) {
 profileOverlay?.addEventListener("click", () => {
   closeProfilePanel();
 });
-
-
-
 
 // ========================== CROP & ZOOM FOTO DE PERFIL ==========================
 window.blobFotoTemporaria = null;
@@ -2287,7 +2465,9 @@ document.addEventListener("DOMContentLoaded", () => {
   cameraBtnLabel?.addEventListener("click", (e) => {
     e.preventDefault();
     if (isProfileEditLocked) {
-      showToast(`Você poderá editar novamente em ${profileEditRemainingDays} dia(s).`);
+      showToast(
+        `Você poderá editar novamente em ${profileEditRemainingDays} dia(s).`,
+      );
       return;
     }
     cropModal?.classList.remove("hidden");
@@ -2317,7 +2497,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cropInputFile?.click();
   });
 
-  cropInputFile?.addEventListener("change", function (e) {
+  cropInputFile?.addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -2327,7 +2507,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const reader = new FileReader();
-    reader.onload = function (event) {
+    reader.onload = (event) => {
       if (cropPreviewImg) {
         cropPreviewImg.src = event.target.result;
         cropPreviewImg.style.display = "block";
@@ -2339,14 +2519,15 @@ document.addEventListener("DOMContentLoaded", () => {
           cropZoomSlider.value = "0.5";
         }
 
-        cropPreviewImg.onload = function () {
-          const proporcao = cropPreviewImg.naturalWidth / cropPreviewImg.naturalHeight;
+        cropPreviewImg.onload = () => {
+          const proporcao =
+            cropPreviewImg.naturalWidth / cropPreviewImg.naturalHeight;
           if (proporcao > 1) {
             cropPreviewImg.style.height = "280px";
-            cropPreviewImg.style.width = (280 * proporcao) + "px";
+            cropPreviewImg.style.width = 280 * proporcao + "px";
           } else {
             cropPreviewImg.style.width = "280px";
-            cropPreviewImg.style.height = (280 / proporcao) + "px";
+            cropPreviewImg.style.height = 280 / proporcao + "px";
           }
           imgLarguraOriginal = parseFloat(cropPreviewImg.style.width);
           imgAlturaOriginal = parseFloat(cropPreviewImg.style.height);
@@ -2389,7 +2570,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const dy = e.touches[0].clientY - e.touches[1].clientY;
         const distanciaAtual = Math.sqrt(dx * dx + dy * dy);
         const proporcaoMapeamento = distanciaAtual / distanciaPinchInicial;
-        let novoZoom = zoomPinchInicial * proporcaoMapeamento;
+        const novoZoom = zoomPinchInicial * proporcaoMapeamento;
         zoomAtual = Math.max(0.2, Math.min(3, novoZoom));
         if (cropZoomSlider) cropZoomSlider.value = zoomAtual;
         atualizarTransformacaoImagem();
@@ -2455,25 +2636,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ctx.drawImage(
       cropPreviewImg,
-      corteRealX, corteRealY, tamanhoRealCorte, tamanhoRealCorte,
-      0, 0, 150, 150
+      corteRealX,
+      corteRealY,
+      tamanhoRealCorte,
+      tamanhoRealCorte,
+      0,
+      0,
+      150,
+      150,
     );
 
-    canvas.toBlob((blob) => {
-      if (!blob) return;
-      window.blobFotoTemporaria = blob;
-      const urlPreview = URL.createObjectURL(blob);
-      selectedProfileAvatar = urlPreview;
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) return;
+        window.blobFotoTemporaria = blob;
+        const urlPreview = URL.createObjectURL(blob);
+        selectedProfileAvatar = urlPreview;
 
-      const profileAvatarEl = document.getElementById("profileAvatar");
-      if (profileAvatarEl) profileAvatarEl.src = urlPreview;
+        const profileAvatarEl = document.getElementById("profileAvatar");
+        if (profileAvatarEl) profileAvatarEl.src = urlPreview;
 
-      if (typeof perfilEstaCompleto === "function") perfilEstaCompleto();
+        if (typeof perfilEstaCompleto === "function") perfilEstaCompleto();
 
-      resetarVisorVisual();
-      cropModal?.classList.add("hidden");
-      showToast("Foto recortada! Clique em Salvar abaixo para concluir.");
-    }, "image/jpeg", 0.85);
+        resetarVisorVisual();
+        cropModal?.classList.add("hidden");
+        showToast("Foto recortada! Clique em Salvar abaixo para concluir.");
+      },
+      "image/jpeg",
+      0.85,
+    );
   });
 });
 
@@ -2482,8 +2673,7 @@ document.getElementById("closeRoomsPanel")?.addEventListener("click", (e) => {
   closeAllPanels();
 });
 
-
-window.addEventListener('pageshow', function (event) {
+window.addEventListener("pageshow", (event) => {
   // Se event.persisted for true, a página veio do Back-Forward Cache (botão voltar)
   if (event.persisted) {
     window.location.reload();

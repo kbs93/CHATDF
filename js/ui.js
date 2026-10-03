@@ -1,5 +1,3 @@
-
-
 //=================== PAINEL DE CORES DO TEXTO (UI) ======================================================
 
 // ------ STORAGE CONTROLADO -------
@@ -14,72 +12,126 @@ const colorBtn = document.getElementById("colorBtn");
 const colorPanel = document.getElementById("colorPanel");
 const grid = document.getElementById("dynamicColors");
 
-// PALETA de CORES 
-// na paleta de cores nao pode usar a cor preta pois ela e padrao do meu chat 
+// PALETA de CORES
+// na paleta de cores nao pode usar a cor preta pois ela e padrao do meu chat
 export const textColorPalette = [
-  "#0D1B2A","#1E3A8A",
-  "#0F766E","#065F46","#e3eaa7","#86af49",
-  "#134E4A","#0F3D3E","#1C4532","#2F4F4F","#004D40",
-  "#3B0764","#4C1D95","#5B21B6","#6D28D9","#312E81",
-  "#7F1D1D","#991B1B","#7C2D12","#78350F","#4E342E",
-  "#1F2937","#111827","#27272A","#3F3F46","#4B5563",
-  "#00b300","#01a37b","#cc00cc","#e67300","#996633",
-  "#cc0052","#d84d4d","#ff9966","#999900","#86b300",
-  "#e60000","#3399ff","#590085","#800066",
-  "#00a6c9","#7a66a3","#80bfff","#1a4c8c","#00cce0",
-  "#006666","#660033","#266073","#4794b2","#6bb2ad",
-  "#5c5c7a","#555532","#82ffab","#b2ad7f","#a2b9bc",
-  "#6b5b95","#c1946a","#c4b7a6","#f7786b","#50394c",
-  "#b2b2b2","#618685","#625750","#bd9441","#7e4a35",
-  "#d4ac6e","#FFBB00",  "#1E88E5", 
-  "#D32F2F", 
-  "#388E3C", 
-  "#F57C00", 
-  "#0097A7", 
+  "#0D1B2A",
+  "#1E3A8A",
+  "#0F766E",
+  "#065F46",
+  "#e3eaa7",
+  "#86af49",
+  "#134E4A",
+  "#0F3D3E",
+  "#1C4532",
+  "#2F4F4F",
+  "#004D40",
+  "#3B0764",
+  "#4C1D95",
+  "#5B21B6",
+  "#6D28D9",
+  "#312E81",
+  "#7F1D1D",
+  "#991B1B",
+  "#7C2D12",
+  "#78350F",
+  "#4E342E",
+  "#1F2937",
+  "#111827",
+  "#27272A",
+  "#3F3F46",
+  "#4B5563",
+  "#00b300",
+  "#01a37b",
+  "#cc00cc",
+  "#e67300",
+  "#996633",
+  "#cc0052",
+  "#d84d4d",
+  "#ff9966",
+  "#999900",
+  "#86b300",
+  "#e60000",
+  "#3399ff",
+  "#590085",
+  "#800066",
+  "#00a6c9",
+  "#7a66a3",
+  "#80bfff",
+  "#1a4c8c",
+  "#00cce0",
+  "#006666",
+  "#660033",
+  "#266073",
+  "#4794b2",
+  "#6bb2ad",
+  "#5c5c7a",
+  "#555532",
+  "#82ffab",
+  "#b2ad7f",
+  "#a2b9bc",
+  "#6b5b95",
+  "#c1946a",
+  "#c4b7a6",
+  "#f7786b",
+  "#50394c",
+  "#b2b2b2",
+  "#618685",
+  "#625750",
+  "#bd9441",
+  "#7e4a35",
+  "#d4ac6e",
+  "#FFBB00",
+  "#1E88E5",
+  "#D32F2F",
+  "#388E3C",
+  "#F57C00",
+  "#0097A7",
   "#C2185B",
-  "#00796B", 
-  "#E53935", 
-  "#43A047", 
-  "#FB8C00", 
-  "#00ACC1", 
-  "#D81B60", 
-  "#2E7D32", 
-  "#6A1B9A", 
-  "#EF6C00", 
+  "#00796B",
+  "#E53935",
+  "#43A047",
+  "#FB8C00",
+  "#00ACC1",
+  "#D81B60",
+  "#2E7D32",
+  "#6A1B9A",
+  "#EF6C00",
   "#1976D2",
   "#1565C0",
   "#0D47A1",
   "#3949AB",
-  "#1A237E", 
-  "#C62828", 
+  "#1A237E",
+  "#C62828",
   "#8E24AA",
-  "#7B1FA2",  
-  "#4A148C", 
-  "#512DA8", 
-  "#E65100", 
-  "#AD1457",  
-  "#880E4F", 
-  "#00897B", 
-  "#00838F", 
+  "#7B1FA2",
+  "#4A148C",
+  "#512DA8",
+  "#E65100",
+  "#AD1457",
+  "#880E4F",
+  "#00897B",
+  "#00838F",
   "#006064",
   "#00695C",
-  "#1B5E20", 
-  "#004D40", 
-  "#6D4C41", 
-  "#3E2723", 
-  "<br>"
+  "#1B5E20",
+  "#004D40",
+  "#6D4C41",
+  "#3E2723",
+  "<br>",
 ];
-
-
 
 const palette = textColorPalette;
 window.textColorPalette = textColorPalette;
 // RENDERIZA PALETA
 // RENDERIZA PALETAS REESTRUTURADAS (CAMPOS SINCROIZADOS)
-function renderizarPaletaNoContainer(targetGridElement, salvarNoLocalStorage = false) {
+function renderizarPaletaNoContainer(
+  targetGridElement,
+  salvarNoLocalStorage = false,
+) {
   if (!targetGridElement) return;
-  
-  palette.forEach(color => {
+
+  palette.forEach((color) => {
     if (!color || color === "<br>") return;
 
     const box = document.createElement("div");
@@ -107,7 +159,6 @@ function renderizarPaletaNoContainer(targetGridElement, salvarNoLocalStorage = f
   });
 }
 
-
 // SELECIONAR COR
 // ================= SELECIONAR COR =================
 // SELECIONAR COR (Apenas do chat comum - Ignora a Área VIP)
@@ -117,7 +168,11 @@ document.addEventListener("click", (e) => {
   if (!box) return;
 
   // BLINDAGEM VIP: Se o clique for em qualquer paleta do painel VIP, ignora totalmente
-  if (box.closest("#profileVip") || box.closest("#vipNameColorGrid") || box.closest("#vipMsgColorGrid")) {
+  if (
+    box.closest("#profileVip") ||
+    box.closest("#vipNameColorGrid") ||
+    box.closest("#vipMsgColorGrid")
+  ) {
     return;
   }
 
@@ -132,8 +187,10 @@ document.addEventListener("click", (e) => {
   localStorage.setItem(USER_COLOR_KEY, color);
 
   // Remove a seleção apenas das caixas do painel comum
-  const containerComum = document.getElementById("colorPanel") || document.getElementById("dynamicColors");
-  containerComum?.querySelectorAll(".color-box").forEach(b => {
+  const containerComum =
+    document.getElementById("colorPanel") ||
+    document.getElementById("dynamicColors");
+  containerComum?.querySelectorAll(".color-box").forEach((b) => {
     b.classList.remove("selected");
   });
 
@@ -166,18 +223,18 @@ document.addEventListener("DOMContentLoaded", () => {
 // Expõe a função global para reinicialização estável se necessário
 window.__rebuildVipGrids = inicializarGradesVipGlobais;
 
-
 // ================= FECHAR PAINEL AO CLICAR FORA (PROTEGIDO) 21-06-26=================
 document.addEventListener("click", (e) => {
   if (!colorPanel?.classList.contains("show")) return;
 
   // Se o clique foi no próprio painel, no botão dele, ou em elementos de controle do chat, ignora
   if (
-    colorPanel.contains(e.target) || 
-    colorBtn?.contains(e.target) || 
+    colorPanel.contains(e.target) ||
+    colorBtn?.contains(e.target) ||
     e.target.closest("#colorBtn") ||
     e.target.closest("#attachBtn")
-  ) return;
+  )
+    return;
 
   colorPanel.classList.remove("show");
   colorPanel.style.display = "none";
@@ -186,7 +243,7 @@ document.addEventListener("click", (e) => {
 // BOTAO X
 document.getElementById("closeColorPanel")?.addEventListener("click", (e) => {
   e.preventDefault();
-  e.stopPropagation(); 
+  e.stopPropagation();
   colorPanel.classList.remove("show");
   colorPanel.style.display = "none";
 });
@@ -244,9 +301,9 @@ Object.defineProperty(window, "selectedColor", {
   },
   set() {
     console.warn("Alteração bloqueada");
-  }
+  },
 });
-// EDITA todos os aviso que aparece no chat 
+// EDITA todos os aviso que aparece no chat
 export function showToast(message, type = "error") {
   const toast = document.createElement("div");
   toast.className = `custom-toast ${type}`;
@@ -283,10 +340,11 @@ export function getColorFromName(name) {
   return "#1E293B";
 }
 
-
 // Faz scroll automático, só se estiver no fim
 export function scrollToBottom(container) {
-  const nearBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 150;
+  const nearBottom =
+    container.scrollTop + container.clientHeight >=
+    container.scrollHeight - 150;
   if (nearBottom) {
     container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
   }
@@ -294,7 +352,9 @@ export function scrollToBottom(container) {
 
 //========================= MOSTRAR PRÉVIA DE RESPOSTA (igual WhatsApp) FOI ADICIONADO DIA 28-11-25  ===================================
 // Detecta sticker
-function isSticker(text) { return /\.(png|jpg|jpeg|webp|gif)$/i.test(text.trim());}
+function isSticker(text) {
+  return /\.(png|jpg|jpeg|webp|gif)$/i.test(text.trim());
+}
 // Detecta vídeo YouTube
 function extractYouTubeId(url) {
   const match = url.match(/(?:youtu\.be\/|v=)([a-zA-Z0-9_-]{11})/);
@@ -303,9 +363,14 @@ function extractYouTubeId(url) {
 
 // Caixa estilo WhatsApp
 // showReplyPreview e responsavel pelas mensagem, menção, responder no chat 16-02-26
-// quantidade de linha na menção 
-// 
-export function showReplyPreview(msgId, msgText, author, authorAvatar = "./img/avatar.png") {
+// quantidade de linha na menção
+//
+export function showReplyPreview(
+  msgId,
+  msgText,
+  author,
+  authorAvatar = "./img/avatar.png",
+) {
   let preview = document.getElementById("replyPreview");
 
   // BLINDAGEM: se o preview já estiver aberto, não recalcula
@@ -346,12 +411,15 @@ export function showReplyPreview(msgId, msgText, author, authorAvatar = "./img/a
   const userColor = getColorFromName(author);
 
   // Sanitização simples do link do avatar
-  const safeAvatar = authorAvatar && authorAvatar.trim() !== "" ? authorAvatar : "./img/avatar.png";
+  const safeAvatar =
+    authorAvatar && authorAvatar.trim() !== ""
+      ? authorAvatar
+      : "./img/avatar.png";
 
   // ================= HTML do preview bota X  aqui muda  o comportamento do sticker dentro=================
 
-// ================= HTML do preview bota X  aqui muda  o comportamento do sticker dentro=================
-preview.innerHTML = `
+  // ================= HTML do preview bota X  aqui muda  o comportamento do sticker dentro=================
+  preview.innerHTML = `
   <div class="reply-info" style="display: flex; flex-direction: row; align-items: flex-start; gap: 10px; width: 100%; padding: 4px 0;">
     <img src="${safeAvatar}" class="reply-user-avatar" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 2px;" onerror="this.src='./img/avatar.png'">
     <div style="display: flex; flex-direction: column; flex-grow: 1; overflow: hidden;">
@@ -363,7 +431,7 @@ preview.innerHTML = `
 
   <span class="close-reply">✕</span>
 `;
-  // CORES da mencao VIA CSS 
+  // CORES da mencao VIA CSS
   const authorEl = preview.querySelector(".reply-author");
   if (authorEl) {
     authorEl.style.setProperty("--author-color", userColor);
@@ -372,21 +440,19 @@ preview.innerHTML = `
   preview.style.setProperty("--reply-bg-color", userColor);
   preview.style.setProperty("--reply-border-color", userColor);
 
-  // EXIBE PREVIEW 
+  // EXIBE PREVIEW
   preview.style.display = "inline-flex";
   window.replyingTo = msgId;
 
-  //  CONTROLE DE texto grande botao de ler mais dentro da menção 
+  //  CONTROLE DE texto grande botao de ler mais dentro da menção
   const replyTextEl = preview.querySelector(".reply-text");
 
   // Só aplica para TEXTO PURO (sem imagem / vídeo)
   if (replyTextEl && !mediaHTML) {
     // Aguarda o browser calcular layout
     requestAnimationFrame(() => {
-      const lineHeight = parseFloat(
-        getComputedStyle(replyTextEl).lineHeight
-      );
-      const maxLines = 3;//linha na menção
+      const lineHeight = parseFloat(getComputedStyle(replyTextEl).lineHeight);
+      const maxLines = 3; //linha na menção
       const maxHeight = lineHeight * maxLines;
       // força estado recolhido
       replyTextEl.classList.remove("expanded");
@@ -397,16 +463,15 @@ preview.innerHTML = `
 
         toggle.onclick = () => {
           replyTextEl.classList.toggle("expanded");
-          toggle.textContent =
-            replyTextEl.classList.contains("expanded")
-              ? "ver menos"
-              : "ver mais";
+          toggle.textContent = replyTextEl.classList.contains("expanded")
+            ? "ver menos"
+            : "ver mais";
         };
         replyTextEl.after(toggle);
       }
     });
   }
-  // FECHAR PREVIEW 
+  // FECHAR PREVIEW
   preview.querySelector(".close-reply").onclick = () => {
     preview.style.display = "none";
     preview.innerHTML = "";
@@ -419,9 +484,9 @@ preview.innerHTML = `
 // NÃO REMOVE NADA EXISTENTE – SOMENTE EXTENSÃO
 // ===================================================================
 
-let bottomSheetState = {
+const bottomSheetState = {
   open: false,
-  type: null
+  type: null,
 };
 
 // detecta modo mobile
@@ -483,7 +548,7 @@ export function openUIPanel(type) {
   const sheet = ensureBottomSheet();
   const title = sheet.querySelector(".bottom-sheet-title");
   const content = sheet.querySelector(".bottom-sheet-content");
-  
+
   bottomSheetState.open = true;
   bottomSheetState.type = type;
   title.textContent = getBottomSheetTitle(type);
@@ -505,7 +570,7 @@ export function openUIPanel(type) {
       { key: "audio", label: "Áudio" },
       { key: "poll", label: "Enquete" },
       { key: "event", label: "Evento" },
-      { key: "ai", label: "IA" }
+      { key: "ai", label: "IA" },
     ];
 
     actions.forEach(({ key, label }) => {
@@ -532,15 +597,16 @@ export function openUIPanel(type) {
   body.className = "bottom-sheet-body bottom-sheet-grid";
 
   // Reaproveita as categorias de stickers existentes
-  const stickerCats = Array.from(document.querySelectorAll(".sticker-cat"))
-    .map(btn => ({ label: btn.textContent, value: btn.dataset.cat }));
+  const stickerCats = Array.from(document.querySelectorAll(".sticker-cat")).map(
+    (btn) => ({ label: btn.textContent, value: btn.dataset.cat }),
+  );
 
   stickerCats.forEach((cat, idx) => {
     const btn = document.createElement("button");
     btn.textContent = cat.label;
     btn.classList.toggle("active", idx === 0);
     btn.onclick = () => {
-      [...categoriesBar.children].forEach(b => b.classList.remove("active"));
+      [...categoriesBar.children].forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
       body.innerHTML = "";
       window.renderStickers?.(cat.value, body);
@@ -554,7 +620,7 @@ export function openUIPanel(type) {
   // Renderiza a lista inicial
   window.renderStickers?.("all", body);
 
-// Abre e exibe o Bottom Sheet
+  // Abre e exibe o Bottom Sheet
   sheet.classList.remove("hidden");
   sheet.classList.add("open");
 
@@ -581,27 +647,22 @@ function closeBottomSheet() {
   document.body.style.overflow = "";
 }
 
-
-
-
-
-
-
-
-
-
-
-
 // títulos por tipo
 // títulos por tipo
 function getBottomSheetTitle(type) {
   switch (type) {
-    case "emoji": return "Figurinhas";
-    case "stickers": return "Stickers";
-    case "color": return "Cor do texto";
-    case "attach": return "Anexo";
-    case "profile": return "Meu perfil";
-    default: return "";
+    case "emoji":
+      return "Figurinhas";
+    case "stickers":
+      return "Stickers";
+    case "color":
+      return "Cor do texto";
+    case "attach":
+      return "Anexo";
+    case "profile":
+      return "Meu perfil";
+    default:
+      return "";
   }
 }
 
@@ -609,8 +670,6 @@ window.attachmentActions = window.attachmentActions || {};
 window.openProfilePanel = () => {
   window.attachmentActions?.profile?.();
 };
-
-
 
 // ============================= REUTILIZAR PAINEL DE ANEXOS NO BOTTOM SHEET (MOBILE) ======================================================
 export function openAttachmentSheet() {
@@ -628,60 +687,60 @@ export function openAttachmentSheet() {
   }
 
   // clona para não quebrar o desktop
-// clona SEM herdar layout de desktop
-const clone = desktopPanel.cloneNode(true);
-// remove IDs duplicados
-clone.id = "attachmentPanelMobile";
-// limpa classes problemáticas
-clone.className = "attachment-panel mobile";
-// força layout mobile
-clone.style.display = "grid";
-clone.style.gridTemplateColumns = "repeat(3, 1fr)";
-clone.style.gap = "12px";
-clone.style.padding = "12px";
-// remove posicionamento absoluto do desktop
-clone.style.position = "static";
-clone.style.left = "auto";
-clone.style.top = "auto";
-clone.style.transform = "none";
-content.appendChild(clone);
+  // clona SEM herdar layout de desktop
+  const clone = desktopPanel.cloneNode(true);
+  // remove IDs duplicados
+  clone.id = "attachmentPanelMobile";
+  // limpa classes problemáticas
+  clone.className = "attachment-panel mobile";
+  // força layout mobile
+  clone.style.display = "grid";
+  clone.style.gridTemplateColumns = "repeat(3, 1fr)";
+  clone.style.gap = "12px";
+  clone.style.padding = "12px";
+  // remove posicionamento absoluto do desktop
+  clone.style.position = "static";
+  clone.style.left = "auto";
+  clone.style.top = "auto";
+  clone.style.transform = "none";
+  content.appendChild(clone);
 
-// ======================================= REATIVAR CLIQUES DOS BOTÕES (MOBILE) ======================================================
-clone.addEventListener("click", (e) => {
-  const btn = e.target.closest("[data-action]");
-  if (!btn) return;
+  // ======================================= REATIVAR CLIQUES DOS BOTÕES (MOBILE) ======================================================
+  clone.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-action]");
+    if (!btn) return;
 
-  const action = btn.dataset.action;
+    const action = btn.dataset.action;
 
-  // COR DO TEXTO
-  if (action === "color") {
-    closeBottomSheet();
-    openColorPanel();
-    return;
-  }
+    // COR DO TEXTO
+    if (action === "color") {
+      closeBottomSheet();
+      openColorPanel();
+      return;
+    }
 
-  // SUGESTÃO / IA
-  if (action === "ai") {
-    closeBottomSheet();
-    document.getElementById("feedbackModal")?.classList.remove("hidden");
-    return;
-  }
+    // SUGESTÃO / IA
+    if (action === "ai") {
+      closeBottomSheet();
+      document.getElementById("feedbackModal")?.classList.remove("hidden");
+      return;
+    }
 
-  // MEU PERFIL
-  if (action === "profile") {
-    closeBottomSheet();
-    window.attachmentActions?.profile?.();
-    return;
-  }
+    // MEU PERFIL
+    if (action === "profile") {
+      closeBottomSheet();
+      window.attachmentActions?.profile?.();
+      return;
+    }
 
-  // DEMAIS AÇÕES
-  if (window.attachmentActions?.[action]) {
-    closeBottomSheet();
-    window.attachmentActions[action]();
-  }
-});
+    // DEMAIS AÇÕES
+    if (window.attachmentActions?.[action]) {
+      closeBottomSheet();
+      window.attachmentActions[action]();
+    }
+  });
 
-sheet.classList.remove("hidden");
+  sheet.classList.remove("hidden");
   sheet.classList.add("open");
 
   /* Rola o chat para baixo mostrando as mensagens recentes */
@@ -692,12 +751,9 @@ sheet.classList.remove("hidden");
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }, 150);
   }
+} // fim da export function openAttachmentSheet
 
-}// fim da export function openAttachmentSheet
-
-
-
-// padronizando 17-03-26 
+// padronizando 17-03-26
 export function closeColorPanel() {
   if (!colorPanel) return;
   colorPanel.classList.remove("show");

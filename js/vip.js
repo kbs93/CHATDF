@@ -1,10 +1,14 @@
-import { showToast, textColorPalette } from "./ui.js";
-import { doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import {
+  ref as rRef,
+  update as rUpdate,
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import {
+  doc,
+  updateDoc,
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
 import { auth, db, rtdb } from "./firebase-config.js";
-import { ref as rRef, update as rUpdate } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
-
-
+import { showToast, textColorPalette } from "./ui.js";
 
 // Estado global do módulo VIP
 // Estado global do módulo VIP
@@ -14,18 +18,33 @@ window.__vipNOME_COR_SELECIONADA = "#6f42c1";
 // Função auxiliar de fallback cirúrgico para evitar quebras em mobile
 function obterFallbackFonteVip(fonte) {
   const cursivas = [
-    "Charm-Bold", "CherryBombOne", "EduAUVICWANTHand", "MeaCulpa", 
-    "PlaywriteBEVLG", "Praise", "RockSalt", "Tangerine", "Courgette", 
-    "Lobster", "Bangers", "Pacifico", "Satisfy"
+    "Charm-Bold",
+    "CherryBombOne",
+    "EduAUVICWANTHand",
+    "MeaCulpa",
+    "PlaywriteBEVLG",
+    "Praise",
+    "RockSalt",
+    "Tangerine",
+    "Courgette",
+    "Lobster",
+    "Bangers",
+    "Pacifico",
+    "Satisfy",
   ];
-  const serifadas = ["CinzelDecorative", "CaesarDressing", "Pridi", "Pridi-ExtraLight", "Pridi-SemiBold", "UnifrakturMaguntia"];
+  const serifadas = [
+    "CinzelDecorative",
+    "CaesarDressing",
+    "Pridi",
+    "Pridi-ExtraLight",
+    "Pridi-SemiBold",
+    "UnifrakturMaguntia",
+  ];
 
   if (cursivas.includes(fonte)) return "cursive";
   if (serifadas.includes(fonte)) return "serif";
   return "sans-serif";
 }
-
-
 
 /* ========================================================================
    APLICAÇÃO VISUAL VIP (INFO / VISUALIZAÇÃO)
@@ -43,7 +62,8 @@ export function aplicarVisualVipCompleto(data = {}) {
   const nome = data.nome || "Usuário";
   const bannerCorOriginal = data.bannerColor || "#00000063";
 
-  const temEfeitoNome = data.vipNameColorType && data.vipNameColorType !== "solid";
+  const temEfeitoNome =
+    data.vipNameColorType && data.vipNameColorType !== "solid";
   const temCorNome = !!data.vipNameColorSolid;
   const temFonte = data.vipNameFont && data.vipNameFont !== "default";
   const temMoldura = data.vipAvatarFrame && data.vipAvatarFrame !== "none";
@@ -67,7 +87,7 @@ export function aplicarVisualVipCompleto(data = {}) {
     topName.style.color = data.vipNameColorSolid;
   }
 
-// 2. Fonte
+  // 2. Fonte
   if (temFonte) {
     const fallback = obterFallbackFonteVip(data.vipNameFont);
     topName.style.fontFamily = `'${data.vipNameFont}', ${fallback}`;
@@ -75,7 +95,8 @@ export function aplicarVisualVipCompleto(data = {}) {
 
   // 3. Moldura
   if (topFrame) {
-    topFrame.className = "position-absolute top-0 start-0 w-100 h-100 rounded-circle d-none";
+    topFrame.className =
+      "position-absolute top-0 start-0 w-100 h-100 rounded-circle d-none";
     if (temMoldura) {
       topFrame.className = `position-absolute top-0 start-0 w-100 h-100 rounded-circle ${data.vipAvatarFrame}`;
     }
@@ -91,7 +112,9 @@ export function aplicarVisualVipCompleto(data = {}) {
 
   // 5. Tema
   if (profilePanel) {
-    profilePanel.className = profilePanel.className.replace(/banner-\S+/g, "").trim();
+    profilePanel.className = profilePanel.className
+      .replace(/banner-\S+/g, "")
+      .trim();
     if (temTema) {
       profilePanel.classList.add(data.vipProfileBanner);
     } else {
@@ -137,18 +160,22 @@ export function restaurarVisualPadraoPerfil(selectedBannerColor = "#00000063") {
   }
 
   if (topFrame) {
-    topFrame.className = "position-absolute top-0 start-0 w-100 h-100 rounded-circle d-none";
+    topFrame.className =
+      "position-absolute top-0 start-0 w-100 h-100 rounded-circle d-none";
   }
 
   if (topBanner) {
     topBanner.className = "profile-cover position-relative";
     topBanner.style.backgroundImage = "none";
-    topBanner.style.background = data.bannerColor || selectedBannerColor || "#00000063";
+    topBanner.style.background =
+      data.bannerColor || selectedBannerColor || "#00000063";
   }
 
   if (profilePanel) {
     profilePanel.classList.remove("vip-mode-active");
-    profilePanel.className = profilePanel.className.replace(/banner-\S+/g, "").trim();
+    profilePanel.className = profilePanel.className
+      .replace(/banner-\S+/g, "")
+      .trim();
     profilePanel.style.padding = "";
     profilePanel.style.background = "";
   }
@@ -158,7 +185,7 @@ export function restaurarVisualPadraoPerfil(selectedBannerColor = "#00000063") {
   const frameSelect = document.getElementById("vipAvatarFrameSelect");
   const bannerSelect = document.getElementById("vipProfileBannerSelect");
 
-if (typeSelect) typeSelect.value = "none";
+  if (typeSelect) typeSelect.value = "none";
   if (fontSelect) fontSelect.value = "default";
   if (frameSelect) frameSelect.value = "none";
   if (bannerSelect) bannerSelect.value = "default";
@@ -168,23 +195,23 @@ if (typeSelect) typeSelect.value = "none";
   const btnFrame = document.getElementById("btnVipAvatarFrameSelect");
   const btnBanner = document.getElementById("btnVipProfileBannerSelect");
 
-if (btnType) btnType.textContent = "Escolha uma cor";
+  if (btnType) btnType.textContent = "Escolha uma cor";
   if (btnFont) btnFont.textContent = "Padrão do Chat";
   if (btnFrame) btnFrame.textContent = "Nenhuma Moldura";
   if (btnBanner) btnBanner.textContent = "Padrão do Sistema";
 
-  document.querySelectorAll('.vip-custom-dropdown').forEach(dropdown => {
-    dropdown.querySelectorAll('.vip-dropdown-option').forEach(option => {
-      option.classList.remove('active');
-      const val = option.getAttribute('data-value');
+  document.querySelectorAll(".vip-custom-dropdown").forEach((dropdown) => {
+    dropdown.querySelectorAll(".vip-dropdown-option").forEach((option) => {
+      option.classList.remove("active");
+      const val = option.getAttribute("data-value");
       if (val === "solid" || val === "default" || val === "none") {
-        option.classList.add('active');
+        option.classList.add("active");
       }
     });
-    dropdown.classList.add('hidden');
+    dropdown.classList.add("hidden");
   });
 
- window.__vipNOME_COR_SELECIONADA = "#6f42c1";
+  window.__vipNOME_COR_SELECIONADA = "#6f42c1";
   window.__vipMENSAGEM_COR_SELECIONADA = null;
 }
 
@@ -211,7 +238,7 @@ export function atualizarSimulacaoTopoVip(selectedBannerColor = "#00000063") {
   topName.style.webkitTextFillColor = "";
   topName.style.color = "";
 
-const valorEfeito = typeSelect ? typeSelect.value : "none";
+  const valorEfeito = typeSelect ? typeSelect.value : "none";
 
   if (valorEfeito === "solid") {
     if (solidWrapper) solidWrapper.classList.remove("hidden");
@@ -224,7 +251,7 @@ const valorEfeito = typeSelect ? typeSelect.value : "none";
     }
   }
 
-if (fontSelect) {
+  if (fontSelect) {
     if (fontSelect.value !== "default") {
       const fallback = obterFallbackFonteVip(fontSelect.value);
       topName.style.fontFamily = `'${fontSelect.value}', ${fallback}`;
@@ -238,7 +265,8 @@ if (fontSelect) {
   }
 
   if (topFrame) {
-    topFrame.className = "position-absolute top-0 start-0 w-100 h-100 rounded-circle";
+    topFrame.className =
+      "position-absolute top-0 start-0 w-100 h-100 rounded-circle";
     const valorMoldura = frameSelect ? frameSelect.value : "none";
     if (valorMoldura !== "none") {
       topFrame.classList.remove("d-none");
@@ -249,7 +277,9 @@ if (fontSelect) {
   }
 
   if (profilePanel && bannerSelect) {
-    profilePanel.className = profilePanel.className.replace(/banner-\S+/g, "").trim();
+    profilePanel.className = profilePanel.className
+      .replace(/banner-\S+/g, "")
+      .trim();
     const data = window.__currentProfileData || {};
 
     if (bannerSelect.value === "default") {
@@ -258,8 +288,11 @@ if (fontSelect) {
     } else {
       profilePanel.classList.add(bannerSelect.value);
     }
-if (topBanner) {
-      const bannerUrlAtual = window.__vipBannerUrlTemp !== undefined ? window.__vipBannerUrlTemp : data.vipBannerUrl;
+    if (topBanner) {
+      const bannerUrlAtual =
+        window.__vipBannerUrlTemp !== undefined
+          ? window.__vipBannerUrlTemp
+          : data.vipBannerUrl;
       if (bannerUrlAtual) {
         topBanner.style.background = `url("${bannerUrlAtual}") center/cover no-repeat`;
       } else {
@@ -267,11 +300,9 @@ if (topBanner) {
         topBanner.style.background = selectedBannerColor || "#00000063";
       }
     }
-
   }
 }
 window.atualizarSimulacaoTopoVip = atualizarSimulacaoTopoVip;
-
 
 /* ========================================================================
    INICIALIZAÇÃO DO PAINEL VIP (COM CONTADOR E TRAVA COMPLETA DE BOTÕES)
@@ -306,7 +337,9 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
   }
 
   const btnSaveVip = document.getElementById("btnSaveVipSettings");
-  const customCards = document.querySelectorAll('.vip-btn-card:not([data-target="gaveta-renovar"])');
+  const customCards = document.querySelectorAll(
+    '.vip-btn-card:not([data-target="gaveta-renovar"])',
+  );
   const vipBannerHeaderBtn = document.getElementById("vipHeaderActionBtn");
 
   const atualizarStatusInterfaceVip = () => {
@@ -329,7 +362,8 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
         drawerExpiryDays.className = "text-warning fw-bold font-monospace";
       }
       if (drawerBtnRenew) {
-        drawerBtnRenew.className = "btn btn-warning w-100 fw-bold py-2 shadow-sm";
+        drawerBtnRenew.className =
+          "btn btn-warning w-100 fw-bold py-2 shadow-sm";
         drawerBtnRenew.innerHTML = `<i class="bi bi-arrow-repeat me-1"></i> Renovar assinatura VIP`;
       }
 
@@ -342,7 +376,7 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
       }
 
       // 2. OFUSCA E TRAVA OS 4 BOTÕES DE CUSTOMIZAÇÃO (NOME, TEXTO, MOLDURA, TEMA)
-      customCards.forEach(card => {
+      customCards.forEach((card) => {
         card.setAttribute("disabled", "disabled");
         card.style.opacity = "0.35";
         card.style.cursor = "not-allowed";
@@ -356,11 +390,11 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
         vipBannerHeaderBtn.style.cursor = "not-allowed";
         vipBannerHeaderBtn.style.pointerEvents = "none";
       }
-
-
-} else {
+    } else {
       // Identifica se já foi VIP alguma vez ou se é a primeira contratação
-      const jaFoiVipAlgumaVez = Boolean(data.vipExpiresAt && data.vipExpiresAt > 0);
+      const jaFoiVipAlgumaVez = Boolean(
+        data.vipExpiresAt && data.vipExpiresAt > 0,
+      );
 
       if (jaFoiVipAlgumaVez) {
         // Usuário veterano com VIP Vencido -> Libera o botão de Renovar direto
@@ -374,7 +408,8 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
           drawerBtnRenew.style.opacity = "1";
           drawerBtnRenew.style.cursor = "pointer";
           drawerBtnRenew.style.pointerEvents = "auto";
-          drawerBtnRenew.className = "btn btn-warning w-100 fw-bold py-2 shadow-sm text-dark";
+          drawerBtnRenew.className =
+            "btn btn-warning w-100 fw-bold py-2 shadow-sm text-dark";
           drawerBtnRenew.innerHTML = `<i class="bi bi-arrow-repeat me-1"></i> Renovar assinatura VIP`;
         }
       } else {
@@ -389,7 +424,8 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
           drawerBtnRenew.style.opacity = "0.35";
           drawerBtnRenew.style.cursor = "not-allowed";
           drawerBtnRenew.style.pointerEvents = "none";
-          drawerBtnRenew.className = "btn btn-warning w-100 fw-bold py-2 shadow-sm text-dark";
+          drawerBtnRenew.className =
+            "btn btn-warning w-100 fw-bold py-2 shadow-sm text-dark";
           drawerBtnRenew.innerHTML = `<i class="bi bi-lock-fill me-1"></i> Renovar assinatura VIP`;
         }
       }
@@ -403,7 +439,7 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
       }
 
       // LIBERA OS 4 BOTÕES DE CUSTOMIZAÇÃO
-      customCards.forEach(card => {
+      customCards.forEach((card) => {
         card.removeAttribute("disabled");
         card.style.opacity = "1";
         card.style.cursor = "pointer";
@@ -418,7 +454,11 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
         vipBannerHeaderBtn.style.pointerEvents = "auto";
       }
 
-      if (data.isVip === true && typeof window.verificarEExpiraVipUsuario === "function" && auth.currentUser) {
+      if (
+        data.isVip === true &&
+        typeof window.verificarEExpiraVipUsuario === "function" &&
+        auth.currentUser
+      ) {
         window.verificarEExpiraVipUsuario(auth.currentUser.uid, data);
       }
 
@@ -427,11 +467,6 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
         vipCountdownInterval = null;
       }
     }
-
-
-
-
-
   };
 
   atualizarStatusInterfaceVip();
@@ -440,7 +475,7 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
   const vipNameGrid = document.getElementById("vipNameColorGrid");
   if (vipNameGrid && vipNameGrid.children.length === 0) {
     vipNameGrid.innerHTML = "";
-    textColorPalette.forEach(color => {
+    textColorPalette.forEach((color) => {
       if (!color || color === "<br>") return;
       const box = document.createElement("div");
       box.className = "color-box";
@@ -460,7 +495,7 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
   const vipMsgGrid = document.getElementById("vipMsgColorGrid");
   if (vipMsgGrid && vipMsgGrid.children.length === 0) {
     vipMsgGrid.innerHTML = "";
-    textColorPalette.forEach(color => {
+    textColorPalette.forEach((color) => {
       if (!color || color === "<br>") return;
       const box = document.createElement("div");
       box.className = "color-box";
@@ -485,7 +520,10 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
 
   const data = window.__currentProfileData || {};
   const btnType = document.getElementById("btnVipNameColorType");
-  if (btnType && (!data.vipNameColorType || data.vipNameColorType === "solid")) {
+  if (
+    btnType &&
+    (!data.vipNameColorType || data.vipNameColorType === "solid")
+  ) {
     btnType.textContent = "Escolha uma cor";
   }
 
@@ -497,16 +535,13 @@ export function inicializarPainelVipDinamico(editNameValue, selectedAvatar) {
   vincularEventosPreviewVip();
 }
 
-
-
-
 function vincularEventosPreviewVip() {
   const typeSelect = document.getElementById("vipNameColorType");
   const fontSelect = document.getElementById("vipNameFont");
   const frameSelect = document.getElementById("vipAvatarFrameSelect");
   const bannerSelect = document.getElementById("vipProfileBannerSelect");
 
-  [typeSelect, fontSelect, frameSelect, bannerSelect].forEach(selectEl => {
+  [typeSelect, fontSelect, frameSelect, bannerSelect].forEach((selectEl) => {
     selectEl?.addEventListener("change", () => atualizarSimulacaoTopoVip());
   });
 
@@ -516,7 +551,9 @@ function vincularEventosPreviewVip() {
       const box = e.target.closest(".color-box");
       if (!box) return;
       window.__vipNOME_COR_SELECIONADA = box.dataset.color;
-      vipNameGrid.querySelectorAll(".color-box").forEach(b => b.classList.remove("selected"));
+      vipNameGrid
+        .querySelectorAll(".color-box")
+        .forEach((b) => b.classList.remove("selected"));
       box.classList.add("selected");
       atualizarSimulacaoTopoVip();
     };
@@ -528,7 +565,9 @@ function vincularEventosPreviewVip() {
       const box = e.target.closest(".color-box");
       if (!box) return;
       window.__vipMENSAGEM_COR_SELECIONADA = box.dataset.color;
-      vipMsgGrid.querySelectorAll(".color-box").forEach(b => b.classList.remove("selected"));
+      vipMsgGrid
+        .querySelectorAll(".color-box")
+        .forEach((b) => b.classList.remove("selected"));
       box.classList.add("selected");
       atualizarSimulacaoTopoVip();
     };
@@ -542,51 +581,59 @@ function vincularEventosPreviewVip() {
 ===================================================================== */
 export function initVipEngine(isOwnerCallback) {
   // 1. Acordeão de Categorias
-  document.querySelectorAll(".vip-btn-card").forEach(button => {
+  document.querySelectorAll(".vip-btn-card").forEach((button) => {
     button.addEventListener("click", (e) => {
       e.preventDefault();
       const targetId = button.getAttribute("data-target");
 
-      document.querySelectorAll(".vip-drawer-content").forEach(drawer => drawer.classList.add("hidden"));
-      document.querySelectorAll(".vip-btn-card").forEach(btn => btn.classList.remove("active"));
+      document
+        .querySelectorAll(".vip-drawer-content")
+        .forEach((drawer) => drawer.classList.add("hidden"));
+      document
+        .querySelectorAll(".vip-btn-card")
+        .forEach((btn) => btn.classList.remove("active"));
 
       const targetDrawer = document.getElementById(targetId);
       if (targetDrawer) {
         targetDrawer.classList.remove("hidden");
         button.classList.add("active");
       }
-      document.querySelectorAll('.vip-custom-dropdown').forEach(d => d.classList.add('hidden'));
+      document
+        .querySelectorAll(".vip-custom-dropdown")
+        .forEach((d) => d.classList.add("hidden"));
     });
   });
 
   //=============================== 2. Dropdowns Personalizados ===========================
-  document.querySelectorAll('.vip-custom-dropdown').forEach(dropdown => {
+  document.querySelectorAll(".vip-custom-dropdown").forEach((dropdown) => {
     const wrapper = dropdown.parentElement;
-    const btn = wrapper.querySelector('.vip-custom-select-btn');
-    const selectNativo = wrapper.querySelector('select');
+    const btn = wrapper.querySelector(".vip-custom-select-btn");
+    const selectNativo = wrapper.querySelector("select");
 
     if (btn && selectNativo) {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        document.querySelectorAll('.vip-custom-dropdown').forEach(d => {
-          if (d !== dropdown) d.classList.add('hidden');
+        document.querySelectorAll(".vip-custom-dropdown").forEach((d) => {
+          if (d !== dropdown) d.classList.add("hidden");
         });
-        dropdown.classList.toggle('hidden');
+        dropdown.classList.toggle("hidden");
       });
 
-      dropdown.querySelectorAll('.vip-dropdown-option').forEach(option => {
-        option.addEventListener('click', (e) => {
+      dropdown.querySelectorAll(".vip-dropdown-option").forEach((option) => {
+        option.addEventListener("click", (e) => {
           e.preventDefault();
           e.stopPropagation();
 
-          const val = option.getAttribute('data-value');
+          const val = option.getAttribute("data-value");
           selectNativo.value = val;
-          selectNativo.dispatchEvent(new Event('change'));
+          selectNativo.dispatchEvent(new Event("change"));
 
           // Se for o dropdown de cor do nome, controla a exibição do carrossel
           if (selectNativo.id === "vipNameColorType") {
-            const solidWrapper = document.getElementById("vipSolidColorWrapper");
+            const solidWrapper = document.getElementById(
+              "vipSolidColorWrapper",
+            );
             if (solidWrapper) {
               if (val === "solid") {
                 solidWrapper.classList.remove("hidden");
@@ -599,19 +646,19 @@ export function initVipEngine(isOwnerCallback) {
           atualizarSimulacaoTopoVip();
 
           btn.textContent = option.textContent;
-          dropdown.querySelectorAll('.vip-dropdown-option').forEach(o => o.classList.remove('active'));
-          option.classList.add('active');
+          dropdown
+            .querySelectorAll(".vip-dropdown-option")
+            .forEach((o) => o.classList.remove("active"));
+          option.classList.add("active");
         });
       });
     }
   });
 
- 
-// ====================================3. Gravação das Configurações VIP VERIFICACAO E RESET AUTOMÁTICO DO VIP EXPIRADO 
-//  RESETANDO O PAINEL VIP.. =============================
+  // ====================================3. Gravação das Configurações VIP VERIFICACAO E RESET AUTOMÁTICO DO VIP EXPIRADO
+  //  RESETANDO O PAINEL VIP.. =============================
 
-
-// Função unificada para chamar o modal Pix
+  // Função unificada para chamar o modal Pix
   const acionarModalPix = (e) => {
     if (e && typeof e.preventDefault === "function") e.preventDefault();
     if (typeof window.solicitarPixVip === "function") {
@@ -619,105 +666,125 @@ export function initVipEngine(isOwnerCallback) {
     } else if (typeof window.abrirModalPix === "function") {
       window.abrirModalPix({
         titulo: "VIP Diamante - 30 Dias",
-        valor: "R$ 5,99"
+        valor: "R$ 5,99",
       });
     }
   };
 
   // 3. Gravação das Configurações VIP + Abertura Primária do Pix
-  document.getElementById("btnSaveVipSettings")?.addEventListener("click", async () => {
-    const user = auth.currentUser;
-    if (!user) return;
+  document
+    .getElementById("btnSaveVipSettings")
+    ?.addEventListener("click", async () => {
+      const user = auth.currentUser;
+      if (!user) return;
 
-    // Captura os valores dos 6 campos VIP
-    const tipoNome = document.getElementById("vipNameColorType")?.value || "none";
-    const fonteNome = document.getElementById("vipNameFont")?.value || "default";
-    const corMsg = window.__vipMENSAGEM_COR_SELECIONADA;
-    const moldura = document.getElementById("vipAvatarFrameSelect")?.value || "none";
-    const tema = document.getElementById("vipProfileBannerSelect")?.value || "default";
-    const bannerUrlFinal = window.__vipBannerUrlTemp !== undefined 
-      ? window.__vipBannerUrlTemp 
-      : (window.__currentProfileData?.vipBannerUrl || "");
+      // Captura os valores dos 6 campos VIP
+      const tipoNome =
+        document.getElementById("vipNameColorType")?.value || "none";
+      const fonteNome =
+        document.getElementById("vipNameFont")?.value || "default";
+      const corMsg = window.__vipMENSAGEM_COR_SELECIONADA;
+      const moldura =
+        document.getElementById("vipAvatarFrameSelect")?.value || "none";
+      const tema =
+        document.getElementById("vipProfileBannerSelect")?.value || "default";
+      const bannerUrlFinal =
+        window.__vipBannerUrlTemp !== undefined
+          ? window.__vipBannerUrlTemp
+          : window.__currentProfileData?.vipBannerUrl || "";
 
-    // 1. Estilo do nome
-    if (!tipoNome || tipoNome === "none") {
-      showToast("Por favor, selecione o Estilo do nome.");
-      return;
-    }
-
-    // 2. Fonte do nome
-    if (!fonteNome || fonteNome === "default") {
-      showToast("Por favor, selecione a Fonte do nome.");
-      return;
-    }
-
-    // 3. Cor do texto
-    if (!corMsg) {
-      showToast("Por favor, selecione a Cor do texto.");
-      return;
-    }
-
-    // 4. Moldura
-    if (!moldura || moldura === "none") {
-      showToast("Por favor, selecione uma Moldura.");
-      return;
-    }
-
-    // 5. Tema
-    if (!tema || tema === "default") {
-      showToast("Por favor, selecione um Tema de perfil.");
-      return;
-    }
-
-    // 6. Capa/Banner do topo
-    if (!bannerUrlFinal || bannerUrlFinal.trim() === "") {
-      showToast("Por favor, selecione uma Imagem para o Banner da capa.");
-      return;
-    }
-try {
-      // Guarda o rascunho apenas localmente (sem gravar no banco nem no status online)
-      const rascunhoVip = {
-        vipNameColorType: tipoNome,
-        vipNameColorSolid: window.__vipNOME_COR_SELECIONADA || "#6f42c1",
-        vipNameFont: fonteNome,
-        vipMsgColor: corMsg,
-        vipAvatarFrame: moldura,
-        vipProfileBanner: tema,
-        vipBannerUrl: bannerUrlFinal
-      };
-      sessionStorage.setItem("chatdf_vip_rascunho", JSON.stringify(rascunhoVip));
-
-      // 1. Fecha dropdowns abertos
-      document.querySelectorAll('.vip-custom-dropdown').forEach(d => d.classList.add('hidden'));
-
-      // 2. Mantém a simulação visual apenas na tela local do usuário
-      atualizarSimulacaoTopoVip();
-
-      // 3. Direciona a visualização para a gaveta "Renovar"
-      const btnRenovar = document.querySelector('.vip-btn-card[data-target="gaveta-renovar"]');
-      if (btnRenovar) {
-        document.querySelectorAll(".vip-drawer-content").forEach(drawer => drawer.classList.add("hidden"));
-        document.querySelectorAll(".vip-btn-card").forEach(btn => btn.classList.remove("active"));
-        document.getElementById("gaveta-renovar")?.classList.remove("hidden");
-        btnRenovar.classList.add("active");
+      // 1. Estilo do nome
+      if (!tipoNome || tipoNome === "none") {
+        showToast("Por favor, selecione o Estilo do nome.");
+        return;
       }
 
-      // 4. Dispara o Modal Pix imediatamente
-      acionarModalPix();
+      // 2. Fonte do nome
+      if (!fonteNome || fonteNome === "default") {
+        showToast("Por favor, selecione a Fonte do nome.");
+        return;
+      }
 
-    } catch (err) {
-      console.error("Erro ao preparar rascunho VIP:", err);
-      showToast("Erro ao processar opções VIP.");
-    }
+      // 3. Cor do texto
+      if (!corMsg) {
+        showToast("Por favor, selecione a Cor do texto.");
+        return;
+      }
 
-  });
+      // 4. Moldura
+      if (!moldura || moldura === "none") {
+        showToast("Por favor, selecione uma Moldura.");
+        return;
+      }
+
+      // 5. Tema
+      if (!tema || tema === "default") {
+        showToast("Por favor, selecione um Tema de perfil.");
+        return;
+      }
+
+      // 6. Capa/Banner do topo
+      if (!bannerUrlFinal || bannerUrlFinal.trim() === "") {
+        showToast("Por favor, selecione uma Imagem para o Banner da capa.");
+        return;
+      }
+      try {
+        // Guarda o rascunho apenas localmente (sem gravar no banco nem no status online)
+        const rascunhoVip = {
+          vipNameColorType: tipoNome,
+          vipNameColorSolid: window.__vipNOME_COR_SELECIONADA || "#6f42c1",
+          vipNameFont: fonteNome,
+          vipMsgColor: corMsg,
+          vipAvatarFrame: moldura,
+          vipProfileBanner: tema,
+          vipBannerUrl: bannerUrlFinal,
+        };
+        sessionStorage.setItem(
+          "chatdf_vip_rascunho",
+          JSON.stringify(rascunhoVip),
+        );
+
+        // 1. Fecha dropdowns abertos
+        document
+          .querySelectorAll(".vip-custom-dropdown")
+          .forEach((d) => d.classList.add("hidden"));
+
+        // 2. Mantém a simulação visual apenas na tela local do usuário
+        atualizarSimulacaoTopoVip();
+
+        // 3. Direciona a visualização para a gaveta "Renovar"
+        const btnRenovar = document.querySelector(
+          '.vip-btn-card[data-target="gaveta-renovar"]',
+        );
+        if (btnRenovar) {
+          document
+            .querySelectorAll(".vip-drawer-content")
+            .forEach((drawer) => drawer.classList.add("hidden"));
+          document
+            .querySelectorAll(".vip-btn-card")
+            .forEach((btn) => btn.classList.remove("active"));
+          document.getElementById("gaveta-renovar")?.classList.remove("hidden");
+          btnRenovar.classList.add("active");
+        }
+
+        // 4. Dispara o Modal Pix imediatamente
+        acionarModalPix();
+      } catch (err) {
+        console.error("Erro ao preparar rascunho VIP:", err);
+        showToast("Erro ao processar opções VIP.");
+      }
+    });
 
   // 4. Modal de Banner & Buscador
   initVipBannerModal(isOwnerCallback);
 
   // 5. Botões de Renovação (Gatilho secundário/renovação posterior)
-  document.getElementById("btnDrawerRenewVip")?.addEventListener("click", acionarModalPix);
-  document.getElementById("btnTopRenewVip")?.addEventListener("click", acionarModalPix);
+  document
+    .getElementById("btnDrawerRenewVip")
+    ?.addEventListener("click", acionarModalPix);
+  document
+    .getElementById("btnTopRenewVip")
+    ?.addEventListener("click", acionarModalPix);
 }
 
 // ================================== BANNER ADICIONANDO FOTOS =============================
@@ -765,7 +832,10 @@ function initVipBannerModal(isOwnerCallback) {
     if (!isOwnerCallback()) return;
 
     const data = window.__currentProfileData || {};
-    const linkAtual = window.__vipBannerUrlTemp !== undefined ? window.__vipBannerUrlTemp : (data.vipBannerUrl || "");
+    const linkAtual =
+      window.__vipBannerUrlTemp !== undefined
+        ? window.__vipBannerUrlTemp
+        : data.vipBannerUrl || "";
 
     solicitouRemoverBanner = false;
     imagemOriginal = null;
@@ -774,20 +844,22 @@ function initVipBannerModal(isOwnerCallback) {
     if (fileInput) fileInput.value = "";
 
     if (linkAtual) {
-  if (cropImg) {
-    cropImg.src = linkAtual;
-    cropImg.style.display = "block";
-  }
-  const img = new Image();
-  img.crossOrigin = "anonymous";
-  img.onload = () => { imagemOriginal = img; };
-  img.src = linkAtual;
-} else {
-  if (cropImg) {
-    cropImg.src = "";
-    cropImg.style.display = "none";
-  }
-}
+      if (cropImg) {
+        cropImg.src = linkAtual;
+        cropImg.style.display = "block";
+      }
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        imagemOriginal = img;
+      };
+      img.src = linkAtual;
+    } else {
+      if (cropImg) {
+        cropImg.src = "";
+        cropImg.style.display = "none";
+      }
+    }
 
     bannerModal?.classList.remove("hidden");
   });
@@ -839,8 +911,8 @@ function initVipBannerModal(isOwnerCallback) {
     escalaZoom = parseFloat(e.target.value);
     aplicarTransformacao();
   });
-//Controle de Zoom do Banner (Slider nativo)
-btnZoomIn?.addEventListener("click", () => {
+  //Controle de Zoom do Banner (Slider nativo)
+  btnZoomIn?.addEventListener("click", () => {
     if (!zoomSlider) return;
     zoomSlider.value = Math.min(6, parseFloat(zoomSlider.value) + 0.15);
     escalaZoom = parseFloat(zoomSlider.value);
@@ -855,7 +927,7 @@ btnZoomIn?.addEventListener("click", () => {
   });
 
   // 5. Arraste com Dedo (Touch) e Mouse (Pointer Events)
-// 5. Arraste e Zoom com os Dedos (Touch Pinch-to-Zoom e Arraste com Mouse)
+  // 5. Arraste e Zoom com os Dedos (Touch Pinch-to-Zoom e Arraste com Mouse)
   let distanciaInicialPinca = 0;
   let escalaBasePinca = 1;
 
@@ -899,43 +971,54 @@ btnZoomIn?.addEventListener("click", () => {
   window.addEventListener("mouseup", pararArrasto);
 
   // Eventos de Toque no Celular (1 dedo = arrastar / 2 dedos = zoom de pinça)
-  previewBox?.addEventListener("touchstart", (e) => {
-    if (!cropImg || cropImg.style.display === "none") return;
+  previewBox?.addEventListener(
+    "touchstart",
+    (e) => {
+      if (!cropImg || cropImg.style.display === "none") return;
 
-    if (e.touches.length === 1) {
-      iniciarArrasto(e.touches[0].clientX, e.touches[0].clientY);
-    } else if (e.touches.length === 2) {
-      e.preventDefault();
-      arrastando = false;
-      distanciaInicialPinca = obterDistanciaToques(e.touches[0], e.touches[1]);
-      escalaBasePinca = escalaZoom;
-    }
-  }, { passive: false });
+      if (e.touches.length === 1) {
+        iniciarArrasto(e.touches[0].clientX, e.touches[0].clientY);
+      } else if (e.touches.length === 2) {
+        e.preventDefault();
+        arrastando = false;
+        distanciaInicialPinca = obterDistanciaToques(
+          e.touches[0],
+          e.touches[1],
+        );
+        escalaBasePinca = escalaZoom;
+      }
+    },
+    { passive: false },
+  );
 
-  window.addEventListener("touchmove", (e) => {
-    if (!cropImg || cropImg.style.display === "none") return;
+  window.addEventListener(
+    "touchmove",
+    (e) => {
+      if (!cropImg || cropImg.style.display === "none") return;
 
-    // 1 Dedo: Move a imagem
-    if (arrastando && e.touches.length === 1) {
-      moverArrasto(e.touches[0].clientX, e.touches[0].clientY);
-    } 
-    // 2 Dedos: Zoom por pinça
-    else if (e.touches.length === 2 && distanciaInicialPinca > 0) {
-      e.preventDefault();
-      const distanciaAtual = obterDistanciaToques(e.touches[0], e.touches[1]);
-      const fator = distanciaAtual / distanciaInicialPinca;
-      
-      // Limita o zoom entre 0.5 e 3.0 (mesmos limites do slider)
-      // Libera zoom amplo até 6.0x
-      const novoZoom = Math.min(6, Math.max(0.5, escalaBasePinca * fator));
-      escalaZoom = parseFloat(novoZoom.toFixed(2));
+      // 1 Dedo: Move a imagem
+      if (arrastando && e.touches.length === 1) {
+        moverArrasto(e.touches[0].clientX, e.touches[0].clientY);
+      }
+      // 2 Dedos: Zoom por pinça
+      else if (e.touches.length === 2 && distanciaInicialPinca > 0) {
+        e.preventDefault();
+        const distanciaAtual = obterDistanciaToques(e.touches[0], e.touches[1]);
+        const fator = distanciaAtual / distanciaInicialPinca;
 
-      // Sincroniza a barra deslizante na tela enquanto move os dedos
-      if (zoomSlider) zoomSlider.value = escalaZoom;
+        // Limita o zoom entre 0.5 e 3.0 (mesmos limites do slider)
+        // Libera zoom amplo até 6.0x
+        const novoZoom = Math.min(6, Math.max(0.5, escalaBasePinca * fator));
+        escalaZoom = parseFloat(novoZoom.toFixed(2));
 
-      aplicarTransformacao();
-    }
-  }, { passive: false });
+        // Sincroniza a barra deslizante na tela enquanto move os dedos
+        if (zoomSlider) zoomSlider.value = escalaZoom;
+
+        aplicarTransformacao();
+      }
+    },
+    { passive: false },
+  );
 
   window.addEventListener("touchend", (e) => {
     if (e.touches.length === 0) {
@@ -947,12 +1030,6 @@ btnZoomIn?.addEventListener("click", () => {
     }
   });
 
-
-
-
-
-
-
   // 6. Botão Limpar Banner
   clearBannerBtn?.addEventListener("click", () => {
     imagemOriginal = null;
@@ -962,7 +1039,7 @@ btnZoomIn?.addEventListener("click", () => {
       cropImg.src = "";
       cropImg.style.display = "none";
     }
-   if (zoomWrapper) zoomWrapper.style.display = "flex";
+    if (zoomWrapper) zoomWrapper.style.display = "flex";
     showToast("Banner limpo. Clique em Salvar para confirmar a remoção.");
   });
 
@@ -970,13 +1047,15 @@ btnZoomIn?.addEventListener("click", () => {
   saveBannerBtn?.addEventListener("click", async (e) => {
     e.preventDefault();
     if (!isOwnerCallback()) return;
-
-    const user = auth.currentUser;
+const user = auth.currentUser;
     if (!user) return;
+
+    const { getStorage, ref: sRef, uploadBytes, getDownloadURL, deleteObject } =
+      await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js");
 
     const storage = getStorage();
     const bannerRef = sRef(storage, `banners_vip/${user.uid}.jpg`);
-
+  
     try {
       let finalUrl = "";
 
@@ -987,7 +1066,11 @@ btnZoomIn?.addEventListener("click", () => {
           // Arquivo já não existia
         }
         finalUrl = "";
-      } else if (imagemOriginal && cropImg && cropImg.style.display !== "none") {
+      } else if (
+        imagemOriginal &&
+        cropImg &&
+        cropImg.style.display !== "none"
+      ) {
         showToast("Processando recorte e enviando banner...");
 
         // Dimensões do visor retangular na tela
@@ -997,7 +1080,9 @@ btnZoomIn?.addEventListener("click", () => {
         // Canvas final no tamanho padrão de capa (800x300 proporcional)
         const canvas = document.createElement("canvas");
         const TARGET_W = 800;
-        const TARGET_H = Math.round(TARGET_W * (boxRect.height / boxRect.width));
+        const TARGET_H = Math.round(
+          TARGET_W * (boxRect.height / boxRect.width),
+        );
         canvas.width = TARGET_W;
         canvas.height = TARGET_H;
 
@@ -1012,7 +1097,13 @@ btnZoomIn?.addEventListener("click", () => {
         const desenharW = imgRect.width * fator;
         const desenharH = imgRect.height * fator;
 
-        ctx.drawImage(imagemOriginal, desenharX, desenharY, desenharW, desenharH);
+        ctx.drawImage(
+          imagemOriginal,
+          desenharX,
+          desenharY,
+          desenharW,
+          desenharH,
+        );
 
         const blobFinal = await new Promise((resolve) => {
           canvas.toBlob(resolve, "image/jpeg", 0.82);
@@ -1024,7 +1115,10 @@ btnZoomIn?.addEventListener("click", () => {
         }
       } else {
         const data = window.__currentProfileData || {};
-        finalUrl = window.__vipBannerUrlTemp !== undefined ? window.__vipBannerUrlTemp : (data.vipBannerUrl || "");
+        finalUrl =
+          window.__vipBannerUrlTemp !== undefined
+            ? window.__vipBannerUrlTemp
+            : data.vipBannerUrl || "";
       }
 
       window.__vipBannerUrlTemp = finalUrl;
@@ -1049,13 +1143,6 @@ btnZoomIn?.addEventListener("click", () => {
   });
 }
 
-
-
-
-
-
-
-
 /* ========================================================================= 
    FLUXO DE ABERTURA E e FECHAMENTO E RETORNO DO PAINEL VIP ISOLADO
    ========================================================================= */
@@ -1064,12 +1151,12 @@ export function abrirPainelVip() {
   const mainTabs = document.getElementById("profileMainTabs");
   const profileContent = document.querySelector(".profile-content");
   const profileVip = document.getElementById("profileVip");
-  
+
   const vipBtn = document.getElementById("vipTopHeaderBtn");
   const backBtn = document.getElementById("vipBackToProfileBtn");
   const editCoverBtn = document.getElementById("editProfileCoverBtn");
   const vipHeaderActionBtn = document.getElementById("vipHeaderActionBtn");
-  
+
   const topMood = document.getElementById("profileMood");
   const topTag = document.getElementById("vipTopPreviewTag");
   const topMsgBox = document.getElementById("vipTopMsgPreviewBox");
@@ -1088,31 +1175,40 @@ export function abrirPainelVip() {
         const sel = document.getElementById("vipNameColorType");
         const btn = document.getElementById("btnVipNameColorType");
         if (sel) sel.value = r.vipNameColorType;
-        const opt = document.querySelector(`#listVipNameColorType .vip-dropdown-option[data-value="${r.vipNameColorType}"]`);
+        const opt = document.querySelector(
+          `#listVipNameColorType .vip-dropdown-option[data-value="${r.vipNameColorType}"]`,
+        );
         if (btn && opt) btn.textContent = opt.textContent;
       }
       if (r.vipNameFont) {
         const sel = document.getElementById("vipNameFont");
         const btn = document.getElementById("btnVipNameFont");
         if (sel) sel.value = r.vipNameFont;
-        const opt = document.querySelector(`#listVipNameFont .vip-dropdown-option[data-value="${r.vipNameFont}"]`);
+        const opt = document.querySelector(
+          `#listVipNameFont .vip-dropdown-option[data-value="${r.vipNameFont}"]`,
+        );
         if (btn && opt) btn.textContent = opt.textContent;
       }
       if (r.vipAvatarFrame) {
         const sel = document.getElementById("vipAvatarFrameSelect");
         const btn = document.getElementById("btnVipAvatarFrameSelect");
         if (sel) sel.value = r.vipAvatarFrame;
-        const opt = document.querySelector(`#listVipAvatarFrameSelect .vip-dropdown-option[data-value="${r.vipAvatarFrame}"]`);
+        const opt = document.querySelector(
+          `#listVipAvatarFrameSelect .vip-dropdown-option[data-value="${r.vipAvatarFrame}"]`,
+        );
         if (btn && opt) btn.textContent = opt.textContent;
       }
       if (r.vipProfileBanner) {
         const sel = document.getElementById("vipProfileBannerSelect");
         const btn = document.getElementById("btnVipProfileBannerSelect");
         if (sel) sel.value = r.vipProfileBanner;
-        const opt = document.querySelector(`#listVipProfileBannerSelect .vip-dropdown-option[data-value="${r.vipProfileBanner}"]`);
+        const opt = document.querySelector(
+          `#listVipProfileBannerSelect .vip-dropdown-option[data-value="${r.vipProfileBanner}"]`,
+        );
         if (btn && opt) btn.textContent = opt.textContent;
       }
-      if (r.vipNameColorSolid) window.__vipNOME_COR_SELECIONADA = r.vipNameColorSolid;
+      if (r.vipNameColorSolid)
+        window.__vipNOME_COR_SELECIONADA = r.vipNameColorSolid;
       if (r.vipMsgColor) window.__vipMENSAGEM_COR_SELECIONADA = r.vipMsgColor;
       if (r.vipBannerUrl) window.__vipBannerUrlTemp = r.vipBannerUrl;
     }
@@ -1123,7 +1219,7 @@ export function abrirPainelVip() {
   // 2. Troca os botões do cabeçalho
   if (vipBtn) vipBtn.classList.add("d-none");
   if (backBtn) backBtn.classList.remove("d-none");
- if (editCoverBtn) editCoverBtn.style.display = "none";
+  if (editCoverBtn) editCoverBtn.style.display = "none";
   if (vipHeaderActionBtn) {
     vipHeaderActionBtn.classList.remove("d-none");
     vipHeaderActionBtn.style.display = "grid";
@@ -1132,8 +1228,14 @@ export function abrirPainelVip() {
   // 3. Ativa o modo VIP visual
   if (profilePanel) profilePanel.classList.add("vip-mode-active");
   if (topMood) topMood.style.display = "none";
-  if (topTag) { topTag.classList.remove("d-none"); topTag.classList.add("d-inline-block"); }
-  if (topMsgBox) { topMsgBox.classList.remove("d-none"); topMsgBox.classList.add("d-block"); }
+  if (topTag) {
+    topTag.classList.remove("d-none");
+    topTag.classList.add("d-inline-block");
+  }
+  if (topMsgBox) {
+    topMsgBox.classList.remove("d-none");
+    topMsgBox.classList.add("d-block");
+  }
 
   // 4. Banner e simuladores
   const data = window.__currentProfileData || {};
@@ -1146,7 +1248,9 @@ export function abrirPainelVip() {
 
   // Se o VIP estiver ativo, foca diretamente na aba Renovar
   if (data.isVip === true) {
-    const btnRenovar = document.querySelector('.vip-btn-card[data-target="gaveta-renovar"]');
+    const btnRenovar = document.querySelector(
+      '.vip-btn-card[data-target="gaveta-renovar"]',
+    );
     if (btnRenovar) {
       btnRenovar.click();
     }
@@ -1162,19 +1266,19 @@ export function fecharPainelVip() {
   const mainTabs = document.getElementById("profileMainTabs");
   const profileContent = document.querySelector(".profile-content");
   const profileVip = document.getElementById("profileVip");
-  
+
   const vipBtn = document.getElementById("vipTopHeaderBtn");
   const backBtn = document.getElementById("vipBackToProfileBtn");
   const editCoverBtn = document.getElementById("editProfileCoverBtn");
   const vipHeaderActionBtn = document.getElementById("vipHeaderActionBtn");
-  
+
   const topMood = document.getElementById("profileMood");
   const topTag = document.getElementById("vipTopPreviewTag");
   const topMsgBox = document.getElementById("vipTopMsgPreviewBox");
   const topExpiry = document.getElementById("vipTopExpiryRow");
 
   // 1. Descarta a imagem temporária não salva do banner
- // 1. Descarta a imagem temporária e o rascunho apenas ao fechar ou voltar
+  // 1. Descarta a imagem temporária e o rascunho apenas ao fechar ou voltar
   window.__vipBannerUrlTemp = undefined;
   sessionStorage.removeItem("chatdf_vip_rascunho");
   restaurarVisualPadraoPerfil();
@@ -1196,8 +1300,14 @@ export function fecharPainelVip() {
   // 4. Desativa o modo VIP visual temporário do simulador
   if (profilePanel) profilePanel.classList.remove("vip-mode-active");
   if (topMood) topMood.style.display = "block";
-  if (topTag) { topTag.classList.remove("d-inline-block"); topTag.classList.add("d-none"); }
-  if (topMsgBox) { topMsgBox.classList.remove("d-block"); topMsgBox.classList.add("d-none"); }
+  if (topTag) {
+    topTag.classList.remove("d-inline-block");
+    topTag.classList.add("d-none");
+  }
+  if (topMsgBox) {
+    topMsgBox.classList.remove("d-block");
+    topMsgBox.classList.add("d-none");
+  }
 
   // 5. Restaura a capa oficial salva no banco ou a cor comum padrão
   const data = window.__currentProfileData || {};
@@ -1227,8 +1337,14 @@ export function formatarAutorVipChat(msg = {}) {
   let corInline = "";
   let fonteInline = "";
 
-const isVipMsg = msg.isVip === true || (tipoEfeito !== "solid" && tipoEfeito !== "none") || fonte !== "default" || moldura !== "none";
-const tagDiamante = isVipMsg ? `<i class="bi bi-gem" style="font-size: 13px; color: #01b1f7; -webkit-text-fill-color: #01b1f7; margin-left: 4px; vertical-align: middle; display: inline-block;"></i>` : "";
+  const isVipMsg =
+    msg.isVip === true ||
+    (tipoEfeito !== "solid" && tipoEfeito !== "none") ||
+    fonte !== "default" ||
+    moldura !== "none";
+  const tagDiamante = isVipMsg
+    ? `<i class="bi bi-gem" style="font-size: 13px; color: #01b1f7; -webkit-text-fill-color: #01b1f7; margin-left: 4px; vertical-align: middle; display: inline-block;"></i>`
+    : "";
 
   if (tipoEfeito !== "solid" && tipoEfeito !== "none") {
     classeEfeito = `nick-${tipoEfeito}`;
@@ -1236,7 +1352,7 @@ const tagDiamante = isVipMsg ? `<i class="bi bi-gem" style="font-size: 13px; col
     corInline = `color: ${corSolida};`;
   }
 
-if (fonte !== "default") {
+  if (fonte !== "default") {
     const fallback = obterFallbackFonteVip(fonte);
     fonteInline = `font-family: '${fonte}', ${fallback};`;
   }

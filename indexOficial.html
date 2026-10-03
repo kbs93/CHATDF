@@ -27,8 +27,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <link href="styles.css?v=2" rel="stylesheet">
 <!-- Caminhos RELATIVOS corretos -->
-<script type="module" src="./js/main.js"></script>
-<script type="module" src="./js/contato.js"></script>
+<script type="module" src="./js/home.js"></script>
+
 </head>
 <body class="index-page">
 <!-- 🔹 NAVBAR -->
@@ -43,8 +43,7 @@ aria-expanded="false">
 <span></span>
 </span>
 </button>
- <a class="navbar-brand  align-items-center gap-2 " href="#">
-    <!-------<img src="img/imgicon2.png" alt="ChatDF" style="width:38px; height:35px; object-fit: contain;">---->
+ <a class="navbar-brand align-items-center gap-2" href="#">
     <span>chatdf.com.br</span>
   </a>
 <div class="collapse navbar-collapse justify-content-end align-items-center" id="navbarNav">
@@ -209,8 +208,8 @@ aria-expanded="false">
 <div id="profilePanel" class="profile-panel hidden">
   <div class="profile-body">
     <!-- BOTOES DENTRO DO PAINEL DO USUARIO-->
-<div class="profile-cover">
-  <!---- denuncia usuario-->
+    <div class="profile-cover">
+      <!---- denuncia usuario-->
       <button id="reportUserBtn" type="button" aria-label="Denunciar usuário">
         <i class="bi bi-flag-fill"></i>
       </button>
@@ -223,194 +222,181 @@ aria-expanded="false">
         <button id="closeProfilePanel" type="button" aria-label="Fechar painel">✕</button>
       </div>
     </div>
-    <!-- mudança 13-07-2026 ---->
-    <!-- mudança 13-07-2026 ---->
-<div class="profile-avatar-wrap">
-  <div class="profile-avatar position-relative">
-    <img id="profileAvatar" src="img/avatar.png" alt="Avatar do usuário">
-    <div id="vipTopPreviewFrame" class="position-absolute top-0 start-0 w-100 h-100 rounded-circle d-none" style="pointer-events: none; box-sizing: border-box;"></div>
-  </div>
-  <!-- Botão de Upload agora fica do lado de fora da máscara de corte -->
-  <label id="btnUploadPhoto" class="profile-photo-upload-btn hidden" title="Adicionar foto de perfil">
-    <i class="bi bi-camera"></i>
-    <input type="file" id="uploadProfilePic" accept="image/jpeg, image/png, image/webp" style="display: none;">
-  </label>
+    
+    <div class="profile-avatar-wrap">
+      <div class="profile-avatar position-relative">
+        <img id="profileAvatar" src="img/avatar.png" alt="Avatar do usuário">
+        <div id="vipTopPreviewFrame" class="position-absolute top-0 start-0 w-100 h-100 rounded-circle d-none" style="pointer-events: none; box-sizing: border-box;"></div>
+      </div>
+      <!-- Botão de Upload agora fica do lado de fora da máscara de corte -->
+      <label id="btnUploadPhoto" class="profile-photo-upload-btn hidden" title="Adicionar foto de perfil">
+        <i class="bi bi-camera"></i>
+        <input type="file" id="uploadProfilePic" accept="image/jpeg, image/png, image/webp" style="display: none;">
+      </label>
 
-  <span id="profileOnlineDot" class="profile-online-dot hidden"></span>
-</div>
+      <span id="profileOnlineDot" class="profile-online-dot hidden"></span>
+    </div>
 
-<div class="profile-user-info">
+    <div class="profile-user-info">
       <h3 id="profileName">Usuário</h3>
     </div>
 
-<!---====================== 16-07-26 ADICIONANDO NOVO PAINEL VIP ===================---->
-<div class="profile-tabs">
+    <!---====================== 16-07-26 ADICIONANDO NOVO PAINEL VIP ===================---->
+    <div class="profile-tabs">
       <button class="profile-tab" data-tab="info" type="button">Info</button>
       <button class="profile-tab" data-tab="edit" type="button">Editar perfil</button>
     </div>   
+    
     <div class="profile-content px-3">
       <!-- INFO -->
-  <!-- INFO -->
-<div class="profile-section active" id="profileInfo">
-  <!-- Cidade -->
-  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
-    <span class="col-6 d-flex align-items-center gap-2 px-0">
-      <i class="bi bi-geo-alt text-secondary fs-5"></i>
-      <span class="text-secondary fw-medium">Cidade</span>
-    </span>
-    <span id="profileCity" class="col-6 ps-3 text-start text-secondary">-</span>
-  </div>
-  <!-- Idade -->
-  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
-    <span class="col-6 d-flex align-items-center gap-2 px-0">
-      <i class="bi bi-calendar-heart text-secondary fs-5"></i>
-      <span class="text-secondary fw-medium">Idade</span>
-    </span>
-    <span id="profileAge" class="col-6 ps-3 text-start text-secondary">-</span>
-  </div>
-  <!-- Gênero -->
-  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
-    <span class="col-6 d-flex align-items-center gap-2 px-0">
-      <i class="bi bi-gender-ambiguous text-secondary fs-5"></i>
-      <span class="text-secondary fw-medium">Gênero</span>
-    </span>
-    <span id="profileGender" class="col-6 ps-3 text-start text-secondary">-</span>
-  </div>
-  <!-- Membro desde -->
-  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
-    <span class="col-6 d-flex align-items-center gap-2 px-0">
-      <i class="bi bi-person-check text-secondary fs-5"></i>
-      <span class="text-secondary fw-medium">Membro desde</span>
-    </span>
-    <span id="profileMemberSince" class="col-6 ps-3 text-start text-secondary">-</span>
-  </div>
-  <!-- Instagram -->
-  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
-    <span class="col-6 d-flex align-items-center gap-2 px-0">
-      <i class="bi bi-instagram fs-5"></i>
-      <span class="text-secondary fw-medium">Instagram</span>
-    </span>
-    <span id="profileInstagramText" class="col-6 ps-3 text-start text-secondary">-</span>
-  </div>
-  <!-- Telegram -->
-  <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0 ">
-    <span class="col-6 d-flex align-items-center gap-2 px-0">
-      <i class="bi bi-telegram"></i>
-      <span class=" fw-medium">Telegram</span>
-    </span>
-    <span id="profileTelegramText" class="col-6 ps-3 text-start text-secondary">-</span>
-  </div>
+      <div class="profile-section active" id="profileInfo">
+        <!-- Cidade -->
+        <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+          <span class="col-6 d-flex align-items-center gap-2 px-0">
+            <i class="bi bi-geo-alt text-secondary fs-5"></i>
+            <span class="text-secondary fw-medium">Cidade</span>
+          </span>
+          <span id="profileCity" class="col-6 ps-3 text-start text-secondary">-</span>
+        </div>
+        <!-- Idade -->
+        <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+          <span class="col-6 d-flex align-items-center gap-2 px-0">
+            <i class="bi bi-calendar-heart text-secondary fs-5"></i>
+            <span class="text-secondary fw-medium">Idade</span>
+          </span>
+          <span id="profileAge" class="col-6 ps-3 text-start text-secondary">-</span>
+        </div>
+        <!-- Gênero -->
+        <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+          <span class="col-6 d-flex align-items-center gap-2 px-0">
+            <i class="bi bi-gender-ambiguous text-secondary fs-5"></i>
+            <span class="text-secondary fw-medium">Gênero</span>
+          </span>
+          <span id="profileGender" class="col-6 ps-3 text-start text-secondary">-</span>
+        </div>
+        <!-- Membro desde -->
+        <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+          <span class="col-6 d-flex align-items-center gap-2 px-0">
+            <i class="bi bi-person-check text-secondary fs-5"></i>
+            <span class="text-secondary fw-medium">Membro desde</span>
+          </span>
+          <span id="profileMemberSince" class="col-6 ps-3 text-start text-secondary">-</span>
+        </div>
+        <!-- Instagram -->
+        <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0">
+          <span class="col-6 d-flex align-items-center gap-2 px-0">
+            <i class="bi bi-instagram fs-5"></i>
+            <span class="text-secondary fw-medium">Instagram</span>
+          </span>
+          <span id="profileInstagramText" class="col-6 ps-3 text-start text-secondary">-</span>
+        </div>
+        <!-- Telegram -->
+        <div class="m-0 dados-info row align-items-center border-bottom w-100 mx-0 ">
+          <span class="col-6 d-flex align-items-center gap-2 px-0">
+            <i class="bi bi-telegram"></i>
+            <span class=" fw-medium">Telegram</span>
+          </span>
+          <span id="profileTelegramText" class="col-6 ps-3 text-start text-secondary">-</span>
+        </div>
 
-   <!-- SECAO DE TAGS & HOBBIES DO DF -->
-          <div class="profile-tags-container mt-3 pb-2">
-            <div class="d-flex align-items-center gap-2 mb-2 text-secondary">
-              <i class="bi bi-tags-fill fs-6 text-primary"></i>
-              <strong style="font-size: 13.5px; color: #555;">Gostos & Hobbies:</strong>
-            </div>
-            <div id="profileInterestsList" class="profile-interests-pills">
-              <!-- Renderizado dinamicamente via JS -->
-            </div>
+        <!-- SECAO DE TAGS & HOBBIES DO DF -->
+        <div class="profile-tags-container mt-3 pb-2">
+          <div class="d-flex align-items-center gap-2 mb-2 text-secondary">
+            <i class="bi bi-tags-fill fs-6 text-primary"></i>
+            <strong style="font-size: 13.5px; color: #555;">Gostos & Hobbies:</strong>
           </div>
-</div>
-</div>
+          <div id="profileInterestsList" class="profile-interests-pills">
+            <!-- Renderizado dinamicamente via JS -->
+          </div>
+        </div>
+      </div>
+
       <!-- EDITAR -->
-<div class="profile-section" id="profileEdit">
-  <label class="profile-field">
-    <i class="bi bi-person profile-field-icon"></i>
-    <span class="profile-field-body">
-      <span class="profile-field-label">Nome</span>
-      <input type="text" id="editName" placeholder="Nome de Usuário" maxlength="10">
-    </span>
-  </label>
-  <label class="profile-field">
-    <i class="bi bi-calendar-heart profile-field-icon"></i>
-    <span class="profile-field-body">
-      <span class="profile-field-label">Idade</span>
-      <input type="text" id="editAge" placeholder="Somente números" inputmode="numeric" pattern="[0-9]*">
-    </span>
-  </label>
-  <label class="profile-field">
-    <i class="bi bi-gender-ambiguous profile-field-icon"></i>
-    <span class="profile-field-body">
-      <span class="profile-field-label">Gênero</span>
-      <input type="text" id="editGender" placeholder="Digite seu gênero" maxlength="15">
-    </span>
-  </label>
-  <label class="profile-field">
-    <i class="bi bi-geo-alt profile-field-icon"></i>
-    <span class="profile-field-body">
-      <span class="profile-field-label">Cidade</span>
-      <input type="text" id="editCity" placeholder="Digite sua cidade"maxlength="22">
-    </span>
-  </label>
-<!-------- NAO APAGAR POIS E O CAMPO DE RECADO DO USUARIO (FRASE FAVORITA) 16-07-26 -----
-<label class="profile-field" style="align-items: flex-start; padding-top: 8px;">
-  <i class="bi bi-chat-square-text profile-field-icon"></i>
-  <span class="profile-field-body">
-    <span class="profile-field-label">Recado</span>
-    <textarea id="editMood" placeholder="Frase Favorita " maxlength="100" rows="3"></textarea>
-  </span>
-</label>
--------------------->
+      <div class="profile-section" id="profileEdit">
+        <label class="profile-field">
+          <i class="bi bi-person profile-field-icon"></i>
+          <span class="profile-field-body">
+            <span class="profile-field-label">Nome</span>
+            <input type="text" id="editName" placeholder="Nome de Usuário" maxlength="10">
+          </span>
+        </label>
+        <label class="profile-field">
+          <i class="bi bi-calendar-heart profile-field-icon"></i>
+          <span class="profile-field-body">
+            <span class="profile-field-label">Idade</span>
+            <input type="text" id="editAge" placeholder="Somente números" inputmode="numeric" pattern="[0-9]*">
+          </span>
+        </label>
+        <label class="profile-field">
+          <i class="bi bi-gender-ambiguous profile-field-icon"></i>
+          <span class="profile-field-body">
+            <span class="profile-field-label">Gênero</span>
+            <input type="text" id="editGender" placeholder="Digite seu gênero" maxlength="15">
+          </span>
+        </label>
+        <label class="profile-field">
+          <i class="bi bi-geo-alt profile-field-icon"></i>
+          <span class="profile-field-body">
+            <span class="profile-field-label">Cidade</span>
+            <input type="text" id="editCity" placeholder="Digite sua cidade" maxlength="22">
+          </span>
+        </label>
 
-
- <!-- CAMPO DO INSTAGRAM -->
-       <label class="profile-field">
-            <i class="bi bi-instagram profile-field-icon"></i>
-            <span class="profile-field-body">
-              <span class="profile-field-label">Instagram</span>
-              <input type="text" id="editInstagram" placeholder="Digite seu @usuario(Opcional)" maxlength="30">
-            </span>
+        <!-- CAMPO DO INSTAGRAM -->
+        <label class="profile-field">
+          <i class="bi bi-instagram profile-field-icon"></i>
+          <span class="profile-field-body">
+            <span class="profile-field-label">Instagram</span>
+            <input type="text" id="editInstagram" placeholder="Digite seu @usuario(Opcional)" maxlength="30">
+          </span>
+        </label>
+        <!-- CAMPO DO TELEGRAM -->
+        <label class="profile-field">
+          <i class="bi bi-telegram profile-field-icon"></i>
+          <span class="profile-field-body">
+            <span class="profile-field-label">Telegram</span>
+            <input type="text" id="editTelegram" placeholder="Digite seu @usuario(Opcional)" maxlength="30">
+          </span>
+        </label>
+        <!-- SELETOR DE TAGS NO EDITAR PERFIL -->
+        <div class="profile-edit-interests-wrapper mt-3 mb-2">
+          <label class="profile-field-label d-flex justify-content-between align-items-center">
+            <span>Selecione até 6 gostos & hobbies:</span>
+            <small id="selectedInterestsCount" class="text-muted fw-bold">0/5</small>
           </label>
-          <!-- CAMPO DO TELEGRAM -->
-          <label class="profile-field">
-            <i class="bi bi-telegram profile-field-icon"></i>
-            <span class="profile-field-body">
-              <span class="profile-field-label">Telegram</span>
-              <input type="text" id="editTelegram" placeholder="Digite seu @usuario(Opcional)" maxlength="30">
-            </span>
-          </label>
-          <!-- SELETOR DE TAGS NO EDITAR PERFIL -->
-          <div class="profile-edit-interests-wrapper mt-3 mb-2">
-            <label class="profile-field-label d-flex justify-content-between align-items-center">
-              <span>Selecione até 6 gostos & hobbies:</span>
-              <small id="selectedInterestsCount" class="text-muted fw-bold">0/5</small>
-            </label>
-            <div id="editInterestsSelectorGrid" class="interests-selector-grid">
-              <!-- Renderizado dinamicamente via JS -->
-            </div>
+          <div id="editInterestsSelectorGrid" class="interests-selector-grid">
+            <!-- Renderizado dinamicamente via JS -->
           </div>
-  <div id="editTrackingState" data-capa-alterada="false" data-avatar-alterado="false" class="d-none"></div>
-  <button id="saveProfileBtn" type="button" disabled style="opacity: 0.5; cursor: not-allowed;">Salvar</button>
-</div>
+        </div>
+        <div id="editTrackingState" data-capa-alterada="false" data-avatar-alterado="false" class="d-none"></div>
+        <button id="saveProfileBtn" type="button" disabled style="opacity: 0.5; cursor: not-allowed;">Salvar</button>
+      </div>
     </div>
   </div>
 </div>
+
 <div id="profileEditorModal" class="profile-editor-modal hidden">
   <div class="profile-editor-card">
-<div class="profile-editor-header">
-  <button id="showBannerEditorBtn" type="button" class="profile-editor-tab active">
-    Editar capa
-  </button>
-  <button id="openAvatarPickerBtn" type="button" class="profile-editor-tab">
-    Escolher avatar
-  </button>
-  <button id="closeProfileEditorBtn" type="button" aria-label="Fechar editor de perfil">✕</button>
-</div>
+    <div class="profile-editor-header">
+      <button id="showBannerEditorBtn" type="button" class="profile-editor-tab active">
+        Editar capa
+      </button>
+      <button id="openAvatarPickerBtn" type="button" class="profile-editor-tab">
+        Escolher avatar
+      </button>
+      <button id="closeProfileEditorBtn" type="button" aria-label="Fechar editor de perfil">✕</button>
+    </div>
     <div id="profileEditorBannerPreview" class="profile-editor-banner-preview"></div>
     <div id="profileEditorBannerColors" class="profile-editor-banner-colors"></div>
-<!-- ÁREA DE AVATARES
-     <button class="profile-avatar-cat active" data-cat="eles" type="button">Eles</button>
-        <button class="profile-avatar-cat" data-cat="elas" type="button">Elas</button>
-        <button class="profile-avatar-cat" data-cat="unissex" type="button">Unissex</button> 
--->
-<div id="profileEditorAvatarArea" class="profile-editor-avatar-area hidden">
-  <div id="profileEditorAvatarGrid" class="profile-editor-avatar-grid" style="overflow-y: auto; max-height: 200px; display: grid; gap: 10px;"></div>
+
+    <div id="profileEditorAvatarArea" class="profile-editor-avatar-area hidden">
+      <div id="profileEditorAvatarGrid" class="profile-editor-avatar-grid" style="overflow-y: auto; max-height: 200px; display: grid; gap: 10px;"></div>
     </div>
-   <button id="saveProfileEditorBtn" type="button">Confirmar</button>
+    <button id="saveProfileEditorBtn" type="button">Confirmar</button>
   </div>
 </div>
-<!-- 01-07-26 MODAL DE DENÚNCIA dentro do painel do Usuário  Estrutura do Modal dentro do painel do Usuario de Denúncia (CHAT-DF UX) -->
+
+<!-- MODAL DE DENÚNCIA -->
 <div id="reportModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 9999;">
   <div style="background: #ffffff; width: 90%; max-width: 450px; padding: 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; font-family: sans-serif;">
     <button id="closeReportModalX" type="button" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 18px; cursor: pointer; color: #666;">✕</button>
@@ -422,66 +408,58 @@ aria-expanded="false">
       Please only submit actionable offences. Abuse or false reporting may lead to action taken against your own account. Select the reason to report this content.
     </p>
     <label style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Reason</label>
-    <!-- Lista de denuncia que expande para baixo -->
-  <!-- Lista de denuncia que expande para baixo -->
-<select id="reportReasonSelect" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; background: #f9f9f9; outline: none; margin-bottom: 24px;">
-  <option value="Preconceito e Discriminacao">Preconceito / Discriminação / Racismo</option>
-  <option value="Assedio e Perseguicao">Assédio moral / Perseguição contínua</option>
-  <option value="Desrespeito as Regras da Sala">Mensagens fora do tema proposto da sala</option>
-  <option value="Xingamentos e Baixo Calao">Xingamentos e ofensas verbais</option>
-  <option value="Insinuacao Sexual Indesejada">Insinuação ou teor sexual</option>
-  <option value="Golpe Financeiro ou Pedido de Pix">Golpe / Pedidos de dinheiro / Pix</option>
-  <option value="Divulgacao de Contatos e Telefones">Divulgação insistente de telefone </option>
-  <option value="Uso Indevido de Identidade">Perfil falso / Fingindo ser outra pessoa</option>
-  <option value="Provocacao e Trolling">Provocação deliberada </option>
-  
-  <!-- 10 NOVAS OPÇÕES EXCLUSIVAS PARA CONDUTA DE TEXTO -->
-  <option value="Ameaca de Agressao ou Violencia">Ameaça contra a integridade física</option>
-  <option value="Exposicao de Dados Pessoais">Vazamento de nome real, CPF ou endereço</option>
-  <option value="Incentivo a Automutilacao">Incentivo ou menção a automutilação</option>
-  <option value="Comportamento Invasivo com Menores">Conversas inadequadas envolvendo menores</option>
-  <option value="Spam de Mensagens Repetitivas">Inundação de mensagens iguais</option>
-  <option value="Intolerancia Religiosa">Intolerância ou ataque religioso</option>
-  <option value="Apoligia a Crimes ou Drogas">Apologia a crimes, drogas ou atos ilegais</option>
-  <option value="Venda e Comercio Ilegal">Comércio de produtos ilegais no chat</option>
 
-</select>
-
+    <select id="reportReasonSelect" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; background: #f9f9f9; outline: none; margin-bottom: 24px;">
+      <option value="Preconceito e Discriminacao">Preconceito / Discriminação / Racismo</option>
+      <option value="Assedio e Perseguicao">Assédio moral / Perseguição contínua</option>
+      <option value="Desrespeito as Regras da Sala">Mensagens fora do tema proposto da sala</option>
+      <option value="Xingamentos e Baixo Calao">Xingamentos e ofensas verbais</option>
+      <option value="Insinuacao Sexual Indesejada">Insinuação ou teor sexual</option>
+      <option value="Golpe Financeiro ou Pedido de Pix">Golpe / Pedidos de dinheiro / Pix</option>
+      <option value="Divulgacao de Contatos e Telefones">Divulgação insistente de telefone </option>
+      <option value="Uso Indevido de Identidade">Perfil falso / Fingindo ser outra pessoa</option>
+      <option value="Provocacao e Trolling">Provocação deliberada </option>
+      
+      <!-- 10 NOVAS OPÇÕES EXCLUSIVAS PARA CONDUTA DE TEXTO -->
+      <option value="Ameaca de Agressao ou Violencia">Ameaça contra a integridade física</option>
+      <option value="Exposicao de Dados Pessoais">Vazamento de nome real, CPF ou endereço</option>
+      <option value="Incentivo a Automutilacao">Incentivo ou menção a automutilação</option>
+      <option value="Comportamento Invasivo com Menores">Conversas inadequadas envolvendo menores</option>
+      <option value="Spam de Mensagens Repetitivas">Inundação de mensagens iguais</option>
+      <option value="Intolerancia Religiosa">Intolerância ou ataque religioso</option>
+      <option value="Apoligia a Crimes ou Drogas">Apologia a crimes, drogas ou atos ilegais</option>
+      <option value="Venda e Comercio Ilegal">Comércio de produtos ilegais no chat</option>
     </select>
+
     <div style="display: flex; gap: 12px; justify-content: flex-end;">
       <button id="cancelReportBtn" type="button" style="padding: 12px 24px; border: none; background: #212121; color: #fff; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancela</button>
       <button id="submitReportBtn" type="button" style="padding: 12px 24px; border: none; background: #00a2d3; color: #fff; border-radius: 8px; font-weight: 600; cursor: pointer;">Reporta</button>
     </div>
   </div>
 </div>
-<!-------============================= 14-07-2026 =========================================--->
-<!-- 14-07-26 Modal de Corte de Imagem Nativo (Feito do Zero) -->
+
+<!-- Modal de Corte de Imagem Nativo -->
 <div id="cropModal" class="crop-modal hidden">
   <div class="crop-modal-content">
     <span id="closeCropModal" class="crop-close">&times;</span>
-    <!-- Recipiente onde a imagem carregada vai se mover -->
     <div class="crop-container-box">
       <div class="crop-mask-circle"></div>
       <img id="cropPreviewImg" src="" alt="Prévia" style="display: none;" />
     </div>
-    <!-- Controle de Zoom Nativo com - e + -->
     <div class="crop-zoom-wrapper">
       <button id="btnZoomOut" class="zoom-btn" type="button">—</button>
       <input type="range" id="cropZoomSlider" min="1" max="3" step="0.01" value="1" />
       <button id="btnZoomIn" class="zoom-btn" type="button">+</button>
     </div>
-    <!-- Botões de Comando Inferiores -->
     <div class="crop-buttons-container">
       <button id="btnSelectCropFile" class="btn-crop-select" type="button">Seleciona</button>
       <button id="btnSaveCropPhoto" class="btn-crop-save" type="button">Salvar</button>
     </div>
-    <!-- Input oculto que abre o gerenciador de arquivos do celular/PC -->
     <input type="file" id="cropInputFile" accept="image/jpeg, image/png, image/webp" style="display: none;" />
   </div>
 </div>
-  <!-- 🔹 RODAPÉ -->
-<!-- 🔹 RODAPÉ (Organizado em colunas profissionais para melhor UX e navegação) -->
-<!-- 🔹 RODAPÉ (CSS Próprio - Fundo Branco e Tons Grafite/Cinza) -->
+
+<!-- 🔹 RODAPÉ -->
 <footer class="custom-footer">
   <div class="footer-container">
     <div class="footer-grid">
@@ -497,26 +475,25 @@ aria-expanded="false">
         </div>
       </div>
 
-<!-- Coluna 2: Navegação -->
-<div>
-<h5 class="footer-title">Navegação</h5>
-<ul class="footer-links">
-<li><a href="contato.html"><i class="bi bi-chevron-right"></i> Fale Conosco</a></li>
-<li><a href="trabalhe.html"><i class="bi bi-chevron-right"></i> Trabalhe com a Gente</a></li>
-</ul>
-</div>
+      <!-- Coluna 2: Navegação -->
+      <div>
+        <h5 class="footer-title">Navegação</h5>
+        <ul class="footer-links">
+          <li><a href="contato.html"><i class="bi bi-chevron-right"></i> Fale Conosco</a></li>
+          <li><a href="trabalhe.html"><i class="bi bi-chevron-right"></i> Trabalhe com a Gente</a></li>
+        </ul>
+      </div>
 
-
-<!-- Coluna 3: Termos e Acesso -->
-<div>
-<h5 class="footer-title">Termos e Acesso</h5>
-<ul class="footer-links">
-<li><a href="somos.html"><i class="bi bi-chevron-right"></i> Quem Somos</a></li>
-<li><a href="privacidade.html"><i class="bi bi-chevron-right"></i> Política de Privacidade</a></li>
-<li><a href="termos.html"><i class="bi bi-chevron-right"></i> Termos de Uso</a></li>
-</ul>
-</div>
-</div>
+      <!-- Coluna 3: Termos e Acesso -->
+      <div>
+        <h5 class="footer-title">Termos e Acesso</h5>
+        <ul class="footer-links">
+          <li><a href="somos.html"><i class="bi bi-chevron-right"></i> Quem Somos</a></li>
+          <li><a href="privacidade.html"><i class="bi bi-chevron-right"></i> Política de Privacidade</a></li>
+          <li><a href="termos.html"><i class="bi bi-chevron-right"></i> Termos de Uso</a></li>
+        </ul>
+      </div>
+    </div>
 
     <!-- Linha Divisória de Direitos Autorais -->
     <hr class="footer-divider">
@@ -525,13 +502,11 @@ aria-expanded="false">
     </div>
   </div>
 </footer>
-  <!-- BOOTSTRAP -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@multiavatar/multiavatar/multiavatar.min.js"></script>
+
+<!-- BOOTSTRAP -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
-<!-- Biblioteca Three.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <!-- Biblioteca Three.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
@@ -541,8 +516,8 @@ aria-expanded="false">
     const container = canvas ? canvas.parentElement : null;
     if (!canvas || !container) return;
 
-    let width = container.clientWidth;
-    let height = container.clientHeight;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
 
     const TUNNEL_WIDTH = 24;
     const TUNNEL_HEIGHT = 16;
@@ -599,7 +574,6 @@ aria-expanded="false">
 
     const segments = [];
 
-    // Padrões de rotação para chão e laterais linhas 
     const floorPattern = [0, 2, 4, 1, 3, 5];
     const leftPattern  = [0, 2, 1, 3];
     const rightPattern = [3, 1, 2, 0];
@@ -613,7 +587,7 @@ aria-expanded="false">
           map: tex,
           side: THREE.DoubleSide,
           transparent: true,
-          opacity: 0.19 // imagem levemente transparente para efeito de profundidade
+          opacity: 0.19
         });
         const mesh = new THREE.Mesh(geom, mat);
         mesh.position.copy(pos);
@@ -622,7 +596,6 @@ aria-expanded="false">
         group.add(mesh);
       };
 
-      //  Chao (cobre as colunas 0 a 5 sem repetição)
       const floorCol = floorPattern[segIndex % floorPattern.length];
       addCard(
         new THREE.Vector3(-w + floorCol * COL_WIDTH + COL_WIDTH / 2, -h, -d / 2),
@@ -631,9 +604,6 @@ aria-expanded="false">
         d
       );
 
-      //  Teto removido: a parte superior fica limpa apenas com as linhas da malha 3D
-
-      //  Parede Esquerda (espaçamento de 1 e 2)
       const leftRow = leftPattern[segIndex % leftPattern.length];
       addCard(
         new THREE.Vector3(-w, -h + leftRow * ROW_HEIGHT + ROW_HEIGHT / 2, -d / 2),
@@ -642,7 +612,6 @@ aria-expanded="false">
         ROW_HEIGHT
       );
 
-      //  Parede Direita (espaçamento de 1 e 2)
       const rightRow = rightPattern[segIndex % rightPattern.length];
       addCard(
         new THREE.Vector3(w, -h + rightRow * ROW_HEIGHT + ROW_HEIGHT / 2, -d / 2),
@@ -651,7 +620,7 @@ aria-expanded="false">
         ROW_HEIGHT
       );
     }
-// edita as linhas nas laterais e no chão do túnel 3D
+
     function createSegment(zPos, segIndex) {
       const group = new THREE.Group();
       group.position.z = zPos;
@@ -745,10 +714,5 @@ aria-expanded="false">
     });
   })();
 </script>
-
-
-
-
-
 </body>
 </html>

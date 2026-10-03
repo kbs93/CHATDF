@@ -1,17 +1,18 @@
-// ========================================================================= 
+// =========================================================================
 // MÓDULO DE CURTIDAS E TAGS DE GOSTOS & HOBBIES DO DF (CHAT-DF)
 // Arquitetura de Alta Escala: Contador Agregado + Trava de Like Único
 // =========================================================================
-import { auth, db } from "./firebase-config.js";
-import { showToast } from "./ui.js";
+
 import {
-  setDoc,
+  arrayRemove,
+  arrayUnion,
   doc,
   getDoc,
-  arrayUnion,
-  arrayRemove,
-  onSnapshot
+  onSnapshot,
+  setDoc,
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { auth, db } from "./firebase-config.js";
+import { showToast } from "./ui.js";
 // Lista base dos Interesses do DF
 export const LISTA_INTERESSES_DF = [
   // Lugares do DF (Verde Esmeralda)
@@ -69,7 +70,7 @@ export const LISTA_INTERESSES_DF = [
   { id: "ateu", nome: "Ateu", categoria: "religiao" },
   { id: "candomble", nome: "Candomblé", categoria: "religiao" },
   { id: "umbanda", nome: "Umbanda", categoria: "religiao" },
-  
+
   // Artes Marciais / Lutas
   { id: "boxe", nome: "Boxe", categoria: "luta" },
   { id: "muaythai", nome: "MuayThai", categoria: "luta" },
@@ -80,12 +81,13 @@ export const LISTA_INTERESSES_DF = [
   { id: "capoeira", nome: "Capoeira", categoria: "luta" },
   { id: "jiujitsu", nome: "JiuJitsu", categoria: "luta" },
   { id: "judo", nome: "Judô", categoria: "luta" },
-  { id: "mma", nome: "MMA", categoria: "luta" }
+  { id: "mma", nome: "MMA", categoria: "luta" },
 ];
 
 // Gera chave legível e curta para o documento: NomeSemAcentos_Primeiros5DigitosUID
 export function obterDocIdTotais(targetUid) {
-  const nomeBruto = document.getElementById("profileName")?.textContent?.trim() || "Usuario";
+  const nomeBruto =
+    document.getElementById("profileName")?.textContent?.trim() || "Usuario";
   const nomeLimpo = nomeBruto
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -96,7 +98,9 @@ export function obterDocIdTotais(targetUid) {
 
 export let selectedInterests = [];
 export function setSelectedInterests(novosInteresses) {
-  selectedInterests = Array.isArray(novosInteresses) ? [...novosInteresses] : [];
+  selectedInterests = Array.isArray(novosInteresses)
+    ? [...novosInteresses]
+    : [];
 }
 
 let unsubscribeTotalsListener = null;
@@ -113,7 +117,7 @@ export function renderProfileInterests(userInterests = [], targetUid, isOwner) {
     unsubscribeTotalsListener = null;
   }
   if (unsubscribeUserLikesListener.length > 0) {
-    unsubscribeUserLikesListener.forEach(unsub => unsub());
+    unsubscribeUserLikesListener.forEach((unsub) => unsub());
     unsubscribeUserLikesListener = [];
   }
 
@@ -124,23 +128,26 @@ export function renderProfileInterests(userInterests = [], targetUid, isOwner) {
     return;
   }
 
-  const currentUserId = auth.currentUser?.uid || window.appState?.currentUser?.uid || null;
+  const currentUserId =
+    auth.currentUser?.uid || window.appState?.currentUser?.uid || null;
 
   // Normalização: garante que tagId seja SEMPRE string limpa
-  const sanitizedInterests = userInterests.map(item => {
-    if (typeof item === "string") return item;
-    if (item && typeof item === "object" && item.id) return item.id;
-    return String(item);
-  }).filter(Boolean);
+  const sanitizedInterests = userInterests
+    .map((item) => {
+      if (typeof item === "string") return item;
+      if (item && typeof item === "object" && item.id) return item.id;
+      return String(item);
+    })
+    .filter(Boolean);
 
   const targetDocKey = obterDocIdTotais(targetUid);
 
-// 1. Cria os botões das tags no DOM
-  sanitizedInterests.forEach(tagId => {
-    const meta = LISTA_INTERESSES_DF.find(i => i.id === tagId) || {
+  // 1. Cria os botões das tags no DOM
+  sanitizedInterests.forEach((tagId) => {
+    const meta = LISTA_INTERESSES_DF.find((i) => i.id === tagId) || {
       id: tagId,
       nome: tagId,
-      categoria: ""
+      categoria: "",
     };
 
     const pill = document.createElement("button");
@@ -150,7 +157,7 @@ export function renderProfileInterests(userInterests = [], targetUid, isOwner) {
     pill.className = `interest-pill ${catClass} ${isOwner ? "owner-view" : ""}`;
     pill.innerHTML = `
       <span>${meta.nome}</span>
-      ${!isOwner ? '<i class="bi bi-heart interest-like-icon"></i>' : ''}
+      ${!isOwner ? '<i class="bi bi-heart interest-like-icon"></i>' : ""}
       <span class="interest-like-badge">0</span>
     `;
 
@@ -160,9 +167,11 @@ export function renderProfileInterests(userInterests = [], targetUid, isOwner) {
         e.preventDefault();
         e.stopPropagation();
 
-        const loggedUid = auth.currentUser?.uid || window.appState?.currentUser?.uid;
+        const loggedUid =
+          auth.currentUser?.uid || window.appState?.currentUser?.uid;
         if (!loggedUid) {
-          if (typeof showToast === "function") showToast("Faça login para curtir os interesses.");
+          if (typeof showToast === "function")
+            showToast("Faça login para curtir os interesses.");
           return;
         }
 
@@ -178,13 +187,17 @@ export function renderProfileInterests(userInterests = [], targetUid, isOwner) {
   unsubscribeTotalsListener = onSnapshot(totalsDocRef, (snap) => {
     const data = snap.exists() ? snap.data() : {};
 
-    sanitizedInterests.forEach(tagId => {
+    sanitizedInterests.forEach((tagId) => {
       const pill = document.getElementById(`pill-interest-${tagId}`);
       if (!pill) return;
 
-      const arrayCurtidas = Array.isArray(data[`curtidas_${tagId}`]) ? data[`curtidas_${tagId}`] : [];
+      const arrayCurtidas = Array.isArray(data[`curtidas_${tagId}`])
+        ? data[`curtidas_${tagId}`]
+        : [];
       const count = arrayCurtidas.length;
-      const isLiked = currentUserId ? arrayCurtidas.includes(currentUserId) : false;
+      const isLiked = currentUserId
+        ? arrayCurtidas.includes(currentUserId)
+        : false;
 
       const badge = pill.querySelector(".interest-like-badge");
       const icon = pill.querySelector(".interest-like-icon");
@@ -198,18 +211,17 @@ export function renderProfileInterests(userInterests = [], targetUid, isOwner) {
   });
 }
 
-
-
 // Alterna o like de forma atômica no array do documento principal
 export async function toggleInterestLike(targetUid, tagId) {
-  const currentUserId = auth.currentUser?.uid || window.appState?.currentUser?.uid;
+  const currentUserId =
+    auth.currentUser?.uid || window.appState?.currentUser?.uid;
   if (!currentUserId || !targetUid) return;
 
   const pill = document.getElementById(`pill-interest-${tagId}`);
   const badge = pill?.querySelector(".interest-like-badge");
   const icon = pill?.querySelector(".interest-like-icon");
 
-  let currentCount = badge ? (parseInt(badge.textContent, 10) || 0) : 0;
+  const currentCount = badge ? parseInt(badge.textContent, 10) || 0 : 0;
   const isCurrentlyLiked = pill?.classList.contains("liked");
 
   // Atualização otimista imediata na interface
@@ -228,18 +240,28 @@ export async function toggleInterestLike(targetUid, tagId) {
     const totalsDocRef = doc(db, "totais_tags", targetDocKey);
     const snap = await getDoc(totalsDocRef);
     const data = snap.exists() ? snap.data() : {};
-    const arrayCurtidas = Array.isArray(data[`curtidas_${tagId}`]) ? data[`curtidas_${tagId}`] : [];
+    const arrayCurtidas = Array.isArray(data[`curtidas_${tagId}`])
+      ? data[`curtidas_${tagId}`]
+      : [];
 
     if (arrayCurtidas.includes(currentUserId)) {
       // Descurtir: remove o UID do array
-      await setDoc(totalsDocRef, {
-        [`curtidas_${tagId}`]: arrayRemove(currentUserId)
-      }, { merge: true });
+      await setDoc(
+        totalsDocRef,
+        {
+          [`curtidas_${tagId}`]: arrayRemove(currentUserId),
+        },
+        { merge: true },
+      );
     } else {
       // Curtiu: adiciona o UID ao array
-      await setDoc(totalsDocRef, {
-        [`curtidas_${tagId}`]: arrayUnion(currentUserId)
-      }, { merge: true });
+      await setDoc(
+        totalsDocRef,
+        {
+          [`curtidas_${tagId}`]: arrayUnion(currentUserId),
+        },
+        { merge: true },
+      );
     }
   } catch (err) {
     console.error("Erro ao processar curtida no Firestore:", err);
@@ -252,11 +274,10 @@ export async function toggleInterestLike(targetUid, tagId) {
       }
       if (badge) badge.textContent = currentCount;
     }
-    if (typeof showToast === "function") showToast("Erro ao registrar curtida.");
+    if (typeof showToast === "function")
+      showToast("Erro ao registrar curtida.");
   }
 }
-
-
 
 // Renderiza a seleção de tags na aba "Editar perfil"
 export function renderEditInterestsSelector() {
@@ -267,7 +288,7 @@ export function renderEditInterestsSelector() {
   container.innerHTML = "";
   if (countDisplay) countDisplay.textContent = `${selectedInterests.length}/6`;
 
-  LISTA_INTERESSES_DF.forEach(item => {
+  LISTA_INTERESSES_DF.forEach((item) => {
     const isSelected = selectedInterests.includes(item.id);
     const btn = document.createElement("button");
     btn.type = "button";
@@ -277,10 +298,11 @@ export function renderEditInterestsSelector() {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       if (selectedInterests.includes(item.id)) {
-        selectedInterests = selectedInterests.filter(id => id !== item.id);
+        selectedInterests = selectedInterests.filter((id) => id !== item.id);
       } else {
         if (selectedInterests.length >= 6) {
-          if (typeof showToast === "function") showToast("Você pode selecionar no máximo 6 tags.");
+          if (typeof showToast === "function")
+            showToast("Você pode selecionar no máximo 6 tags.");
           return;
         }
         selectedInterests.push(item.id);

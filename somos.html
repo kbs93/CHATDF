@@ -26,7 +26,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-3">
     <div class="container">
       <!-- BOTÃO INÍCIO (CASA) -->
-      <a href="indexOficial.html" class="btn btn-outline-light border-0 d-inline-flex align-items-center justify-content-center p-2 me-2" title="Voltar ao Início" style="font-size: 20px; line-height: 1;">
+      <a href="indexOficial.html" class="btn btn-outline-light border-0 d-inline-flex align-items-center justify-content-center p-2 me-2" title="Voltar ao Início" aria-label="Voltar ao Início" style="font-size: 20px; line-height: 1;">
         <i class="bi bi-house-door-fill"></i>
       </a>
 
@@ -36,9 +36,9 @@
 
       <!-- ÁREA DO USUÁRIO / AVATAR -->
       <div id="userArea" class="d-flex align-items-center me-3">
-        <a class="open-login btn-sair" id="btnLogin" href="#">
+        <button type="button" class="open-login btn-sair bg-transparent border-0 p-0" id="btnLogin" aria-label="Abrir menu de perfil">
           <img src="../img/avatar.png" alt="Avatar" class="user-menu-avatar" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid #fff;">
-        </a>
+        </button>
       </div>
     </div>
   </nav>
@@ -130,7 +130,6 @@
               </div>
             </div>
 
-      
             <h4 class="fw-bold mt-4 mb-3" style="color: #020641;">Fale com a Gente</h4>
             <p>
               Tem uma sugestão de melhoria para a sua cidade ou quer bater um papo com os administradores? Envie uma mensagem pelo e-mail oficial: <strong>chatdf1@gmail.com</strong> ou utilize a nossa <a href="contato.html">Página de Contato</a>.
@@ -171,7 +170,7 @@
         <div>
           <h5 class="footer-title">Termos e Acesso</h5>
           <ul class="footer-links">
-            <li><a href="privacidade.html"><i class="bi bi-chevron-right"></i> Política de Privacidade</a></li>
+            <li><a href="privacidade.html"><i class="bi bi-shield-check"></i> Política de Privacidade</a></li>
             <li><a href="termos.html"><i class="bi bi-chevron-right"></i> Termos de Uso</a></li>
           </ul>
         </div>
@@ -190,5 +189,4 @@
   <script src="https://cdn.jsdelivr.net/npm/@multiavatar/multiavatar/multiavatar.min.js"></script>
   <script type="module" src="../js/main.js"></script>
 </body>
-
 </html>

@@ -1,6 +1,9 @@
 import { auth } from "./firebase-config.js";
+import {
+  debounceUpdateRoomPresence,
+  listenRoomsUserCounts,
+} from "./presence.js";
 import { showToast } from "./ui.js";
-import { debounceUpdateRoomPresence, listenRoomsUserCounts } from "./presence.js";
 
 // --- Criação das salas ---
 export const salas = [
@@ -8,62 +11,62 @@ export const salas = [
     id: "geral",
     nome: "Bate papo Geral",
     descricao: "Resenha livre e amizades pelo quadradinho",
-    icone: "bi bi-chat-dots"
+    icone: "bi bi-chat-dots",
   },
   {
     id: "concurso",
     nome: "Concurso Público",
     descricao: "Acompanhamento e dicas sobre concursos públicos.",
-    icone: "bi bi-journal-bookmark-fill"
+    icone: "bi bi-journal-bookmark-fill",
   },
   {
     id: "transito",
     nome: "Trânsito e Transporte",
     descricao: "Mobilidade, Metrô e ônibus do DF",
-    icone: "bi bi-sign-stop"
+    icone: "bi bi-sign-stop",
   },
   {
     id: "lugares",
     nome: "Lugares para sair",
     descricao: "Dicas de bares, cafés, lanchonetes e picos no quadradinho",
-    icone: "bi bi-cup-hot"
+    icone: "bi bi-cup-hot",
   },
   {
     id: "eventos",
     nome: "Eventos e Shows",
     descricao: "O que fazer no fim de semana em Brasília",
-    icone: "bi bi-calendar2-day"
+    icone: "bi bi-calendar2-day",
   },
   {
     id: "entretenimento",
     nome: "Entretenimento",
     descricao: "Fala Sobre Filmes,Series,Animes e musicas Favoritos.",
-    icone: "bi bi-chat-heart"
+    icone: "bi bi-chat-heart",
   },
   {
     id: "games",
     nome: "Games",
     descricao: "Recomendação e tudo sobre jogos, online.",
-    icone: "bi-controller"
+    icone: "bi-controller",
   },
   {
     id: "futebol",
     nome: "Futebol e Esportes",
     descricao: "Gama, Brasiliense, peladas e grandes jogos",
-    icone: "bi bi-trophy"
+    icone: "bi bi-trophy",
   },
   {
     id: "religiao",
     nome: "Religião e Fé",
     descricao: "Conversas, reflexões e eventos religiosos no DF",
-    icone: "bi bi-house-heart"
+    icone: "bi bi-house-heart",
   },
   {
     id: "politica",
     nome: "Politica",
     descricao: "Debates, opiniões sobre os bastidores da nossa capital ",
-    icone: "bi bi-megaphone"
-  }
+    icone: "bi bi-megaphone",
+  },
 ];
 
 // ==========================================
@@ -102,12 +105,14 @@ if (container) {
     `;
 
     // Interceptação de clique: SPA real sem recarregar
-link.addEventListener("click", (e) => {
+    link.addEventListener("click", (e) => {
       e.preventDefault();
 
       const totalNaSala = roomCounts[sala.id] || 0;
       if (totalNaSala >= MAX_USERS_PER_ROOM) {
-        showToast(`A sala ${sala.nome} está Cheia no momento. Tente novamente em alguns minutos!`);
+        showToast(
+          `A sala ${sala.nome} está Cheia no momento. Tente novamente em alguns minutos!`,
+        );
         return;
       }
 

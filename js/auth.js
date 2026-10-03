@@ -1,41 +1,27 @@
 // auth.js
 
-import { auth, provider, signOutUser, db } from "./firebase-config.js";
-import { verificarUsuarioBloqueado } from "./bloqueio.js";
 import {
+  onAuthStateChanged,
   signInWithPopup,
-  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-
 import {
   doc,
   getDoc,
+  onSnapshot,
   setDoc,
   updateDoc,
-  onSnapshot
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-
-
+import { verificarUsuarioBloqueado } from "./bloqueio.js";
+import { auth, db, provider, signOutUser } from "./firebase-config.js";
 
 export let currentUser = null;
 let googleLoginInProgress = false;
-let unsubscribeUserAreaProfileListener = null; // 03-05-26 
-let profileTooltipAlreadyShown = false;//11-05-2026 
+let unsubscribeUserAreaProfileListener = null; // 03-05-26
+let profileTooltipAlreadyShown = false; //11-05-2026
 const USER_AREA_CACHE_KEY = "chatdf_user_area_cache";
 
-
-// ================= SALA ATUAL ================= 18-05-26 
-// Pega o ID da sala da URL, ou usa "geral" como padrão
-const urlParams = new URLSearchParams(window.location.search); 
-
-// 18-05-26 detectar se estamos no chat.html para evitar erros de URL em outras páginas
-const isChatPage = 
-  window.location.pathname.includes("chat.html");
-
-const currentRoom =
-  isChatPage
-    ? (urlParams.get("sala") || "geral")
-    : null;
+// ================= SALA ATUAL ================= 18-05-26
+const urlParams = new URLSearchParams(window.location.search);
 
 // AJUSTADO (Detecta automaticamente se está na subpasta /uso/):
 const isSubfolder = window.location.pathname.includes("/uso/");
@@ -48,10 +34,7 @@ function sanitizeAvatarUrl(photo) {
 
   const trimmed = photo.trim();
 
-  if (
-    trimmed.includes("127.0.0.1") ||
-    trimmed.includes("localhost")
-  ) {
+  if (trimmed.includes("127.0.0.1") || trimmed.includes("localhost")) {
     return DEFAULT_AVATAR;
   }
 
@@ -62,8 +45,6 @@ function sanitizeAvatarUrl(photo) {
 
   return trimmed;
 }
-
-
 
 function saveUserAreaCache(data) {
   try {
@@ -90,7 +71,6 @@ function clearUserAreaCache() {
     console.warn("Não foi possível limpar cache visual do usuário:", err);
   }
 }
-
 
 /*ADICIONANDO NOVO CODIGO  11-05-2026 
 Verifica se o tooltip já apareceu e pega o botão do usuário (foto/nome).
@@ -123,54 +103,48 @@ function showEditProfileTooltip() {
   const rect = userMenuBtn.getBoundingClientRect();
 
   tooltip.style.top = `${rect.bottom + 12}px`;
-  tooltip.style.left = `${Math.max(12, rect.left - 125)}px`;//tooltip mais pra esquerda 
+  tooltip.style.left = `${Math.max(12, rect.left - 125)}px`; //tooltip mais pra esquerda
   tooltip.classList.add("show");
 
-
-function closeProfileTooltip() {
-  tooltip.classList.remove("show");
-  document.removeEventListener("click", outsideTooltipClick);
-}
-
-function outsideTooltipClick(e) {
-  if (
-    tooltip.contains(e.target) ||
-    userMenuBtn.contains(e.target)
-  ) {
-    return;
+  function closeProfileTooltip() {
+    tooltip.classList.remove("show");
+    document.removeEventListener("click", outsideTooltipClick);
   }
 
-  closeProfileTooltip();
-}
+  function outsideTooltipClick(e) {
+    if (tooltip.contains(e.target) || userMenuBtn.contains(e.target)) {
+      return;
+    }
 
-const closeBtn = tooltip.querySelector(".profile-tooltip-close");
-if (closeBtn) {
-  closeBtn.onclick = (e) => {
-    e.stopPropagation();
     closeProfileTooltip();
+  }
+
+  const closeBtn = tooltip.querySelector(".profile-tooltip-close");
+  if (closeBtn) {
+    closeBtn.onclick = (e) => {
+      e.stopPropagation();
+      closeProfileTooltip();
+    };
+  }
+
+  tooltip.onclick = (e) => {
+    e.stopPropagation();
   };
+
+  setTimeout(() => {
+    document.addEventListener("click", outsideTooltipClick);
+  }, 100);
+
+  setTimeout(() => {
+    closeProfileTooltip();
+  }, 4000); //tooltip aparee e desaparece em 4 segundos
 }
-
-tooltip.onclick = (e) => {
-  e.stopPropagation();
-};
-
-setTimeout(() => {
-  document.addEventListener("click", outsideTooltipClick);
-}, 100);
-
-setTimeout(() => {
-  closeProfileTooltip();
-}, 4000);//tooltip aparee e desaparece em 4 segundos
-
-}
-
 
 // EDITA O PERFIL NO INDEX 08-05-2026
 function renderLoggedUserArea(userArea, profileName, profilePhoto) {
   if (!userArea) return;
 
-userArea.innerHTML = `
+  userArea.innerHTML = `
 <div class="user-menu-wrap">
 
   <button id="userMenuBtn" class="user-menu-btn">
@@ -203,37 +177,34 @@ userArea.innerHTML = `
 
 </div>
 `;
-/* 08-05-26
+  /* 08-05-26
 abre o menu no index perfil ao clicar, fecha clicando fora*/
-const userMenuBtn = document.getElementById("userMenuBtn");
-const userDropdown = document.getElementById("userDropdown");
-const openProfileBtn = document.getElementById("openProfileBtn");
+  const userMenuBtn = document.getElementById("userMenuBtn");
+  const userDropdown = document.getElementById("userDropdown");
+  const openProfileBtn = document.getElementById("openProfileBtn");
 
-if (userMenuBtn && userDropdown) {
-  userMenuBtn.onclick = (e) => {
-    e.stopPropagation();
-    userDropdown.classList.toggle("hidden");
-  };
+  if (userMenuBtn && userDropdown) {
+    userMenuBtn.onclick = (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle("hidden");
+    };
 
-  userDropdown.onclick = (e) => {
-    e.stopPropagation();
-  };
+    userDropdown.onclick = (e) => {
+      e.stopPropagation();
+    };
 
-  document.onclick = () => {
-    userDropdown.classList.add("hidden");
-  };
-}
+    document.onclick = () => {
+      userDropdown.classList.add("hidden");
+    };
+  }
 
-if (openProfileBtn) {
-  openProfileBtn.onclick = () => {
-    userDropdown?.classList.add("hidden");
+  if (openProfileBtn) {
+    openProfileBtn.onclick = () => {
+      userDropdown?.classList.add("hidden");
 
-    document.dispatchEvent(new CustomEvent("chatdf:open-profile"));
-  };
-}
-
-
-
+      document.dispatchEvent(new CustomEvent("chatdf:open-profile"));
+    };
+  }
 }
 
 function renderLoggedOutUserArea(userArea, isChatPage) {
@@ -259,7 +230,7 @@ function restoreCachedUserArea(userArea, isChatPage) {
       renderLoggedUserArea(
         userArea,
         cached.profileName || "Usuário",
-        cached.profilePhoto || "img/avatar.png"
+        cached.profilePhoto || "img/avatar.png",
       );
     }
     // Aplica o estado logado no Hero imediatamente no 1º milissegundo pelo cache
@@ -275,270 +246,247 @@ function restoreCachedUserArea(userArea, isChatPage) {
   }
 }
 
-
 function dispatchUserReady(user, extra = {}) {
-
-  document.dispatchEvent(new CustomEvent("chatdf:user-ready", {
-    detail: { user, ...extra }
-  }));
+  document.dispatchEvent(
+    new CustomEvent("chatdf:user-ready", {
+      detail: { user, ...extra },
+    }),
+  );
 }
 
 function dispatchUserLogout() {
   document.dispatchEvent(new CustomEvent("chatdf:user-logout"));
 }
 
-     /* =====================================================
+/* =====================================================
        USUÁRIO LOGADO
     ===================================================== */
 export function initAuth(showToast) {
   const loginBtnModal = document.getElementById("googleModalBtn");
-  const userArea = document.getElementById("userArea"); 
+  const userArea = document.getElementById("userArea");
   const loginTopBtn = document.getElementById("btnLogin");
   // Detectar se está no chat.html
   const isChatPage = window.location.pathname.includes("chat.html");
-   restoreCachedUserArea(userArea, isChatPage);
+  restoreCachedUserArea(userArea, isChatPage);
   // SOMENTE NO CHAT.HTML: esconder o botão "Inscreva-se"
   if (isChatPage && loginTopBtn) {
     loginTopBtn.style.display = "none";
   }
 
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      currentUser = user;
 
- onAuthStateChanged(auth, async (user) => {
-if (user) {
-  currentUser = user;
+      // VERIFICAÇÃO DE BLOQUEIO / BANIMENTO
+      const isBloqueado = await verificarUsuarioBloqueado(user);
+      if (isBloqueado) return; // Se estiver banido, interrompe o carregamento e desloga
 
-  // VERIFICAÇÃO DE BLOQUEIO / BANIMENTO
-  const isBloqueado = await verificarUsuarioBloqueado(user);
-  if (isBloqueado) return; // Se estiver banido, interrompe o carregamento e desloga
+      // ===================== CRIAR / ATUALIZAR USUÁRIO (FIRESTORE) ====================== 18-03-26
+      // ===================== CRIAR / ATUALIZAR USUÁRIO (FIRESTORE) ======================
+      let profileName = "Usuário";
+      let profilePhoto = user.photoURL || "";
 
-// ===================== CRIAR / ATUALIZAR USUÁRIO (FIRESTORE) ====================== 18-03-26
-// ===================== CRIAR / ATUALIZAR USUÁRIO (FIRESTORE) ======================
-let profileName = "Usuário";
-let profilePhoto = user.photoURL || "";
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
 
-try {
-  const userRef = doc(db, "users", user.uid);
-  const userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) {
+          const defaultPhoto = sanitizeAvatarUrl(user.photoURL);
 
+          const userData = {
+            nome: user.displayName || "Usuário",
+            email: user.email || "",
+            foto: defaultPhoto,
+            cidade: "",
+            telefone: "",
+            lastLogin: Date.now(),
+            createdAt: Date.now(),
+          };
 
+          await setDoc(userRef, userData);
+          profileName = userData.nome;
+          profilePhoto = userData.foto;
+        } else {
+          const dbUser = userSnap.data();
 
+          profileName =
+            dbUser.nome ||
+            dbUser.name ||
+            dbUser.displayName ||
+            user.displayName ||
+            "Usuário";
 
-if (!userSnap.exists()) {
-  const defaultPhoto = sanitizeAvatarUrl(user.photoURL);
+          profilePhoto = sanitizeAvatarUrl(
+            dbUser.foto || dbUser.avatar || dbUser.photoURL || user.photoURL,
+          );
 
-  const userData = {
-    nome: user.displayName || "Usuário",
-    email: user.email || "",
-    foto: defaultPhoto,
-    cidade: "",
-    telefone: "",
-    lastLogin: Date.now(),
-    createdAt: Date.now()
-  };
-
-  await setDoc(userRef, userData);
-  profileName = userData.nome;
-  profilePhoto = userData.foto;
-}
-else {
-  const dbUser = userSnap.data();
-
-  profileName =
-    dbUser.nome ||
-    dbUser.name ||
-    dbUser.displayName ||
-    user.displayName ||
-    "Usuário";
-
-  profilePhoto = sanitizeAvatarUrl(
-    dbUser.foto ||
-    dbUser.avatar ||
-    dbUser.photoURL ||
-    user.photoURL
-  );
-
-  await updateDoc(userRef, {
-    email: user.email || dbUser.email || "",
-    foto: profilePhoto,
-    lastLogin: Date.now()
-  });
-}
-
-} catch (err) {
-  console.error("Erro ao salvar usuário:", err);
-}
-
-// ===================== PRESENÇA ONLINE ======================
-
-
-
-
-
-  // Fecha modal (se estiver no index)
-// Fecha modal e destrava o fundo (se estiver no index)
-  const modal = document.getElementById("loginModal");
-  if (modal) {
-    modal.classList.add("hidden");
-    document.body.style.overflow = "";
-    document.body.style.touchAction = "";
-  }
-  // Some botão do Google dentro do modal
-  if (loginBtnModal) loginBtnModal.style.display = "none";
-
-  // Atualiza botões do Hero no index para usuário logado
-  const heroVisitorBtn = document.getElementById("heroVisitorBtn");
-  const heroLoginBtn = document.getElementById("heroLoginBtn");
-  if (heroVisitorBtn) heroVisitorBtn.textContent = "Entrar nas Salas";
-  if (heroLoginBtn) heroLoginBtn.classList.add("bloqueado");
-
-  // ATUALIZA NAVBAR (index e chat) Botao de sair 
-saveUserAreaCache({
-  isLoggedIn: true,
-  uid: user.uid,
-  profileName,
-  profilePhoto
-});
-
-
-
-// atualizando o topo 03-05-26 
-if (unsubscribeUserAreaProfileListener) {
-  unsubscribeUserAreaProfileListener();
-}
-const liveUserRef = doc(db, "users", user.uid);
-
-unsubscribeUserAreaProfileListener = onSnapshot(
-  liveUserRef, 
-  (snap) => {
-    if (!snap.exists()) {
-      renderLoggedUserArea(userArea, profileName, profilePhoto);
-      return;
-    }
-
-    const liveData = snap.data();
-
-    const liveName =
-      liveData.nome ||
-      liveData.name ||
-      liveData.displayName ||
-      profileName ||
-      "Usuário";
-
-    const livePhoto = sanitizeAvatarUrl(
-      liveData.foto ||
-      liveData.avatar ||
-      liveData.photoURL ||
-      profilePhoto
-    );
-
-    saveUserAreaCache({
-      isLoggedIn: true,
-      uid: user.uid,
-      profileName: liveName,
-      profilePhoto: livePhoto
-    });
-
-    renderLoggedUserArea(userArea, liveName, livePhoto);
-
-    //11-05-2026
-    if (!liveData.perfilCompleto) {
-      setTimeout(() => {
-        showEditProfileTooltip();
-      }, 500);
-    }
-
-    // 21-06-26 Notifica dinamicamente os scripts do chat sobre mudanças no perfil
-    document.dispatchEvent(new CustomEvent("chatdf:user-ready", {
-      detail: { user, userData: liveData }
-    }));
-    const logoutBtn = document.getElementById("logoutBtn");
-    if (logoutBtn) {
-      logoutBtn.onclick = async () => {
-        try {
-          window.replyingTo = null;
-          window.dispatchEvent(new Event("resetColorPicker"));
-          localStorage.removeItem("chatdf_user_color");
-          clearUserAreaCache();
-          await signOutUser();
-          showToast("Volte sempre!");
-        } catch (err) {
-          console.error("Erro ao sair:", err);
+          await updateDoc(userRef, {
+            email: user.email || dbUser.email || "",
+            foto: profilePhoto,
+            lastLogin: Date.now(),
+          });
         }
-      };
+      } catch (err) {
+        console.error("Erro ao salvar usuário:", err);
+      }
+
+      // ===================== PRESENÇA ONLINE ======================
+
+      // Fecha modal (se estiver no index)
+      // Fecha modal e destrava o fundo (se estiver no index)
+      const modal = document.getElementById("loginModal");
+      if (modal) {
+        modal.classList.add("hidden");
+        document.body.style.overflow = "";
+        document.body.style.touchAction = "";
+      }
+      // Some botão do Google dentro do modal
+      if (loginBtnModal) loginBtnModal.style.display = "none";
+
+      // Atualiza botões do Hero no index para usuário logado
+      const heroVisitorBtn = document.getElementById("heroVisitorBtn");
+      const heroLoginBtn = document.getElementById("heroLoginBtn");
+      if (heroVisitorBtn) heroVisitorBtn.textContent = "Entrar nas Salas";
+      if (heroLoginBtn) heroLoginBtn.classList.add("bloqueado");
+
+      // ATUALIZA NAVBAR (index e chat) Botao de sair
+      saveUserAreaCache({
+        isLoggedIn: true,
+        uid: user.uid,
+        profileName,
+        profilePhoto,
+      });
+
+      // atualizando o topo 03-05-26
+      if (unsubscribeUserAreaProfileListener) {
+        unsubscribeUserAreaProfileListener();
+      }
+      const liveUserRef = doc(db, "users", user.uid);
+
+      unsubscribeUserAreaProfileListener = onSnapshot(
+        liveUserRef,
+        (snap) => {
+          if (!snap.exists()) {
+            renderLoggedUserArea(userArea, profileName, profilePhoto);
+            return;
+          }
+
+          const liveData = snap.data();
+
+          const liveName =
+            liveData.nome ||
+            liveData.name ||
+            liveData.displayName ||
+            profileName ||
+            "Usuário";
+
+          const livePhoto = sanitizeAvatarUrl(
+            liveData.foto ||
+              liveData.avatar ||
+              liveData.photoURL ||
+              profilePhoto,
+          );
+
+          saveUserAreaCache({
+            isLoggedIn: true,
+            uid: user.uid,
+            profileName: liveName,
+            profilePhoto: livePhoto,
+          });
+
+          renderLoggedUserArea(userArea, liveName, livePhoto);
+
+          //11-05-2026
+          if (!liveData.perfilCompleto) {
+            setTimeout(() => {
+              showEditProfileTooltip();
+            }, 500);
+          }
+
+          // 21-06-26 Notifica dinamicamente os scripts do chat sobre mudanças no perfil
+          document.dispatchEvent(
+            new CustomEvent("chatdf:user-ready", {
+              detail: { user, userData: liveData },
+            }),
+          );
+          const logoutBtn = document.getElementById("logoutBtn");
+          if (logoutBtn) {
+            logoutBtn.onclick = async () => {
+              try {
+                window.replyingTo = null;
+                window.dispatchEvent(new Event("resetColorPicker"));
+                localStorage.removeItem("chatdf_user_color");
+                clearUserAreaCache();
+                await signOutUser();
+                showToast("Volte sempre!");
+              } catch (err) {
+                console.error("Erro ao sair:", err);
+              }
+            };
+          }
+        },
+        (error) => {
+          // Evita que erros do WebChannel travem a aplicação no console
+          console.warn(
+            "Aviso na sincronização de perfil em tempo real:",
+            error,
+          );
+        },
+      );
+
+      // Evento sair (CORRIGIDO) presença do suario
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        logoutBtn.onclick = async () => {
+          try {
+            // Limpa estado global do chat
+            window.replyingTo = null;
+            // Reset da paleta SOMENTE no cliente
+            window.dispatchEvent(new Event("resetColorPicker"));
+            localStorage.removeItem("chatdf_user_color");
+
+            // Logout
+            clearUserAreaCache();
+
+            // Logout
+            await signOutUser();
+            showToast("Volte sempre!");
+          } catch (err) {
+            console.error("Erro ao sair:", err);
+          }
+        };
+      }
+      dispatchUserReady(user, {
+        profileName,
+        profilePhoto,
+      });
+
+      return; // FIM DO LOGIN
     }
-  },
-  (error) => {
-    // Evita que erros do WebChannel travem a aplicação no console
-    console.warn("Aviso na sincronização de perfil em tempo real:", error);
-  }
-);
-
-
-
-
-
-
-
-
-
-
-
-  // Evento sair (CORRIGIDO) presença do suario 
- const logoutBtn = document.getElementById("logoutBtn");
-if (logoutBtn) {
-  logoutBtn.onclick = async () => {
-    try {
-      // Limpa estado global do chat
-      window.replyingTo = null;
-      // Reset da paleta SOMENTE no cliente
-      window.dispatchEvent(new Event("resetColorPicker"));
-      localStorage.removeItem("chatdf_user_color");
-
-      // Logout
-         clearUserAreaCache();
-
-      // Logout
-      await signOutUser();
-      showToast("Volte sempre!");
-   
-    } catch (err) {
-      console.error("Erro ao sair:", err);
-    }
-  };
-}
-  dispatchUserReady(user, {
-    profileName,
-    profilePhoto
-  });
-
-  return; // FIM DO LOGIN
-
-}
 
     /* =====================================================
      USUÁRIO DESLOGADO
     ===================================================== */
-// evita logout falso durante recarregamento da página
-if (auth.currentUser) return;
+    // evita logout falso durante recarregamento da página
+    if (auth.currentUser) return;
 
-//LIMPAR LISTENER AO SAIR
-currentUser = null;
-if (unsubscribeUserAreaProfileListener) {
-  unsubscribeUserAreaProfileListener();
-  unsubscribeUserAreaProfileListener = null;
-}
+    //LIMPAR LISTENER AO SAIR
+    currentUser = null;
+    if (unsubscribeUserAreaProfileListener) {
+      unsubscribeUserAreaProfileListener();
+      unsubscribeUserAreaProfileListener = null;
+    }
 
-clearUserAreaCache();
-dispatchUserLogout();
+    clearUserAreaCache();
+    dispatchUserLogout();
 
-renderLoggedOutUserArea(userArea, isChatPage);
+    renderLoggedOutUserArea(userArea, isChatPage);
 
-
-// Restaura botões do Hero no index para usuario deslogado
-  const heroVisitorBtn = document.getElementById("heroVisitorBtn");
-  const heroLoginBtn = document.getElementById("heroLoginBtn");
-  if (heroVisitorBtn) heroVisitorBtn.textContent = "Modo Visitante";
-  if (heroLoginBtn) heroLoginBtn.classList.remove("bloqueado");
+    // Restaura botões do Hero no index para usuario deslogado
+    const heroVisitorBtn = document.getElementById("heroVisitorBtn");
+    const heroLoginBtn = document.getElementById("heroLoginBtn");
+    if (heroVisitorBtn) heroVisitorBtn.textContent = "Modo Visitante";
+    if (heroLoginBtn) heroLoginBtn.classList.remove("bloqueado");
 
     // evento para abrir modal quando clicar
     const newLoginBtn = document.getElementById("btnLogin");
@@ -549,64 +497,49 @@ renderLoggedOutUserArea(userArea, isChatPage);
       };
     }
 
+    // Botão Google
+    if (loginBtnModal) {
+      loginBtnModal.style.display = "block";
 
+      loginBtnModal.onclick = async () => {
+        if (googleLoginInProgress) return;
 
-// Botão Google
-if (loginBtnModal) {
-  loginBtnModal.style.display = "block";
+        googleLoginInProgress = true;
+        loginBtnModal.disabled = true;
 
-  loginBtnModal.onclick = async () => {
-    if (googleLoginInProgress) return;
+        const modal = document.getElementById("loginModal");
+        if (modal) modal.classList.add("hidden");
+        document.body.style.overflow = "auto";
 
-    googleLoginInProgress = true;
-    loginBtnModal.disabled = true;
+        try {
+          await signInWithPopup(auth, provider);
+        } catch (error) {
+          console.error("Erro Google:", error);
 
-    const modal = document.getElementById("loginModal");
-    if (modal) modal.classList.add("hidden");
-    document.body.style.overflow = "auto";
+          if (error.code === "auth/cancelled-popup-request") {
+            showToast("Já existe uma tentativa de login em andamento.");
+            return;
+          }
 
-    try {
-      await signInWithPopup(auth, provider);
+          if (error.code === "auth/popup-closed-by-user") {
+            showToast("Login cancelado.");
+            if (modal) modal.classList.remove("hidden");
+            return;
+          }
 
-    } catch (error) {
-      console.error("Erro Google:", error);
+          if (error.code === "auth/account-exists-with-different-credential") {
+            showToast("Já existe uma conta associada a este e-mail.");
+            if (modal) modal.classList.remove("hidden");
+            return;
+          }
 
-      if (error.code === "auth/cancelled-popup-request") {
-        showToast("Já existe uma tentativa de login em andamento.");
-        return;
-      }
-
-      if (error.code === "auth/popup-closed-by-user") {
-        showToast("Login cancelado.");
-        if (modal) modal.classList.remove("hidden");
-        return;
-      }
-
-
-
-
-
-if (error.code === "auth/account-exists-with-different-credential") {
-        showToast("Já existe uma conta associada a este e-mail.");
-        if (modal) modal.classList.remove("hidden");
-        return;
-      }
-
-
-
-
-
-
-
-      showToast("Erro ao fazer login com Google");
-      if (modal) modal.classList.remove("hidden");
-
-    } finally {
-      googleLoginInProgress = false;
-      loginBtnModal.disabled = false;
+          showToast("Erro ao fazer login com Google");
+          if (modal) modal.classList.remove("hidden");
+        } finally {
+          googleLoginInProgress = false;
+          loginBtnModal.disabled = false;
+        }
+      };
     }
-  };
-}
-
   });
 }

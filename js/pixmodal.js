@@ -251,10 +251,15 @@ copyBtn?.addEventListener("click", async () => {
   }, 2000);
 });
 
-export function abrirModalPix({ titulo = "Plano 3 Dias", valor = "R$ 5,99", qrCodeBase64 = "", copiaECola = "" } = {}) {
+export function abrirModalPix({
+  titulo = "Plano 3 Dias",
+  valor = "R$ 5,99",
+  qrCodeBase64 = "",
+  copiaECola = "",
+} = {}) {
   if (titulo) document.getElementById("pixPlanTitle").textContent = titulo;
   if (valor) document.getElementById("pixPlanPrice").textContent = valor;
-  
+
   const imgEl = document.getElementById("pixQrCodeImg");
   if (qrCodeBase64) {
     imgEl.src = qrCodeBase64;

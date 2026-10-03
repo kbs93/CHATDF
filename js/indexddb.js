@@ -1,5 +1,8 @@
-import { db } from './firebase-config.js';
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import {
+  doc,
+  getDoc,
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { db } from "./firebase-config.js";
 
 const DB_NAME = "ChatDF_LocalDatabase";
 const DB_VERSION = 1;
@@ -94,7 +97,7 @@ async function fetchProfileFromFirestore(uid) {
         vipNameColorSolid: "#1E293B",
         vipNameFont: "default",
         vipAvatarFrame: "none",
-        cachedAt: Date.now()
+        cachedAt: Date.now(),
       };
     }
 
@@ -109,7 +112,7 @@ async function fetchProfileFromFirestore(uid) {
       vipNameFont: data.vipNameFont || "default",
       vipAvatarFrame: data.vipAvatarFrame || "none",
       isVip: data.isVip === true,
-      cachedAt: Date.now()
+      cachedAt: Date.now(),
     };
   } catch (err) {
     console.error(`Erro ao obter perfil remoto do utilizador (${uid}):`, err);
@@ -134,7 +137,7 @@ export async function resolveUserProfile(uid, fallbackData = {}) {
       vipNameColorType: fallbackData.vipNameColorType || "solid",
       vipNameColorSolid: fallbackData.vipNameColorSolid || "#1E293B",
       vipNameFont: fallbackData.vipNameFont || "default",
-      vipAvatarFrame: fallbackData.vipAvatarFrame || "none"
+      vipAvatarFrame: fallbackData.vipAvatarFrame || "none",
     };
   }
 
@@ -147,7 +150,7 @@ export async function resolveUserProfile(uid, fallbackData = {}) {
   const cachedIDB = await getProfileFromIDB(uid);
   const now = Date.now();
 
-  if (cachedIDB && (now - cachedIDB.cachedAt < CACHE_TTL_MS)) {
+  if (cachedIDB && now - cachedIDB.cachedAt < CACHE_TTL_MS) {
     memoryCache.set(uid, cachedIDB);
     return cachedIDB;
   }
@@ -159,17 +162,18 @@ export async function resolveUserProfile(uid, fallbackData = {}) {
 
   const fetchPromise = (async () => {
     const remoteProfile = await fetchProfileFromFirestore(uid);
-    const finalProfile = remoteProfile || cachedIDB || {
-      uid,
-      user: fallbackData.user || "Usuário",
-      photo: fallbackData.photo || fallbackData.avatar || "./img/avatar.png",
-      cidade: fallbackData.cidade || "",
-      vipNameColorType: fallbackData.vipNameColorType || "solid",
-      vipNameColorSolid: fallbackData.vipNameColorSolid || "#1E293B",
-      vipNameFont: fallbackData.vipNameFont || "default",
-      vipAvatarFrame: fallbackData.vipAvatarFrame || "none",
-      cachedAt: now
-    };
+    const finalProfile = remoteProfile ||
+      cachedIDB || {
+        uid,
+        user: fallbackData.user || "Usuário",
+        photo: fallbackData.photo || fallbackData.avatar || "./img/avatar.png",
+        cidade: fallbackData.cidade || "",
+        vipNameColorType: fallbackData.vipNameColorType || "solid",
+        vipNameColorSolid: fallbackData.vipNameColorSolid || "#1E293B",
+        vipNameFont: fallbackData.vipNameFont || "default",
+        vipAvatarFrame: fallbackData.vipAvatarFrame || "none",
+        cachedAt: now,
+      };
 
     memoryCache.set(uid, finalProfile);
     saveProfileToIDB(finalProfile);

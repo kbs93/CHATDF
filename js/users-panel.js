@@ -2,11 +2,9 @@
 // ============================== IMPORTS ======================================================
 
 import { auth } from "./firebase-config.js";
+import { listenRoomOnlineUsers } from "./presence.js";
 import { showToast } from "./ui.js";
 import { formatarAutorVipChat } from "./vip.js";
-import { listenRoomOnlineUsers } from "./presence.js";
-
-
 
 // ========================= CACHE LOCAL ONLINE =========================
 const ONLINE_USERS_CACHE_KEY = "chatdf_online_users_cache";
@@ -19,10 +17,7 @@ function sanitizeAvatar(avatar) {
 
   const trimmed = avatar.trim();
 
-  if (
-    trimmed.includes("127.0.0.1") ||
-    trimmed.includes("localhost")
-  ) {
+  if (trimmed.includes("127.0.0.1") || trimmed.includes("localhost")) {
     return DEFAULT_AVATAR;
   }
 
@@ -30,7 +25,7 @@ function sanitizeAvatar(avatar) {
 }
 function saveOnlineUsersCache(users) {
   try {
-    const safeUsers = users.map(user => ({
+    const safeUsers = users.map((user) => ({
       uid: user.uid || null,
       name: user.name || "Usuário",
       avatar: sanitizeAvatar(user.avatar),
@@ -45,18 +40,14 @@ function saveOnlineUsersCache(users) {
       vipNameColorType: user.vipNameColorType || "solid",
       vipNameColorSolid: user.vipNameColorSolid || "#1E293B",
       vipNameFont: user.vipNameFont || "default",
-      vipAvatarFrame: user.vipAvatarFrame || "none"
+      vipAvatarFrame: user.vipAvatarFrame || "none",
     }));
 
-    localStorage.setItem(
-      ONLINE_USERS_CACHE_KEY,
-      JSON.stringify(safeUsers)
-    );
+    localStorage.setItem(ONLINE_USERS_CACHE_KEY, JSON.stringify(safeUsers));
   } catch (err) {
     console.warn("Erro ao salvar cache de usuários online:", err);
   }
 }
-
 
 function loadOnlineUsersCache() {
   try {
@@ -66,7 +57,7 @@ function loadOnlineUsersCache() {
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
 
-    return parsed.filter(user => user && user.uid && user.online === true);
+    return parsed.filter((user) => user && user.uid && user.online === true);
   } catch (err) {
     console.warn("Erro ao carregar cache de usuários online:", err);
     return [];
@@ -85,13 +76,13 @@ function buildOnlineUserItem(user) {
     corInline: corInlineNome,
     fonteInline: fonteInlineNome,
     tagDiamante,
-    moldura
+    moldura,
   } = formatarAutorVipChat(user);
 
-item.innerHTML = `
+  item.innerHTML = `
     <div class="message-avatar-wrap avatar-wrapper position-relative d-inline-flex align-items-center justify-content-center" style="width: 36px; height: 36px; min-width: 36px; min-height: 36px; flex-shrink: 0;">
       <img src="${avatar}" alt="" onerror="this.src='./img/avatar.png'" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block;">
-      <div class="avatar-frame position-absolute rounded-circle ${moldura && moldura !== 'none' ? moldura : 'd-none'}" style="top: 0; left: 0; width: 100%; height: 100%; box-sizing: border-box; pointer-events: none; z-index: 2;"></div>
+      <div class="avatar-frame position-absolute rounded-circle ${moldura && moldura !== "none" ? moldura : "d-none"}" style="top: 0; left: 0; width: 100%; height: 100%; box-sizing: border-box; pointer-events: none; z-index: 2;"></div>
       <span class="status-dot"></span>
     </div>
     <span class="message-author-name ${classeEfeitoNome}" style="font-weight: 600; font-size: 15px; line-height: 1.3; ${corInlineNome} ${fonteInlineNome} display: inline-flex; align-items: center; gap: 3px; max-width: calc(100% - 48px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
@@ -124,8 +115,8 @@ item.innerHTML = `
           cidade: user.cidade || "",
           recado: user.recado || "",
           vistoPorUltimo: user.lastChanged || null,
-          membroDesde: user.membroDesde || null
-        }
+          membroDesde: user.membroDesde || null,
+        },
       });
     }
   });
@@ -137,7 +128,7 @@ function renderOnlineUsers(listEl, countEl, users) {
   if (!listEl) return;
 
   const fragment = document.createDocumentFragment();
-  users.forEach(user => {
+  users.forEach((user) => {
     fragment.appendChild(buildOnlineUserItem(user));
   });
   listEl.replaceChildren(fragment);
@@ -153,16 +144,16 @@ export function initUsersPanel(openPanel, closeAllPanels) {
 
     e.preventDefault();
     openPanel("users");
-document.body.classList.add("panel-open");
+    document.body.classList.add("panel-open");
   });
 
   document.getElementById("closeOnlinePanel")?.addEventListener("click", () => {
-  closeAllPanels();
-document.body.classList.remove("panel-open");
+    closeAllPanels();
+    document.body.classList.remove("panel-open");
   });
 
   // ========================= LISTA ONLINE =========================
-// ========================= LISTA ONLINE =========================
+  // ========================= LISTA ONLINE =========================
 
   const onlineUsersList = document.getElementById("onlineUsersList");
   const onlineCount = document.getElementById("onlineCount");
@@ -174,24 +165,18 @@ document.body.classList.remove("panel-open");
   }
 
   // Ouvinte Delegado e Otimizado vindo do presence.js
-  listenRoomOnlineUsers(() => window.appState?.currentRoom || "geral", (users) => {
-    if (!onlineUsersList) return;
+  listenRoomOnlineUsers(
+    () => window.appState?.currentRoom || "geral",
+    (users) => {
+      if (!onlineUsersList) return;
 
-    renderOnlineUsers(onlineUsersList, onlineCount, users);
-    saveOnlineUsersCache(users);
+      renderOnlineUsers(onlineUsersList, onlineCount, users);
+      saveOnlineUsersCache(users);
 
-    if (!window.__onlineFirstPaintDone) {
-      window.dispatchEvent(new CustomEvent("chatdf:first-online-render"));
-      window.__onlineFirstPaintDone = true;
-    }
-  });
-
+      if (!window.__onlineFirstPaintDone) {
+        window.dispatchEvent(new CustomEvent("chatdf:first-online-render"));
+        window.__onlineFirstPaintDone = true;
+      }
+    },
+  );
 }
-
-
-
-
-
-
-
-
