@@ -219,6 +219,11 @@ body.index-page .chatdf-features-section, body.index-page .custom-footer { backg
 
 .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon::after { transform: rotate(-45deg); bottom: 7px; }
 
+@media (max-width: 991px) {
+  #navbarNav:not(.show) { display: none; }
+  #navbarNav.show { display: block; }
+}
+
 /* ================== MINI MENU DO USUÁRIO / NAVBAR index 08-05-2026 =================== */
 
 .user-menu-wrap { position: relative; display: flex; align-items: center; min-width: 0; }

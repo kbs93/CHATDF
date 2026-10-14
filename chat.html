@@ -421,10 +421,10 @@
           </label>
           <!-- SELETOR DE TAGS NO EDITAR PERFIL -->
           <div class="profile-edit-interests-wrapper mt-3 mb-2">
-            <label class="profile-field-label d-flex justify-content-between align-items-center">
-              <span>Selecione até 6 gostos & hobbies:</span>
-              <small id="selectedInterestsCount" class="text-muted fw-bold">0/5</small>
-            </label>
+           <div class="profile-field-label d-flex justify-content-between align-items-center">
+  <span>Selecione até 6 gostos & hobbies:</span>
+  <small id="selectedInterestsCount" class="text-muted fw-bold">0/5</small>
+</div>
             <div id="editInterestsSelectorGrid" class="interests-selector-grid">
               <!-- Renderizado dinamicamente via JS -->
             </div>
@@ -474,7 +474,7 @@
           <div id="gaveta-nome" class="vip-drawer-content">
             <div class="vip-control-card text-start border-0 rounded-0 m-0">
               <div class="mb-2 position-relative">
-                <label class="small mb-1" style="font-size: 13px; font-weight: 600; color: #475569;">Cor do nome</label>
+               <span class="small mb-1 d-block" style="font-size: 13px; font-weight: 600; color: #475569;">Cor do nome</span>
                <button type="button" id="btnVipNameColorType" class="vip-custom-select-btn">Escolha uma cor</button>
                 <div id="listVipNameColorType" class="vip-custom-dropdown hidden">
                   <div class="vip-dropdown-option " data-value="solid">Cor Sólida Comum</div>
@@ -627,7 +627,7 @@
               </div>
 
               <div class="mb-0 position-relative">
-                <label class="small mb-1" style="font-size: 13px; font-weight: 600; color: #475569;">Estilo da Fonte</label>
+             <span class="small mb-1 d-block" style="font-size: 13px; font-weight: 600; color: #475569;">Estilo da Fonte</span>
                 <button type="button" id="btnVipNameFont" class="vip-custom-select-btn">Padrão do Chat</button>
                 <div id="listVipNameFont" class="vip-custom-dropdown hidden">
                   <div class="vip-dropdown-option active" data-value="default">Padrão do Chat</div>
@@ -1018,8 +1018,7 @@
         Por favor, envie apenas denúncias de infrações passíveis de ação. Abusos ou denúncias falsas podem resultar em
         medidas contra a sua própria conta. Selecione o motivo para denunciar este Usuário.
       </p>
-      <label style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Motivo para a
-        denúncia</label>
+    <span style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px;">Motivo para denúncia</span>
 <!-- Estrutura Accordion Customizada -->
 <div class="custom-accordion-select" id="customReportSelect">
   <!-- Input invisível para preservar o envio do valor no formulário -->
@@ -1190,7 +1189,7 @@ MODAL DO BANNER VIP - UPLOAD NATIVO (CÂMERA / GALERIA) COM MODERAÇÃO CHAT-DF
   <!-- 🔹 Scripts -->
 <!-- DEPOIS (Limpo, sem módulos duplicados) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+<script src="./js/multiavatar.min.js"></script>
 <script type="module" src="./js/salas.js"></script>
 <script type="module" src="./js/main.js"></script>
 <script type="module" src="./js/pixmodal.js"></script>

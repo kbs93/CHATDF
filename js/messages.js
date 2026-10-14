@@ -1,11 +1,8 @@
 import {
   collection,
-  deleteDoc,
   doc,
-  getCountFromServer,
   getDoc,
   getDocs,
-  limit,
   limitToLast,
   onSnapshot,
   orderBy,
@@ -1840,31 +1837,22 @@ Recupera a cor personalizada configurada na prévia de resposta se houver um rep
     });
     saveProfileToLocalDB(profileMemoryCache.get(currentUser.uid));
 
-    // Rotina de Faxina de 110 mensagens (mantida em 10% dos envios)
-    if (Math.random() < 0.1) {
-      setTimeout(async () => {
-        try {
-          const snapshotCount = await getCountFromServer(chatRefAchatado);
-          const totalMensagens = snapshotCount.data().count;
 
-          if (totalMensagens > 110) {
-            const excesso = totalMensagens - 100;
-            const qMaisVelhas = query(
-              chatRefAchatado,
-              orderBy("createdAt", "asc"),
-              limit(excesso),
-            );
-            const docsMaisVelhos = await getDocs(qMaisVelhas);
 
-            docsMaisVelhos.forEach((docSnap) => {
-              deleteDoc(docSnap.ref);
-            });
-          }
-        } catch (erroFaxina) {
-          console.warn("Faxina em segundo plano ignorada:", erroFaxina);
-        }
-      }, 2000);
-    }
+
+// Atualiza imediatamente o perfil local na RAM/IndexedDB ao enviar mensagem
+    profileMemoryCache.set(currentUser.uid, {
+      uid: currentUser.uid,
+      user: profileName,
+      photo: finalPhoto,
+      cidade: profileCity,
+      vipNameColorType: userProfile?.vipNameColorType || "solid",
+      vipNameColorSolid: userProfile?.vipNameColorSolid || "#1E293B",
+      vipNameFont: userProfile?.vipNameFont || "default",
+      vipAvatarFrame: userProfile?.vipAvatarFrame || "none",
+      cachedAt: Date.now(),
+    });
+    saveProfileToLocalDB(profileMemoryCache.get(currentUser.uid));
   } catch (err) {
     console.error(err);
     const pendingDiv = document.querySelector(`[data-id="${idOrganizado}"]`);
