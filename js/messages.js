@@ -21,6 +21,7 @@ import {
   showToast,
 } from "./ui.js";
 import { formatarAutorVipChat } from "./vip.js";
+import { resolveUserProfile } from "./indexddb.js";
 
 // =================== STATE ========================================================
 window.replyingTo = null;
@@ -95,131 +96,6 @@ let floodCount = 0;
 let floodResetTimeout = null;
 const ultimaDenunciaTime = 0;
 
-// =========================================================================
-// CAMADA INDEXEDDB + CACHE EM MEMÓRIA PARA PERFIS
-// =========================================================================
-const profileMemoryCache = new Map();
-const pendingProfileRequests = new Map();
-const IDB_STORE_NAME = "chatdf_perfis";
-let chatDbInstance = null;
-
-function getChatIndexedDB() {
-  if (!chatDbInstance) {
-    chatDbInstance = new Promise((resolve) => {
-      if (!window.indexedDB) {
-        resolve(null);
-        return;
-      }
-      const request = indexedDB.open("ChatDF_LocalStore", 1);
-      request.onupgradeneeded = (e) => {
-        const idb = e.target.result;
-        if (!idb.objectStoreNames.contains(IDB_STORE_NAME)) {
-          idb.createObjectStore(IDB_STORE_NAME, { keyPath: "uid" });
-        }
-      };
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => resolve(null);
-    });
-  }
-  return chatDbInstance;
-}
-
-async function getProfileFromLocalDB(uid) {
-  try {
-    const idb = await getChatIndexedDB();
-    if (!idb) return null;
-    return new Promise((resolve) => {
-      const tx = idb.transaction(IDB_STORE_NAME, "readonly");
-      const store = tx.objectStore(IDB_STORE_NAME);
-      const req = store.get(uid);
-      req.onsuccess = () => resolve(req.result || null);
-      req.onerror = () => resolve(null);
-    });
-  } catch (err) {
-    return null;
-  }
-}
-
-async function saveProfileToLocalDB(profile) {
-  try {
-    const idb = await getChatIndexedDB();
-    if (!idb) return;
-    const tx = idb.transaction(IDB_STORE_NAME, "readwrite");
-    const store = tx.objectStore(IDB_STORE_NAME);
-    store.put(profile);
-  } catch (err) {}
-}
-
-async function fetchRemoteUserProfile(uid, fallbackMsg = {}) {
-  try {
-    const userDocRef = doc(db, "users", uid);
-    const userSnap = await getDoc(userDocRef);
-    if (userSnap.exists()) {
-      const u = userSnap.data();
-      return {
-        uid,
-        user: u.nome || u.name || fallbackMsg.user || "Usuário",
-        photo: sanitizeMessageAvatar(
-          u.foto || u.avatar || fallbackMsg.photo || fallbackMsg.avatar,
-        ),
-        cidade: u.cidade || u.city || fallbackMsg.cidade || "",
-        vipNameColorType: u.vipNameColorType || "solid",
-        vipNameColorSolid: u.vipNameColorSolid || "#1E293B",
-        vipNameFont: u.vipNameFont || "default",
-        vipAvatarFrame: u.vipAvatarFrame || "none",
-        isVip: u.isVip === true,
-        cachedAt: Date.now(),
-      };
-    }
-  } catch (e) {}
-
-  return {
-    uid,
-    user: fallbackMsg.user || "Usuário",
-    photo: sanitizeMessageAvatar(fallbackMsg.photo || fallbackMsg.avatar),
-    cidade: fallbackMsg.cidade || "",
-    vipNameColorType: fallbackMsg.vipNameColorType || "solid",
-    vipNameColorSolid:
-      fallbackMsg.vipNameColorSolid || fallbackMsg.color || "#1E293B",
-    vipNameFont: fallbackMsg.vipNameFont || "default",
-    vipAvatarFrame: fallbackMsg.vipAvatarFrame || "none",
-    cachedAt: Date.now(),
-  };
-}
-
-async function resolveUserProfileSafe(uid, fallbackMsg = {}) {
-  if (!uid) return fallbackMsg;
-
-  // 1. RAM da aba
-  if (profileMemoryCache.has(uid)) {
-    return profileMemoryCache.get(uid);
-  }
-
-  // 2. IndexedDB (Disco)
-  const cachedIDB = await getProfileFromLocalDB(uid);
-  const now = Date.now();
-  // Válido por 2 horas (7200000 ms)
-  if (cachedIDB && now - cachedIDB.cachedAt < 7200000) {
-    profileMemoryCache.set(uid, cachedIDB);
-    return cachedIDB;
-  }
-
-  // 3. Deduplicação de requisições ao Firebase
-  if (pendingProfileRequests.has(uid)) {
-    return await pendingProfileRequests.get(uid);
-  }
-
-  const p = (async () => {
-    const fresh = await fetchRemoteUserProfile(uid, fallbackMsg);
-    profileMemoryCache.set(uid, fresh);
-    saveProfileToLocalDB(fresh);
-    pendingProfileRequests.delete(uid);
-    return fresh;
-  })();
-
-  pendingProfileRequests.set(uid, p);
-  return await p;
-}
 
 // =================== HELPERS VISUAIS ========================================================
 /*====================================================================================================
@@ -598,8 +474,9 @@ ${cidade ? `<span class="user-city"><i class="icon-cidade bi bi-geo-alt"></i> ${
 `;
 
   // Sincronização em segundo plano via IndexedDB/RAM (Mantém visual instantâneo e atualiza se o perfil mudou)
+  // Sincronização em segundo plano via IndexedDB/RAM oficial
   if (msg.uid) {
-    resolveUserProfileSafe(msg.uid, msg).then((perfilAtualizado) => {
+    resolveUserProfile(msg.uid, msg).then((perfilAtualizado) => {
       if (!perfilAtualizado) return;
 
       const imgEl = div.querySelector(".user-photo");
@@ -1605,19 +1482,23 @@ Verifica se existe um usuário autenticado no sistema antes de prosseguir com o 
   }
 
   // Recupera o perfil direto da RAM / Cache local para não travar a tela se estiver sem internet
-  let userProfile = window.__currentProfileData || {};
+// Garante que os dados de perfil pertençam ESTRITAMENTE ao usuário logado atualmente (sem vazamento de sessão)
+  let userProfile = {};
+  if (window.__currentProfileData && window.__currentProfileData.uid === currentUser.uid) {
+    userProfile = window.__currentProfileData;
+  }
 
-  // Se não estiver na memória, tenta buscar no banco apenas se houver rede ativa
+  // Se não estiver em memória com o UID verificado, busca os dados oficiais do Firestore
   if (!userProfile.nome && navigator.onLine) {
     try {
       const perfilRef = doc(db, "users", currentUser.uid);
       const perfilSnap = await getDoc(perfilRef);
       if (perfilSnap.exists()) {
-        userProfile = perfilSnap.data();
+        userProfile = { uid: currentUser.uid, ...perfilSnap.data() };
         window.__currentProfileData = userProfile;
       }
     } catch (e) {
-      console.warn("Sem rede imediata, usando perfil em cache.");
+      console.warn("Sem rede imediata para carregar perfil completo.");
     }
   }
 
@@ -1824,35 +1705,7 @@ Recupera a cor personalizada configurada na prévia de resposta se houver um rep
     pendingDiv.classList.remove("message-pending");
 
     // Atualiza imediatamente o perfil local na RAM/IndexedDB ao enviar mensagem
-    profileMemoryCache.set(currentUser.uid, {
-      uid: currentUser.uid,
-      user: profileName,
-      photo: finalPhoto,
-      cidade: profileCity,
-      vipNameColorType: userProfile?.vipNameColorType || "solid",
-      vipNameColorSolid: userProfile?.vipNameColorSolid || "#1E293B",
-      vipNameFont: userProfile?.vipNameFont || "default",
-      vipAvatarFrame: userProfile?.vipAvatarFrame || "none",
-      cachedAt: Date.now(),
-    });
-    saveProfileToLocalDB(profileMemoryCache.get(currentUser.uid));
 
-
-
-
-// Atualiza imediatamente o perfil local na RAM/IndexedDB ao enviar mensagem
-    profileMemoryCache.set(currentUser.uid, {
-      uid: currentUser.uid,
-      user: profileName,
-      photo: finalPhoto,
-      cidade: profileCity,
-      vipNameColorType: userProfile?.vipNameColorType || "solid",
-      vipNameColorSolid: userProfile?.vipNameColorSolid || "#1E293B",
-      vipNameFont: userProfile?.vipNameFont || "default",
-      vipAvatarFrame: userProfile?.vipAvatarFrame || "none",
-      cachedAt: Date.now(),
-    });
-    saveProfileToLocalDB(profileMemoryCache.get(currentUser.uid));
   } catch (err) {
     console.error(err);
     const pendingDiv = document.querySelector(`[data-id="${idOrganizado}"]`);

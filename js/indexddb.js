@@ -160,26 +160,32 @@ export async function resolveUserProfile(uid, fallbackData = {}) {
     return await pendingRequests.get(uid);
   }
 
-  const fetchPromise = (async () => {
+const fetchPromise = (async () => {
     const remoteProfile = await fetchProfileFromFirestore(uid);
-    const finalProfile = remoteProfile ||
-      cachedIDB || {
-        uid,
-        user: fallbackData.user || "Usuário",
-        photo: fallbackData.photo || fallbackData.avatar || "./img/avatar.png",
-        cidade: fallbackData.cidade || "",
-        vipNameColorType: fallbackData.vipNameColorType || "solid",
-        vipNameColorSolid: fallbackData.vipNameColorSolid || "#1E293B",
-        vipNameFont: fallbackData.vipNameFont || "default",
-        vipAvatarFrame: fallbackData.vipAvatarFrame || "none",
-        cachedAt: now,
-      };
+    
+    // Só grava no IndexedDB se o perfil veio confirmado do Firestore
+    if (remoteProfile) {
+      memoryCache.set(uid, remoteProfile);
+      saveProfileToIDB(remoteProfile);
+      pendingRequests.delete(uid);
+      return remoteProfile;
+    }
 
-    memoryCache.set(uid, finalProfile);
-    saveProfileToIDB(finalProfile);
+    // Se o Firebase falhar momentaneamente, usa o cache local antigo ou o fallback provisório na memória RAM apenas
+    const tempProfile = cachedIDB || {
+      uid,
+      user: fallbackData.user || "Usuário",
+      photo: fallbackData.photo || fallbackData.avatar || "./img/avatar.png",
+      cidade: fallbackData.cidade || "",
+      vipNameColorType: fallbackData.vipNameColorType || "solid",
+      vipNameColorSolid: fallbackData.vipNameColorSolid || "#1E293B",
+      vipNameFont: fallbackData.vipNameFont || "default",
+      vipAvatarFrame: fallbackData.vipAvatarFrame || "none",
+      cachedAt: now,
+    };
+
     pendingRequests.delete(uid);
-
-    return finalProfile;
+    return tempProfile;
   })();
 
   pendingRequests.set(uid, fetchPromise);
