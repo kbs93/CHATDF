@@ -1,3 +1,4 @@
 {
-    "editor.hover.enabled": "off"
+    "editor.hover.enabled": "off",
+    "liveServer.settings.port": 5501
 }

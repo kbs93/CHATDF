@@ -211,7 +211,7 @@ Se não houver uma resposta pendente no momento, ativa a caixa de prévia do rep
         .getElementById("message-input-wrapper")
         ?.classList.contains("profile-locked");
       if (!currentUser || inputTravado) {
-        showToast("Complete seu perfil para responder mensagens.");
+        //showToast("Complete seu perfil para responder mensagens.");
         document.dispatchEvent(new CustomEvent("chatdf:open-profile"));
         return;
       }
@@ -526,7 +526,6 @@ ${cidade ? `<span class="user-city"><i class="icon-cidade bi bi-geo-alt"></i> ${
         .getElementById("message-input-wrapper")
         ?.classList.contains("profile-locked");
       if (!currentUser || inputTravado) {
-        showToast("Complete seu perfil para interagir com os usuários.");
         document.dispatchEvent(new CustomEvent("chatdf:open-profile"));
         return;
       }
@@ -1506,7 +1505,7 @@ Verifica se existe um usuário autenticado no sistema antes de prosseguir com o 
 Verifica se o usuário completou seu perfil e dispara o evento de abertura de perfil se for falso
 ======================================================================================================== */
   if (userProfile.perfilCompleto !== true) {
-    showToast("Complete seu perfil para enviar mensagens.");
+    //showToast("Complete seu perfil para enviar mensagens.");
     document.dispatchEvent(new CustomEvent("chatdf:open-profile"));
     return;
   }

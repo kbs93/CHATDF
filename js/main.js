@@ -936,7 +936,9 @@ window.addEventListener("attachmentAction", (e) => {
 
 window.closeAllPanels = closeAllPanels;
 
-// Menu de Mensagem
+
+
+// Menu de Mensagem - Ver Perfil
 document
   .getElementById("contextProfileBtn")
   ?.addEventListener("click", async (e) => {
@@ -958,15 +960,45 @@ document
       await window.openMainProfilePanel(userId);
     }
   });
-// DENUNCIA DE USUARIO
+
+// Menu de Mensagem - Conversar no Privado
+document
+  .getElementById("contextPrivateBtn")
+  ?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const menu = document.getElementById("messageContextMenu");
+    if (!menu) return;
+
+    const targetUid = menu.dataset.uid;
+    const targetNome = menu.dataset.user;
+    const msgId = menu.dataset.msgId;
+
+    menu.classList.add("hidden");
+
+    if (!targetUid) {
+      showToast("Usuário não identificado.");
+      return;
+    }
+
+    const msgEl = document.querySelector(`.message[data-id="${msgId}"]`);
+    const targetAvatar = msgEl?.querySelector(".user-photo")?.src || "./img/avatar.png";
+
+    if (typeof window.iniciarConversaPrivada === "function") {
+      window.iniciarConversaPrivada(targetUid, targetNome, targetAvatar);
+    }
+  });
+
+// Menu de Mensagem - Denunciar Usuario
 document
   .getElementById("contextReportBtn")
   ?.addEventListener("click", async (e) => {
     e.preventDefault();
+    e.stopPropagation();
+
     const menu = document.getElementById("messageContextMenu");
-    const reportUserModal =
-      document.getElementById("reportUserModal") ||
-      document.getElementById("reportModal");
+    const reportUserModal = document.getElementById("reportUserModal");
     const reportUserBtn = document.getElementById("reportUserBtn");
 
     if (!menu || !reportUserModal) return;
@@ -1000,10 +1032,26 @@ document
     reportUserModal.style.display = "flex";
   });
 
-document.getElementById("cancelReport")?.addEventListener("click", () => {
-  document.getElementById("reportModal")?.classList.add("hidden");
-  currentReportData = null;
-});
+// Fechamento correto do Modal de Denúncia (Botão X e Botão Cancela)
+const fecharModalDenuncia = (e) => {
+  e?.preventDefault?.();
+  e?.stopPropagation?.();
+  const modal = document.getElementById("reportUserModal");
+  if (modal) {
+    modal.classList.add("hidden");
+    modal.style.display = "none";
+  }
+};
+
+document.getElementById("closeReportModalX")?.addEventListener("click", fecharModalDenuncia);
+document.getElementById("cancelReportBtn")?.addEventListener("click", fecharModalDenuncia);
+
+
+
+
+
+
+
 
 // Accordion Denúncia
 document.addEventListener("DOMContentLoaded", () => {

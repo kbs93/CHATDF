@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
   <!-- Cor da barra do navegador (Força o grafite #212529 em qualquer tema do celular) -->
   <meta name="theme-color" content="#212529">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#212529">
@@ -972,6 +972,7 @@
   </div>
 
   <!-- ================= MENU CONTEXTUAL DA MENSAGEM ================= 06-05-26 -->
+<!-- ================= MENU CONTEXTUAL DA MENSAGEM ================= 06-05-26 -->
   <div id="messageContextMenu" class="message-context-menu hidden">
 
     <div class="context-menu-header">
@@ -981,11 +982,10 @@
       <i class="bi bi-person-circle"></i>
       Ver perfil
     </button>
-    <!----------
-  <button type="button" id="contextReplyBtn">
-    <i class="bi bi-reply-fill"></i>
-    Responder
-  </button>----->
+    <button type="button" id="contextPrivateBtn">
+      <i class="bi bi-chat-dots-fill"></i>
+      Conversar no privado
+    </button>
     <button type="button" id="contextReportBtn">
       <i class="bi bi-flag-fill"></i>
       Denunciar usuario
@@ -1194,5 +1194,6 @@ MODAL DO BANNER VIP - UPLOAD NATIVO (CÂMERA / GALERIA) COM MODERAÇÃO CHAT-DF
 <script type="module" src="./js/main.js"></script>
 <script type="module" src="./js/pixmodal.js"></script>
 <script type="module" src="./js/frontendpix.js"></script>
+<script type="module" src="./js/privado.js"></script>
 </body>
 </html>
