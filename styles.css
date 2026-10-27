@@ -2857,8 +2857,8 @@ Reposiciona a tag de expiração para não cobrir o botão voltar vip
 
 .privado-balao { max-width: 82%; padding: 6px 10px; border-radius: 12px; font-size: 13px; line-height: 1.35; word-break: break-word; display: flex; flex-direction: column; }
 
-/*cor da conversa do chat privado*/
-.privado-balao.enviada { align-self: flex-end; background: #055cfd8f; color: #fff; border-bottom-right-radius: 2px; }
+/*cor da conversa do chat privado e do texto*/
+.privado-balao.enviada { align-self: flex-end; background: #b1c8f36e; color: #000000; border-bottom-right-radius: 2px; }
 
 .privado-balao.recebida { align-self: flex-start; background: #fff; color: #1e293b; border: 1px solid #e2e8f0; border-bottom-left-radius: 2px; }
 

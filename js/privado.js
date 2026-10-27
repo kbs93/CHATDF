@@ -1,5 +1,6 @@
 // ========================================================================
 // js/privado.js - Bate-Papo Privado Efêmero 1 a 1 (Realtime Database)
+// Arquitetura de Ligação Centralizada (conexoes_pv)
 // Desacoplado: Sem histórico salvo, onDisconnect().remove() e zero custo no Firestore.
 // ========================================================================
 
@@ -7,6 +8,7 @@ import {
   ref,
   push,
   set,
+  update,
   onValue,
   off,
   remove,
@@ -16,8 +18,8 @@ import { auth, rtdb } from "./firebase-config.js";
 import { showToast } from "./ui.js";
 
 let chatPrivadoAtivoId = null;
-let ouvinteMensagensPrivadas = null;
-let ouvinteSolicitacoes = null;
+let ouvinteSessaoAtiva = null;
+let ouvinteConvitesRecebidos = null;
 let outroUsuarioData = null;
 
 function obterChatId(uid1, uid2) {
@@ -33,13 +35,13 @@ function sanitizarTexto(texto) {
 function injetarDOMPrivado() {
   if (document.getElementById("containerChatPrivado")) return;
   if (!document.body) return;
-const html = `
+  const html = `
     <!-- Fundo escuro do Bottom Sheet -->
     <div id="privadoBackdrop" class="privado-backdrop hidden"></div>
 
     <!-- Janela Bottom Sheet do Chat Privado -->
     <div id="containerChatPrivado" class="privado-flutuante hidden">
-      <!-- Barra para puxar para baixo no celular -->
+      <!-- Barra para puxar para baixo no telemóvel -->
       <div class="privado-drag-indicator">
         <div class="privado-drag-handle"></div>
       </div>
@@ -92,8 +94,6 @@ const html = `
   configurarEventosDOM();
 }
 
-
-
 function configurarEventosDOM() {
   const container = document.getElementById("containerChatPrivado");
   const form = document.getElementById("privadoFormEnvio");
@@ -102,7 +102,6 @@ function configurarEventosDOM() {
   const btnMinimizar = document.getElementById("btnMinimizarPrivado");
   const btnEnviar = document.getElementById("privadoBtnEnviar");
 
-  // TRAVA DE SEGURANÇA: Impede cliques de vazarem
   container?.addEventListener("click", (e) => {
     e.stopPropagation();
   });
@@ -110,7 +109,6 @@ function configurarEventosDOM() {
     e.stopPropagation();
   });
 
-  // Função para limpar coordenadas de arrasto e restaurar o posicionamento original
   const resetarPosicaoArrasto = () => {
     if (!container) return;
     container.style.removeProperty("left");
@@ -121,15 +119,12 @@ function configurarEventosDOM() {
     container.classList.remove("arrastando");
   };
 
-  // ENVIO DE MENSAGENS (sem fechar o teclado no telemóvel)
   const processarEnvioPrivado = () => {
     const texto = input?.value.trim();
     if (!texto || !chatPrivadoAtivoId) return;
 
     enviarMensagemPrivada(texto);
     input.value = "";
-
-    // Mantém o foco ativo no campo para o teclado virtual não fechar
     input.focus({ preventScroll: true });
   };
 
@@ -149,7 +144,6 @@ function configurarEventosDOM() {
     processarEnvioPrivado();
   });
 
-  // BOTÕES DO CABEÇALHO
   btnFechar?.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -164,7 +158,6 @@ function configurarEventosDOM() {
     container?.classList.toggle("minimizado");
   });
 
-  // Minimiza ao focar no campo da sala pública
   const mainInput = document.getElementById("messageInput");
   if (mainInput) {
     mainInput.addEventListener("focus", () => {
@@ -175,9 +168,7 @@ function configurarEventosDOM() {
     });
   }
 
-  // =========================================================================
-  // ARRASTAR: FUNCIONA EXCLUSIVAMENTE QUANDO MINIMIZADO
-  // =========================================================================
+  // Arrasto quando minimizado
   let isDragging = false;
   let hasMoved = false;
   let startX = 0;
@@ -186,10 +177,7 @@ function configurarEventosDOM() {
   let initialTop = 0;
 
   const onPointerDown = (e) => {
-    // Se o chat estiver ABERTO, não permite arrastar de todo
     if (!container || !container.classList.contains("minimizado")) return;
-
-    // Se clicar nos botões de fechar ou minimizar, não inicia arrasto
     if (e.target.closest("#btnFecharPrivado") || e.target.closest("#btnMinimizarPrivado")) return;
 
     isDragging = true;
@@ -218,7 +206,6 @@ function configurarEventosDOM() {
     const deltaX = e.clientX - startX;
     const deltaY = e.clientY - startY;
 
-    // Distingue toque simples de arrasto
     if (!hasMoved && (Math.abs(deltaX) > 6 || Math.abs(deltaY) > 6)) {
       hasMoved = true;
       container.classList.add("arrastando");
@@ -250,7 +237,6 @@ function configurarEventosDOM() {
       }
     } catch (_) {}
 
-    // Toque rápido sem arrastar: reabre o chat e limpa coordenadas de arrasto
     if (!hasMoved && container) {
       resetarPosicaoArrasto();
       container.classList.remove("minimizado");
@@ -262,24 +248,16 @@ function configurarEventosDOM() {
   window.addEventListener("pointerup", onPointerUp);
   window.addEventListener("pointercancel", onPointerUp);
 
-
-// =========================================================================
-  // GESTO GERAL MOBILE: ARRASTO EM QUALQUER PARTE DA JANELA PARA MINIMIZAR
-  // Trava o pull-to-refresh da página e minimiza suavemente (sem fechar)
-  // =========================================================================
+  // Gesto mobile para recolher
   let sheetStartY = 0;
   let isDraggingSheet = false;
   let podePuxarJanela = false;
 
   container?.addEventListener("touchstart", (e) => {
-    // Só funciona se a janela estiver aberta no celular
     if (container.classList.contains("minimizado") || window.innerWidth > 576) return;
-
-    // Não ativa se tocar no campo de texto ou botões interativos
     if (e.target.closest("input") || e.target.closest("button") || e.target.closest("#btnFecharPrivado")) return;
 
     const corpoMsg = document.getElementById("privadoCorpoMensagens");
-    // Se estiver nas mensagens, só puxa a janela inteira se a rolagem já estiver no topo
     if (corpoMsg && e.target.closest("#privadoCorpoMensagens")) {
       if (corpoMsg.scrollTop > 5) return;
     }
@@ -296,11 +274,8 @@ function configurarEventosDOM() {
     const currentY = e.touches[0].clientY;
     const deltaY = currentY - sheetStartY;
 
-    // TRAVA CRÍTICA: Se puxar para baixo, cancela 100% o pull-to-refresh nativo do navegador
     if (deltaY > 0) {
-      if (e.cancelable) {
-        e.preventDefault();
-      }
+      if (e.cancelable) e.preventDefault();
       container.style.transform = `translateY(${deltaY}px)`;
     }
   }, { passive: false });
@@ -315,7 +290,6 @@ function configurarEventosDOM() {
 
     container.style.transition = "transform 0.22s cubic-bezier(0.16, 1, 0.3, 1)";
 
-    // Se deslizou 60px para baixo: minimiza a janela (mantendo a conversa salva)
     if (deltaY > 60) {
       resetarPosicaoArrasto();
       container.classList.add("minimizado");
@@ -326,34 +300,14 @@ function configurarEventosDOM() {
 
   window.addEventListener("touchend", finalizarGestoSheet);
   window.addEventListener("touchcancel", finalizarGestoSheet);
-
-
-  
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 async function enviarMensagemPrivada(texto) {
   const user = auth.currentUser;
   if (!user || !chatPrivadoAtivoId) return;
 
   try {
-    const mensagensRef = ref(rtdb, `privados/${chatPrivadoAtivoId}/mensagens`);
+    const mensagensRef = ref(rtdb, `conexoes_pv/${chatPrivadoAtivoId}/mensagens`);
     const novaMsgRef = push(mensagensRef);
 
     await set(novaMsgRef, {
@@ -389,6 +343,60 @@ function renderizarMensagemPrivada(msgData) {
   corpo.scrollTop = corpo.scrollHeight;
 }
 
+function abrirJanelaPrivadoVisual(avatar, nome) {
+  injetarDOMPrivado();
+  const container = document.getElementById("containerChatPrivado");
+  const avatarEl = document.getElementById("privadoAvatar");
+  const nomeEl = document.getElementById("privadoNome");
+  const corpo = document.getElementById("privadoCorpoMensagens");
+
+  if (avatarEl) avatarEl.src = avatar || "./img/avatar.png";
+  if (nomeEl) nomeEl.textContent = nome || "Usuário";
+  if (corpo) {
+    corpo.innerHTML = `
+      <div class="privado-aviso-seguranca">
+        <i class="bi bi-shield-check"></i>
+        <span>Mensagens efêmeras: esta conversa é apagada ao fechar a janela.</span>
+      </div>
+    `;
+  }
+
+  container?.classList.remove("hidden", "minimizado");
+}
+
+function fecharJanelaPrivadoVisual() {
+  const container = document.getElementById("containerChatPrivado");
+  if (container) {
+    container.classList.add("hidden");
+    container.classList.remove("minimizado");
+    container.style.removeProperty("left");
+    container.style.removeProperty("top");
+    container.style.removeProperty("bottom");
+    container.style.removeProperty("right");
+    container.style.removeProperty("transform");
+  }
+
+  const corpo = document.getElementById("privadoCorpoMensagens");
+  if (corpo) {
+    corpo.innerHTML = `
+      <div class="privado-aviso-seguranca">
+        <i class="bi bi-shield-check"></i>
+        <span>Mensagens efêmeras: esta conversa é apagada ao fechar a janela.</span>
+      </div>
+    `;
+  }
+}
+
+function desconectarOuvinteSessao() {
+  if (ouvinteSessaoAtiva && chatPrivadoAtivoId) {
+    off(ref(rtdb, `conexoes_pv/${chatPrivadoAtivoId}`));
+    ouvinteSessaoAtiva = null;
+  }
+}
+
+// =========================================================================
+// INICIAR CONVERSA PRIVADA (REMETENTE SOLICITA A LIGAÇÃO)
+// =========================================================================
 export async function iniciarConversaPrivada(outroUid, outroNome, outroAvatar) {
   const user = auth.currentUser;
   if (!user) {
@@ -408,124 +416,143 @@ export async function iniciarConversaPrivada(outroUid, outroNome, outroAvatar) {
     return;
   }
 
-  injetarDOMPrivado();
+  const novoChatId = obterChatId(user.uid, outroUid);
 
+  // REGRA DE CONVERSA ÚNICA: Impede chamar outro utilizador se já estiver numa ligação ativa
+  if (chatPrivadoAtivoId && chatPrivadoAtivoId !== novoChatId) {
+    showToast("Feche a conversa atual no 'X' para iniciar outra.");
+    return;
+  }
+
+  injetarDOMPrivado();
+  desconectarOuvinteSessao();
+
+  chatPrivadoAtivoId = novoChatId;
   outroUsuarioData = {
     uid: outroUid,
     nome: outroNome || "Usuário",
     avatar: outroAvatar || "./img/avatar.png"
   };
 
-  const chatId = obterChatId(user.uid, outroUid);
-  chatPrivadoAtivoId = chatId;
+const sessaoRef = ref(rtdb, `conexoes_pv/${novoChatId}`);
+  const solicitacaoRef = ref(rtdb, `solicitacoes_pv/${outroUid}/${user.uid}`);
 
-  const container = document.getElementById("containerChatPrivado");
-  const avatarEl = document.getElementById("privadoAvatar");
-  const nomeEl = document.getElementById("privadoNome");
-  const corpo = document.getElementById("privadoCorpoMensagens");
-
-  if (avatarEl) avatarEl.src = outroUsuarioData.avatar;
-  if (nomeEl) nomeEl.textContent = outroUsuarioData.nome;
-  if (corpo) {
-    corpo.innerHTML = `
-      <div class="privado-aviso-seguranca">
-        <i class="bi bi-shield-check"></i>
-        <span>Mensagens efêmeras: esta conversa é apagada ao fechar a janela.</span>
-      </div>
-    `;
-  }
-
-  container?.classList.remove("hidden", "minimizado");
-
-  const chatRefRTDB = ref(rtdb, `privados/${chatId}`);
-  onDisconnect(chatRefRTDB).remove();
-
-  const conviteRef = ref(rtdb, `solicitacoes_pv/${outroUid}/${user.uid}`);
-  await set(conviteRef, {
+  // Regista o nó da sessão
+  await set(sessaoRef, {
     remetenteUid: user.uid,
     remetenteNome: user.displayName || "Usuário",
     remetenteAvatar: user.photoURL || "./img/avatar.png",
+    destinatarioUid: outroUid,
+    status: "aguardando",
     timestamp: Date.now()
   });
-  onDisconnect(conviteRef).remove();
 
-  iniciarEscutaMensagens(chatId);
+  // Regista na caixa direta do destinatário (garante o alerta imediato)
+  await set(solicitacaoRef, {
+    chatId: novoChatId,
+    remetenteUid: user.uid,
+    remetenteNome: user.displayName || "Usuário",
+    remetenteAvatar: user.photoURL || "./img/avatar.png",
+    status: "aguardando",
+    timestamp: Date.now()
+  });
+
+  onDisconnect(sessaoRef).remove();
+  onDisconnect(solicitacaoRef).remove();
+
   showToast(`Chamando ${outroUsuarioData.nome} no privado...`);
-}
 
-function iniciarEscutaMensagens(chatId) {
-  if (ouvinteMensagensPrivadas) {
-    off(ref(rtdb, `privados/${chatPrivadoAtivoId}/mensagens`));
-  }
+  // Garante que, se o remetente cair ou fechar a janela, o nó é destruído
+  onDisconnect(sessaoRef).remove();
 
-  const mensagensRef = ref(rtdb, `privados/${chatId}/mensagens`);
-  let primeiraCarga = true;
+  showToast(`Chamando ${outroUsuarioData.nome} no privado...`);
 
-  ouvinteMensagensPrivadas = onValue(mensagensRef, (snapshot) => {
+  // O remetente escuta o nó da ligação para reagir à aceitação ou recusa
+  ouvinteSessaoAtiva = onValue(sessaoRef, (snapshot) => {
     const dados = snapshot.val();
-    const corpo = document.getElementById("privadoCorpoMensagens");
 
+    // Se o nó foi apagado (por exemplo, encerramento ou saída súbita)
     if (!dados) {
-      if (!primeiraCarga && corpo) {
+      if (document.getElementById("containerChatPrivado")?.classList.contains("hidden") === false) {
         showToast("A conversa privada foi encerrada.");
-        encerrarChatPrivado(false);
       }
+      encerrarChatPrivado(false);
       return;
     }
 
-    primeiraCarga = false;
-    corpo.innerHTML = `
-      <div class="privado-aviso-seguranca">
-        <i class="bi bi-shield-check"></i>
-        <span>Mensagens efêmeras: esta conversa é apagada ao fechar a janela.</span>
-      </div>
-    `;
+    // 1. Destinatário recusou a conversa
+    if (dados.status === "recusada") {
+      showToast(`${outroUsuarioData?.nome || "O usuário"} Conversa não aceita.`);
+      desconectarOuvinteSessao();
+      remove(sessaoRef).catch(() => {});
+      encerrarChatPrivado(false);
+      return;
+    }
 
-    Object.values(dados).forEach((msg) => {
-      renderizarMensagemPrivada(msg);
-    });
+    // 2. Destinatário aceitou a conversa: abre a janela e carrega as mensagens
+    if (dados.status === "ativa") {
+      const container = document.getElementById("containerChatPrivado");
+      if (container && container.classList.contains("hidden")) {
+        abrirJanelaPrivadoVisual(outroUsuarioData.avatar, outroUsuarioData.nome);
+      }
+
+      // Renderiza as mensagens trocadas em tempo real
+      const corpo = document.getElementById("privadoCorpoMensagens");
+      if (corpo && dados.mensagens) {
+        corpo.innerHTML = `
+          <div class="privado-aviso-seguranca">
+            <i class="bi bi-shield-check"></i>
+            <span>Mensagens efêmeras: esta conversa é apagada ao fechar a janela.</span>
+          </div>
+        `;
+        Object.values(dados.mensagens).forEach((msg) => {
+          renderizarMensagemPrivada(msg);
+        });
+      }
+    }
   });
 }
 
-export function encerrarChatPrivado(destruirNoBanco = true) {
-  if (ouvinteMensagensPrivadas && chatPrivadoAtivoId) {
-    off(ref(rtdb, `privados/${chatPrivadoAtivoId}/mensagens`));
-    ouvinteMensagensPrivadas = null;
-  }
-
-  if (destruirNoBanco && chatPrivadoAtivoId) {
-    remove(ref(rtdb, `privados/${chatPrivadoAtivoId}`)).catch(() => {});
-  }
-
-  chatPrivadoAtivoId = null;
-  outroUsuarioData = null;
-
-  const container = document.getElementById("containerChatPrivado");
-  container?.classList.add("hidden");
-}
-
+// =========================================================================
+// MONITORAR CONVITES RECEBIDOS (DESTINATÁRIO ESCUTA SE ESTÁ A SER CHAMADO)
+// =========================================================================
 export function monitorarSolicitacoesRecebidas(meuUid) {
   if (!meuUid) return;
 
-  const solicitacoesRef = ref(rtdb, `solicitacoes_pv/${meuUid}`);
+  // Escuta diretamente a caixa do utilizador (já permitida nas suas regras)
+  const minhaCaixaRef = ref(rtdb, `solicitacoes_pv/${meuUid}`);
 
-  if (ouvinteSolicitacoes) {
-    off(solicitacoesRef);
+  if (ouvinteConvitesRecebidos) {
+    off(minhaCaixaRef);
   }
 
-  ouvinteSolicitacoes = onValue(solicitacoesRef, (snapshot) => {
+  ouvinteConvitesRecebidos = onValue(minhaCaixaRef, (snapshot) => {
     const dados = snapshot.val();
-    if (!dados) return;
+    const modal = document.getElementById("modalSolicitacaoPrivado");
 
-    const lista = Object.values(dados);
-    if (!lista.length) return;
+    if (!dados) {
+      modal?.classList.add("hidden");
+      return;
+    }
 
-    const convite = lista[lista.length - 1];
-    exibirModalConvite(convite);
+    const pendentes = Object.entries(dados).filter(([_, item]) => item.status === "aguardando");
+    if (!pendentes.length) {
+      modal?.classList.add("hidden");
+      return;
+    }
+
+    const [remetenteUid, convite] = pendentes[pendentes.length - 1];
+    const chatId = convite.chatId || obterChatId(meuUid, remetenteUid);
+
+    if (chatPrivadoAtivoId && chatPrivadoAtivoId !== chatId) {
+      return;
+    }
+
+    exibirModalConvite(chatId, convite);
   });
 }
 
-function exibirModalConvite(convite) {
+function exibirModalConvite(chatId, convite) {
   injetarDOMPrivado();
 
   const modal = document.getElementById("modalSolicitacaoPrivado");
@@ -543,46 +570,112 @@ function exibirModalConvite(convite) {
 
   modal.classList.remove("hidden");
 
+  // AÇÃO AO CLICAR EM CONVERSAR (ACEITAR)
+// AÇÃO AO CLICAR EM CONVERSAR (ACEITAR)
   btnAceitar.onclick = async () => {
     modal.classList.add("hidden");
     const user = auth.currentUser;
     if (!user) return;
 
+    // Limpa o convite da caixa de entrada
     remove(ref(rtdb, `solicitacoes_pv/${user.uid}/${convite.remetenteUid}`)).catch(() => {});
 
-    chatPrivadoAtivoId = obterChatId(user.uid, convite.remetenteUid);
+    desconectarOuvinteSessao();
+
+    chatPrivadoAtivoId = chatId;
     outroUsuarioData = {
       uid: convite.remetenteUid,
       nome: convite.remetenteNome,
       avatar: convite.remetenteAvatar
     };
 
-    const container = document.getElementById("containerChatPrivado");
-    const avatarEl = document.getElementById("privadoAvatar");
-    const nomeEl = document.getElementById("privadoNome");
+    const sessaoRef = ref(rtdb, `conexoes_pv/${chatId}`);
 
-    if (avatarEl) avatarEl.src = outroUsuarioData.avatar;
-    if (nomeEl) nomeEl.textContent = outroUsuarioData.nome;
+    // Ativa a ligação
+    await update(sessaoRef, {
+      status: "ativa"
+    });
 
-    container?.classList.remove("hidden", "minimizado");
-    
+    onDisconnect(sessaoRef).remove();
 
-    onDisconnect(ref(rtdb, `privados/${chatPrivadoAtivoId}`)).remove();
+    abrirJanelaPrivadoVisual(outroUsuarioData.avatar, outroUsuarioData.nome);
 
-    iniciarEscutaMensagens(chatPrivadoAtivoId);
+    ouvinteSessaoAtiva = onValue(sessaoRef, (snapshot) => {
+      const dados = snapshot.val();
+      if (!dados) {
+        showToast("A conversa privada foi encerrada.");
+        encerrarChatPrivado(false);
+        return;
+      }
+
+      const corpo = document.getElementById("privadoCorpoMensagens");
+      if (corpo && dados.mensagens) {
+        corpo.innerHTML = `
+          <div class="privado-aviso-seguranca">
+            <i class="bi bi-shield-check"></i>
+            <span>Mensagens efêmeras: esta conversa é apagada ao fechar a janela.</span>
+          </div>
+        `;
+        Object.values(dados.mensagens).forEach((msg) => {
+          renderizarMensagemPrivada(msg);
+        });
+      }
+    });
   };
 
-  btnRecusar.onclick = () => {
+  // AÇÃO AO CLICAR EM RECUSAR
+  btnRecusar.onclick = async () => {
     modal.classList.add("hidden");
     const user = auth.currentUser;
-    if (!user) return;
-    remove(ref(rtdb, `solicitacoes_pv/${user.uid}/${convite.remetenteUid}`)).catch(() => {});
+
+    if (user) {
+      remove(ref(rtdb, `solicitacoes_pv/${user.uid}/${convite.remetenteUid}`)).catch(() => {});
+    }
+
+    try {
+      const sessaoRef = ref(rtdb, `conexoes_pv/${chatId}`);
+      await update(sessaoRef, {
+        status: "recusada"
+      });
+    } catch (e) {
+      console.warn("Falha ao atualizar recusa da ligação:", e);
+    }
+  };
+
+  // AÇÃO AO CLICAR EM RECUSAR
+  btnRecusar.onclick = async () => {
+    modal.classList.add("hidden");
+
+    try {
+      const sessaoRef = ref(rtdb, `conexoes_pv/${chatId}`);
+      // Marca como recusada para notificar imediatamente o remetente
+      await update(sessaoRef, {
+        status: "recusada"
+      });
+    } catch (e) {
+      console.warn("Falha ao atualizar recusa da ligação:", e);
+    }
   };
 }
 
+// =========================================================================
+// ENCERRAMENTO E LIMPEZA TOTAL DA SESSÃO PRIVADA
+// =========================================================================
+export function encerrarChatPrivado(destruirNoBanco = true) {
+  const chatIdParaRemover = chatPrivadoAtivoId;
 
+  desconectarOuvinteSessao();
 
-// Inicializa de forma segura após o carregamento do DOM
+  if (destruirNoBanco && chatIdParaRemover) {
+    remove(ref(rtdb, `conexoes_pv/${chatIdParaRemover}`)).catch(() => {});
+  }
+
+  chatPrivadoAtivoId = null;
+  outroUsuarioData = null;
+
+  fecharJanelaPrivadoVisual();
+}
+
 function inicializarSeguro() {
   injetarDOMPrivado();
   if (auth.currentUser) {
@@ -606,10 +699,10 @@ document.addEventListener("chatdf:user-ready", (e) => {
 
 document.addEventListener("chatdf:user-logout", () => {
   encerrarChatPrivado(false);
-  if (ouvinteSolicitacoes) {
-    const user = auth.currentUser;
-    if (user) off(ref(rtdb, `solicitacoes_pv/${user.uid}`));
-    ouvinteSolicitacoes = null;
+  const user = auth.currentUser;
+  if (ouvinteConvitesRecebidos && user) {
+    off(ref(rtdb, `solicitacoes_pv/${user.uid}`));
+    ouvinteConvitesRecebidos = null;
   }
 });
 
